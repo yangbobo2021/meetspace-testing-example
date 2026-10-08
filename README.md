@@ -71,6 +71,8 @@ python3 -m unittest discover -s tests -v
 
 首轮完整验收已执行，**结果未通过，不建议发布当前版本**。正式独立审阅 139 项通过、9 项失败、11 项未证明；9 个失败场景对应空日期、微秒重放、迟到401、通知时间缺失四类缺陷。另有两组新增覆盖缺口及环境观测限制，详见 [首轮验收档案](tests/snapshots/stage-06-acceptance-run/README.md)。应用和原测试均未修改，后续需修复并针对新修订复测。测试 Skill 需要 Node.js 和 Playbook；它们不是应用运行依赖。
 
+随后对既有冒烟、API、运行时、UI及竞态测试重跑测量：后端行覆盖 **98.96%**、分支 **100%**；前端行覆盖 **99.44%**、分支 **93.22%**。覆盖率不能替代行为断言与证据审阅；审计提出8组补测路径及5处防御逻辑分析项，详见 [覆盖率审计档案](tests/snapshots/stage-07-coverage-audit/README.md) 与 [DR-008](specs/decisions/008-code-coverage-audit.md)，首轮验收失败结论保持。
+
 ## GitHub 阶段对比
 
 公共仓库：<https://github.com/yangbobo2021/meetspace-testing-example>。
@@ -82,6 +84,7 @@ python3 -m unittest discover -s tests -v
 - `stage-04-black-box-ready` 保存[修订后设计公开档案](tests/snapshots/stage-04-black-box-ready/README.md)：按用户决定补充需求端点，96 个场景、105 个方法，全部 96 条需求充分，独立审阅与确定性设计门禁通过；未执行应用测试。
 - `stage-05-white-box-scenarios` 保存[白盒设计公开档案](tests/snapshots/stage-05-white-box-scenarios/README.md)：新增 63 个白盒场景、63 个方法，全部独立审阅充分，合计 159 个场景、168 个方法；本次仅设计，未启动完整编译验收流程或执行应用测试。
 - `stage-06-acceptance-run` 保存[首轮验收公开档案](tests/snapshots/stage-06-acceptance-run/README.md)：完整工作流真实执行和独立审阅；139 通过、9 失败、11 未证明，验收 incomplete，应用代码保持不变。
+- `stage-07-coverage-audit` 保存[代码覆盖率审计档案](tests/snapshots/stage-07-coverage-audit/README.md)：既有测试重跑计数、逐位置未覆盖映射、补测建议与测量范围；不修改应用或升级验收结论。
 - 后续修复和复测分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：

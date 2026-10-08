@@ -1,0 +1,284 @@
+{
+  "baseline_revision": "5b7e2461476d4ee6bd6819d084cb1e4787c302c1",
+  "status": "proposal_not_independently_reviewed_not_added_to_canonical_ledger",
+  "groups": [
+    {
+      "id": "COV-GAP-001",
+      "title": "响应写入时客户端断开及提交后重试",
+      "category": "missing_fault_mode",
+      "priority": "P1",
+      "status": "proposed_unexecuted",
+      "code_locations": [
+        "app/server.py:259-260"
+      ],
+      "existing_scenario_ids": [
+        "WB-errors-and-response",
+        "BB-reservation-creation-11"
+      ],
+      "existing_method_ids": [
+        "AI-WB-errors-and-response",
+        "AI-reservation-creation-11",
+        "AI-reservation-creation-13"
+      ],
+      "requirement_ids": [
+        "application-runtime-7",
+        "application-runtime-9",
+        "reservation-creation-11"
+      ],
+      "finding": "260行零命中；现有异常方法没有BrokenPipeError/ConnectionResetError模式。后端分支计数不会列出每一种except异常。",
+      "preconditions": "隔离真实服务、独立数据库及有效身份；验证故障位于socket响应写入，不能替换dispatch或预约业务函数。",
+      "operation_matrix": [
+        "正常响应写入触发BrokenPipeError",
+        "正常响应写入触发ConnectionResetError",
+        "预约已提交、响应未收到就断开；同一请求标识与完全相同内容重试"
+      ],
+      "expected": "服务进程仍能处理后续正常请求；断开不被包装成业务成功证据；已提交预约重试返回原记录，预约和通知只各增加一条；未提交故障遵循事务回滚要求。",
+      "evidence_expected": "TCP事件或I/O依赖故障到达记录、260行命中、提交时间与断开顺序、前后独立数据库快照、健康请求及重试响应。"
+    },
+    {
+      "id": "COV-GAP-002",
+      "title": "真实CLI收到Ctrl+C后关闭监听并保持持久数据",
+      "category": "missing_lifecycle_mode",
+      "priority": "P2",
+      "status": "proposed_unexecuted",
+      "code_locations": [
+        "app/server.py:492-495"
+      ],
+      "existing_scenario_ids": [
+        "WB-runtime-entry",
+        "BB-application-runtime-4"
+      ],
+      "existing_method_ids": [
+        "AI-WB-runtime-entry",
+        "AI-application-runtime-4"
+      ],
+      "requirement_ids": [
+        "application-runtime-2",
+        "application-runtime-4"
+      ],
+      "finding": "492、493、495行零命中；现有main正常启动路径有覆盖，但子进程主要通过SIGTERM结束，未证明KeyboardInterrupt/finally。",
+      "preconditions": "真实python -m app.server子进程、新库、显式随机端口；记录PID和该进程拥有的监听。",
+      "operation_matrix": [
+        "建立一条持久业务记录→向服务PID发送SIGINT→等待退出→同库同端口重新启动"
+      ],
+      "expected": "进程正常响应中断，关闭监听；同端口可重新启动，原业务资料保持一致；不将该探针替代未完成的默认端口和Python3.11矩阵。",
+      "evidence_expected": "真实命令/PID、信号、退出码、492/493/495行计数、端口释放和重启API读回及数据库快照。"
+    },
+    {
+      "id": "COV-GAP-003",
+      "title": "三种弹窗的右侧、上下侧及矩形内空白点击",
+      "category": "existing_design_execution_gap",
+      "priority": "P2",
+      "status": "proposed_unexecuted",
+      "code_locations": [
+        "web/app.js:258 / branch85[1], branch86[1,2,3]"
+      ],
+      "existing_scenario_ids": [
+        "WB-ui-dialog-close-no-write"
+      ],
+      "existing_method_ids": [
+        "AI-WB-ui-dialog-close-no-write"
+      ],
+      "requirement_ids": [
+        "interface-experience-11",
+        "reservation-management-10"
+      ],
+      "finding": "原场景已要求矩形内外；实际外部点击集中在左上(2,2)，短路后右侧/上侧/下侧条件均未求值；内部只点击子元素，未进入event.target===dialog的矩形内空白分支。",
+      "preconditions": "分别打开booking-dialog、room-dialog、confirm-dialog；保留未提交输入；实际浏览器指针事件。",
+      "operation_matrix": [
+        "在rect右侧点击",
+        "横坐标位于rect范围、纵坐标在rect上侧点击",
+        "横坐标位于rect范围、纵坐标在rect下侧点击",
+        "矩形内dialog自身padding空白点击，确认event.target===dialog；保留左侧、子元素、X及Escape对照"
+      ],
+      "expected": "矩形外关闭；矩形内空白及子元素不关闭；所有关闭动作均不产生业务POST/PATCH，数据保持不变。",
+      "evidence_expected": "各弹窗getBoundingClientRect、事件target和clientX/Y、对应分支计数、dialog.open状态、零业务写请求和数据库快照。"
+    },
+    {
+      "id": "COV-GAP-004",
+      "title": "退出成功响应返回时仍有业务弹窗打开",
+      "category": "existing_design_execution_gap",
+      "priority": "P1",
+      "status": "proposed_unexecuted",
+      "code_locations": [
+        "web/app.js:162 / function66"
+      ],
+      "existing_scenario_ids": [
+        "WB-ui-logout-races"
+      ],
+      "existing_method_ids": [
+        "AI-WB-ui-logout-races"
+      ],
+      "requirement_ids": [
+        "identity-session-8",
+        "interface-experience-10"
+      ],
+      "finding": "162行被执行但forEach(d=>d.close())回调零命中；现有退出竞态测试退出时没有打开的弹窗，不能证明关闭逻辑。",
+      "preconditions": "采用可操作的真实UI时序：先点击退出并暂存真实成功响应，再在工作空间仍显示时打开业务弹窗，最后释放响应；不可用DOM.click绕过原生modal对背景的inert限制。",
+      "operation_matrix": [
+        "预约弹窗打开时释放退出成功响应",
+        "会议室编辑弹窗打开时释放退出成功响应",
+        "取消确认弹窗打开时释放退出成功响应；分别保留旧加载迟到对照"
+      ],
+      "expected": "所有业务弹窗关闭、回到登录；旧会话业务请求实际401；旧加载不得恢复空间，新登录不继续旧表单。",
+      "evidence_expected": "退出请求与弹窗打开/响应释放事件顺序、回调命中、dialog.open/身份状态、旧会话拒绝、实际DOM与网络证据。"
+    },
+    {
+      "id": "COV-GAP-005",
+      "title": "标记全部已读遇到真实会话失效",
+      "category": "missing_state_combination",
+      "priority": "P1",
+      "status": "proposed_unexecuted",
+      "code_locations": [
+        "web/app.js:155 / branch73[1]"
+      ],
+      "existing_scenario_ids": [
+        "WB-ui-notification-render",
+        "WB-ui-api-error-session-transition"
+      ],
+      "existing_method_ids": [
+        "AI-WB-ui-api-error-session-transition",
+        "AI-WB-ui-notification-render"
+      ],
+      "requirement_ids": [
+        "identity-session-5",
+        "interface-experience-10",
+        "notification-center-5"
+      ],
+      "finding": "catch已覆盖但state.user为null的出口未命中；现有标已读故障主要是503/网络，此时用户仍存在。",
+      "preconditions": "有未读通知的成员会话；真实会话到期或撤销；确保此次POST实际返回401，不以伪造响应证明服务器鉴权。",
+      "operation_matrix": [
+        "全部已读POST实际401→api清身份→wirePage.catch；重新合法登录作恢复对照"
+      ],
+      "expected": "清身份回登录，不在catch中重新渲染旧工作空间；被拒绝的标已读请求不改变通知；不出现虚假成功提示。",
+      "evidence_expected": "服务401、155行false出口、DOM/身份变化、通知只读快照及合法重新登录。"
+    },
+    {
+      "id": "COV-GAP-006",
+      "title": "角色更新后的身份401，以及自身降权后身份查询失败",
+      "category": "missing_state_combination",
+      "priority": "P1",
+      "status": "proposed_unexecuted",
+      "code_locations": [
+        "web/app.js:250-254 / branch83[1]"
+      ],
+      "existing_scenario_ids": [
+        "WB-ui-role-demotion-reload",
+        "BB-team-administration-7"
+      ],
+      "existing_method_ids": [
+        "AI-WB-ui-role-demotion-reload",
+        "AI-team-administration-7"
+      ],
+      "requirement_ids": [
+        "team-administration-7",
+        "identity-session-5",
+        "interface-experience-10"
+      ],
+      "finding": "254行user=null出口未命中；另外自身降权已经提交后/session的503或网络失败虽然可经过已覆盖行，却不是修改其他成员时的故障。首轮独立审阅已指出后一组合未证明。",
+      "preconditions": "先建立第二个管理员，使当前管理员可合法降为成员；直连核对真实PATCH及最终角色；前端503/网络适配器只证明UI故障处理。",
+      "operation_matrix": [
+        "成员角色PATCH实际401",
+        "PATCH完成后/session实际401",
+        "自身降权已真实提交后/session返回503→恢复并重试/刷新",
+        "自身降权已真实提交后/session网络失败→恢复并重试/刷新"
+      ],
+      "expected": "401清身份且不在catch重载旧空间；已提交角色不能假装回滚，失败明确可见；恢复重新读取身份后返回会议室页并移除管理员入口；真实服务继续拒绝降权身份的管理员操作。",
+      "evidence_expected": "PATCH提交、后续/session故障位置与时序、后台实际role、254行false出口、菜单与选中页面、恢复动作及真实鉴权。"
+    },
+    {
+      "id": "COV-GAP-007",
+      "title": "用户清空日期筛选再选择合法日期",
+      "category": "missing_input_mode",
+      "priority": "P2",
+      "status": "proposed_unexecuted",
+      "code_locations": [
+        "web/app.js:143 / branch72[1]"
+      ],
+      "existing_scenario_ids": [
+        "BB-room-discovery-2"
+      ],
+      "existing_method_ids": [
+        "AI-room-discovery-2"
+      ],
+      "requirement_ids": [
+        "room-discovery-2"
+      ],
+      "finding": "change事件value为空的出口未命中；API空日期已测试并发现缺陷，但UI清空输入是另一条guard路径。",
+      "preconditions": "会议室页面已载入一个合法日期；使用日期控件原生清空操作及change事件。",
+      "operation_matrix": [
+        "清空日期控件→观察state.date、日程和网络→重新选择合法日期"
+      ],
+      "expected": "清空动作不发送date=空字符串查询，不把非法输入作为选定业务日；随后合法日期查询与日程展示一致。空值提示或回填的具体交互未在需求中规定，本清单不新增该产品政策。",
+      "evidence_expected": "控件值、state.date、change事件、143行false出口、请求参数及日程展示/恢复。"
+    },
+    {
+      "id": "COV-GAP-008",
+      "title": "API未支持的HTTP方法穿过标准库入口",
+      "category": "scope_gap_outside_instrumented_file",
+      "priority": "P1",
+      "status": "proposed_unexecuted",
+      "code_locations": [
+        "BaseHTTPRequestHandler.handle_one_request / unsupported do_METHOD",
+        "app/server.py:Handler HTTP方法入口"
+      ],
+      "existing_scenario_ids": [
+        "BB-application-runtime-7",
+        "WB-route-authorizations"
+      ],
+      "existing_method_ids": [
+        "AI-WB-route-authorizations",
+        "AI-application-runtime-7",
+        "AI-storage-exception-boundary"
+      ],
+      "requirement_ids": [
+        "application-runtime-7",
+        "identity-session-5"
+      ],
+      "finding": "应用文件branch100%不包含继承的标准库HTTP分派；DELETE/OPTIONS/PUT没有进入dispatch。额外独立诊断45次真实请求均501 text/html，而非稳定JSON错误；该新增探针未进入原有测试覆盖率。",
+      "preconditions": "隔离真实HTTP服务，匿名、成员、管理员三种身份；有效同源和请求标识；不伪造API返回。",
+      "operation_matrix": [
+        "DELETE/OPTIONS/PUT × 匿名/成员/管理员 × /api/health、/api/rooms、/api/bookings、/api/members、/api/unknown"
+      ],
+      "expected": "拒绝方法保持符合现有API错误契约的JSON error/code，不做业务写入；授权判断与方法拒绝的具体优先级不擅自新增要求。",
+      "evidence_expected": "真实状态码、Content-Type、JSON结构与稳定code、业务数据库前后快照；标准库入口到达记录与应用dispatch未进入的说明。"
+    }
+  ],
+  "defensive_paths": [
+    {
+      "id": "COV-DEF-001",
+      "location": "web/app.js:56 / branch9[1]",
+      "title": "登录catch找不到反馈DOM",
+      "reason": "正常登录页保留目标节点；当前未证明可通过约定UI到达。先做可达性分析，必要时增加DOM契约/故障测试。",
+      "status": "uncovered_reachability_or_defensive_test_pending"
+    },
+    {
+      "id": "COV-DEF-002",
+      "location": "web/app.js:81 / branch20[0]",
+      "title": "renderShell在user为空时提前返回",
+      "reason": "正常调用者已检查身份；可直接调用辅助函数验证guard，但不能当作真实业务场景通过。",
+      "status": "uncovered_reachability_or_defensive_test_pending"
+    },
+    {
+      "id": "COV-DEF-003",
+      "location": "web/app.js:95-96 / branch33[1]",
+      "title": "非法内部page枚举的默认内容",
+      "reason": "所有导航入口使用固定合法枚举；单独内部状态防御测试，不对应新增业务需求。",
+      "status": "uncovered_reachability_or_defensive_test_pending"
+    },
+    {
+      "id": "COV-DEF-004",
+      "location": "web/app.js:99 / branch34[0]",
+      "title": "heading省略aside默认参数",
+      "reason": "当前生产调用均传入参数；可作辅助函数测试，不能据此认定主要业务功能漏测。",
+      "status": "uncovered_reachability_or_defensive_test_pending"
+    },
+    {
+      "id": "COV-DEF-005",
+      "location": "web/app.js:107 / branch37[1]",
+      "title": "中文Intl日期没有星期后缀的fallback",
+      "reason": "当前Chromium格式输出满足既定格式；需先确认支持环境是否有不同输出，再设计真实环境或明确的格式依赖故障测试。",
+      "status": "uncovered_reachability_or_defensive_test_pending"
+    }
+  ]
+}

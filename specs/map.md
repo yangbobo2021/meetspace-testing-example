@@ -2,6 +2,7 @@
 
 本阶段从 `stage-01-implemented`（`32306826ae8531d03d84d4465d51d419783a5d8a`）逆向整理候选需求。
 用户于 2026-10-08 确认 `stage-02-requirements`（`12d503a`）全部 96 条需求作为黑盒场景设计基线，见 [DR-002](decisions/002-black-box-baseline-confirmation.md)。
+用户已按 [DR-004](decisions/004-login-window-endpoint.md) 补充 identity-session-9 的精确六十秒端点；其余 95 条正文保持不变。
 验证章节保留需求阶段占位；黑盒场景与审阅台账存放于 `tests/delivery-acceptance/`，本阶段不执行应用测试。
 规约正文集中在 `packages/`；旧的 `docs/requirements.md` 仅保留迁移入口与旧 ID 对照。
 
@@ -27,6 +28,7 @@ meta.md       结构、语法与引用规范
 | [DR-001](decisions/001-reverse-engineered-requirements.md) | 001-reverse-engineered-requirements.md | 逆向来源、范围、状态与旧 ID 迁移 |
 | [DR-002](decisions/002-black-box-baseline-confirmation.md) | 002-black-box-baseline-confirmation.md | 用户确认 96 条需求及黑盒设计范围 |
 | [DR-003](decisions/003-black-box-design-review.md) | 003-black-box-design-review.md | 黑盒设计产出、三轮独立审阅及剩余不足 |
+| [DR-004](decisions/004-login-window-endpoint.md) | 004-login-window-endpoint.md | 六十秒窗口端点确认与续轮基线 |
 
 ## 规约包
 

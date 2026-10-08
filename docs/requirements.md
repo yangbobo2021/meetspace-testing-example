@@ -37,3 +37,5 @@
 | RUN-01 | [application-runtime-4](../specs/packages/application-runtime.md#application-runtime-4)、[application-runtime-5](../specs/packages/application-runtime.md#application-runtime-5) |
 | RUN-02 | [interface-experience-4](../specs/packages/interface-experience.md#interface-experience-4)、[interface-experience-7](../specs/packages/interface-experience.md#interface-experience-7)、[interface-experience-8](../specs/packages/interface-experience.md#interface-experience-8)、[interface-experience-9](../specs/packages/interface-experience.md#interface-experience-9) |
 | RUN-03 | [interface-experience-11](../specs/packages/interface-experience.md#interface-experience-11)、[interface-experience-12](../specs/packages/interface-experience.md#interface-experience-12)、[interface-experience-13](../specs/packages/interface-experience.md#interface-experience-13)、[interface-experience-14](../specs/packages/interface-experience.md#interface-experience-14) |
+
+当前基线在上述 96 条需求上仅补充 identity-session-9 的六十秒窗口端点，用户确认见 [DR-004](../specs/decisions/004-login-window-endpoint.md)。

@@ -1,0 +1,19 @@
+{
+  "revision": "0b386b4bd37b01eb996c5e74215ab1a4463a9487",
+  "role": "Tester; execution notes, not independent evidence review",
+  "r1_aggregation_correction": {
+    "members": "r1 把同一个组合group的两项role=[]/{}预期400实际500失败复制给所有关联方法。真实失败只适用于角色值合法性AI-team-administration-3与AI-WB-member-select-role-guards；列表/权限/不存在ID方法的请求实际全部达到自身期望，r2单独分配其状态。保留原api/members.json。",
+    "room-read-dates": "r1同group把date=预期400实际200附带传播到房间团队集合/反序列化方法；r2仍将AI-room-discovery-2判failed，集合/字段验证按其自己的成功断言判定。保留原api/room-read-dates.json。",
+    "precision": "r1与r2均失败。confirmed/cancelled/started三个状态下start+1微秒和end+1微秒共6项错误201重放；-1微秒则进入前一秒指纹而拒绝，不将6个成功拒绝或等价时区重放抵消6个反例。",
+    "harness_retry": "r1通知N=0时尝试点击disabled全部已读按钮导致工具Timeout，方法unproven。r2先判按钮是否enabled；空集合通过实际同源API执行已授权动作，其余N=1/99/100/101/105完整执行UI操作。无应用源码变化，无应用失败改判。"
+  },
+  "method_complete_basis": {
+    "horizon": "S固定2030-04-11 10:00，now=S−1/S/S+1/S−30d/S−30d−1/S−30d+1六分支×浏览器偏移0/−1d/+1d，每项新UI登录、直连实际HTTP、失败独立快照。",
+    "idempotency": "normal/past/disabled/capacity/cancelled状态×原文/trim/等价UTC重放；每状态逐维room/title/start/end/attendees冲突拒绝；首次同key同内容及不同内容真实线程屏障竞争；不同用户同key独立。cancel-replay另包含释放给V后原单重放及原开始后重放。",
+    "concurrency": "真实HTTP线程屏障并发：重叠/相邻、同key同/异内容、双取消、最后管理员互降/自降、room CC/EE/CE及交换方向；保存连接级SQL与请求纳秒顺序。",
+    "notifications": "N=0/1/99/100/101/105真实创建/取消生成，部分已读再生成，返回最新100精确ID顺序、全部已读读前后ID不变；105全量持久快照含最旧5验证；V隔离、重复操作、后续新通知未读；真实徽标100/0/3截图。",
+    "stale_UI": "真实打开预约弹窗后管理员停用/降容，旧表单真实提交后实际错误响应和持久快照；降容修正人数后UI创建；禁用成员入口消失，管理页可编辑。",
+    "privacy": "U/V/A/B实际API和真实展开日程截图；V晋升/降级立即改变API主题及UI显示。",
+    "day_intersections": "停止serve_forever后用真实合法记录/schema作为fixture模板创建H1-H6历史跨午夜与两个同室逆序历史记录；integrity_check和foreign_key_check后重新serve；三日半开交集以及每房开始升序逐项对照。"
+  }
+}

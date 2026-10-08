@@ -2,7 +2,7 @@
 
 本项目由 Codex 为“已有项目在发布前补充测试”的教学场景新建，是自建的完整本地应用，不是从某个真实客户项目接手，也不是已发布的开源产品。业务账号、团队和数据均为合成示例。
 
-交接版本为 **1.0.0-rc.1**：主要功能已实现，有少量原有冒烟测试，尚未完成系统发布验收。不能凭这三个测试通过认定版本可发布。没有故意植入故障，也不预设测试 Skill 一定发现严重缺陷。
+最初交接版本为 **1.0.0-rc.1**：主要功能已实现，当时有少量原有冒烟测试，尚未完成系统发布验收。不能凭这三个测试通过认定版本可发布。没有故意植入故障，也不预设测试 Skill 一定发现严重缺陷。
 
 ## 启动
 
@@ -64,12 +64,12 @@ python3 -m unittest discover -s tests -v
 ## 接手做发布验收
 
 1. 阅读 [需求规约地图](specs/map.md) 和 [版本交接](docs/release-handoff.md)。用户已确认 `stage-02-requirements`（`12d503a`）全部 96 条需求作为黑盒场景设计基线，见 [DR-002](specs/decisions/002-black-box-baseline-confirmation.md)。登录窗口精确六十秒端点随后按 [DR-004](specs/decisions/004-login-window-endpoint.md) 补充。
-2. 用户已选择 `tests` 目录；由 `app-delivery-acceptance` Skill 在 `tests/delivery-acceptance/` 保存需求快照、设计和独立审阅场景。当前授权限于场景设计；现有 96 个场景、105 个方法，全部 96 条需求经独立审阅判定充分，设计门禁 `black_box_ready`，见 [DR-005](specs/decisions/005-black-box-design-ready.md)。
-   白盒设计已新增 63 个场景、63 个方法，独立审阅及补充设计结构检查通过；合计 159 个场景、168 个方法，见 [DR-006](specs/decisions/006-white-box-design-review.md)。实际资源与应用路径尚未验证。
+2. 用户已选择 `tests` 目录；由 `app-delivery-acceptance` Skill 在 `tests/delivery-acceptance/` 保存需求快照、设计和独立审阅场景。黑盒设计阶段有 96 个场景、105 个方法，全部 96 条需求经独立审阅判定充分，设计门禁 `black_box_ready`，见 [DR-005](specs/decisions/005-black-box-design-ready.md)。
+   白盒设计已新增 63 个场景、63 个方法，独立审阅及补充设计结构检查通过；合计 159 个场景、168 个方法，见 [DR-006](specs/decisions/006-white-box-design-review.md)。随后用户授权执行完整验收，见 [DR-007](specs/decisions/007-first-release-acceptance.md)。
 3. 固定 Git 修订和数据库初始状态，执行实际界面、API 和必要的实现检查，保存证据。
 4. 根据事实输出通过、失败、未覆盖和受阻项。测试流程不修改应用代码；发现缺陷后在开发流程中修复，再对新修订复测。
 
-完整验收还没有执行，本仓库没有伪造全量通过报告。测试 Skill 需要 Node.js 和 Playbook；它们不是应用运行依赖。
+首轮完整验收已执行，**结果未通过，不建议发布当前版本**。正式独立审阅 139 项通过、9 项失败、11 项未证明；9 个失败场景对应空日期、微秒重放、迟到401、通知时间缺失四类缺陷。另有两组新增覆盖缺口及环境观测限制，详见 [首轮验收档案](tests/snapshots/stage-06-acceptance-run/README.md)。应用和原测试均未修改，后续需修复并针对新修订复测。测试 Skill 需要 Node.js 和 Playbook；它们不是应用运行依赖。
 
 ## GitHub 阶段对比
 
@@ -81,7 +81,8 @@ python3 -m unittest discover -s tests -v
 - `stage-03-black-box-scenarios` 保存[黑盒设计公开档案](tests/snapshots/stage-03-black-box-scenarios/README.md)：96 个场景、102 个方法，三轮独立审阅后 92 条需求充分、4 条有缺口，设计门禁 blocked；未执行应用测试。
 - `stage-04-black-box-ready` 保存[修订后设计公开档案](tests/snapshots/stage-04-black-box-ready/README.md)：按用户决定补充需求端点，96 个场景、105 个方法，全部 96 条需求充分，独立审阅与确定性设计门禁通过；未执行应用测试。
 - `stage-05-white-box-scenarios` 保存[白盒设计公开档案](tests/snapshots/stage-05-white-box-scenarios/README.md)：新增 63 个白盒场景、63 个方法，全部独立审阅充分，合计 159 个场景、168 个方法；本次仅设计，未启动完整编译验收流程或执行应用测试。
-- 后续补测、修复和验收完成时分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
+- `stage-06-acceptance-run` 保存[首轮验收公开档案](tests/snapshots/stage-06-acceptance-run/README.md)：完整工作流真实执行和独立审阅；139 通过、9 失败、11 未证明，验收 incomplete，应用代码保持不变。
+- 后续修复和复测分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：
 
@@ -97,7 +98,7 @@ git diff stage-01-implemented..HEAD
 app/server.py           HTTP API、权限、预约业务及 SQLite
 web/                    中文响应式操作界面
 tests/test_smoke.py      原有少量冒烟测试
-tests/snapshots/         不可变的各阶段测试设计档案
+tests/snapshots/         不可变的各阶段设计与验收档案
 specs/map.md            需求入口与规约索引
 specs/meta.md           沿用自行车项目的存储与语法规范
 specs/packages/         按业务意图拆分的需求条目

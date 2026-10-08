@@ -1,0 +1,3187 @@
+{
+  "method_ids": [
+    "AI-reservation-management-5",
+    "AI-reservation-management-6",
+    "AI-reservation-management-9",
+    "AI-WB-cancel-authorization-and-clock"
+  ],
+  "checks": [
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-184"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104805301208,
+        "end_ns": 1676104807698708,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1676104808041791,
+        "end_ns": 1676104809668000,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-185"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104810053208,
+        "end_ns": 1676104811706416,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1676104812081166,
+        "end_ns": 1676104813452166,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-186"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104813776541,
+        "end_ns": 1676104815239375,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "V",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 403,
+        "body": {
+          "error": "只能取消自己的预约",
+          "code": "forbidden"
+        },
+        "start_ns": 1676104815506416,
+        "end_ns": 1676104816895166,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "越权取消不变量",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-187"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104817899625,
+        "end_ns": 1676104820308708,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "B",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 404,
+        "body": {
+          "error": "预约不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1676104820709916,
+        "end_ns": 1676104821965375,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "越权取消不变量",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-188"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104822842333,
+        "end_ns": 1676104824787291,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": "admin"
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1676104824823000,
+        "end_ns": 1676104825929875,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "V",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1676104825956958,
+        "end_ns": 1676104827219041,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-189"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104827565166,
+        "end_ns": 1676104828964750,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": "member"
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1676104828994000,
+        "end_ns": 1676104830215666,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "V",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 403,
+        "body": {
+          "error": "只能取消自己的预约",
+          "code": "forbidden"
+        },
+        "start_ns": 1676104830250041,
+        "end_ns": 1676104831426583,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-190"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104831792916,
+        "end_ns": 1676104833264833,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1676104833594583,
+        "end_ns": 1676104835100833,
+        "server_clock": "2030-04-11T09:59:59+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-191"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104835613875,
+        "end_ns": 1676104838897333,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 409,
+        "body": {
+          "error": "已经开始的预约不能取消",
+          "code": "booking_started"
+        },
+        "start_ns": 1676104839210958,
+        "end_ns": 1676104840715083,
+        "server_clock": "2030-04-11T10:00:00+08:00"
+      }
+    },
+    {
+      "label": "开始后不释放不通知",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-192"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104841719125,
+        "end_ns": 1676104843990666,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 409,
+        "body": {
+          "error": "已经开始的预约不能取消",
+          "code": "booking_started"
+        },
+        "start_ns": 1676104844418500,
+        "end_ns": 1676104846196791,
+        "server_clock": "2030-04-11T10:30:00+08:00"
+      }
+    },
+    {
+      "label": "开始后不释放不通知",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-193"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104849809958,
+        "end_ns": 1676104853088833,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 409,
+        "body": {
+          "error": "已经开始的预约不能取消",
+          "code": "booking_started"
+        },
+        "start_ns": 1676104853657208,
+        "end_ns": 1676104855524875,
+        "server_clock": "2030-04-11T11:00:00+08:00"
+      }
+    },
+    {
+      "label": "开始后不释放不通知",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-194"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104856449875,
+        "end_ns": 1676104858077500,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 409,
+        "body": {
+          "error": "已经开始的预约不能取消",
+          "code": "booking_started"
+        },
+        "start_ns": 1676104858339291,
+        "end_ns": 1676104859698000,
+        "server_clock": "2030-04-11T11:00:01+08:00"
+      }
+    },
+    {
+      "label": "开始后不释放不通知",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "B",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 5,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-195"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104860588583,
+        "end_ns": 1676104863118333,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 404,
+        "body": {
+          "error": "预约不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1676104863418916,
+        "end_ns": 1676104864698041,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/999999/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings/999999/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 404,
+        "body": {
+          "error": "预约不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1676104864741916,
+        "end_ns": 1676104865886666,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "跨队及不存在不变",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 2,
+            "room_id": 5,
+            "user_id": 4,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 4,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：海风 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-196"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104869401708,
+        "end_ns": 1676104871364375,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1676104871698625,
+        "end_ns": 1676104873079625,
+        "server_clock": "2030-04-11T09:59:59+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-197"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104873504875,
+        "end_ns": 1676104875055166,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 409,
+        "body": {
+          "error": "已经开始的预约不能取消",
+          "code": "booking_started"
+        },
+        "start_ns": 1676104875304291,
+        "end_ns": 1676104876585166,
+        "server_clock": "2030-04-11T10:00:00+08:00"
+      }
+    },
+    {
+      "label": "开始后不释放不通知",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-198"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104877303208,
+        "end_ns": 1676104878652916,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 409,
+        "body": {
+          "error": "已经开始的预约不能取消",
+          "code": "booking_started"
+        },
+        "start_ns": 1676104878893500,
+        "end_ns": 1676104880064750,
+        "server_clock": "2030-04-11T10:30:00+08:00"
+      }
+    },
+    {
+      "label": "开始后不释放不通知",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-199"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104880792666,
+        "end_ns": 1676104882150750,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 409,
+        "body": {
+          "error": "已经开始的预约不能取消",
+          "code": "booking_started"
+        },
+        "start_ns": 1676104882431500,
+        "end_ns": 1676104883623791,
+        "server_clock": "2030-04-11T11:00:00+08:00"
+      }
+    },
+    {
+      "label": "开始后不释放不通知",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-200"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104884531958,
+        "end_ns": 1676104887337583,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 409,
+        "body": {
+          "error": "已经开始的预约不能取消",
+          "code": "booking_started"
+        },
+        "start_ns": 1676104887760416,
+        "end_ns": 1676104889659166,
+        "server_clock": "2030-04-11T11:00:01+08:00"
+      }
+    },
+    {
+      "label": "开始后不释放不通知",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：云杉 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "B",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 5,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-201"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1676104890549166,
+        "end_ns": 1676104892350833,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/1/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings/1/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 404,
+        "body": {
+          "error": "预约不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1676104892619041,
+        "end_ns": 1676104893967500,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings/999999/cancel status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings/999999/cancel",
+        "method": "POST",
+        "input": {},
+        "status": 404,
+        "body": {
+          "error": "预约不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1676104893994500,
+        "end_ns": 1676104895295750,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "跨队及不存在不变",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 2,
+            "room_id": 5,
+            "user_id": 4,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 4,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：海风 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    }
+  ],
+  "http": [
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-184"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104805301208,
+      "end_ns": 1676104807698708,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1676104808041791,
+      "end_ns": 1676104809668000,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-185"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104810053208,
+      "end_ns": 1676104811706416,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1676104812081166,
+      "end_ns": 1676104813452166,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-186"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104813776541,
+      "end_ns": 1676104815239375,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "V",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 403,
+      "body": {
+        "error": "只能取消自己的预约",
+        "code": "forbidden"
+      },
+      "start_ns": 1676104815506416,
+      "end_ns": 1676104816895166,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-187"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104817899625,
+      "end_ns": 1676104820308708,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 404,
+      "body": {
+        "error": "预约不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1676104820709916,
+      "end_ns": 1676104821965375,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-188"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104822842333,
+      "end_ns": 1676104824787291,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": "admin"
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1676104824823000,
+      "end_ns": 1676104825929875,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "V",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1676104825956958,
+      "end_ns": 1676104827219041,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-189"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104827565166,
+      "end_ns": 1676104828964750,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": "member"
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1676104828994000,
+      "end_ns": 1676104830215666,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "V",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 403,
+      "body": {
+        "error": "只能取消自己的预约",
+        "code": "forbidden"
+      },
+      "start_ns": 1676104830250041,
+      "end_ns": 1676104831426583,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-190"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104831792916,
+      "end_ns": 1676104833264833,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1676104833594583,
+      "end_ns": 1676104835100833,
+      "server_clock": "2030-04-11T09:59:59+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-191"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104835613875,
+      "end_ns": 1676104838897333,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 409,
+      "body": {
+        "error": "已经开始的预约不能取消",
+        "code": "booking_started"
+      },
+      "start_ns": 1676104839210958,
+      "end_ns": 1676104840715083,
+      "server_clock": "2030-04-11T10:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-192"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104841719125,
+      "end_ns": 1676104843990666,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 409,
+      "body": {
+        "error": "已经开始的预约不能取消",
+        "code": "booking_started"
+      },
+      "start_ns": 1676104844418500,
+      "end_ns": 1676104846196791,
+      "server_clock": "2030-04-11T10:30:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-193"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104849809958,
+      "end_ns": 1676104853088833,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 409,
+      "body": {
+        "error": "已经开始的预约不能取消",
+        "code": "booking_started"
+      },
+      "start_ns": 1676104853657208,
+      "end_ns": 1676104855524875,
+      "server_clock": "2030-04-11T11:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-194"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104856449875,
+      "end_ns": 1676104858077500,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 409,
+      "body": {
+        "error": "已经开始的预约不能取消",
+        "code": "booking_started"
+      },
+      "start_ns": 1676104858339291,
+      "end_ns": 1676104859698000,
+      "server_clock": "2030-04-11T11:00:01+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 5,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-195"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104860588583,
+      "end_ns": 1676104863118333,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 404,
+      "body": {
+        "error": "预约不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1676104863418916,
+      "end_ns": 1676104864698041,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings/999999/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 404,
+      "body": {
+        "error": "预约不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1676104864741916,
+      "end_ns": 1676104865886666,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/bookings",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "bookings": [
+          {
+            "id": 1,
+            "room_id": 5,
+            "user_id": 4,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "room_name": "海风",
+            "location": "1F · 靠窗",
+            "owner": "许宁"
+          }
+        ]
+      },
+      "start_ns": 1676104866341375,
+      "end_ns": 1676104867662166,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/notifications",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 4,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：海风 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ]
+      },
+      "start_ns": 1676104867695166,
+      "end_ns": 1676104868807458,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-196"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104869401708,
+      "end_ns": 1676104871364375,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1676104871698625,
+      "end_ns": 1676104873079625,
+      "server_clock": "2030-04-11T09:59:59+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-197"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104873504875,
+      "end_ns": 1676104875055166,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 409,
+      "body": {
+        "error": "已经开始的预约不能取消",
+        "code": "booking_started"
+      },
+      "start_ns": 1676104875304291,
+      "end_ns": 1676104876585166,
+      "server_clock": "2030-04-11T10:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-198"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104877303208,
+      "end_ns": 1676104878652916,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 409,
+      "body": {
+        "error": "已经开始的预约不能取消",
+        "code": "booking_started"
+      },
+      "start_ns": 1676104878893500,
+      "end_ns": 1676104880064750,
+      "server_clock": "2030-04-11T10:30:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-199"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104880792666,
+      "end_ns": 1676104882150750,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 409,
+      "body": {
+        "error": "已经开始的预约不能取消",
+        "code": "booking_started"
+      },
+      "start_ns": 1676104882431500,
+      "end_ns": 1676104883623791,
+      "server_clock": "2030-04-11T11:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-200"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104884531958,
+      "end_ns": 1676104887337583,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 409,
+      "body": {
+        "error": "已经开始的预约不能取消",
+        "code": "booking_started"
+      },
+      "start_ns": 1676104887760416,
+      "end_ns": 1676104889659166,
+      "server_clock": "2030-04-11T11:00:01+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 5,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-201"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1676104890549166,
+      "end_ns": 1676104892350833,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings/1/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 404,
+      "body": {
+        "error": "预约不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1676104892619041,
+      "end_ns": 1676104893967500,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings/999999/cancel",
+      "method": "POST",
+      "input": {},
+      "status": 404,
+      "body": {
+        "error": "预约不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1676104893994500,
+      "end_ns": 1676104895295750,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/bookings",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "bookings": [
+          {
+            "id": 1,
+            "room_id": 5,
+            "user_id": 4,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 2,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "room_name": "海风",
+            "location": "1F · 靠窗",
+            "owner": "许宁"
+          }
+        ]
+      },
+      "start_ns": 1676104895791375,
+      "end_ns": 1676104897151875,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/notifications",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 4,
+            "booking_id": 1,
+            "message": "「合成矩阵会议」预约成功：海风 · –11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ]
+      },
+      "start_ns": 1676104897176083,
+      "end_ns": 1676104898273791,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    }
+  ],
+  "gap": "",
+  "executed_source_lines": [
+    58,
+    59,
+    63,
+    77,
+    79,
+    83,
+    84,
+    86,
+    90,
+    91,
+    92,
+    94,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    120,
+    173,
+    176,
+    179,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    193,
+    194,
+    195,
+    198,
+    200,
+    201,
+    203,
+    205,
+    206,
+    207,
+    209,
+    210,
+    212,
+    217,
+    218,
+    219,
+    220,
+    223,
+    226,
+    227,
+    229,
+    233,
+    237,
+    238,
+    239,
+    240,
+    242,
+    246,
+    247,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    312,
+    313,
+    315,
+    320,
+    333,
+    334,
+    335,
+    337,
+    339,
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365,
+    366,
+    369,
+    373,
+    374,
+    375,
+    376,
+    377,
+    379,
+    380,
+    382,
+    386,
+    387,
+    413,
+    438,
+    439,
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    450,
+    451,
+    453,
+    455,
+    456,
+    458,
+    460,
+    461,
+    463,
+    465,
+    467,
+    468,
+    470,
+    473,
+    474,
+    475,
+    479
+  ],
+  "final_snapshot": {
+    "bookings": [
+      {
+        "id": 1,
+        "team_id": 2,
+        "room_id": 5,
+        "user_id": 4,
+        "title": "合成矩阵会议",
+        "start": "2030-04-11T02:00:00+00:00",
+        "end": "2030-04-11T03:00:00+00:00",
+        "attendees": 2,
+        "status": "confirmed",
+        "created_at": "2030-04-10T01:00:00+00:00",
+        "cancelled_at": null
+      }
+    ],
+    "notifications": [
+      {
+        "id": 1,
+        "user_id": 4,
+        "booking_id": 1,
+        "message": "「合成矩阵会议」预约成功：海风 · –11:00。",
+        "created_at": "2030-04-10T01:00:00+00:00",
+        "read": 0
+      }
+    ],
+    "rooms": [
+      {
+        "id": 1,
+        "team_id": 1,
+        "name": "云杉",
+        "location": "3F · 东侧",
+        "capacity": 8,
+        "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+        "active": 1
+      },
+      {
+        "id": 2,
+        "team_id": 1,
+        "name": "白桦",
+        "location": "3F · 西侧",
+        "capacity": 4,
+        "equipment": "[\"显示屏\", \"白板\"]",
+        "active": 1
+      },
+      {
+        "id": 3,
+        "team_id": 1,
+        "name": "银杏",
+        "location": "2F · 开放区",
+        "capacity": 12,
+        "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+        "active": 1
+      },
+      {
+        "id": 4,
+        "team_id": 1,
+        "name": "青松",
+        "location": "2F · 北侧",
+        "capacity": 6,
+        "equipment": "[\"白板\", \"电话会议\"]",
+        "active": 1
+      },
+      {
+        "id": 5,
+        "team_id": 2,
+        "name": "海风",
+        "location": "1F · 靠窗",
+        "capacity": 6,
+        "equipment": "[\"白板\"]",
+        "active": 1
+      }
+    ],
+    "roles": [
+      {
+        "id": 1,
+        "team_id": 1,
+        "role": "admin"
+      },
+      {
+        "id": 2,
+        "team_id": 1,
+        "role": "member"
+      },
+      {
+        "id": 3,
+        "team_id": 1,
+        "role": "member"
+      },
+      {
+        "id": 4,
+        "team_id": 2,
+        "role": "admin"
+      }
+    ]
+  }
+}

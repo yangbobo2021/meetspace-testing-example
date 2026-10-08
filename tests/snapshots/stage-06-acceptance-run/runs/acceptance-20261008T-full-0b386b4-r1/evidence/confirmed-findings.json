@@ -1,0 +1,67 @@
+{
+  "revision": "0b386b4bd37b01eb996c5e74215ab1a4463a9487",
+  "findings": [
+    {
+      "id": "F-date-empty",
+      "actual": "显式 ?date= 返回200并回退今天，未拒绝非法空日期。",
+      "scenario_ids": [
+        "BB-room-discovery-2",
+        "WB-day-range-intersection"
+      ],
+      "evidence": [
+        "evidence/api-r2/room-read-dates.json"
+      ]
+    },
+    {
+      "id": "F-idempotency-microsecond",
+      "actual": "已有请求标识的起止绝对时刻增加1微秒仍返回replayed成功；等价时刻重放对照不能抵消不同时间的失败。",
+      "scenario_ids": [
+        "WB-idempotency-absolute-precision",
+        "WB-idempotency-priority",
+        "BB-reservation-creation-12"
+      ],
+      "evidence": [
+        "evidence/api-r2/precision.json"
+      ]
+    },
+    {
+      "id": "F-role-container",
+      "actual": "非法角色数组或对象返回500 internal_error，未按非法角色请求返回400。",
+      "scenario_ids": [
+        "BB-team-administration-3",
+        "WB-member-select-role-guards"
+      ],
+      "evidence": [
+        "evidence/api-r2/members.json"
+      ]
+    },
+    {
+      "id": "F-stale-401",
+      "actual": "旧身份实际401暂存；新身份登录且业务和session返回200后释放旧401，UI仍被清空回登录，但新服务端session继续200。",
+      "scenario_ids": [
+        "WB-ui-load-token-races",
+        "BB-interface-experience-3"
+      ],
+      "evidence": [
+        "evidence/ui-races/old401-new-session.json",
+        "evidence/ui-races/old401-new-session-N-valid-before-O401.png",
+        "evidence/ui-races/old401-new-session-after-O401.png"
+      ]
+    },
+    {
+      "id": "F-notification-runtime-format",
+      "actual": "Python3.12.4真实未注入时钟的应用通知缺少月日和开始10:00，只剩“· –11:00”；Python3.14.2对照完整，不抵消3.12目标失败。",
+      "scenario_ids": [
+        "BB-notification-center-1",
+        "BB-reservation-creation-10",
+        "WB-booking-insert-notify"
+      ],
+      "evidence": [
+        "evidence/notification-runtime-control/results.json",
+        "evidence/notification-runtime-control/python312-notification.png",
+        "evidence/notification-runtime-control/python314-notification.png",
+        "evidence/api-r2/creation-views.json"
+      ]
+    }
+  ]
+}

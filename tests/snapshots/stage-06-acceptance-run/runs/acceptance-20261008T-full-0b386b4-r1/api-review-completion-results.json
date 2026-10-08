@@ -1,0 +1,99 @@
+{
+  "revision": "0b386b4bd37b01eb996c5e74215ab1a4463a9487",
+  "environment": {
+    "platform": "macOS-15.3.1-arm64-arm-64bit",
+    "python": "3.12.4 | packaged by Anaconda, Inc. | (main, Jun 18 2024, 10:07:17) [Clang 14.0.6 ]",
+    "base_url": "http://127.0.0.1:63411",
+    "database": "isolated synthetic SQLite",
+    "clock_adapter": "app.datetime.now + app.time.time; browser page.clock fixed separately",
+    "source_sha256": "d108a24c318d51607d22a9bedfab77e8e9911a04c7df535a5882698d1e3963e4",
+    "integration_mode": "real local app, no remote integrations; clock adapter only"
+  },
+  "method_results": [
+    {
+      "method_id": "AI-reservation-creation-2",
+      "status": "passed",
+      "actual": "102 assertions, 0 failed. ",
+      "evidence": [
+        "evidence/api-review-completion/booking-fields.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-fields-guards",
+      "status": "passed",
+      "actual": "102 assertions, 0 failed. ",
+      "evidence": [
+        "evidence/api-review-completion/booking-fields.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-4",
+      "status": "passed",
+      "actual": "130 assertions, 0 failed. ",
+      "evidence": [
+        "evidence/api-review-completion/room-uniqueness.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-room-name-unique-concurrency",
+      "status": "passed",
+      "actual": "130 assertions, 0 failed. ",
+      "evidence": [
+        "evidence/api-review-completion/room-uniqueness.json"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_id": "BB-reservation-creation-2",
+      "status": "passed",
+      "method_ids": [
+        "AI-reservation-creation-2"
+      ],
+      "actual": "完整重跑原矩阵及Reviewer指出遗漏分支；各断言达到预期。待独立审阅，不自我批准。",
+      "evidence": [
+        "evidence/api-review-completion/booking-fields.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-4",
+      "status": "passed",
+      "method_ids": [
+        "AI-space-administration-4"
+      ],
+      "actual": "完整重跑原矩阵及Reviewer指出遗漏分支；各断言达到预期。待独立审阅，不自我批准。",
+      "evidence": [
+        "evidence/api-review-completion/room-uniqueness.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-fields-guards",
+      "status": "passed",
+      "method_ids": [
+        "AI-WB-booking-fields-guards"
+      ],
+      "actual": "完整重跑原矩阵及Reviewer指出遗漏分支；各断言达到预期。待独立审阅，不自我批准。",
+      "evidence": [
+        "evidence/api-review-completion/booking-fields.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-room-name-unique-concurrency",
+      "status": "passed",
+      "method_ids": [
+        "AI-WB-room-name-unique-concurrency"
+      ],
+      "actual": "完整重跑原矩阵及Reviewer指出遗漏分支；各断言达到预期。待独立审阅，不自我批准。",
+      "evidence": [
+        "evidence/api-review-completion/room-uniqueness.json"
+      ]
+    }
+  ],
+  "execution_notes": [
+    "仅执行，未做独立审阅。r2完整保留。",
+    "空间R2在所有竞争基线通过真实PATCH停用，保留已有预约；A/V不同账号与独立浏览器cookie容器，经真实接口提升V管理员。",
+    "CC/EE/CE每种都线程屏障并发并交换作业顺序；另显式顺序对照覆盖新增先赢/编辑先赢。",
+    "9次真实新app.server进程同SQLite库重启读回，日志记录PID/快照；新进程运行真实OS时钟，查询指定2030日期。",
+    "预约字段原单字段边界矩阵完整重跑，另四字段全部6种双无效组合，以具体错误与业务无副作用断言。"
+  ]
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#153d32">
+  <title>MeetSpace · 给好想法一个空间</title>
+  <meta name="description" content="团队会议室预约、日程与空间管理。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23153d32'/%3E%3Cpath d='M10 28V12h5l5 8 5-8h5v16h-5V20l-5 7-5-7v8z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <div id="app"><div class="loading-screen">MeetSpace 正在加载…</div></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="booking-dialog" aria-labelledby="booking-title">
+    <form id="booking-form">
+      <div class="dialog-top"><span class="eyebrow">BOOK A SPACE</span><button class="icon-btn" type="button" data-close aria-label="关闭预约窗口">×</button></div>
+      <h2 id="booking-title">预约会议室</h2><p id="booking-subtitle" class="muted"></p>
+      <label>会议主题<input name="title" maxlength="100" placeholder="例如：新产品设计评审" required></label>
+      <div class="form-grid"><label>日期<input name="date" type="date" required></label><label>参会人数<input name="attendees" type="number" min="1" max="100" value="2" required></label></div>
+      <div class="form-grid"><label>开始时间<input name="start" type="time" min="08:00" max="19:45" step="900" required></label><label>结束时间<input name="end" type="time" min="08:15" max="20:00" step="900" required></label></div>
+      <p class="form-note">开放时间 08:00–20:00 · 最短 15 分钟，最长 8 小时<br>所有时间均为北京时间（UTC+8）。</p>
+      <p id="booking-error" class="form-error" role="alert"></p>
+      <button type="submit" class="button primary full">确认预约 <span aria-hidden="true">↗</span></button>
+    </form>
+  </dialog>
+  <dialog id="room-dialog" aria-labelledby="room-title">
+    <form id="room-form">
+      <div class="dialog-top"><span class="eyebrow">MANAGE A SPACE</span><button class="icon-btn" type="button" data-close aria-label="关闭会议室窗口">×</button></div>
+      <h2 id="room-title">添加会议室</h2>
+      <label>名称<input name="name" maxlength="40" required placeholder="例如：梧桐"></label>
+      <div class="form-grid"><label>位置<input name="location" maxlength="80" required placeholder="例如：3F · 东侧"></label><label>容量<input name="capacity" type="number" min="1" max="100" value="6" required></label></div>
+      <fieldset><legend>设备</legend><div class="checks"><label><input type="checkbox" name="equipment" value="显示屏">显示屏</label><label><input type="checkbox" name="equipment" value="白板">白板</label><label><input type="checkbox" name="equipment" value="视频会议">视频会议</label><label><input type="checkbox" name="equipment" value="电话会议">电话会议</label></div></fieldset>
+      <label class="check-line"><input name="active" type="checkbox" checked>允许新预约</label>
+      <p class="form-note">停用后，已有预约仍保留；管理员可在团队预约中取消尚未开始的会议。</p>
+      <p id="room-error" class="form-error" role="alert"></p>
+      <button type="submit" class="button primary full">保存会议室</button>
+    </form>
+  </dialog>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="dialog-top"><span class="eyebrow">CANCEL BOOKING</span><button class="icon-btn" type="button" data-close aria-label="关闭确认窗口">×</button></div>
+    <h2 id="confirm-title">取消这场会议？</h2><p id="confirm-copy" class="muted"></p>
+    <p id="confirm-error" class="form-error" role="alert"></p>
+    <div class="dialog-actions"><button class="button secondary" data-close>保留预约</button><button id="confirm-cancel" class="button danger">确认取消</button></div>
+  </dialog>
+</body>
+</html>

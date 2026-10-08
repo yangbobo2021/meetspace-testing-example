@@ -3,9 +3,10 @@
 本阶段从 `stage-01-implemented`（`32306826ae8531d03d84d4465d51d419783a5d8a`）逆向整理候选需求。
 用户于 2026-10-08 确认 `stage-02-requirements`（`12d503a`）全部 96 条需求作为黑盒场景设计基线，见 [DR-002](decisions/002-black-box-baseline-confirmation.md)。
 用户已按 [DR-004](decisions/004-login-window-endpoint.md) 补充 identity-session-9 的精确六十秒端点；其余 95 条正文保持不变。
-当前黑盒设计全部 96 条需求充分，设计门禁 black_box_ready，见 [DR-005](decisions/005-black-box-design-ready.md)。
-白盒设计新增 63 个场景，独立审阅及补充设计检查通过，见 [DR-006](decisions/006-white-box-design-review.md)；未执行应用测试。
-验证章节保留需求阶段占位；黑白盒场景与审阅台账存放于 `tests/delivery-acceptance/`，本阶段不执行应用测试。
+黑盒设计阶段全部 96 条需求充分，设计门禁 black_box_ready，见 [DR-005](decisions/005-black-box-design-ready.md)。
+白盒设计阶段新增 63 个场景，独立审阅及补充设计检查通过，见 [DR-006](decisions/006-white-box-design-review.md)。
+首轮完整验收正式审阅为139通过、9失败、11未证明，结果incomplete，见 [DR-007](decisions/007-first-release-acceptance.md)。
+验证章节保留需求阶段占位；黑白盒场景、执行与审阅台账存放于 `tests/delivery-acceptance/`，公开阶段归档在 `tests/snapshots/`。
 规约正文集中在 `packages/`；旧的 `docs/requirements.md` 仅保留迁移入口与旧 ID 对照。
 
 ## 编写与审阅
@@ -33,6 +34,7 @@ meta.md       结构、语法与引用规范
 | [DR-004](decisions/004-login-window-endpoint.md) | 004-login-window-endpoint.md | 六十秒窗口端点确认与续轮基线 |
 | [DR-005](decisions/005-black-box-design-ready.md) | 005-black-box-design-ready.md | 续轮场景充分性通过与不可变阶段档案 |
 | [DR-006](decisions/006-white-box-design-review.md) | 006-white-box-design-review.md | 白盒重要实现路径设计、独立审阅与阶段档案 |
+| [DR-007](decisions/007-first-release-acceptance.md) | 007-first-release-acceptance.md | 首轮完整验收、独立证据结论与公开阶段归档 |
 
 ## 规约包
 

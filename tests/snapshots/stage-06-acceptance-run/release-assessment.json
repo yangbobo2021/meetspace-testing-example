@@ -1,0 +1,3220 @@
+{
+  "stage": "stage-06-acceptance-run",
+  "tested_revision": "0b386b4bd37b01eb996c5e74215ab1a4463a9487",
+  "terminal_run_id": "acceptance-20261008T-full-0b386b4-r1",
+  "workflow_session_id": "dc39aa9b-85c1-4166-9a18-375c42f84718",
+  "acceptance": "incomplete",
+  "release_recommendation": "不建议发布当前版本",
+  "execution_claims": {
+    "blocked": 7,
+    "passed": 140,
+    "failed": 12
+  },
+  "independent_review": {
+    "unproven": 11,
+    "passed": 139,
+    "failed": 9
+  },
+  "gate_status": "blocked",
+  "gates": {
+    "requirements": "passed",
+    "resources": "passed",
+    "scenarios": "passed",
+    "execution": "blocked",
+    "review": "blocked"
+  },
+  "uncovered_branches": [
+    "默认CLI归属监听及默认库、host/port/db单项与组合完整参数隔离、Python3.11运行环境未证。",
+    "密码盐的有效OS随机输入因果与全部文件/数据库/WAL/临时/mmap/删除/子进程持久出口未证；dtruss/SIP、fs_usage权限受阻。",
+    "首次及后续登录/切换令牌有效熵输入因果与全部持久出口只存摘要的完整观察未证。",
+    "application-runtime-7 / BB-application-runtime-7 / WB-route-authorizations / AI-WB-route-authorizations：DELETE、OPTIONS等未实现动词由BaseHTTPRequestHandler处理，绕过app/server.py:236–263的JSON映射；runtime_storage_final.py:9–14只测GET/POST/PATCH/HEAD。错误实现可返回HTML而通过已有矩阵；缺可观察Content-Type/JSON code/无副作用证据。",
+    "team-administration-7 / BB-team-administration-7 / WB-ui-role-demotion-reload / AI-team-administration-7、AI-WB-ui-role-demotion-reload：合法自身降权PATCH已提交后/session网络或503失败并恢复。web/app.js:250–254 catch仅loadPage；604只修改他人，108只有正常自降，残留管理员入口这一反例可逃过现有组合。"
+  ],
+  "failed_scenarios": [
+    "BB-interface-experience-3",
+    "BB-notification-center-1",
+    "BB-reservation-creation-12",
+    "BB-room-discovery-2",
+    "WB-day-range-intersection",
+    "WB-booking-insert-notify",
+    "WB-idempotency-priority",
+    "WB-ui-load-token-races",
+    "WB-idempotency-absolute-precision"
+  ],
+  "unproven_scenarios": [
+    "BB-application-runtime-1",
+    "BB-application-runtime-2",
+    "BB-application-runtime-7",
+    "BB-identity-session-13",
+    "BB-identity-session-14",
+    "BB-team-administration-7",
+    "WB-runtime-entry",
+    "WB-password-derivation",
+    "WB-login-switch-and-cookies",
+    "WB-route-authorizations",
+    "WB-ui-role-demotion-reload"
+  ],
+  "findings": [
+    {
+      "id": "F-date-empty",
+      "actual": "显式空日期被回退为今天，应拒绝非法日期",
+      "evidence": "evidence/api-r2/room-read-dates.json"
+    },
+    {
+      "id": "F-idempotency-microsecond",
+      "actual": "同请求标识下，起止时刻增加1微秒仍错误重放",
+      "evidence": "evidence/api-r2/precision.json"
+    },
+    {
+      "id": "F-stale-401",
+      "actual": "旧身份迟到401清空已登录的新工作空间",
+      "evidence": "evidence/ui-races/old401-new-session.json"
+    },
+    {
+      "id": "F-notification-runtime-format",
+      "actual": "本机Python3.12.4实际通知缺少日期和开始时刻，3.14对照不能抵消",
+      "evidence": "evidence/notification-runtime-control/results.json"
+    }
+  ],
+  "review_corrections": [
+    "非法角色的400断言超出确认需求，只需拒绝且不改角色，正式审阅改判通过",
+    "通知正文缺陷由专门场景判失败，不任意扩展所有创建场景的expected",
+    "未知HTTP动词、自身降权后身份读取失败缺完整证据，4个相关场景改判未证明"
+  ],
+  "application_changes": false,
+  "requirements_changes": false,
+  "publication_exclusions": [
+    {
+      "path": "harnesses/__pycache__/api_review_completion.cpython-312.pyc",
+      "sha256": "2842d9530b46b96230234195eb1a508a5d7d36c2b5cfef666bc713740ce64207",
+      "bytes": 109304,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "harnesses/__pycache__/full_api_matrix.cpython-312.pyc",
+      "sha256": "2f0f321155927e26e8ba7931756855505f96370da71bafef5fb40875652787db",
+      "bytes": 95391,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "harnesses/__pycache__/full_api_matrix_r2.cpython-312.pyc",
+      "sha256": "6ec0ed24650dd36060e8b366602e1d0870833d42c55679559de7b2e98555214a",
+      "bytes": 99523,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "harnesses/__pycache__/run_ui_acceptance.cpython-312.pyc",
+      "sha256": "fa46b234590d0e5fed29079b9aafdf3bca6a25092c3549a2b259285e19e0f443",
+      "bytes": 45082,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "harnesses/__pycache__/run_ui_supplement.cpython-312.pyc",
+      "sha256": "e62fe98ca909d3b1abf9bb19e30cef21eab2ff1af1d7fa361d559ff558bf9b9a",
+      "bytes": 25088,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "harnesses/__pycache__/runtime_execute.cpython-312.pyc",
+      "sha256": "3cb7fe0005e4677ea3a463d5bc183b5b70f774a2dc5b9f4f9e95a9edafc19044",
+      "bytes": 32546,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/notification-runtime-control/python312.sqlite",
+      "sha256": "0848247db31d31ed90d9c42a09b73ce068d6fff2c7ea72f16ccf7ec6b4f5d279",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/notification-runtime-control/python314.sqlite",
+      "sha256": "177fb0bc859fe12b2434080110121f61c2c7e008a098b140bebca834fb106f8f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468210.sqlite",
+      "sha256": "3f07335f04ec85fc2457dbcf511cbc9e10f268d87e36df5d405168aa1e2c1c0a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468211.sqlite",
+      "sha256": "dbe0c9cc65f7e678f923fffa933a4e5fbe1929a2ce52f3594a5bf6750b03342b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468212.sqlite",
+      "sha256": "53f94f82f8a17659f6d5c9ada8881183ab73c92f6490bab9546a3ed1fe85b3fe",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468213.sqlite",
+      "sha256": "0c7d9964c38174e9a9f85a5a21b4fccb7f3173d2628943ee5ca6dc538d184c10",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468214.sqlite",
+      "sha256": "251903c6e8ab5b35df8fd35f5307147e0ef79e02a243cb2e1fec875d6078e7a4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468215.sqlite",
+      "sha256": "355613aecb334886e3fdb8ffd9373d2a3f57ac4527b7d650fb0cf92d5513024a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468216.sqlite",
+      "sha256": "6a772287ebe48b5d6b9c15bb60c498ecbc5d93eb9a00f79b03528c567f45ebb8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468217.sqlite",
+      "sha256": "ed936bbe162fba201346470b6ff18daec9463cc935c34d792faa2b154d1120c6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468218.sqlite",
+      "sha256": "625413d1c37b6e3411e9852a78fe52939f35a87b671acb406253fb7b2fcd46bb",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468219.sqlite",
+      "sha256": "638c29607ff748e0c6abe81fde0375991d13df55c1b5ac9688c6b7fb6f9f0e3a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468220.sqlite",
+      "sha256": "8f249e966a4ac98385cd1fe819f340b4275663f09428ab1e4dd262b40491c438",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468221.sqlite",
+      "sha256": "e46e8815fa52b42e11a3b65195ec48b2954fdc2c899c5de5643ecf55b8e09016",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468222.sqlite",
+      "sha256": "9c8c9f26df23cd09ab185064af7c6891f8cf2584e0fac67af3b95fbbe3bb0573",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468223.sqlite",
+      "sha256": "200d72e9194e764d16da795fedc641aa94a92fdad1068739eaba301775b6e382",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468224.sqlite",
+      "sha256": "c6dc43bc1a71e40bccb9b65c0d30d017753dd04c04627edfb4dc26f232f72677",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468225.sqlite",
+      "sha256": "5d578e7a0be6133179c64841b617a8a7a4f5213d713faf7854f1b459a2b8c701",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468226.sqlite",
+      "sha256": "7b29b539b0a8ea4e53e5768ce24994df52284681888701ad45ad5a457300cf85",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468227.sqlite",
+      "sha256": "9948a55836213bdfca8a77dfda953c3dd9fb666f6c7d0ed39919ecc760f76e30",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468228.sqlite",
+      "sha256": "de7bc2ec658e00dba25e30c0b37467f508f4a179201b8ebb17ba1ac01a897af2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468229.sqlite",
+      "sha256": "9ccfbde8329ed28c58dafe568f4342efb7c69fbcc75d0675d2fb43f75b9d471d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468230.sqlite",
+      "sha256": "b73be834a486a75436d1ae2ec5c580732dc8157de08d94729ec3efcbc54dc461",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468231.sqlite",
+      "sha256": "3a3fe1e7d69d139d899fbce04e31dfc57ee2ad92e1704a416c66283db8d04a69",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468232.sqlite",
+      "sha256": "b69022575f74e8450a35dcb5dcca8c3870faf5139bd2d50bbe5c802fd1a937c8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468233.sqlite",
+      "sha256": "9738341b7b74717045612c2dcd7b7290e7bbc8a168469d653752820732eb5ec5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468234.sqlite",
+      "sha256": "4baf96a70e03df523c0dc6a46147289390a24c500a48dfb9966633ff8a50b2cd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468235.sqlite",
+      "sha256": "5222ac67ac4723a7c977b449dc4f29a77431d9448cd1deb197b481c9cdd7a8e2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468236.sqlite",
+      "sha256": "0fb798246871f1786852cbcbbced22e095790f6452cf4657e8292b8f1b1bd90d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468237.sqlite",
+      "sha256": "aa9697c7bf48987fcc8113170d432b7eb43403eb37386cfb0c28ca3855415e48",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468238.sqlite",
+      "sha256": "c0c73156076bb74e4914aadbce6fa8eee92b4ba09bb2a7f29f2db2ceda523cf4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468239.sqlite",
+      "sha256": "c1aa8bd4d3ff8b89b27200c960f26bf61b3dff639440f0a465c0d9e002d91d36",
+      "bytes": 57344,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468240.sqlite",
+      "sha256": "63c0ef6566703037dba395abbc1b4e3a5891c69be990b7b1fee3f0df610cbc70",
+      "bytes": 57344,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468241.sqlite",
+      "sha256": "6c2a9db5e6eadc7bb134c8895e17c5dadc5e83189ed9c5e9765ca1d13621f972",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468242.sqlite",
+      "sha256": "cc086381d0836e0e5a3403079bf2bbfbbaf7fe3761a5365fa3e30dbcefbafa11",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468243.sqlite",
+      "sha256": "120a396f9d711f7ee621a6f7b05378dd2439151facaf1b0a9170325435170b09",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468244.sqlite",
+      "sha256": "ecc7c35f4e1b1373bb341333d22473c0e9627776beb24420bee000194c36dc00",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468245.sqlite",
+      "sha256": "cecceb1713f41870648bb3b74c88566d98cf984c46b1df8555d627204d34fad0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468246.sqlite",
+      "sha256": "57a05a740325aefac43113559ce4c19d14d1ef3cc06e4cb8079de43e97fcbb80",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468247.sqlite",
+      "sha256": "c3a1760cf6abd63860619c90466f02ecc80ecff2691f929429990c135eba04d7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468248.sqlite",
+      "sha256": "031403cd51301f957130522a664b01bed1f23fa75e57dddff6dee5ca4c9bbf68",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468249.sqlite",
+      "sha256": "7e457ac4399d46566ba677f740c6739789402354cfd1a7f6ce1fe65a86920f0f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468250.sqlite",
+      "sha256": "6b8814454b0ea82b12fb109e147b2ffb7f18eb27c189f4c1b30fb2faf0291cd4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468251.sqlite",
+      "sha256": "a00ff672b8ac4145ff190cbe6629e392d8bac2a98a47447f4b5e696061552374",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468252.sqlite",
+      "sha256": "561f029424009a087ac0e799dd728c488cdd640ab52167582cf3252ed2c3fd27",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468253.sqlite",
+      "sha256": "0c9d8423e32947aa8b533b6bbcf22b15d36875a98dbbb0030cb8b19712946f47",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468254.sqlite",
+      "sha256": "ddd9fff2f871d6e81f2321adecf413c760757d292088fea92bac02615e7c5136",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468255.sqlite",
+      "sha256": "03fd16678be298b887d116b3a40c40902479f7fa1b8edd61e019340a7a5f1fa6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468256.sqlite",
+      "sha256": "67decc01c346e807e325003f4df3e67accc1436bc787aa9e69e5f10010fad3e4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468257.sqlite",
+      "sha256": "e938cb4838cc79b40bfbad8e77b6bc220c387a3f85ae32f71bddcb7926776517",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468258.sqlite",
+      "sha256": "497700a64386240639bbdfc588c35a551643d3a25344855b7938a8b3d079a6ed",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468259.sqlite",
+      "sha256": "5dd3742ecc3a8866725ca0cd31256596a0bca8e87009472a4e829817f15283fa",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/db-1791468260.sqlite",
+      "sha256": "3b5439eaa36cb3f8793270104bdf465613466e96c88333438cfd2fea871ab1d0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/existing-team.sqlite",
+      "sha256": "510a0452afd283456c651ef60c1005eaff10b317b04bef3a0867c0456358817a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/process-persist.sqlite",
+      "sha256": "ce2d72ea00e51066b7c1be0f0993f8fdc43a7380a7ba6bf816ea2a7e9a6a38a3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/completion/seed-final.sqlite",
+      "sha256": "9000e7ff73748fd00f845a0eeaff774e8984d74596bea750942038b2a21994c7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1.sqlite",
+      "sha256": "4f46aacd4df423e9830b43dd43c8c6bb705b870de820b7418d988a9c2748ac11",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-10.sqlite",
+      "sha256": "145692f130e65499ff2789054f5c2ce76528e092e584d20512923066243fad8c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467672.sqlite",
+      "sha256": "b159bc49acab5560cd1218f6699036d48c935cb3528694941a311251d4f5ad83",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467673.sqlite",
+      "sha256": "10f563f13ba6b5ee6f05398fc090e58f2fe03e81289d36d2bd2bdaaf4963f272",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467674.sqlite",
+      "sha256": "dd4c3705ddcfd4e999bf9ea3f41b692da03774c1bd92987bf3161c244f4d922c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467675.sqlite",
+      "sha256": "bb1dc0ee4c398a8dfc1ccdd76b703ba6235430d37680af181acb852c623fbf8f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467676.sqlite",
+      "sha256": "c9fab32e8e8d4e1591a2bc27ad8142a5466686bf7423a5e5ee265a2e42cca17f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467677.sqlite",
+      "sha256": "82ad5cded7deca6d203cab7fc1a6ee2c3e5f945bff2c8920830660e0f1acbd88",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467678.sqlite",
+      "sha256": "5155e71eefbcb1b835495732c2175eba736902273b01a9cbd9f8a898aa11cc03",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467679.sqlite",
+      "sha256": "472f42f84ba2681b982ef6c9d1359f13efe1818c05751b29e2f55cd0ddfa8496",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467680.sqlite",
+      "sha256": "dfa9e8e199db0642854d7f886d796250280cd6284da1e6ce37d0540188f5fdfe",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467681.sqlite",
+      "sha256": "eb9f6489214a1b81d38eb8906c0dc40e9f59f8045d4206383a3f9edea06bd08c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467682.sqlite",
+      "sha256": "435d798bd3f4b6b436efcc0ea6f10b3798626e55c519669d049e655ef84c6784",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467683.sqlite",
+      "sha256": "b5ec70ce2e802a83db8b27146bf5d248fae10ba25e0b38862f1994021db4b531",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467684.sqlite",
+      "sha256": "e01cf73f7ed798320fcb86bc32868ae0ec25f2c82f7346114b75931217b3a3c6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467685.sqlite",
+      "sha256": "8cef2dfb9192ae51ea53a44f25c36d569d1687013b4bf8adf738f9be92eecc1c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467686.sqlite",
+      "sha256": "c3563cbf6b05cb878b0898870f0a35e824ad9bfb8c44e35e543842b49c7eb6e5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467687.sqlite",
+      "sha256": "e922b641d67650f18b99790d08fd07e12c0865aed286b9e7fb0a2dbf0ca46946",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467688.sqlite",
+      "sha256": "8911d6025c63740fdf3d33fa45ccec104ec422387232783097f9325ed00b2947",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467689.sqlite",
+      "sha256": "4a6c4b3144b4da68015abe70b2ec932c476addd3a155089356ab5694f65faf63",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467690.sqlite",
+      "sha256": "0d2fad4ba346c189b99117a211aa73aa94e03884abe312f55be055933cd900c5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467691.sqlite",
+      "sha256": "ccfe6fd375f98c345a5182dae350f9264ae3add9e21d32b77738264d0a29e461",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467692.sqlite",
+      "sha256": "8078cdba59a9a6e04fd8da96de016da8933960566422aa87ddcf0b85372dc174",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467693.sqlite",
+      "sha256": "1d9be70c03a7e24ee9eef1ac8c6f527e73ee21c3d0bc3d55808b4fa941df71b8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467694.sqlite",
+      "sha256": "06d2b78c550f853888347c2b8b4d3dc51e9de1f4ab0d3a2dd0f424ff585540d5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467695.sqlite",
+      "sha256": "767d07a4a58dec527e03209c6426623160352ae3f01a1b0c5a2403a7577f403e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467696.sqlite",
+      "sha256": "3c7ea94dd9025d2201401b880c7ccfe566d9e5e94b9230669c9edf732749cc66",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467697.sqlite",
+      "sha256": "8cc33f62e2f81a0bb4b5eb03e977e7ad94ae18ac180c1e900f287d46af06403c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467698.sqlite",
+      "sha256": "d80475ace86be37f3a5c371d3ff2e241a882b745b8f83f17de3a4b90e8abbdd8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467699.sqlite",
+      "sha256": "f32d627ccffa4c0a857944605707255f4611b188689e84b0357d252cfa929df7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467700.sqlite",
+      "sha256": "0d39808a8699c52043823cf6521ec28503c0153476c75aef2db1d96637a21ab8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467701.sqlite",
+      "sha256": "6518db3d7f35e3cfcc13eca9183ab6338daaf7088878221d02f4bacc7f884d94",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467702.sqlite",
+      "sha256": "956e5b7e3bcebb1a2001d32365b5869984ce9a0417e797155b90503f97c631c8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467703.sqlite",
+      "sha256": "b7116b7f17dd3d8462edc63a9bb1c04b450252f98dcca8463f1cc5d755c0e71a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467704.sqlite",
+      "sha256": "5eb567b5430a54ccec769579624823d949d8a209b7b985e889ecfdbf4903d39c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467705.sqlite",
+      "sha256": "7841806abdbc0c2129acc11f1f6d259287995aa4b4a6e7b13b5e803b123cccab",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467706.sqlite",
+      "sha256": "29baf97ae26270651efc54440d51485637660524b16d42e2230fa8c894deea23",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467707.sqlite",
+      "sha256": "cdaed8af6821f9c3836e7cdc6c2d3e829b45044b075fd327f6dbff58162a388a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467708.sqlite",
+      "sha256": "e130db96e9d14ebd614ea3a47ffadafed5205316987255ade1431b7f44300055",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467709.sqlite",
+      "sha256": "31909f681177d360b06ecfa39e67f845bb75fe44ca295e485e9559180f446c92",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467710.sqlite",
+      "sha256": "61f6d7db46ce535394e23cd66500592976ae218dbb94a03164065bdc12e93b99",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467711.sqlite",
+      "sha256": "1e2a6b4aa9b200e513151a65111ff4a348302d57706449766d9c84cdaef9d5a5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467712.sqlite",
+      "sha256": "465954db52d70649f7a71b5d73f6833c73de50e6f3b7f1bd6745d578c1dedd7c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467713.sqlite",
+      "sha256": "96b24343b7b43f81554542502cb6078888affb1aecd829be310172bebcad9c83",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467714.sqlite",
+      "sha256": "1208b42916706b4376c3c6e13f02b5a356f41acaf9628eddbf29e0331e8c2a0c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467715.sqlite",
+      "sha256": "0fc469d71eb392c4e7975e808ee3b060386849cdea60d93e34574fd04c52d6a8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467716.sqlite",
+      "sha256": "44ede956c2e988925e6654f5197d49b817433c6369b404ffd398ea19ba7be05b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467717.sqlite",
+      "sha256": "c707ed9431c7ce28ccaf48509288dcd9e4b40193f6756ffb556d7b192b24171e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467718.sqlite",
+      "sha256": "0af614879fd532c4e786b763795e3330e7c9a5e3f6250107f4dca6b0157b59c7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467719.sqlite",
+      "sha256": "caeb539f57e36ebe531c47b6ea045052028587cebf39e7ae3fa2279b3621722f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467720.sqlite",
+      "sha256": "6eec27165b7a5fceda51427ccee0b466b51a3480b0d59469b5f2033cee414de4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467721.sqlite",
+      "sha256": "02bf915a2584822273aca0ecf8c2a759d2698adf188cff834ee5e075927cc18e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467722.sqlite",
+      "sha256": "7dcaea090673952284de6e5fa80d125ad23f0f87adef69b0c10273a831d671f7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467723.sqlite",
+      "sha256": "9771d7b2a6b06527c217feaf919069a7d9381588889020d59e18fae65853f2b1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467724.sqlite",
+      "sha256": "55534ab8d3dd6dba22c2d41e771abca364f75a009fb6cbc8bb12860cbc0c06f1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467725.sqlite",
+      "sha256": "f54104dee05994b8255f03a1de930ddecb0829fa84c57d907d6574d077060c41",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467726.sqlite",
+      "sha256": "5b4b374d6a9679e4af0448a7ddad39aa3fffdedf36ff7d0579d2df33ed900ace",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467727.sqlite",
+      "sha256": "0f2f3f5e99545842d2fca6b51d99faa90e15da34eefc488ea6554ee82ab1807f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467728.sqlite",
+      "sha256": "360f3ab3d429b355dfb97d4a7802a67b12fb14c1ab2e306023d543eaf0530d3b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467729.sqlite",
+      "sha256": "150b2790aaeebbf99b0a9b97607ddc472a666272c7a13fca25cfacf39037c343",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467730.sqlite",
+      "sha256": "f4fefbfa412004a98be6fe38e5a097d8d17ca32598069e25be0000bd608f6ddb",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467731.sqlite",
+      "sha256": "e422f695b4e9fa41d622b55ccc8cea4f2028874747673648808dc59d41daa256",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467732.sqlite",
+      "sha256": "dc5e9b65cc1789dff82512f8fdd0344a129145391f6be4a76e82a81d028894d6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467733.sqlite",
+      "sha256": "8d55b8df389d741e2280cd830a894b37dd7be6778f613c3f03d5d25dbf0da5a8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467734.sqlite",
+      "sha256": "b216ca6f936e98fc688668dc6b7af24163eb5befafcb8affe6f54a8142d8d231",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467735.sqlite",
+      "sha256": "729a3a666c44b79a595be63ec8c3f24ae2930a6761bc58f8e2941af85b37e6ba",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467736.sqlite",
+      "sha256": "f2755b253924847eec51c883a6807cf777f2894d44630636fe0b70052d1e950d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467737.sqlite",
+      "sha256": "9e4500333e2ffe278d4762ed07ba3ec8db8cd374e1032a07cfd05bc2a10a4213",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467738.sqlite",
+      "sha256": "3e9cee857e192d8380739080834dfef91a54ea96701f69417e2a93f19dd6d30b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467739.sqlite",
+      "sha256": "8a4b2573fb33785d6a24d5aff0a76009cdc787abfc26418b05500b1c02a75ea6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467740.sqlite",
+      "sha256": "77c1ac574ab4069e4fafda0d152502a908974a16957760195f95ec00166819fc",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467741.sqlite",
+      "sha256": "7a59d153d8dbe08a8e0c07fad9ebb84ff578166c93f92f3d9cd60abcac98a6b1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467742.sqlite",
+      "sha256": "a26aaee4e61ba58c91083b9b86c87f144ff3137588af725afdcd33b3d94bc6ef",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467743.sqlite",
+      "sha256": "5a00fa9839debe9540ce8bc4628fdd35c83477b168ba92f558aa6b8c99ca4b5f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467744.sqlite",
+      "sha256": "06e2360de9fef3f69e51ed7ddd10799822bb03d23f94ffd620c528aaeee4403d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467745.sqlite",
+      "sha256": "5ffb3f80fca25a181fb628cc11efc429d8575f55376cc556c81f375c783e952d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467746.sqlite",
+      "sha256": "69acfc49e6d6d575c76e2658b0d307b08ba30235ee85366b2156a7e618634b81",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467747.sqlite",
+      "sha256": "e3daf2129fdb0320c49a9759962f0eee75d3e9bb105c263cbe4414ab788ea2d7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467748.sqlite",
+      "sha256": "cbac0a0504487f7cb88ca734c17537eb638bb974ba4b074390a8119f55e8eaa0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467749.sqlite",
+      "sha256": "661ac81e9a3b93d7b063f6b088a094436091af2e866a6801ea3826cc0e8ee3b8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467750.sqlite",
+      "sha256": "ae837dc9665f52da263143a535fa74bf971df353f8efc9d94917b30ad21e85c1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467751.sqlite",
+      "sha256": "981c6730f58b023ad8f8d94788a472dc23ce81a26a823776ee21bf0defd67618",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467752.sqlite",
+      "sha256": "1b48a9df9881fd69dee3cb7f7ff896c0787be7c09e9e127fbcee0414ecd2ecf3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467753.sqlite",
+      "sha256": "e56238269de2c17f32d5d304d1ecdd5c377d38eee6f51a42f8a7602479f0e51f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467754.sqlite",
+      "sha256": "9bdeb8f09b97373819a51b75c804119ba146dbd7fcebf0e51a71216ba21b1c76",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467755.sqlite",
+      "sha256": "0bf9fd5f56e1dcef0fe8bbd1a2c387f988d4ff5de6e7a49c565e0ebb3dd6bae1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467756.sqlite",
+      "sha256": "f928761121cb67c1793b4cf8bd3dca50c086b1d2a97c301a8600970fcdd87826",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467757.sqlite",
+      "sha256": "40666b4edd6dee0ac7001a6710b86ada35040bfd01ef8599fe8a179ad8978929",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467758.sqlite",
+      "sha256": "d7987017a15564a6d45de0cc7e4417eb21a603203b9dab7b11a1c8e3729633c1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467759.sqlite",
+      "sha256": "6e1c84531f07b8ba89e1d5b4583007ee56f710c6cec4656cc7f289afa8d5f240",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467760.sqlite",
+      "sha256": "34a14b58d7125f80df6af72f2ac497c562baa969b07cf866e984171d23f0c019",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467761.sqlite",
+      "sha256": "e765b517fb5f9ffdcb0e17a1560fca6f188e9f0c6e0421c0961750489777bc99",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467762.sqlite",
+      "sha256": "580f7b05f109689284dacc98b2531e22a21c6c8e02e106258ddb568157f86021",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467763.sqlite",
+      "sha256": "2294a63f90a7810c8f3978ac38cfe69b8520f9a683e4244e1cc3c8f75afcf9d4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467764.sqlite",
+      "sha256": "528a2312a6d1c0352572c6954c39137e111c0f4c9916d939398dca8c427c5e12",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467765.sqlite",
+      "sha256": "e56a9397c65605d8e741635296f410f8335ff63efdb04ef43d048fe5a8eed73d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467766.sqlite",
+      "sha256": "6bc5dae98944b4bcfaf3fd1f77a565b06df532fd9a74a0e48ba016ef5ee7c499",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467767.sqlite",
+      "sha256": "3196ce99ab518e37b400a88baf3c5d77dd1d25c39347028c35398c9ad3c51498",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467768.sqlite",
+      "sha256": "2fcf7dce8fdc55181a9a2b8ff758bda2fa2e52a3d731ae74db528a1c97c7155e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467769.sqlite",
+      "sha256": "a10411286d72faa02d04cd8d2c08f9ae532d0832a88d8105ea25d1627e231ea1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467770.sqlite",
+      "sha256": "c8f4708ba84b5c215f503086e44620871f78084820f7a9099ab09e9e56b58712",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467771.sqlite",
+      "sha256": "3c25a405d2ce20d763ed4ad308d5820d978ede20e456913b961cb839620b5a13",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467772.sqlite",
+      "sha256": "8898ab937064703440d100cf71f344884b33c9b674e9faff4f42d032d0fb0c59",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467773.sqlite",
+      "sha256": "b0c7567e225a7f6bf2d2c5b3ef23f2156de8c90ce9c4de1b5b95e45fbbea8737",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467774.sqlite",
+      "sha256": "722a358474125841581bb51dc3480c29a2bda46cd0dc101819587d15761c1a65",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467775.sqlite",
+      "sha256": "4288a062f6ef5bd60ca6ecb5095e08882718c180d193b0ecff28e1f2d29a6b48",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467776.sqlite",
+      "sha256": "9d443fde6a9e828974aa16d9a3cd9b537e00b36ab62b557667a86cc6d444a57e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467777.sqlite",
+      "sha256": "e5d530156b3ceb8bb7577126315f4fd90d2e4ae9d1d6d1faf66ee8a50016e974",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467778.sqlite",
+      "sha256": "08a88b5b34ee3ccd0a9284b48ad3e6bca7e9622cd524317182b803f7ff082cab",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467779.sqlite",
+      "sha256": "ff3b8beaa20d7e3722f38a3ec996adebfb8a1d82b5e6f4b0793a896b07dd5bb3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467780.sqlite",
+      "sha256": "cf11d2403c30f63e9382ad34cdb48e435656bafdbfcba50e8374718910d47d39",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467781.sqlite",
+      "sha256": "d70c7b83fd7358aa75ae3f0da9ac3480f351a889dd19e4f101ea522fecd9bf36",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467782.sqlite",
+      "sha256": "72da3024801e2c9d7522b09d16e4a4397125585d9588f3a734105b1a7aed7190",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467783.sqlite",
+      "sha256": "994fdde406ea27dfe788e82d02e03ea2204b75d65cf1dd9726249521fb8c3e80",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467784.sqlite",
+      "sha256": "ffd7c2d2305cd80432b70df0874def6222e0bbdd06172259aa0536fda02d7009",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467785.sqlite",
+      "sha256": "eb4088b664961cd883b53daa1c8072e6aaa2c9edd970e399e02f5bbbf726afa3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467786.sqlite",
+      "sha256": "def6584bc7fa81353651bd5a1e24852b54c1a5187aa636882da95df255a808b5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467787.sqlite",
+      "sha256": "f58aaa46e2bff0c029be9561fa741a732f0e87f7326c9cb7a787f3c687d1325f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467788.sqlite",
+      "sha256": "db4803da2de421d17df26e84bfb63abe0947110d3fa02cc934ba99a38a28b950",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467789.sqlite",
+      "sha256": "e543ae7fbad0870814ba495ff1125a08c00dc18b85f7a8e51db200bb2cb1f353",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467790.sqlite",
+      "sha256": "fd6972966b0f851f6667082455bac73be952e9ad308466abd7087397e1732439",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467791.sqlite",
+      "sha256": "2b6c2237617d4f6660fe0a5f55580c651b2ebe0022c32a3541074e0997a78344",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467792.sqlite",
+      "sha256": "d0cddc545e9c275e35b551c1d7ba25e619c9c4e853bb027ef15440f3bc7262a4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467793.sqlite",
+      "sha256": "51a185c6f29a195fbc0dc87f7d46f1e78000a4aa3f31d106ce9b89670c5d8ccf",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467794.sqlite",
+      "sha256": "3411d39e4427e050806be3d8cbdfb35daa5b7c6db185c014400e1a1277fa13e5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467795.sqlite",
+      "sha256": "4becd47830fef3f531546d99aa8d0b96b0e7f3c834acd8c513b68badc5f25c63",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467796.sqlite",
+      "sha256": "bdd8a4b92c18c9a290b3485915bc8299a4e8df5ac4cd837c7301bcc12d08bd0f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467797.sqlite",
+      "sha256": "05f8342e502266742f98cd252cd6c40dea2b93ed5c7126293ddbf13f3c17b1a2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467798.sqlite",
+      "sha256": "3c40f03489b16bab572a507bc006b009b753a7a61218f705ad06497e71662116",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467799.sqlite",
+      "sha256": "3ed3b6428301ae6f7cabdaa5fcdab5b642f6d688634e8ffe4bf0f18b2db99f2f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467800.sqlite",
+      "sha256": "de91b2bbee10edd9e479c801842ecdca93d04c3f62ed0fe822fca1436dd3ba75",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467801.sqlite",
+      "sha256": "47f1b0e586fda4f793ad34cef34dcf15d1e6b169cb242b848a849f177fc0b7ca",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467802.sqlite",
+      "sha256": "ec7424159c4e0a98382e2b9efac1ced19a887c7f2ae904c274f0d39371e0716b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467803.sqlite",
+      "sha256": "8a8c9d9c683187f52422e04c3e122d2f88b54a2c175f59674ad1b7c94cc71543",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467804.sqlite",
+      "sha256": "ee4c178bbfa8ec68581d1cef6a96326ab5ed20b321bafa2d3ee04d95ebc41c4a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467805.sqlite",
+      "sha256": "28793368760a940903aa91480b92c8e1d1399ce812ef7fb708586051c3c3489a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467806.sqlite",
+      "sha256": "279da44781b90150b00af535bcfad4ca366ef4a457e7b0f2f4b7c75a67bc36ff",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467807.sqlite",
+      "sha256": "85a0d18e81ccd0602a114a28a500fbe48ecba5b527bb45ce7ef6c68db0b7c320",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467808.sqlite",
+      "sha256": "ab675a2a8e1050bec6fca9a0068bdae05fc6cb4c9c4f24372b37602baeb089e0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467809.sqlite",
+      "sha256": "d996fd125db212ccf0f89dc0aad9316d1472670c37fe3cbc50cd97730710dab8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467810.sqlite",
+      "sha256": "5eefd19be354176714872bd334a8e9c4e533f169a56f8202c5e17478cd37f09a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467811.sqlite",
+      "sha256": "9308d818488a770228a7754c031d2502a17bf8110505e82fb8042c3af8c8febd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467812.sqlite",
+      "sha256": "ccaff6cf1b93fb1025c4a9bb031ce010a34e6794d18a202897f7970c1388c9a3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467813.sqlite",
+      "sha256": "263ae5c3edcb33b6e2ba6e12978d2215e72594230822fb5366303bc57505d9b8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467814.sqlite",
+      "sha256": "f67b978b58f9497f573d5f1998448daa4f283b50d2cd5993fd677673a3ec0402",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467815.sqlite",
+      "sha256": "21599aa2839013c9630b65cce7d08246fe3fdf5d66df054fa717de1e5ad1c65c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467816.sqlite",
+      "sha256": "7e357b6b232a31bd3301cf10daf20cec54885f7ccf7c724415f1a2aeb9133a0e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467817.sqlite",
+      "sha256": "ff6d5b2833165e4563ee9c6ad6afeb5957649791e793af2aa73dc68428ef6d4c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467818.sqlite",
+      "sha256": "169e25c0b702aee7198e78f21e009644c65b9e874aef7cc658d50f00466d4fee",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467819.sqlite",
+      "sha256": "1edeace365d8ba192dd08e3adbc3af0063b0c049a0c7ae1d38e5311c8965dbb8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467820.sqlite",
+      "sha256": "07a9057db404d3a3a9b8e4200e548327d26026aae16a71c89b939f4312eae5f1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467821.sqlite",
+      "sha256": "501f71199a767ba50ec28a794e065a04104b4f3c05f08f7981fe084c423a277e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467822.sqlite",
+      "sha256": "0a2d530ea4e1e7477cc0aa6b4d81c0afcc9ad43e3879e97079520e78ec1466e5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467823.sqlite",
+      "sha256": "7ebcbd6bac0c16290dd4bebabf6772c2ea8fdaf85efc082673f1e773f64de755",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467824.sqlite",
+      "sha256": "8355a11defbb2de49932231540714cd82e93fc4d3a4722872365c3368bece721",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467825.sqlite",
+      "sha256": "566f9dfbedae9de3bab7d86b5ec572f488228b244ae94ff93131ad509639dd65",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467826.sqlite",
+      "sha256": "7bc3e3c616b0f6e6c261bc536171cb5fcd0e8d5220aee23b6c01020c8e7acec0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467827.sqlite",
+      "sha256": "359ca4822c12b539ac68c206e1f2c4f8c0819c37a87d19a66369fa8679fd1d8f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467828.sqlite",
+      "sha256": "cd21dac6984de59e7427a8798bc50c26b562ba5ee9fbc990c9da057c9f13723b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467829.sqlite",
+      "sha256": "50a301286253e42e28274d517aa63fa93de95ddcd6ae5854a5fcadf69a593143",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467830.sqlite",
+      "sha256": "c1f7541cea70905059850c18247a58233ad8f011d891846974573ab90f50bc6d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467831.sqlite",
+      "sha256": "e2129cdaf852a27d3ec0bbf44723f823c43e34c5dcd4fc067949a82559d27d81",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467832.sqlite",
+      "sha256": "e604dcb85d4eaa70623014540c25f5c112767fe5c5c50a69f75df801d5916198",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467833.sqlite",
+      "sha256": "cf2607e785a6a2490bba6bdd0507f2f4a4acfc81973d61b7f7765ce71cc63fdb",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467834.sqlite",
+      "sha256": "39d6e1dd14a071f2c89cd2fe45615a94a20eb4f05fbbb941763ab8a7a7b55e29",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467835.sqlite",
+      "sha256": "47176c2b83ea1b8d39be95a9a855420d0841e436a593a6ba88598ce32e7e9b4f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467836.sqlite",
+      "sha256": "b7c03bd534a46059d7af0d4c1219c9ff65ccf03914d11b4f309d0b795cf28131",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467837.sqlite",
+      "sha256": "0a3fe34aaf12ed8720d95678d19b0f6006fa25ceafef44b5a556c59e18e90e1e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467838.sqlite",
+      "sha256": "eb4933d1044d687aaccae5e69c19616b0db95c44902399f8fd4ee9036c0bc067",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467839.sqlite",
+      "sha256": "ae64367e924b6f5d484960b1654375b9bf2b53c4c770cff93e09156d157690e8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467840.sqlite",
+      "sha256": "50019cb2a77296f796dc839db7f97de110a962669c822a3cf6b79412770d53e6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467841.sqlite",
+      "sha256": "621abe146dcd1e86dc9cc801ab06670ed0e561ee1882149c2c2721fbc9799798",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467842.sqlite",
+      "sha256": "64fb88c984c101281f224dbb40a2197aa56e3849338b1ec2beb3e38e0a8154a7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467843.sqlite",
+      "sha256": "feeda370728445f6bca4f4f7ff4bc3b20de22bd5a9284886df9eb6281bd0b863",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467844.sqlite",
+      "sha256": "8a597b880f2dc259625c359f16db8561bca7e61d2c2e90b73f355af815f475cf",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467845.sqlite",
+      "sha256": "a0a67be184ec08da66e2d9a2e84b84b1cda1ad2470affac61b6eb295471c4e72",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467846.sqlite",
+      "sha256": "6f09d71d215b675d651d106250f7f3d09cae12fc94eecf4335d6094e1bf2a70f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467847.sqlite",
+      "sha256": "1d10e1d7e4f7e4281e1f73587550997b10af6a30dddd92c989c37dc837b51586",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467848.sqlite",
+      "sha256": "07afc3e6fe9aa840cacb48f825af5a052180d48b36218aaaeeeff74d3221c893",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467849.sqlite",
+      "sha256": "4e267520769d6d16cf1b1100ec436d62a08e9945a0ed619da0bb77f63c890598",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467850.sqlite",
+      "sha256": "82d82cecd2fab7d7a61258d53919c3a1ea62425c836898b7c279bc8b80bcf856",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467851.sqlite",
+      "sha256": "241d7e7aadb65ec96946a32ec0a82fdd11bf3aa3342bf2f991a39d6aed4c4939",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467852.sqlite",
+      "sha256": "6e83f6bb5b19a34668a16c9c56b43ff3f7be02cf6a446b64f1947b9a982800b2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467853.sqlite",
+      "sha256": "4192672e87dcfb7e5780f7d7dc3ef2a915a32729ac9bb257d5894001ba93b040",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467854.sqlite",
+      "sha256": "de14b178dac04b1c45c488bd17da51529f5963649fc8abaef67f13f056c079d4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467855.sqlite",
+      "sha256": "253499b41d9eaec0f391159edd484d8a0f15d251bfddba17415974249e927dca",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467856.sqlite",
+      "sha256": "ac3f9571ef4498a993afe5f74e8cb57a76a438a7dd34b0d3a0c7a55fbf6a354e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467857.sqlite",
+      "sha256": "b66b1dd2e5dac2bffbd8ad10a3bcf2305dc570da959cf157228b49ee3531e690",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467858.sqlite",
+      "sha256": "cba137ef60bdd7b7b730f927d7917a0145c4b78c4978a9cbc3b0c356b9f561a7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467859.sqlite",
+      "sha256": "1f928ca0c3e305194cdb2918c425fa375fca331ad6718f35604d6b0d6eea9a51",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467860.sqlite",
+      "sha256": "0d98f35d32a41c9414862265097ffd1516c50d31a2d99fa118b5942de7b7b700",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467861.sqlite",
+      "sha256": "39dbf38060806fee5517f4f29c852bfaa1bbce4b982c32c3acbe84964da014e5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467862.sqlite",
+      "sha256": "8da4bd526b19971a5214311a368c1216ebd95c45b660c868aa4e47dd0e0fc860",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467863.sqlite",
+      "sha256": "aa177154a1c9583ae2ae2d40a05befef21b584eb500e6d09884708d477c965da",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467864.sqlite",
+      "sha256": "805c1c8cb58d6fc659a95cb0fd02f10a723af7bb40344e5a4b84f0cba5f690f7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467865.sqlite",
+      "sha256": "16dcf7de242a4fe0177d17ffc9bfd8efbf870c9bf8f9dfffdb5ebd8eaa02f416",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467866.sqlite",
+      "sha256": "83ab12b14136b980a839909932235c7674fc7e3cfc60d3179e875c7126f476be",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467867.sqlite",
+      "sha256": "2231904279045be6e21a7553d2b30984b9ff758535dcddd9c2fc82dddccda582",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467868.sqlite",
+      "sha256": "93656db72094a8da34bbb624686e7f9373b00be33bfa8704f2c7399614f96d20",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467869.sqlite",
+      "sha256": "0a637e2c97ff1b6eec64cb53b6035680466a5492adfe3b0d5abbfa90c73c5ab9",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467870.sqlite",
+      "sha256": "3b6e5260044faa0d8f438bd13c161a724a1badaa387bf3b92c36983ecdddbf15",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467871.sqlite",
+      "sha256": "ef5b69d129eefe8ee56ca891bcf1ae38a03f781b341eaed3cea39a6a762263ef",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467872.sqlite",
+      "sha256": "2cd76e27e71c2d9e68882636a837aa0126a4a93448704eb10c8f13d17abd6c1e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467873.sqlite",
+      "sha256": "857e4abb743b122e72d3f813aaabd2eb97267b9abca85422c4e3e28e646e8b3d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467874.sqlite",
+      "sha256": "40c5cf50482d6d90d031c64a4fb8262b381f27a44b5dc8e30ac772bfff6f9c6d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467875.sqlite",
+      "sha256": "5706f1245c1f2b7d8a13f11817c5929d3f337e00587c666c37c8cf70ad05e4c7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467876.sqlite",
+      "sha256": "61baf586500b7063db0fe6f1dc6a382f1f113a635ecb69fcf4d0d1569909ea02",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467877.sqlite",
+      "sha256": "5891d3388a2a32b58b6f5ed30a18e0b752b9103fd8868ad960890f0c845c5484",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467878.sqlite",
+      "sha256": "010d4ff28a0285e49eb153f6c60889da154d1ecb6fafce5dc3c41a47be2e465f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467879.sqlite",
+      "sha256": "4c02761cf51508e021c0b59cc7344d2939404167e8c131f07c4c6e8d7840bb50",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467880.sqlite",
+      "sha256": "dd38ee7b8474ccf9b9e25bf3a6354a78ff1cca854acac96f2cf4b4051a0f0d6d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467881.sqlite",
+      "sha256": "2e192f6acda573adc296c0ffb898ab757dd2d5933b1e7e1b0f7250294a326abd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467882.sqlite",
+      "sha256": "7cd2ec9fcbfa835ddf764d0201413fd75137e61731783643032f228166db4c60",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467883.sqlite",
+      "sha256": "14feefe50cad7ceb0ef806d19736f6eff99367cbeb2c90a2fb30a3fd84af8953",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467884.sqlite",
+      "sha256": "6b5ae8ffee8d56be57b7586b476372f50cf5e6c80cc289afa301bce15aafb853",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467885.sqlite",
+      "sha256": "c8427bb017dd5062c98c7e5baa4437b0e3cd2dc9cecf3b3e589546ed76036742",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467886.sqlite",
+      "sha256": "0171fc8110a074cb133873060260f023de49b249b63d1e4bedd9cf990bedb502",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-1791467887.sqlite",
+      "sha256": "1454786bf1ab02e433b37ca59d8d195105f99d2cef4924cb0e5faddb60587e20",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-2.sqlite",
+      "sha256": "f815aec7c077039060a58477e186e717104fb4436747cb4f1d9562f1eed96008",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-3.sqlite",
+      "sha256": "b836f1d20c30a035a5f797d330cdd64a4a4c68c1e34e0c4946e467c5665e4513",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-4.sqlite",
+      "sha256": "0a52001fbc46b36d6168af759b5b46a8fbe4559b00ccda92d4b5ad58e3020311",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-5.sqlite",
+      "sha256": "b142c3d7a6b330314b18d7c8ebf1e0fef1ef8c9237a885f506c702eee32fa596",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-6.sqlite",
+      "sha256": "86fdc62cae159015166b53cdb782eb08028b7fdda6bc8fe96e5ee855a27f0fe5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-7.sqlite",
+      "sha256": "2db8a5b1305ae7ca2ad167c2a68cc6e4bbce004c23fc81646ea441891e5348fb",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-8.sqlite",
+      "sha256": "2c2c75e82d235cda2514eeeaef14700854336c47b635ee658c9b456778ad6e04",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/db-9.sqlite",
+      "sha256": "de25359942061fefa4f81c5ca5f23ced4adebfdc5a7415b373af11036841f6e8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/edges/db-1791468427.sqlite",
+      "sha256": "9e3f66430f746ef7604e969501a559dcc6492a96d4ed4fb30b6bbda51265593d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/edges/db-1791468428.sqlite",
+      "sha256": "43a6115d91424ae1324ecb94e1fb9ab83ab56bc52c6b1abc2e7fb0aa71ec7541",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468318.sqlite",
+      "sha256": "4407164553563ead47a2791fe8cde6a29fec82bb369d8cdd15f0b307a0ae20dd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468319.sqlite",
+      "sha256": "d6d7a05a2845ec49a4af915d8bdd58304d8b97028646348f7293055cf6a4deab",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468320.sqlite",
+      "sha256": "383515d3e073490e1c7adfd004b49566e6ad6733ef65b9d1dbebbd83fe3abb14",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468321.sqlite",
+      "sha256": "e2b7dd5db92b1eb785a5a1737ac7c70434ac47231e3a367f05a90d5df4a31ebf",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468322.sqlite",
+      "sha256": "a6b3317ef1f895fd42154afc30c6102dfa7e624f0b3e5da7cec024baa694cc12",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468323.sqlite",
+      "sha256": "b12bd164fadf7020483b77a46946261c86f70bc3419b613d7b4fcadd8d72b8ea",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468324.sqlite",
+      "sha256": "0ae677278866be28182eb386f55c547452b07e231c93f78ddd501dd6cf498ae4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468325.sqlite",
+      "sha256": "95d73a0dedbc9d8e81b645d4acf1fbcc98781dc0b99c7bfff749c347ca993516",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468326.sqlite",
+      "sha256": "92c6ffc52952102b0586b2b1ed208de483a5d2fa32ff7986a1b640aaa45260ae",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468327.sqlite",
+      "sha256": "0f791b95ff110fec65e07c54cb0167f48c8ba9970372bdfb70c03aa25f855694",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468328.sqlite",
+      "sha256": "757537dd9386f8c7bfac30724b00d8a63bf323d32160e20ec7331215bd3c81f5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468329.sqlite",
+      "sha256": "fd108a7b2bb77c4f9564cafc7dfc5147d0b50ad95a39f8401bae67f16c80998e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468331.sqlite",
+      "sha256": "7ca3fbd93c4fb5ef7bcc5cdd6fb8af3a4e096f49b94b29ae131aad0d9d75e75f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468333.sqlite",
+      "sha256": "7aea115d88af0661ecb06898317cc0ce852c698039c7cf9eca78d7da7a6813ab",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468335.sqlite",
+      "sha256": "8cbbb294d7b89718b7dc49024057950df152029f5a55d87e60cb3c52a3f72ac5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468337.sqlite",
+      "sha256": "fef8dff6fb35e484e51b08738f70e84c65fc6ddddd74b5d819f15a9ba94d8fa2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468339.sqlite",
+      "sha256": "b02f98bf02661df1c99d408d0e585d5110ed481a0c4419f35f751d397d2bbb38",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468341.sqlite",
+      "sha256": "dc82ea56a63c55dcfd31699fa223f264f6d1e2005082533381cd08205cf00cec",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/db-1791468343.sqlite",
+      "sha256": "46dcbc2fae2e63343942b11dd57de4558389ddb551e0585ff1247b3b439886df",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/seed-login-1791468330.sqlite",
+      "sha256": "e1acb717af3a371ab72ccc93f1b1b09ae4b9a91a27316b76ae3d05cd80b0b1a3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/seed-login-1791468332.sqlite",
+      "sha256": "347f03f4c199553d9735d5fc9c08ee5d2514ecb0bdb033705c686463c4567601",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/seed-login-1791468334.sqlite",
+      "sha256": "ca377b97aaf75637d90c738c0ec9c768f215a0632908e0e1713e8ac50d7940f3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/seed-login-1791468336.sqlite",
+      "sha256": "6c35c1b3efd8e7bf16a1e8de99512e9b0e56aa50a11ce16a9fae1ffcf81868d6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/seed-login-1791468338.sqlite",
+      "sha256": "29f1e2c18565ce4868cd2d8bd5d1f718d6d42be9a7bc3580abb985767624324f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/seed-login-1791468340.sqlite",
+      "sha256": "047e738e3f6befb036d2cb5ebb1a231b1c9500a85495187945ff91be5e5f0bab",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/seed-login-1791468342.sqlite",
+      "sha256": "cd9c6e91f0d1870339e3c66cfdce5eef800cdea105747deaf6c0dade87388e49",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/finish/seed-login-1791468344.sqlite",
+      "sha256": "302297bc767a6161ccb37a8f227b9633d68da041ccbd4869effa44f09d6e241c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-bookings-1.sqlite",
+      "sha256": "365c85a53d948e39b5dd5940eeb4a0c33b482d1feae04087f284932d2aa4f89d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-bookings-2.sqlite",
+      "sha256": "7fa01e17398f0c689bef77417aebb897dcc13b57c53381cea2646bf9da80fd90",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-bookings-3.sqlite",
+      "sha256": "96ab6377dab003d51979875aae49ce6471a079dd793a802e39effc51f0fcee68",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-rooms-1.sqlite",
+      "sha256": "989833b43d6dcfa1f27b24b1a5c4b89953d5e8e2764556bee6129d7bf7760bc2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-rooms-5.sqlite",
+      "sha256": "fc1b7e565dd41bd3d030e02848e6a7a795c05068200aae1cc7f767934126b03f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-teams-1.sqlite",
+      "sha256": "f237ab5feb29003f93f830ba6fff890ece601a52ec59d9a37683dda057f4d14a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-teams-2.sqlite",
+      "sha256": "2bf108f8857b7ef284ea1a6e1acdbb0be3692a61e1e56adfb3129e7dc7c5778a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-users-1.sqlite",
+      "sha256": "68e1f459dc4b3537542d3e1184dac05f526ac0e4a25e49536a3b4ae7a767343e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-1791467885-users-4.sqlite",
+      "sha256": "512c9cd3782b55c7ab32f65e8086ade28ab5c047677a6053dbdbf18c12b5f2a8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-bookings-1.sqlite",
+      "sha256": "e65cb210ecb53273a2799539c71a7c3aea1eae9b15dd9665f6e8647b52b256cf",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-bookings-2.sqlite",
+      "sha256": "66716b760e1e06cc60aad4d0f81cc406a060d3932dbaef4515db7d78a1bc3b2f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-bookings-3.sqlite",
+      "sha256": "ea9d77e51390321b619e482de5c6c0e4239b23dcae51662587996e639bed4e2e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-rooms-1.sqlite",
+      "sha256": "5637371278ea7ec7a6fe00ac75a4d51320f88d7a66244c42599f6bec01ea0468",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-rooms-5.sqlite",
+      "sha256": "d11c755bfb242b2533a39e9bd2146a4b3b410953cf03bd54a5a210f321661e31",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-teams-1.sqlite",
+      "sha256": "3ce4d4ebeede6c73992d993a9abd9f3a00a4e3a0bf221b337bc1ad72e1d1de36",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-teams-2.sqlite",
+      "sha256": "ee920ab6ade87f382efc90024a028b6d155a4791be7fa68c75ce371c6742cca6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-users-1.sqlite",
+      "sha256": "c956f36433c8ca5b08f0cb91275f2bb3fec3bcc1161dae70013382a9ef5e1989",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/seed-users-4.sqlite",
+      "sha256": "4739520f1ee6c5fe72c67532fa0eb37cbfa64e9cd677d77c46b725dc9f7d1433",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/startup-copy/all.sqlite",
+      "sha256": "69cc28a2827b68edc906c569554513ecca7d81b1ef06413459a1e906ce241b3a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/startup-copy/data/meetspace.sqlite",
+      "sha256": "91529013c0c73cfda0b06392fc969f9443b5ea5a03866934a80bd4409e05f99b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/storage-final/db-1791468513.sqlite",
+      "sha256": "a3a6997baf9b220f9e0534c603055db0b713ee35ea16837644160bd35b0910c3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/storage-final/db-1791468514.sqlite",
+      "sha256": "ebab16a2cdb01d443bcaf58715ac820c38430025d1ca6f4113ec6989476ab411",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/storage-final/db-1791468515.sqlite",
+      "sha256": "384f670dd721e8ff75f9a5aa066dd59d572f1d6f193fe41a1fdfe2e69e7759a4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/storage-final/db-1791468516.sqlite",
+      "sha256": "882a8dd5fbecfa17765132d2ac789b36b1a55b063cdb5d522d7fd7c19da1ef09",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/storage-final/db-1791468517.sqlite",
+      "sha256": "1a851942f9b285cd3b16a425edcbad2b49f5eb95e148f8661bd25b5ba0834acc",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/storage-final/db-1791468518.sqlite",
+      "sha256": "8d00b1445cb059579b74c66582489a590544acf5baf2986511358c18d8888ec7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/storage-final/db-1791468519.sqlite",
+      "sha256": "d37a82471929bf4516f6f6c4e149dbfb846e30efb28f789111bcb825fd108580",
+      "bytes": 57344,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467824.sqlite",
+      "sha256": "720269d3ec808fe4ec872d3f9c2c1a7edef2601c9353a3d557ccd450062de17d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467825.sqlite",
+      "sha256": "388753a91bc37b4bc92769975a3f4bbd53efdedf083f5facdea7eede147e1d35",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467826.sqlite",
+      "sha256": "04d1aab896c7d45894f99b02d846c9ec0b046342a58dc65195c4e43ba106656f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467827.sqlite",
+      "sha256": "84fac12f3a8498291401539ea944ebb2768c7cd4d7f838e4feb84fab4e2278f2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467828.sqlite",
+      "sha256": "22bf8ef0c2f61e5098f8a197aa306b5c3783e4e87aaa53747ae9a52c49f31fab",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467829.sqlite",
+      "sha256": "22c7017db6ba1a0fd25eade33e0e2bdfbc96e08878ac64975f9ce563cbff0c38",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467830.sqlite",
+      "sha256": "cd76c44b46a30b36b8c0fe631c66163aacecb45e485b40515fd332f484a11859",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467831.sqlite",
+      "sha256": "8cac2b0b3a90c12bb3ec30ddcd4b70d06144585041508b37b699f3fdb9bf6d16",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467832.sqlite",
+      "sha256": "23d05c38152ac80d6edb4842581a3c09a8d7e5454504331c74bf233143118ece",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467833.sqlite",
+      "sha256": "1dd874610c6d4d62ec2db77ae86f0a301ca6b6dcacc68eb8e64a4627716f4fb1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467834.sqlite",
+      "sha256": "56cdd83c6b21908c15a9d27c4e4e686863c1aa660fd546f4ff8fd96dbb28a161",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467835.sqlite",
+      "sha256": "996680a5bbd4dbc432decf95b7f0947321b48b9670c74b0a0e2aa55863a3ac93",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467836.sqlite",
+      "sha256": "06bb8b88a72d00ae99e44ac71d5d445298acecab367d263cf0bffa24d36f69c5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467837.sqlite",
+      "sha256": "e1c60cb87e2295bbaee3f453a16dc117e19c51ffd8244cf67884479f4b251c0a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467838.sqlite",
+      "sha256": "0d0e9808da564df465b414eae71f16dbdb051dcebe3ba153d481e0c15ec427ca",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467839.sqlite",
+      "sha256": "dd06cdd56eb77e389b6105fc17a8a37772478ee07a490b602cba4e175540f34b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467840.sqlite",
+      "sha256": "b808dbeb9b8230044b059ebdbfb6462f7f15673ae68768daa2067c62679c7f7a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467841.sqlite",
+      "sha256": "25a9b6e612a939501491242fd30330f32d85131dccdd4ccf29dadee772764b52",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467842.sqlite",
+      "sha256": "67dd9e1588e68eae38a1ab7cf6d5fe658e2bd733e232959a947f9ba4d0f0fb59",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467843.sqlite",
+      "sha256": "17edb9de796d1fbe2a70e8f4270db4d55dd241c81fbee8262db5824282404943",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/db-1791467844.sqlite",
+      "sha256": "c7ed7daa89fc604953c50434721d3eb69d2a3e8e9f920077f9d8a47bda2c1bd5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/seed-1791467816.sqlite",
+      "sha256": "9551db030c4355b2fc6a4c0a0a6639bb8778a1c566f13e6b4ecdba0b98b48bd1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/seed-1791467817.sqlite",
+      "sha256": "bd6cdaa405d82176c64036af1c44fa1fad3c583f3c4a3d8834eecbdea88a0494",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/seed-1791467818.sqlite",
+      "sha256": "e49ad8de98a3072a6ea17f05f5898105a63156142415230f14fa054ce7729a54",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/seed-1791467819.sqlite",
+      "sha256": "c4f0c2d02fd7ba408179373d75b8ca416d3c9c6efac1093f41dc44f8aef1c795",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/seed-1791467820.sqlite",
+      "sha256": "349b04d9e59431c9403ff41397e9c265da452718c388b3d665962da8607cd8bd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/seed-1791467821.sqlite",
+      "sha256": "18837518e5e9790b9b876bf59d85ba8e0062b1a36264fb5c38247bc8da0220b6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/seed-1791467822.sqlite",
+      "sha256": "7b3bd736507703c5e2a9393a8d033cdb40633725f19353cc3986d25ec43250d0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime/supplement/seed-1791467823.sqlite",
+      "sha256": "2db68b48dc1a668b294e1a5de793e9f0f208dd250d3fba09ead9e0f348777931",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps/db-1791468979.sqlite",
+      "sha256": "00c718f9bab270276697b9a92126cff8decd2710045c1bb070e8c30bcc8b7510",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps/db-1791468980.sqlite",
+      "sha256": "c52d41236fd382f7c872a0934580979e21541ce86179d44e28502db85fe96e9a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps/db-1791468981.sqlite",
+      "sha256": "b503267665fc38a00f801aae17b98e26fe33d2da8f620286923388dbbe8e8fcd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps/db-1791468982.sqlite",
+      "sha256": "1ecf1ddadf6d1675e399b1bb05324990d7da793a87a7195de0474051f855350f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps/db-1791468983.sqlite",
+      "sha256": "211e611f0c1000f2fc0f654fc2d40410517b1e20a93eb668220d01ebefc17b69",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps/db-1791468984.sqlite",
+      "sha256": "0f53ae019fa249083d911e178e4cd30328620703d5592dc386ed39c041cff4ff",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps/db-1791468985.sqlite",
+      "sha256": "95fd94c056c9c0c2f9968adff40603ea11d254f47d7e7642b7500221b4bd1cf0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps/db-1791468986.sqlite",
+      "sha256": "6bfeca77c554bffc56d61250af9240474949fbad8b8cdb18b2589b18f692486c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/runtime-write-gaps-harness-attempt1/db-1791468945.sqlite",
+      "sha256": "9ce960b3a7b75e1ce990c66db945c03b678a59c67f858df812ebdec6c34c90c6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/001-roles-navigation.sqlite",
+      "sha256": "7cd9cc2a7cc8d6a2347090da40025a653f2f6841328e183d9a4c4312260e4089",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/002-default-time-matrix.sqlite",
+      "sha256": "537ad48bcd0d50de883e439b59d7acb6c0915c7d1471125b8911ec6d49037e37",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/003-dialog-close-matrix.sqlite",
+      "sha256": "5f0f9032efa60a200717d0f1203c53e83aa4f740a70be6a6fae2ec78ada1b633",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/004-responsive-complete-flows.sqlite",
+      "sha256": "594054d19c876d3b38792e7227b984260ce56dc3d31be68106b3c7b5da2be77b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/005-start-session-errors.sqlite",
+      "sha256": "b6d2056172c732297511178fbcf3f806d85d10ed78f0f64cb8409aea3e20271b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/006-parallel-load-errors.sqlite",
+      "sha256": "fc08faf2f5e7249c2251ad715b5f065366ee0ce6c7f17e1e9cd899823ba1fd00",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/007-room-edit-create-retry.sqlite",
+      "sha256": "31ba0af6ef9b78db4af7df7bf6e4359d9d74dc0a5ba16857eddcc3801ab25757",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/008-role-demotion.sqlite",
+      "sha256": "1fb6c7c284eaaed2725e25d5ad2180eb9b0fee12b4e80fa40b41527bc526c187",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/101-roles-navigation.sqlite",
+      "sha256": "51004089acdc71c18f28f6bf502191ff075243718a197c7df0de552cf0d4eaa2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/102-default-time-matrix.sqlite",
+      "sha256": "8a2b696da98496c553082c48794b92f08db7e1302a75858d0b36a1c1984ff5e2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/103-dialog-close-matrix.sqlite",
+      "sha256": "468344a95c4ea24ad1540929a31a716a0d47bdcfb2ee4b99ac865066847211c9",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/104-responsive-complete-flows.sqlite",
+      "sha256": "44786e3e433aa5d96afd2651488baace5d535ceae48a3ae73975736897b53722",
+      "bytes": 57344,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/105-start-session-errors.sqlite",
+      "sha256": "3cd59e7b31e703e4c36fb74ac1379686a6f9627a07cbc111d368e369deb011c7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/106-parallel-load-errors.sqlite",
+      "sha256": "ac2be0c5ee999382c65255cee8d7350433e7a349043dc0fff9684045012affc7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/107-room-edit-create-retry.sqlite",
+      "sha256": "a90112e985906c5b4f06e6f64163d0ff86efcfe9501963fcbaff802561adecc7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/108-role-demotion.sqlite",
+      "sha256": "33c8aa60c89ceda3f810846a32c6cd39de0e760ac9484b68a867dcb933db1446",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/201-filters-all-controls.sqlite",
+      "sha256": "be9a3155c98ae303d88d04591d3275d29bbfda852e4c93d48945efe724db4d16",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/202-timeline-boundaries.sqlite",
+      "sha256": "2e1e06b68aacdfcc472ec8df657b1c6d5a0495a4560cf24f37c9dfeb83c205a1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/203-status-exact-boundaries.sqlite",
+      "sha256": "a2b4015c900cd8ee95b3f72f42b1494e5c9fa5e8bbb98e3f8156e9245142b120",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/204-notifications-render-timezones.sqlite",
+      "sha256": "df2b2d7fda874a0ce39aadd38e48ada1d9cde27be37dacf2d6ed4aa5b8b6e7b9",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/205-real-session-expiry-dialogs.sqlite",
+      "sha256": "371226ccbb52b9403cc9e153d7f205cac7b04092915eeaf0febad4053211427f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/206-stored-text-escaping.sqlite",
+      "sha256": "55444bcacb3d0ec32e83223c50c8e41e28b27c6a2b70403f7583aff6b0138f75",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/207-booking-draft-retry.sqlite",
+      "sha256": "29cb780d59466af149183ebdcd223c9a3fd0f97b1fedf946926e927629356736",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/301-submit-button-fault-matrix.sqlite",
+      "sha256": "0149cbbc8410226ac56dc294262685e95c5f495818b7ae1903b1e7eb213b36d4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/302-timezone-full-views.sqlite",
+      "sha256": "d8ed7e204c5241d276c01fc276e9c41bb4c255a9669f52c3fbe067e1e7a9c9c2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/303-agenda-privacy.sqlite",
+      "sha256": "a18f3634fc952eeb888c87545e358aa8c920b333c081283d07f5319779343839",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/304-keyboard-only.sqlite",
+      "sha256": "82de3572180751f50595c2c1d8cff01c9feda3fc04bf92fa8039599a8efad6bb",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/305-logout-failure-recovery.sqlite",
+      "sha256": "127ce45839cd93a1b80d9de37becc65be8f74349d5288bb3d61df546240ebd5a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/306-booking-group-sort.sqlite",
+      "sha256": "7a796005ce583542d86c8ccb97f45ab6c12587dda9b6e30ff277dfa307768889",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/401-statistics-midnight-fixture.sqlite",
+      "sha256": "5067fea12fd8fa280f81e06e40e7e7a09a20bb8fbbef2b2c6cbe8d529220fe7b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/402-logout-full-retry.sqlite",
+      "sha256": "a07d5a1370ed86343db2da56bb597d6c683a61b5cff52dc5ce21b2b31e476ba9",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/403-keyboard-cancel-notices.sqlite",
+      "sha256": "a30454421540120c6e711dfa80dfe66253bfd74eb448c1aab0d7da3b70019ead",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/404-load-network-wait-recovery.sqlite",
+      "sha256": "2bef133497b8a3411149b7fb675b6b9753890b6e276304185bfc16ff52da0883",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/405-two-room-dialog-details.sqlite",
+      "sha256": "6e96f949361b0e4006910ff81ba9de2cf485d5215caaf92a05bf6f717002fa21",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/501-statistics-full-corrected-harness.sqlite",
+      "sha256": "7c7938337d332618c1f57866236e3bdfaf240566b8de0c9d19edf6d765c66f37",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/502-edit-room-button-matrix.sqlite",
+      "sha256": "cbc8b3f183de88f53439d6f1b8988b916388c40cc07295e266ad4c7a84704c5c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/503-keyboard-alert-status.sqlite",
+      "sha256": "6808802ae95e23232e305ad0730bfeea19c6caa3e85c868ae360dc6dab51804f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/504-escaping-user-team-attributes.sqlite",
+      "sha256": "911b0a7a7a6650450b602e1a08b85eac772ce2b645b903e039d1ae9176156725",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/505-three-viewport-long-content.sqlite",
+      "sha256": "35ee4436bb69ba378524fe0323d7ade0d8c50cc3aca496db6918d015e7f55566",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/506-demo-choice-no-login.sqlite",
+      "sha256": "a62a64fb10b33821ecdd44fea2ea916b103ed52025c628ddc9df8cb4da136c6d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/601-real-booking-conflict-retry.sqlite",
+      "sha256": "4ae83020140515635633d9f694968dea7bc1740ed034d84fea15580f81579e9a",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/602-notification-mark-read-failure.sqlite",
+      "sha256": "cca7922acdc2fffeba2cf33de67cc92c13baf397674770cd815cfa7173f64738",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/603-manage-disabled-room-and-team-status.sqlite",
+      "sha256": "a5b777daaf1be33f58f5d047ca94f329dcb48010d6d4c6ef0af8045ae884d81f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/604-role-post-success-load-errors.sqlite",
+      "sha256": "b4b861994483a289044cda4e27ee7113f0f2235672d6611da52f6935df5591f9",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/605-api-default-error-and-wrong-password.sqlite",
+      "sha256": "9112f2bbd343c591eea8e905c6aceb7c087ef9d58d4de4c0d5584c51fe1641fa",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/701-keyboard-only-real-error-correction.sqlite",
+      "sha256": "83c6c0b7da5170f398c2fefc74b42bdf8fc8bc191b7504545ebc3753e65f3fc4",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/702-long-content-all-breakpoints.sqlite",
+      "sha256": "c0af4ec4b6441598bc4941201d039b298238ab973161bdeec6f100a4d3e06fa3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/703-escape-private-agenda-error-toast.sqlite",
+      "sha256": "74c5e600b13cfd2d3ad8d0706be61fc99588b61706a1d026e30ba9b23f49820c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/801-successful-write-followed-by-load-error.sqlite",
+      "sha256": "744af93d7395447fc89464c1b61490ca6d11472c07ce9a612bd961b3bff696a1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/802-small-room-and-new-draft.sqlite",
+      "sha256": "d929bf9828472975a1ae8193bb89d1b7a730e3b532a4c566b6409628732e832f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/803-cancelled-history-group-sort.sqlite",
+      "sha256": "cce18bc957dab25d70032f82b24975c2d3d90352dae7f79160bb66de18bde5ef",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/901-mobile-keyboard-complete-path.sqlite",
+      "sha256": "dae046eff00bf28f8dd9344dd0df659d3f2ed53dc16a95843f1de371d1a36ab6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/911-mobile-keyboard-complete-path.sqlite",
+      "sha256": "2ffeffc9b8456cc682ac03190149508b3aa8a05a3b887cda772acf078aac9b74",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/921-real-cancel-edit-business-rejections.sqlite",
+      "sha256": "b02a0c30c8f4106a65ab77e0bd39156f7eebcc80698d7017c0f2aea8a77e7b1d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/931-real-cancel-edit-business-rejections.sqlite",
+      "sha256": "dd5125041092427defde2f1140b831e77c3846a580f59cc0730ded6af2c3a5a3",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/941-stats-real-zero-per-day-and-identity.sqlite",
+      "sha256": "035c46c11554a78b4dc9ea6bcbe35e5aea32b57fc1985c9bd909858c8f268d48",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/951-login-team-scope-and-no-user-load.sqlite",
+      "sha256": "2c8762ca320db045c8b053e31256f8f86e05694ad04a3956b0db8111ef37bc6c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui/952-same-start-admin-scope-status.sqlite",
+      "sha256": "22789b194ebc257886ee3c5a9f9477bba57287b6fda2d5702d6adc9a9ed95e28",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/current401-old-token.sqlite",
+      "sha256": "94af16fc1922480a8401caaa898106042dbcb3697856325a45a5778565b6e33b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/date-network-failure-network-failure-new-first.sqlite",
+      "sha256": "9d1710dd64dd3e89ce1775333c818a2e7b0efb01013986388677b63365aedb47",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/date-network-failure-network-failure-old-first.sqlite",
+      "sha256": "ee2d7ff6389675ed83f50621be7b0cd6b45f42c0fa969cf0a8663fa2ee61b9f9",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/date-network-failure-success-new-first.sqlite",
+      "sha256": "08558102f565ef4ec44e742d101f15d8adf4952c64c9c34f26d91f9660b3cb7f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/date-network-failure-success-old-first.sqlite",
+      "sha256": "6aa23148c4ddc59e73f7674620e1bba84d993708362d704af04d8623606e80c1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/date-success-network-failure-new-first.sqlite",
+      "sha256": "bcbacb20514b1ec72e68d62d525f37ad6c25c93626b1583e3ba8650d12c92093",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/date-success-network-failure-old-first.sqlite",
+      "sha256": "91f1e19de5e457b8b0a57a3b8a2dcd433f648a2a77d89c068abcce9bf0ff6870",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/date-success-success-new-first.sqlite",
+      "sha256": "75536857312cacb4a83bb247344e19de1c340b9e76efc35ff90973057971d311",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/date-success-success-old-first.sqlite",
+      "sha256": "82b687c71688376f6b43915bac257a0ea99d38c0642e9547a581770c9eac43e0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/logout-failure.sqlite",
+      "sha256": "3393b79b766db0d87cac555809dfc4635ec2d7a7f82596359bae66a17b3e15dd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/logout-success.sqlite",
+      "sha256": "7243addbdeac5bfc0dfc1b30f5330495f32ef5fc3c91c1a6d0a7e49743c520b0",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/navigation-network-failure-network-failure-new-first.sqlite",
+      "sha256": "658bec5bc9ae511110a228b42a1d7b3d451a61d2f94248410a88c2fd04eabd91",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/navigation-network-failure-network-failure-old-first.sqlite",
+      "sha256": "a32e7429fccdfea32a4ae7c1ebde4ecfa84472f27ee5e400996bd3e31f49b70e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/navigation-network-failure-success-new-first.sqlite",
+      "sha256": "ec57fda881234ecdd7ab8cc5a6e85f1a2666378fa221d23c1a3f5e2f4b8378c5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/navigation-network-failure-success-old-first.sqlite",
+      "sha256": "f44878d2973b81ab4ef73ba3484113037e9111c5b2082915338c832cf8bfb19b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/navigation-success-network-failure-new-first.sqlite",
+      "sha256": "ed80553ccc938206bc7695180bfe3406547407a40f6e59d70d0b88f19e0cc922",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/navigation-success-network-failure-old-first.sqlite",
+      "sha256": "1d14bbbd00d8148f978b49763a0927802454c7c31b3db60ba638d360bef32f99",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/navigation-success-success-new-first.sqlite",
+      "sha256": "7fb00422a252cd6792469c2d3942ef24b41aede8ec618723b82c9194556aa709",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/navigation-success-success-old-first.sqlite",
+      "sha256": "1c2cf3606f116bd98abcb1c9300a69c4fefc3d2791f67251cc61b07f03f84339",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/old401-new-session.sqlite",
+      "sha256": "dc0d056b33cf2554ba29269fad26d02e9ba517fb2082e517b7a7959bbcbc1013",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/relogin-failure.sqlite",
+      "sha256": "115f62924ec8928c5ff9844ed0cf54c4b7283804ef5ee12ba8ff422cd687c0d8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races/relogin-success.sqlite",
+      "sha256": "bedc452ac67ff469eeecf83173d60e6cf305941fe63c07602e3a0357c39d6c2c",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/current401-old-token.sqlite",
+      "sha256": "69fcb93337ee0a5372ca2bee7de6574f73752aea1bd4de85bfba532eb8d82831",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-network-failure-network-failure-new-first.sqlite",
+      "sha256": "bfb6ddd586814979c002d6e1a07a987484808ee1c6479f919f5f57291a17d648",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-network-failure-network-failure-old-first.sqlite",
+      "sha256": "7e33294af6f397fc689471f36d9d7de1b3bb2d5d7d96f11c743e8d2b900fbc0f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-network-failure-network-failure-old-first.sqlite-shm",
+      "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "bytes": 32768,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-network-failure-network-failure-old-first.sqlite-wal",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-network-failure-success-new-first.sqlite",
+      "sha256": "6ff638173051e119ec5fb3967197ef68da4b4ea42c87c2a51e12632d57cb258f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-network-failure-success-old-first.sqlite",
+      "sha256": "4fe95556bea9b31278b626d16bc632b6fee64ba273ea24245f4db2f3dfa165bd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-success-network-failure-new-first.sqlite",
+      "sha256": "365cd754612c2e1d31a05fdac5c88129cda506ef5f5effdf369c0d761abbb506",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-success-network-failure-old-first.sqlite",
+      "sha256": "6c0b5597514748d5b21a856673df665558c4e26c36c857b087a28b6ce2e917db",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-success-success-new-first.sqlite",
+      "sha256": "4c8ec50fc8bfbefe352e4bfd7d3e2deb4edda1abca8d12d62dc63f8fbfa6d617",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/date-success-success-old-first.sqlite",
+      "sha256": "39245b594a3da07cc04889d04a68d11beefef9f3f2a80dd6ffe72c1555e8e64d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/logout-failure.sqlite",
+      "sha256": "a28c8d550666adea300e491c1d6711e562478d7db2dd9263bcd11749bf86a7d1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/logout-success.sqlite",
+      "sha256": "a000de07df66e6a0e6e760ac9b132bbe9bee333bad77ac9aadc65ce0ee27e620",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/navigation-network-failure-network-failure-new-first.sqlite",
+      "sha256": "b0dbc2e69295ee83b33cbfb2d5cf024f4dc1c9282ea6e952699ff38766b38858",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/navigation-network-failure-network-failure-old-first.sqlite",
+      "sha256": "0c02a78e6f203daa396fb4d3d9f05beb8e80817a6c89aa2a40a2db977f18c067",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/navigation-network-failure-success-new-first.sqlite",
+      "sha256": "7283ec569f1812c3754e04b879499dda0e085901af89ab96995bd2f69aab9d58",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/navigation-network-failure-success-old-first.sqlite",
+      "sha256": "e9911ca76b3b7fac0a10522095349c53ad7793bbd318bf18ba0f6d4cb10e3f35",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/navigation-success-network-failure-new-first.sqlite",
+      "sha256": "9da29e66f9c4ca19a58b97d82207a9e466d10286c2e70b178b88d36d2e0522b6",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/navigation-success-network-failure-old-first.sqlite",
+      "sha256": "a1e9f58eda138cf012d95007f31cb7ef8428cdd43f9a2921fc219da791ef0852",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/navigation-success-success-new-first.sqlite",
+      "sha256": "643a4ff3546abb9f755ebcbc80dfe090fed03847050a6d3d62a74317f448234d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/navigation-success-success-old-first.sqlite",
+      "sha256": "66b793ed68dc8d1e9b35a483d5d5525084ef3eb00bb451e51f55050679fd263b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/old401-new-session.sqlite",
+      "sha256": "49fa5aa9b8efd2267ef6d7f792654511b183944f98e66f4f3a6a93599189f100",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/relogin-failure.sqlite",
+      "sha256": "3637d9665ca55e7a6930a319b11db4554b8491b35aadbb717e75d7337f038913",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt1/relogin-success.sqlite",
+      "sha256": "6ba2f0d00ed32814184cfd3ce82fc40aee9415c93a4d7c8f0e85ee0c33e15f40",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/date-network-failure-network-failure-new-first.sqlite",
+      "sha256": "520f59be28739123fd8243916e5e604b5e606cca96b2d98bbf005d41fdacfc4e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/date-network-failure-network-failure-old-first.sqlite",
+      "sha256": "3c162f7ef6223ce6613ab59f3aaa66a2b693bc3a21688a3936c06fb3868f27f7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/date-network-failure-success-new-first.sqlite",
+      "sha256": "a1ce10c783ba5d7ee801244b2c83585b3cf3b267dc71dcc7f91fe6292383cda5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/date-network-failure-success-old-first.sqlite",
+      "sha256": "87236a927a5685d17fea98dde838d653a18a602cff31674fba76cf977a1dcd1d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/date-success-network-failure-new-first.sqlite",
+      "sha256": "ebd3f54464699cb59bfa58370b2ca56dc840f6597ced74f148c4fa1c0729d6e9",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/date-success-network-failure-old-first.sqlite",
+      "sha256": "6a0ff7e85ebd41433ba8cb14264145af460ec21c26a4dcb9612749d360f918b2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/date-success-success-new-first.sqlite",
+      "sha256": "8f990571180d29cba79e5e5e804e22cb6f92d3b6cc49a8ec1b71b9959d34e25e",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/date-success-success-old-first.sqlite",
+      "sha256": "2c496206f4011cacaa1f3516c8c7ef59af5c961ec5d52485a146430e21e3d67b",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/navigation-network-failure-success-new-first.sqlite",
+      "sha256": "f2b214189eedebe44522aa8f234111aea815275e8957487133a643acb29eba5d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/navigation-network-failure-success-old-first.sqlite",
+      "sha256": "87cea612ddba2fa9ffdac151b482139cb298bb5e9da3888bdd1fd456fbeb7e29",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/navigation-success-network-failure-new-first.sqlite",
+      "sha256": "cc66e9ff57f363d0f352c12a829dc57c543941191f3c97a36a5022bc89094c2d",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/navigation-success-network-failure-old-first.sqlite",
+      "sha256": "ed34671595a2e15215bf4089a9be9e445224c5dc680b2bdc1c937194082f233f",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/navigation-success-success-new-first.sqlite",
+      "sha256": "e388e2e422ed90defc1f7528304cdf5acace9d615b92a4bb26658d84b596b9b5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt2/navigation-success-success-old-first.sqlite",
+      "sha256": "c3c5edd967024823d874e5bc4b191eeb4a2cb8ad6a0ac1241cd0335ad2b5fcdd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/current401-old-token.sqlite",
+      "sha256": "5138c03aaf85c8aed9abb82da153655b211f8b7072bdfe9b4f5beed95a82db44",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/date-network-failure-network-failure-new-first.sqlite",
+      "sha256": "8619fb2ca1b4bc9778273aa9f0e5f47f0653af063557e75967431af3a3368dd2",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/date-network-failure-network-failure-old-first.sqlite",
+      "sha256": "aabbfb1768b92abb5f6ff0415b8f22deef285329bd87352951d974178c46bda7",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/date-network-failure-success-new-first.sqlite",
+      "sha256": "c2ce123067da077d4779fa567666dd6cf5571ac181adea5eaa77741d57dec5fd",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/date-network-failure-success-old-first.sqlite",
+      "sha256": "345c4d7e69886fadd77d19d6f491d976eb4a96cc1cba31c50dbde60318e11389",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/date-success-network-failure-new-first.sqlite",
+      "sha256": "d3af44c662b2ec7f178504ecc68f1002ed03cf3679f8f2b33ae4bef357b5fdba",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/date-success-network-failure-old-first.sqlite",
+      "sha256": "547bac888240e1a20dfc660a3e2d35684c207c18a4746fce853bdaece857d992",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/date-success-success-new-first.sqlite",
+      "sha256": "917b6f67fb9fa251b4f247a614e2dc6fc9a5f857d87c8586b117440e8f5d35f5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/date-success-success-old-first.sqlite",
+      "sha256": "ed7abf378bf0cc23611e4d406d9b4f4ccb626b719b1c797f117092341a200aca",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/logout-failure.sqlite",
+      "sha256": "19c3df3aeb35f137a301a5c7ef2294d3d47c1cea13e959ee6263016f40c06dd8",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/logout-success.sqlite",
+      "sha256": "90001289375feca0abae8fd763ec63dac89dda257defaeae50b7bcb4db81f1da",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/navigation-network-failure-network-failure-new-first.sqlite",
+      "sha256": "31f2efe597717b269774c4907305f0c65336f274f2faaad8b25b364440666256",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/navigation-network-failure-network-failure-old-first.sqlite",
+      "sha256": "5dfc570191c014812ef11c2fdfd19d49b0256cf065aad99ec33ea7bda2c07acc",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/navigation-network-failure-success-new-first.sqlite",
+      "sha256": "cb30451c77bc3d4ca1b569c17e26a8faf424688e24c9dd63df7eae72418c6d35",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/navigation-network-failure-success-old-first.sqlite",
+      "sha256": "0d302e11f522b0935ce2c87c2699b91c15816987d1f88e9311f0319bb325b5d5",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/navigation-success-network-failure-new-first.sqlite",
+      "sha256": "3100f37e61b34e0eb7a0f2d1e11ab63649e1552dbfd3c48b954cc76d9c705875",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/navigation-success-network-failure-old-first.sqlite",
+      "sha256": "f88ecd3762f69371e0efc8033890f50a74e0b14f70f9bbaed96c65077ce82234",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/navigation-success-success-new-first.sqlite",
+      "sha256": "28c6e0a668e6064a6bd27eebff0726f421209a2a72496364d062436755ceba34",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/navigation-success-success-old-first.sqlite",
+      "sha256": "24d5044a6d3fa548bcd99632fc41f5bc34ee1df6126377fca8b287b85ce2b552",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/old401-new-session.sqlite",
+      "sha256": "98df93f27c4068fada3b9ea75903528bf13824f79b440f3c965ce5f556b93a90",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/relogin-failure.sqlite",
+      "sha256": "274bdeffea3e053c9c637ff2bcedec60b6f22fc03ae65dc671327287f8e36494",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    },
+    {
+      "path": "runs/acceptance-20261008T-full-0b386b4-r1/evidence/ui-races-harness-attempt3/relogin-success.sqlite",
+      "sha256": "5a6dc0af88399d6d3338055db8f3a5e625b8d57757eed4e6f78d0066df1bebd1",
+      "bytes": 49152,
+      "reason": "本机运行数据库、会话或缓存，不公开"
+    }
+  ]
+}

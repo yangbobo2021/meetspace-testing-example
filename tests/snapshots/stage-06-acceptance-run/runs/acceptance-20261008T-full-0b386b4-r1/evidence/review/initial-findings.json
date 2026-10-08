@@ -1,0 +1,59 @@
+{
+  "reviewer": "/root/independent_reviewer",
+  "revision": "0b386b4bd37b01eb996c5e74215ab1a4463a9487",
+  "review_scope": "独立阅读96条需求、159场景expected与方法；实际JSON/HTTP/SQL与截图审阅中，非Tester自批。",
+  "findings": [
+    {
+      "id": "R-NOTIFY",
+      "status": "failed",
+      "reason": "creation-views真实通知正文只有–11:00，缺北京日期和开始时刻。Tester计数/归属断言未核对完整正文。",
+      "evidence": [
+        "evidence/api-r2/creation-views.json"
+      ]
+    },
+    {
+      "id": "R-DATE",
+      "status": "failed",
+      "reason": "date=实际200并返回默认当日；parse_qs默认丢空值导致与省略参数混同。",
+      "evidence": [
+        "evidence/api-r2/room-read-dates.json"
+      ]
+    },
+    {
+      "id": "R-PRECISION",
+      "status": "failed",
+      "reason": "confirmed/cancelled/started的start/end+1微秒均误返回201/replayed。秒级fingerprint先于粒度检查，负微秒拒绝不能抵消正微秒反例。",
+      "evidence": [
+        "evidence/api-r2/precision.json"
+      ]
+    },
+    {
+      "id": "R-401",
+      "status": "failed",
+      "reason": "旧身份O真实401延迟交付，在N身份证明200后清空有效N工作空间；已直接查看前后截图。api()先清user，再到loadToken检查。",
+      "evidence": [
+        "evidence/ui-races/old401-new-session.json",
+        "evidence/ui-races/old401-new-session-N-valid-before-O401.png",
+        "evidence/ui-races/old401-new-session-after-O401.png"
+      ]
+    },
+    {
+      "id": "R-DISABLED-UNIQUE",
+      "status": "unproven",
+      "reason": "r2同名冲突仅启用房间，尚缺已停用名称冲突；已告知补齐完整方法。"
+    },
+    {
+      "id": "R-FILTER-ZERO",
+      "status": "unproven",
+      "reason": "501跨午夜逐日统计筛选12+电话会议仍包含启用银杏，未达方法要求各日期零匹配。"
+    }
+  ],
+  "ledger_hashes": {
+    "project.json": "c86c5481cd12eb70509fabbcb3cf01d754ff54cbc13bfd7687a9e4f8387fb6c0",
+    "requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "resources.json": "de1422275b32c2b822baa6073bb134b94a0a74eb3188dfe722bdfe183c3aa7e5",
+    "scenarios.json": "e22f55fc9f49df9bbc8207e21432f1220883effffbd368ead8b80ee3d14dd394",
+    "methods.json": "0f16b2504c624fe7f9d1fc9066dec2b2af5cbfb958111c1f2313f82b176db63a",
+    "coverage_review.json": "caf74373c657eee5e43f5a1e6ada80f8fbad0a9bf938f6fb3ef2fdf981b28728"
+  }
+}

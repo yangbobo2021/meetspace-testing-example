@@ -5,6 +5,8 @@
 已记录的黑盒设计阶段产出，设计门禁 black_box_ready，应用验收未开展。
 本轮基于 [DR-004](004-login-window-endpoint.md) 的用户决定继续设计，关闭 [DR-003](003-black-box-design-review.md) 所记四项缺口；保留原历史档案和结论。
 
+后续白盒设计记录于 [DR-006](006-white-box-design-review.md)，不替换本阶段的黑盒结论。
+
 ## 背景
 
 - 用户回答“按建议”，确认登录限频窗口在精确六十秒时排除第零秒尝试。

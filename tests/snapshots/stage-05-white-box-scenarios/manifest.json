@@ -1,0 +1,144 @@
+{
+  "stage": "stage-05-white-box-scenarios",
+  "created_at": "2026-10-08T12:15:37.340651+00:00",
+  "source_revision": "5a0fd19fa6691c2b25be1ac2356e3b0c55766c43",
+  "requirements_sha256": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+  "code_sha256": {
+    "app/server.py": "d108a24c318d51607d22a9bedfab77e8e9911a04c7df535a5882698d1e3963e4",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "795a77045b90f46c99851f52fee5bce6836e4b88b39d4e584c9bb9387921d293",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead"
+  },
+  "counts": {
+    "requirements": 96,
+    "black_box_scenarios": 96,
+    "white_box_scenarios": 63,
+    "methods": 168,
+    "material_targets": 63
+  },
+  "total_scenarios": 159,
+  "new_white_box_methods": 63,
+  "independent_review_status": "passed",
+  "supplementary_design_gate_status": "white_box_design_ready",
+  "supplementary_design_check_exit_code": 0,
+  "compiled_full_acceptance_launched": false,
+  "execution_status": "not_started",
+  "resources_status": "not_verified",
+  "app_acceptance": "not_established",
+  "review_rounds": [
+    {
+      "round": "white-box-round-01",
+      "status": "gaps",
+      "sufficient_scenarios": 60,
+      "gap_scenarios": 3,
+      "uncovered_branches": [
+        {
+          "gap_id": "WBG-01",
+          "scenario_id": "WB-password-derivation",
+          "id": "WBG-01",
+          "requirement_ids": [
+            "identity-session-13"
+          ],
+          "inventory_ids": [
+            "IWB-017"
+          ],
+          "code_reference": "app/server.py:66-73,133-134",
+          "reason": "方法只观察 secrets.token_hex 调用、盐差异及数据库/WAL/输出文件，未明确独立复算派生、有效随机输入因果和完整持久化出口检查。读取随机后忽略结果、在未列出子进程或临时/已删除文件另存可恢复密码都可能通过当前新增白盒方法。原黑盒已有严格方法但没有本场景方法链接或明确全量复用。",
+          "plausible_fault": "调用随机API作表象，盐由账号/轮次计数生成；主表派生正确但临时文件或子进程日志保存可恢复密码。",
+          "failure_signal": "仅观察调用及主表会误通过；有效熵改变时盐不受影响，或未覆盖的持久出口含可恢复副本，应在后续执行中使本场景失败。",
+          "repair": "复用并链接已有 AI-salt-entropy-dependence、AI-password-persistence-scope；在新增方法明确要求两者完整矩阵与独立派生复算，检查所有出口，不能以随机调用或样本差异替代。"
+        },
+        {
+          "gap_id": "WBG-02",
+          "scenario_id": "WB-login-switch-and-cookies",
+          "id": "WBG-02",
+          "requirement_ids": [
+            "identity-session-14"
+          ],
+          "inventory_ids": [
+            "IWB-018"
+          ],
+          "code_reference": "app/server.py:298-307",
+          "reason": "方法写实际熵调用及token不同，但仅调用随机API不证明值依赖随机输入，且审计未额外存令牌的范围未具体化。首次随机、后续按账号/时间/计数输出，或正确摘要之外另存不明可恢复blob都可能逃过新增白盒方法；黑盒补充方法当前未关联。",
+          "plausible_fault": "首次令牌随机而后续登录/切换令牌按计数器生成，仍调用熵函数但丢弃结果，或日志/外部出口保存额外会话字段。",
+          "failure_signal": "同状态目标登录仅改变有效随机种子，后续输出不变或持久化出口发现额外内容；这些反事实不能只靠不同token与主表三字段检出。",
+          "repair": "链接并要求完整执行 AI-token-entropy-and-storage-scope 与 AI-subsequent-session-entropy，覆盖首次及真实前缀后目标登录、同带重放控制及全部持久化出口。"
+        },
+        {
+          "gap_id": "WBG-04",
+          "scenario_id": "WB-booking-horizon",
+          "id": "WBG-04",
+          "requirement_ids": [
+            "reservation-creation-4"
+          ],
+          "inventory_ids": [
+            "IWB-029"
+          ],
+          "code_reference": "app/server.py:450-452",
+          "reason": "新增方法在精确T及T+30天用下一个有效15分钟刻度测越界，未明确固定合法对齐开始S、移动服务钟±1秒来孤立精确相对日期边界。实现多放行几秒或对当前时间舍入，仍可能通过所列15分钟外侧样本。",
+          "plausible_fault": "服务端三十天上界额外允许1秒到14分钟，或先把current_time舍入整刻再做判定。",
+          "failure_signal": "相同合法对齐S，在服务钟为S-30天-1秒时已经越界却成功；在S-1秒/S/S+1秒的未来判定不符合要求。",
+          "repair": "链接并完整复用 AI-reservation-creation-4 的固定合法S、移动服务钟±1秒、新会话/新K隔离全部矩阵，或把六个精确边界具体写入新增方法。"
+        }
+      ]
+    },
+    {
+      "round": "white-box-round-02",
+      "status": "passed",
+      "sufficient_scenarios": 63,
+      "gap_scenarios": 0,
+      "uncovered_branches": []
+    },
+    {
+      "round": "white-box-round-03",
+      "status": "passed",
+      "sufficient_scenarios": 63,
+      "gap_scenarios": 0,
+      "uncovered_branches": []
+    }
+  ],
+  "files": {
+    "README.md": "88fcbe188e8665428388269b4fb9178cf28b0509d85891e1134f751e5774f2f2",
+    "black-box-gate.json": "932ac9f7dae29fee34ccdb9e17b92fddddb194cd1981d60bde80fea1928b3cdf",
+    "coverage_review.json": "d6232cff3765e528d1cb8817374fe3eadef0a3543600cb22f1c99ca82028c24b",
+    "methods.json": "69f06a98c1f3dbb0f4b79be132c614d18b1e5e3178113a6c583b022a3d4bb3d0",
+    "requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "review-history/pre-white-box-design/black-box-gate.json": "932ac9f7dae29fee34ccdb9e17b92fddddb194cd1981d60bde80fea1928b3cdf",
+    "review-history/pre-white-box-design/coverage_review.json": "d6232cff3765e528d1cb8817374fe3eadef0a3543600cb22f1c99ca82028c24b",
+    "review-history/pre-white-box-design/methods.json": "d6198c675f39cda9073ba6670085d932f6ef926691dc45c7a14aef80fc528aad",
+    "review-history/pre-white-box-design/requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "review-history/pre-white-box-design/scenarios.json": "947e785fcaa3933d9f5f3b2a5ef8f6a57476aa49ea65722aec91c8acdd67be97",
+    "review-history/white-box-independent-inventory.json": "96460a8663ca4939d29d3eae10788b4658bc70eea0badc9b9899aec946d421e7",
+    "review-history/white-box-round-01/methods.json": "5cdd56470d4a0d7605ddde60afe78c4f0966141ea1c0c69532111754bf29f8c0",
+    "review-history/white-box-round-01/requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "review-history/white-box-round-01/scenarios.json": "cb3fd001a4a8a2a24652d02759ddc3d49f40a5e0c1ac9982063db6e02c5fd8a1",
+    "review-history/white-box-round-01/white-box-context.json": "9d509d5edf53fde655c9d488fbe91a8701026eb2df4714a6ace285dc4baf91c6",
+    "review-history/white-box-round-01/white-box-independent-inventory.json": "96460a8663ca4939d29d3eae10788b4658bc70eea0badc9b9899aec946d421e7",
+    "review-history/white-box-round-01/white-box-map.json": "e79cba4b01e7efb12e85178394463689cba4677c495114e1bf311251f535acef",
+    "review-history/white-box-round-01/white_box_review.json": "16d33b54904d2e4e45c23bf1d590b844f1d879d4afc0eac2fedaef019f0d1327",
+    "review-history/white-box-round-02/methods.json": "69f06a98c1f3dbb0f4b79be132c614d18b1e5e3178113a6c583b022a3d4bb3d0",
+    "review-history/white-box-round-02/requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "review-history/white-box-round-02/scenarios.json": "25d55e6814298ce3cd3a528aa4e73b34014c26572d5ac5da9c2413eef5c310bb",
+    "review-history/white-box-round-02/white-box-context.json": "9d509d5edf53fde655c9d488fbe91a8701026eb2df4714a6ace285dc4baf91c6",
+    "review-history/white-box-round-02/white-box-independent-inventory.json": "96460a8663ca4939d29d3eae10788b4658bc70eea0badc9b9899aec946d421e7",
+    "review-history/white-box-round-02/white-box-map.json": "e79cba4b01e7efb12e85178394463689cba4677c495114e1bf311251f535acef",
+    "review-history/white-box-round-02/white_box_review.json": "83a38d949019615e5f948feb7fa476356453e05b84354042fba009533701c761",
+    "review-history/white-box-round-03/methods.json": "69f06a98c1f3dbb0f4b79be132c614d18b1e5e3178113a6c583b022a3d4bb3d0",
+    "review-history/white-box-round-03/requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "review-history/white-box-round-03/scenarios.json": "2725989a69788e17154435750a79a63819ea987c9dcf252a1a8b65455a5cc9fb",
+    "review-history/white-box-round-03/white-box-context.json": "9d509d5edf53fde655c9d488fbe91a8701026eb2df4714a6ace285dc4baf91c6",
+    "review-history/white-box-round-03/white-box-design-gate.json": "ec64311724defbc4b5ce7d97ff44956fac065fc602d7fa57daa59c807a841df9",
+    "review-history/white-box-round-03/white-box-independent-inventory.json": "96460a8663ca4939d29d3eae10788b4658bc70eea0badc9b9899aec946d421e7",
+    "review-history/white-box-round-03/white-box-map.json": "5f0b93f181a59cd6be32abfb102283f6a1b2fe9083c05b602de53a28bdc97963",
+    "review-history/white-box-round-03/white_box_review.json": "1df746f07cfc45b19543a571c4e2a3c245d0a3e721cf05672416d629e1f47fa5",
+    "scenarios.json": "a6e504c76b3b921621c982252d91b57ea5dff117828775937ac832e89d851562",
+    "scripts/check_white_box_design.py": "9a92dd5b019e8c364917f63f4951a6fe6082a39d52c414f81d38887abe14ac3a",
+    "white-box-context.json": "9d509d5edf53fde655c9d488fbe91a8701026eb2df4714a6ace285dc4baf91c6",
+    "white-box-design-gate.json": "ec64311724defbc4b5ce7d97ff44956fac065fc602d7fa57daa59c807a841df9",
+    "white-box-design-summary.json": "a8f93e62f9f36ca3d10f58208c51f2fc98b1257fea2a517f1a97835601b5430b",
+    "white-box-map.json": "5f0b93f181a59cd6be32abfb102283f6a1b2fe9083c05b602de53a28bdc97963",
+    "white_box_review.json": "1df746f07cfc45b19543a571c4e2a3c245d0a3e721cf05672416d629e1f47fa5"
+  }
+}

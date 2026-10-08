@@ -1,0 +1,422 @@
+{
+  "source": "specs/map.md and specs/packages/*.md; stage-02-requirements + DR-004",
+  "version": "stage-02-requirements (12d503a) + user-confirmed DR-004 login-window endpoint",
+  "confirmation": {
+    "status": "confirmed",
+    "date": "2026-10-08",
+    "scope": "stage-02-requirements（12d503a）全部96条需求作为本次黑盒场景设计基线",
+    "basis": "用户对采用上述全部96条需求作为本次黑盒场景设计基线的明确问题回答：确认。",
+    "decision_ref": "specs/decisions/002-black-box-baseline-confirmation.md",
+    "test_directory": "tests",
+    "clarifications": [
+      {
+        "requirement_id": "identity-session-9",
+        "decision_ref": "specs/decisions/004-login-window-endpoint.md",
+        "human_reply": "按建议",
+        "rule": "t=60.000秒时，t=0的有效尝试移出计数窗口，释放一个名额；窗口为(t-60秒,t]。"
+      }
+    ]
+  },
+  "scope": {
+    "environment": "具备 Asia/Shanghai 时区资料的本地 Python 3.11+ 环境、浏览器界面与同源 HTTP API；账号与数据均为合成示例。",
+    "excluded": "真实邮件、短信、SSO、注册、密码恢复、成员邀请、周期预约、支付、公网部署、高可用和备份恢复。",
+    "clock_boundary": "服务端按服务端时刻判定会话和预约资格；界面状态及默认时间按浏览器时刻计算。",
+    "package_intents": {
+      "application-runtime": "使本地示例可独立启动、保存业务记录，并提供可识别的运行状态。\n本包不定义公网运营、高可用、备份恢复或企业部署要求。",
+      "identity-session": "使示例用户以所属团队与当前角色进入工作空间，并限制失效会话和非同源修改请求。\n本包描述已有账号的登录，不包含注册、密码修改或企业身份接入。",
+      "interface-experience": "使用户在桌面或窄屏界面理解业务状态、完成主要操作并从错误中继续。\n本包不定义品牌资产、浏览器兼容清单或性能服务等级。",
+      "notification-center": "使用户获得自己预约的确认与取消记录，并在站内跟踪已读状态。\n本包不承诺发送真实邮件、短信或浏览器推送。",
+      "reservation-creation": "使团队用户为合法时段创建唯一且可追溯的会议室预约，并明确拒绝不可接受的预约。",
+      "reservation-management": "使成员管理自己的预约，使管理员管理本团队预约，并在取消后保持历史与占用一致。",
+      "room-discovery": "使团队用户按日期查看空间与占用，并找到容量和设备合适的可预约会议室。",
+      "space-administration": "使本团队管理员维护空间资料与可预约状态，并保留已有预约的业务记录。",
+      "team-administration": "使管理员维护本团队现有成员的角色，并保证团队保留管理能力。\n本包不包含新增、邀请、移除或停用成员。"
+    }
+  },
+  "items": [
+    {
+      "id": "application-runtime-1",
+      "text": "给定 Python 3.11+ 且具有 Asia/Shanghai 时区资料，当使用者执行 `python3 -m app.server`，应用应仅使用 Python 标准库在 `127.0.0.1:8766` 启动，并使用项目的 `data/meetspace.sqlite` 数据文件。"
+    },
+    {
+      "id": "application-runtime-2",
+      "text": "当使用者通过启动参数指定 host、port 或 db，应用应使用指定监听地址、端口或数据库路径，未指定的参数保持默认值。"
+    },
+    {
+      "id": "application-runtime-3",
+      "text": "当应用首次初始化没有团队记录的数据文件，应用应创建以下合成示例数据并可供登录使用：\n\n| 类型 | 初始资料 |\n| --- | --- |\n| 团队 | 见山设计、远岸工作室 |\n| 见山设计账号 | 林可 admin@meetspace.test 管理员；陈悦 alice@meetspace.test 成员；周言 bob@meetspace.test 成员 |\n| 远岸工作室账号 | 许宁 other@meetspace.test 管理员 |\n| 公开示例密码 | 全部账号为 MeetSpace!2026 |\n| 云杉 | 见山设计，3F · 东侧，八人，显示屏、白板、视频会议，启用 |\n| 白桦 | 见山设计，3F · 西侧，四人，显示屏、白板，启用 |\n| 银杏 | 见山设计，2F · 开放区，十二人，显示屏、白板、视频会议、电话会议，启用 |\n| 青松 | 见山设计，2F · 北侧，六人，白板、电话会议，启用 |\n| 海风 | 远岸工作室，1F · 靠窗，六人，白板，启用 |\n| 初始会议 | 初始化北京时间的明天：陈悦在云杉 10:00–11:00 六人“品牌方向讨论”；林可在白桦 11:00–12:00 三人“设计评审”；周言在银杏 14:00–15:00 十人“产品周会” |"
+    },
+    {
+      "id": "application-runtime-4",
+      "text": "当应用打开已有团队记录的数据文件，应用应保留其原有记录，不重复填入或按当前日期移动初始示例会议。"
+    },
+    {
+      "id": "application-runtime-5",
+      "text": "当使用相同数据库文件重启服务，应用应保留已保存的团队、账号角色、会议室、预约、取消记录及通知的内容和已读状态。"
+    },
+    {
+      "id": "application-runtime-6",
+      "text": "当客户端查询健康接口，应用应无需登录即可返回数据库可读取时的 ok 状态、1.0.0-rc.1 版本和 Asia/Shanghai 时区。"
+    },
+    {
+      "id": "application-runtime-7",
+      "text": "当应用对接口请求返回错误，应用应使用 JSON 错误说明与稳定错误代码，不把内部异常栈或密码放入公开响应。"
+    },
+    {
+      "id": "application-runtime-8",
+      "text": "当持久化或服务处理发生异常，应用应按以下错误类别返回结果：\n\n| 类别 | HTTP 结果 |\n| --- | --- |\n| 数据完整性冲突 | 409 与 data_conflict |\n| 数据存储操作失败 | 503 与 storage_unavailable |\n| 未预期应用异常 | 500 与 internal_error |"
+    },
+    {
+      "id": "application-runtime-9",
+      "text": "当一个业务写入事务失败，应用应撤销该事务的部分写入，不将未完成的修改保存为成功结果。"
+    },
+    {
+      "id": "identity-session-1",
+      "text": "当用户提交登录资料，身份服务应按以下输入规则接收邮箱与密码：\n\n| 字段 | 规则 |\n| --- | --- |\n| 邮箱 | 字符串，去除首尾空格后为一至一百六十字符，按小写匹配账号 |\n| 密码 | 字符串，去除首尾空格后为一至二百五十六字符 |"
+    },
+    {
+      "id": "identity-session-2",
+      "text": "当用户以有效账号的正确密码登录，身份服务应建立该账号的会话。"
+    },
+    {
+      "id": "identity-session-3",
+      "text": "当登录账号不存在或密码不匹配，身份服务应以同一“邮箱或密码不正确”反馈拒绝登录。"
+    },
+    {
+      "id": "identity-session-4",
+      "text": "当已登录用户查询当前身份，身份服务应返回用户编号、邮箱、姓名、所属团队编号与名称、当前角色、版本和 Asia/Shanghai 时区。"
+    },
+    {
+      "id": "identity-session-5",
+      "text": "当没有有效会话的请求访问工作空间业务接口，身份服务应拒绝访问并要求登录。"
+    },
+    {
+      "id": "identity-session-6",
+      "text": "当会话建立后经过八小时，身份服务应使该会话失效，普通业务访问不延长有效期。"
+    },
+    {
+      "id": "identity-session-7",
+      "text": "当同一浏览器成功登录另一个账号，身份服务应替换该浏览器的原会话，不注销其他浏览器的有效会话。"
+    },
+    {
+      "id": "identity-session-8",
+      "text": "当已登录用户退出，身份服务应撤销当前会话并清除该浏览器的会话 Cookie。"
+    },
+    {
+      "id": "identity-session-9",
+      "text": "当同一来源 IP 提交登录请求，身份服务应在滚动六十秒窗口（不计入距当前时刻满六十秒的尝试）内仅接收前八次资料格式有效的尝试，并对额外尝试返回频率限制，成功尝试同样计数。"
+    },
+    {
+      "id": "identity-session-10",
+      "text": "当客户端提交 POST 或 PATCH 修改请求，请求入口应拒绝缺少 `X-Meeting-App: 1` 标记或携带不同于当前 HTTP 来源的 Origin 的请求。"
+    },
+    {
+      "id": "identity-session-11",
+      "text": "当客户端提交 POST 或 PATCH 修改请求，请求入口应仅接收 `application/json` 的对象正文，正文长度须为一至六万五千五百三十六字节。"
+    },
+    {
+      "id": "identity-session-12",
+      "text": "当身份服务建立或清除会话 Cookie，身份服务应将 Cookie 限制为路径 `/`、HttpOnly 和 SameSite=Lax。"
+    },
+    {
+      "id": "identity-session-13",
+      "text": "当账号密码被初始化，身份服务应仅保存带随机盐的密码派生值，不保存可恢复的明文密码。"
+    },
+    {
+      "id": "identity-session-14",
+      "text": "当会话建立，身份服务应在持久存储中只记录随机会话令牌的摘要、用户关联与到期时间。"
+    },
+    {
+      "id": "interface-experience-1",
+      "text": "当界面显示有效登录用户的工作空间，界面应提供会议室、我的预约、通知中心入口，并仅对管理员提供空间管理入口。"
+    },
+    {
+      "id": "interface-experience-2",
+      "text": "当用户选择一个示例账号，登录界面应仅填入其邮箱及公开示例密码，仍要求用户点击登录，不自动建立会话。"
+    },
+    {
+      "id": "interface-experience-3",
+      "text": "当界面加载工作空间数据，界面应显示加载状态，只有最新一次页面加载请求可更新当前页面。"
+    },
+    {
+      "id": "interface-experience-4",
+      "text": "当工作空间数据加载失败，界面应显示错误与重新加载入口，不将缺失数据展示为成功的空列表。"
+    },
+    {
+      "id": "interface-experience-5",
+      "text": "当用户打开预约弹窗，界面应显示所选会议室名称、位置、容量与时间规则，并提供主题、日期、参会人数、开始时间和结束时间输入。"
+    },
+    {
+      "id": "interface-experience-6",
+      "text": "当预约弹窗选择默认时间，界面应按浏览器当前北京时间给出对齐十五分钟的开放时段，所选日期已过去或当天已无开放时段时改用明天，默认结束时间不超过 20:00。"
+    },
+    {
+      "id": "interface-experience-7",
+      "text": "当用户提交登录、预约、取消或会议室保存，界面应在请求处理中禁用相应提交按钮，并在请求完成后恢复按钮可用状态。"
+    },
+    {
+      "id": "interface-experience-8",
+      "text": "当预约、取消、会议室保存或角色修改成功，界面应显示对应成功反馈并重新载入相关列表，预约成功反馈应包含预约编号。"
+    },
+    {
+      "id": "interface-experience-9",
+      "text": "当预约或会议室资料提交失败，界面应在表单内显示错误、保留可修改的输入并允许重试。"
+    },
+    {
+      "id": "interface-experience-10",
+      "text": "当客户端发现工作空间会话已失效 [[identity-session-5](identity-session.md#identity-session-5)]，界面应关闭打开的业务弹窗并返回登录界面。"
+    },
+    {
+      "id": "interface-experience-11",
+      "text": "当用户关闭业务弹窗，界面应支持关闭按钮、Escape 键或点击弹窗外区域，不因关闭动作提交业务修改。"
+    },
+    {
+      "id": "interface-experience-12",
+      "text": "当用户在桌面或手机宽度执行登录、筛选、预约、取消和通知阅读，界面应保持所需内容与操作可见、可完成且不发生横向遮挡。"
+    },
+    {
+      "id": "interface-experience-13",
+      "text": "当用户通过键盘或辅助技术操作主要表单与状态，界面应提供输入标签、可见焦点、弹窗标题和可感知的成功或错误反馈。"
+    },
+    {
+      "id": "interface-experience-14",
+      "text": "当界面展示用户输入的名称、主题、位置或通知正文，界面应按文本展示内容，不将业务文本解释为可执行标记。"
+    },
+    {
+      "id": "interface-experience-15",
+      "text": "当界面展示预约日期、时段、日程与通知时间，界面应统一按 Asia/Shanghai 格式化并明确标示北京时间 UTC+8，不随浏览器所在时区改变日期含义。"
+    },
+    {
+      "id": "interface-experience-16",
+      "text": "当用户在同一预约弹窗内再次提交内容，界面应在内容未改变时复用原请求标识以支持重放 [[reservation-creation-11](reservation-creation.md#reservation-creation-11)]，内容改变时使用新标识。"
+    },
+    {
+      "id": "notification-center-1",
+      "text": "当新预约成功保存，通知服务应在同一业务事务内向预约人生成一条未读确认通知，关联预约编号并记录主题、会议室名称、北京时间时段及生成时间。"
+    },
+    {
+      "id": "notification-center-2",
+      "text": "当预约首次成功取消，通知服务应在同一业务事务内向预约人生成一条未读取消通知，关联预约编号并记录主题、取消与时段释放说明及生成时间，管理员代为取消时接收者仍为预约人。"
+    },
+    {
+      "id": "notification-center-3",
+      "text": "当用户查询通知，通知服务应仅返回当前用户自己的通知，不向其他成员或管理员开放该用户的通知列表。"
+    },
+    {
+      "id": "notification-center-4",
+      "text": "当通知服务返回列表，通知服务应按生成顺序倒序返回最近一百条记录及其编号、预约编号、正文、生成时间与已读状态。"
+    },
+    {
+      "id": "notification-center-5",
+      "text": "当用户请求全部标为已读，通知服务应将该用户的全部已有通知标为已读，包括当前列表未载入的更早记录，且不改变其他用户的通知。"
+    },
+    {
+      "id": "notification-center-6",
+      "text": "当界面显示通知徽标，界面应显示本次载入通知 [[notification-center-4](#notification-center-4)] 中的未读数量，为零时不显示数字徽标。"
+    },
+    {
+      "id": "notification-center-7",
+      "text": "当用户查看通知中心，界面应显示通知正文、北京时间的生成时间与预约编号，无通知时应显示空状态。"
+    },
+    {
+      "id": "reservation-creation-1",
+      "text": "当已登录用户提交新预约，预约服务应仅接受其所属团队已启用会议室 [[room-discovery-1](room-discovery.md#room-discovery-1)] 的预约，不接受另一团队或已停用的会议室。"
+    },
+    {
+      "id": "reservation-creation-2",
+      "text": "当用户提交新预约资料，预约服务应按以下规则校验必填业务字段：\n\n| 字段 | 规则 |\n| --- | --- |\n| 会议室编号 | 一至 2147483647 的整数 |\n| 主题 | 字符串，去除首尾空格后为一至一百字符 |\n| 参会人数 | 一至一百的整数，不接受布尔值或小数 |\n| 请求标识 | 字符串，去除首尾空格后为一至一百字符 |"
+    },
+    {
+      "id": "reservation-creation-3",
+      "text": "当用户提交预约开始和结束时间，预约服务应要求可解析且带时区的时间，以其绝对时刻进行比较。"
+    },
+    {
+      "id": "reservation-creation-4",
+      "text": "当预约服务判定新预约的可预约日期，预约服务应仅接受晚于服务端当前时刻且不晚于该时刻加三十天的开始时间。"
+    },
+    {
+      "id": "reservation-creation-5",
+      "text": "当预约服务判定新预约时长，预约服务应仅接受十五分钟至八小时的开始结束时间差，含两端边界。"
+    },
+    {
+      "id": "reservation-creation-6",
+      "text": "当预约服务判定新预约的开放时间，预约服务应仅接受开始与结束位于同一北京时间日期且全部位于 08:00–20:00 内的时段。"
+    },
+    {
+      "id": "reservation-creation-7",
+      "text": "当预约服务校验新预约的时间粒度，预约服务应要求开始与结束均对齐十五分钟，秒与微秒均为零。"
+    },
+    {
+      "id": "reservation-creation-8",
+      "text": "当预约服务校验新预约参会人数，预约服务应拒绝超过该会议室当前容量 [[space-administration-5](space-administration.md#space-administration-5)] 的人数。"
+    },
+    {
+      "id": "reservation-creation-9",
+      "text": "当新预约与同一会议室有效预约竞争时段，预约服务应拒绝任何重叠，包括同时提交的重叠请求；相邻时段满足前一场结束等于后一场开始时应允许预约。"
+    },
+    {
+      "id": "reservation-creation-10",
+      "text": "当新预约通过全部校验，预约服务应原子保存编号、团队、会议室、预约人、主题、绝对开始结束时间、人数、创建时间和 confirmed 状态，并生成该预约的站内确认通知 [[notification-center-1](notification-center.md#notification-center-1)]。"
+    },
+    {
+      "id": "reservation-creation-11",
+      "text": "当同一用户以同一请求标识重复提交相同预约内容，预约服务应返回原编号、当前状态与重放标记，不新增预约或通知，不重新判定原预约的时段资格。"
+    },
+    {
+      "id": "reservation-creation-12",
+      "text": "当同一用户以已有请求标识提交不同内容，预约服务应拒绝请求且不改变原预约，内容比较包含会议室、去除首尾空格后的主题、绝对开始结束时刻及参会人数。"
+    },
+    {
+      "id": "reservation-creation-13",
+      "text": "当原预约已取消后用户重放相同请求，预约服务应返回原已取消状态 [[reservation-management-7](reservation-management.md#reservation-management-7)]，不恢复预约或占用时段。"
+    },
+    {
+      "id": "reservation-creation-14",
+      "text": "当新预约因资料、资格、容量或冲突校验失败，预约服务应返回具体错误且不创建预约、占用时段或确认通知。"
+    },
+    {
+      "id": "reservation-management-1",
+      "text": "当用户查询预约列表，预约查询服务应按当前身份 [[identity-session-4](identity-session.md#identity-session-4)] 和请求范围返回记录：\n\n| 范围 | 结果 |\n| --- | --- |\n| 未指定或 mine | 当前用户自己的全部预约 |\n| team 且为管理员 | 当前用户所属团队的全部预约 |\n| team 且为普通成员 | 拒绝请求 |\n| 其他范围 | 拒绝无效范围 |"
+    },
+    {
+      "id": "reservation-management-2",
+      "text": "当用户读取有权查看的预约，预约查询服务应提供编号、会议室编号、预约人编号与姓名、主题、开始结束时间、人数、状态、创建与取消时间，以及会议室当前名称与位置 [[space-administration-3](space-administration.md#space-administration-3)]。"
+    },
+    {
+      "id": "reservation-management-3",
+      "text": "当界面判定预约的显示状态，界面应按浏览器当前时刻及记录状态作出以下分类：\n\n| 条件 | 显示状态 |\n| --- | --- |\n| 记录状态为 cancelled | 已取消 |\n| 未取消且结束时间不晚于当前时刻 | 已结束 |\n| 未取消且开始时间不晚于当前时刻、结束仍在未来 | 进行中 |\n| 未取消且开始时间在未来 | 已确认 |"
+    },
+    {
+      "id": "reservation-management-4",
+      "text": "当界面展示预约列表，界面应将未取消且尚未结束的预约按开始时间升序列入“即将进行”，将已结束或已取消记录按开始时间降序列入历史区域。"
+    },
+    {
+      "id": "reservation-management-5",
+      "text": "当用户请求取消预约，预约服务应仅允许预约本人或所属团队管理员操作，不允许其他成员或另一团队用户取消该预约。"
+    },
+    {
+      "id": "reservation-management-6",
+      "text": "当用户请求首次取消已开始或已结束的有效预约，预约服务应以服务端当前时刻判定并拒绝取消。"
+    },
+    {
+      "id": "reservation-management-7",
+      "text": "当有权用户取消尚未开始的有效预约，预约服务应原子记录 cancelled 状态和取消时间、保留原预约资料、释放日程占用 [[room-discovery-3](room-discovery.md#room-discovery-3)]，并生成预约所属成员的取消通知 [[notification-center-2](notification-center.md#notification-center-2)]。"
+    },
+    {
+      "id": "reservation-management-8",
+      "text": "当有权用户再次取消已取消预约，预约服务应返回成功而不改变原取消时间、不重复释放或生成通知。"
+    },
+    {
+      "id": "reservation-management-9",
+      "text": "当用户请求取消不存在或不属于其团队的预约，预约服务应返回预约不存在，不泄露另一团队的预约资料。"
+    },
+    {
+      "id": "reservation-management-10",
+      "text": "当界面展示有权取消的预约卡片，界面应仅对尚未开始且未取消的预约提供取消入口，并在提交取消前显示主题、时间、会议室和确认选项。"
+    },
+    {
+      "id": "room-discovery-1",
+      "text": "当有有效会话的用户读取会议室资料，空间查询服务应仅返回其当前所属团队 [[identity-session-4](identity-session.md#identity-session-4)] 的会议室编号、名称、位置、容量、设备和启用状态，包括供管理用途读取的停用会议室。"
+    },
+    {
+      "id": "room-discovery-2",
+      "text": "当用户指定查询日期，空间查询服务应按 Asia/Shanghai 的该自然日查询占用，未指定日期时使用当前北京时间日期，无法解析的日期应被拒绝。"
+    },
+    {
+      "id": "room-discovery-3",
+      "text": "当空间查询服务汇总所选日期的会议室日程，空间查询服务应仅包含与该自然日相交且未取消的预约 [[reservation-management-3](reservation-management.md#reservation-management-3)]，按开始时间升序返回。"
+    },
+    {
+      "id": "room-discovery-4",
+      "text": "当团队用户查看日程，空间查询服务应按其身份展示主题：\n\n| 查询者 | 主题显示 |\n| --- | --- |\n| 预约本人 | 实际主题 |\n| 本团队管理员 | 实际主题 |\n| 本团队其他成员 | “已预约” |"
+    },
+    {
+      "id": "room-discovery-5",
+      "text": "当用户在会议室页面选择容量和设备条件，界面应仅显示已启用、容量不少于所选人数且包含所选设备的会议室，未选择某条件时不以该条件过滤。"
+    },
+    {
+      "id": "room-discovery-6",
+      "text": "当用户展开会议室的当日日程，界面应展示占用时段、预约人及按访问者身份处理后的主题 [[room-discovery-4](#room-discovery-4)]。"
+    },
+    {
+      "id": "room-discovery-7",
+      "text": "当界面展示会议室占用条，界面应以十五分钟间隔表示北京时间 08:00–20:00 的占用情况，取消记录不标为占用。"
+    },
+    {
+      "id": "room-discovery-8",
+      "text": "当用户查看所选日期的会议室总览，界面应展示以下基于团队原始列表的数量，不因容量或设备筛选改变数量：\n\n| 指标 | 含义 |\n| --- | --- |\n| 可预约会议室 | 本团队已启用会议室总数 |\n| 所选日期预约 | 本团队所有会议室所选日期的有效预约数量 |\n| 我的当日会议 | 当前用户在所选日期开始且未取消的预约数量 |"
+    },
+    {
+      "id": "room-discovery-9",
+      "text": "当没有会议室满足筛选条件，界面应显示无匹配空间提示并保留调整筛选的入口。"
+    },
+    {
+      "id": "space-administration-1",
+      "text": "当当前用户进入空间管理，空间管理服务应仅向本团队管理员开放添加和编辑会议室的操作，普通成员不得通过直接调用接口绕过限制。"
+    },
+    {
+      "id": "space-administration-2",
+      "text": "当本团队管理员提交合法新会议室，空间管理服务应在其所属团队建立带独立编号的会议室，并返回保存的完整资料。"
+    },
+    {
+      "id": "space-administration-3",
+      "text": "当本团队管理员提交合法会议室修改，空间管理服务应保存名称、位置、容量、设备及启用状态，后续查询应使用当前资料。"
+    },
+    {
+      "id": "space-administration-4",
+      "text": "当管理员提交会议室名称，空间管理服务应要求去除首尾空格后的名称在同一团队内唯一，名称冲突不得改变已有会议室。"
+    },
+    {
+      "id": "space-administration-5",
+      "text": "当管理员提交会议室资料，空间管理服务应按以下字段规则校验：\n\n| 字段 | 规则 |\n| --- | --- |\n| 名称 | 字符串，去除首尾空格后为一至四十字符 |\n| 位置 | 字符串，去除首尾空格后为一至八十字符 |\n| 容量 | 一至一百的整数，不接受布尔值或小数 |\n| 启用状态 | 布尔值，新增资料未提供时默认启用 |"
+    },
+    {
+      "id": "space-administration-6",
+      "text": "当管理员提交会议室设备，空间管理服务应仅接受由显示屏、白板、视频会议、电话会议组成的列表，允许空列表，保存时去除重复设备。"
+    },
+    {
+      "id": "space-administration-7",
+      "text": "当会议室被停用，空间管理服务应保留它的资料与已有预约，阻止它接受新预约 [[reservation-creation-1](reservation-creation.md#reservation-creation-1)]。"
+    },
+    {
+      "id": "space-administration-8",
+      "text": "当会议室资料发生变更，空间管理服务应保持已有预约的时间、参会人数和状态不变，降低容量不自动取消原预约。"
+    },
+    {
+      "id": "space-administration-9",
+      "text": "当管理员请求修改不存在或另一团队的会议室，空间管理服务应返回会议室不存在，不改变该空间资料。"
+    },
+    {
+      "id": "space-administration-10",
+      "text": "当管理员重新启用会议室，空间管理服务应恢复该会议室接受新预约的资格 [[reservation-creation-1](reservation-creation.md#reservation-creation-1)]。"
+    },
+    {
+      "id": "team-administration-1",
+      "text": "当用户读取团队成员列表，成员管理服务应仅允许当前本团队管理员访问，并返回本团队成员编号、邮箱、姓名及角色。"
+    },
+    {
+      "id": "team-administration-2",
+      "text": "当用户请求变更成员角色，成员管理服务应仅允许本团队管理员操作本团队成员，普通成员不得通过直接请求变更任何角色。"
+    },
+    {
+      "id": "team-administration-3",
+      "text": "当管理员提交角色值，成员管理服务应只接受 admin 和 member，其他值不得改变现有角色。"
+    },
+    {
+      "id": "team-administration-4",
+      "text": "当角色变更会使团队不再拥有管理员，成员管理服务应拒绝该变更并保留原角色，包括唯一管理员自行降权的请求。"
+    },
+    {
+      "id": "team-administration-5",
+      "text": "当合法角色变更保存后该成员发起下一次业务请求，授权服务应按更新后的角色 [[identity-session-4](identity-session.md#identity-session-4)] 判定权限，无需其退出或重新登录。"
+    },
+    {
+      "id": "team-administration-6",
+      "text": "当管理员请求修改不存在或另一团队的成员，成员管理服务应返回成员不存在，不更改该成员角色。"
+    },
+    {
+      "id": "team-administration-7",
+      "text": "当管理员在界面合法地将自己的角色改为成员，界面应重新读取身份，返回会议室页面并撤去管理员操作入口。"
+    }
+  ]
+}

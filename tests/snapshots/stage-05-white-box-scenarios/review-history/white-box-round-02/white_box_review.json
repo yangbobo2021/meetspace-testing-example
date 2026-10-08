@@ -1,0 +1,1645 @@
+{
+  "status": "passed",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "/root/white_box_reviewer independent round 02",
+  "implementation_revision": "5a0fd19fa6691c2b25be1ac2356e3b0c55766c43",
+  "basis": [
+    "Skill SKILL.md、references/data-model.md、playbook/delivery-acceptance.md的实质独立反事实审阅原则",
+    "全部固定app/server.py、app/__init__.py、web/app.js、web/index.html、web/style.css和tests/test_smoke.py静态阅读，未导入/启动应用",
+    "确认96条需求、原96黑盒场景/105方法及原coverage_review；白盒范围未更改原黑盒证明",
+    "Analyst稳定63白盒场景、63新增方法、white-box-map.json全部63材料target，逐项读取前置/动作/预期证据",
+    "先于Analyst草稿完成独立64分支库存，对照不是假定Analyst清单完整；第1轮方法缺口不能靠存在黑盒方法但未关联自动闭合",
+    "第2轮完整读取三修订WB及三新增方法、复用原黑盒方法；其余60白盒场景、60新增方法、全部原105方法和96需求/63材料map/代码上下文与前轮逐对象或字节对照未变。三项修订以具体有效熵/全出口/精确时钟矩阵关闭第1轮反事实，不从执行结果假定充分。"
+  ],
+  "created_at": "2026-10-08T12:08:32.668736+00:00",
+  "scope_hashes": {
+    "requirements_sha256": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "white_box_scenarios_sha256": "df13f54ee282f74cb89d6ecb3f866744b50f2abf94a20aa7f7e8834c1fd26696",
+    "white_box_methods_sha256": "3d0dc2f4f58243ead989aafbd8e19a3c0d64fef0d4f71713510e5ff4a1e31991",
+    "white_box_map_sha256": "e79cba4b01e7efb12e85178394463689cba4677c495114e1bf311251f535acef",
+    "context_sha256": "9d509d5edf53fde655c9d488fbe91a8701026eb2df4714a6ace285dc4baf91c6",
+    "independent_inventory_sha256": "96460a8663ca4939d29d3eae10788b4658bc70eea0badc9b9899aec946d421e7"
+  },
+  "requirements_reviewed": [
+    "application-runtime-1",
+    "application-runtime-2",
+    "application-runtime-3",
+    "application-runtime-4",
+    "application-runtime-5",
+    "application-runtime-6",
+    "application-runtime-7",
+    "application-runtime-8",
+    "application-runtime-9",
+    "identity-session-1",
+    "identity-session-2",
+    "identity-session-3",
+    "identity-session-4",
+    "identity-session-5",
+    "identity-session-6",
+    "identity-session-7",
+    "identity-session-8",
+    "identity-session-9",
+    "identity-session-10",
+    "identity-session-11",
+    "identity-session-12",
+    "identity-session-13",
+    "identity-session-14",
+    "interface-experience-1",
+    "interface-experience-2",
+    "interface-experience-3",
+    "interface-experience-4",
+    "interface-experience-5",
+    "interface-experience-6",
+    "interface-experience-7",
+    "interface-experience-8",
+    "interface-experience-9",
+    "interface-experience-10",
+    "interface-experience-11",
+    "interface-experience-12",
+    "interface-experience-13",
+    "interface-experience-14",
+    "interface-experience-15",
+    "interface-experience-16",
+    "notification-center-1",
+    "notification-center-2",
+    "notification-center-3",
+    "notification-center-4",
+    "notification-center-5",
+    "notification-center-6",
+    "notification-center-7",
+    "reservation-creation-1",
+    "reservation-creation-2",
+    "reservation-creation-3",
+    "reservation-creation-4",
+    "reservation-creation-5",
+    "reservation-creation-6",
+    "reservation-creation-7",
+    "reservation-creation-8",
+    "reservation-creation-9",
+    "reservation-creation-10",
+    "reservation-creation-11",
+    "reservation-creation-12",
+    "reservation-creation-13",
+    "reservation-creation-14",
+    "reservation-management-1",
+    "reservation-management-2",
+    "reservation-management-3",
+    "reservation-management-4",
+    "reservation-management-5",
+    "reservation-management-6",
+    "reservation-management-7",
+    "reservation-management-8",
+    "reservation-management-9",
+    "reservation-management-10",
+    "room-discovery-1",
+    "room-discovery-2",
+    "room-discovery-3",
+    "room-discovery-4",
+    "room-discovery-5",
+    "room-discovery-6",
+    "room-discovery-7",
+    "room-discovery-8",
+    "room-discovery-9",
+    "space-administration-1",
+    "space-administration-2",
+    "space-administration-3",
+    "space-administration-4",
+    "space-administration-5",
+    "space-administration-6",
+    "space-administration-7",
+    "space-administration-8",
+    "space-administration-9",
+    "space-administration-10",
+    "team-administration-1",
+    "team-administration-2",
+    "team-administration-3",
+    "team-administration-4",
+    "team-administration-5",
+    "team-administration-6",
+    "team-administration-7"
+  ],
+  "uncovered_branches": [],
+  "items": [
+    {
+      "scenario_id": "WB-runtime-entry",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:482-499；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获忽略 db 参数或依赖非标准库。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "忽略 db 参数或依赖非标准库",
+      "failure_signal": "监听地址端口、独立数据库读回与重启记录错位"
+    },
+    {
+      "scenario_id": "WB-seed-empty-existing",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:99-105,122-156、app/server.py:144-156；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按固定团队ID判空，重开已有库重复播种；使用 UTC 明天。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "按固定团队ID判空，重开已有库重复播种；使用 UTC 明天",
+      "failure_signal": "精确初始记录增量与既有数据差异；三场会议落于错误北京时间日期"
+    },
+    {
+      "scenario_id": "WB-password-derivation",
+      "verdict": "sufficient",
+      "reason": "完整链接并强制执行原AI-identity-session-13、AI-salt-entropy-dependence、AI-password-persistence-scope；新增方法明确同前态仅改变实际有效熵和同带重放、独立hashlib.scrypt复算、不调用被测密码函数获得预期，以及从进程创建至重启的全子进程I/O/数据库/WAL/临时/删除/外部出口对账。读随机但忽略结果、非密码派生或另存可恢复副本都将有明确失败信号；未知出口未覆盖不能判通过。原认证/输入分支仍保留。",
+      "plausible_fault": "调用随机函数却按账号/计数生成盐，密码派生伪造，或主库派生正确但子进程/临时/外部持久出口保存可恢复密码。",
+      "failure_signal": "固定前态改变有效熵却盐不依赖、独立派生重算不匹配、错误密码也匹配，或出口发现可恢复副本/未知无法解释材料。"
+    },
+    {
+      "scenario_id": "WB-persistence-restart",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:107-120,249-252；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获提前commit或回滚遗漏。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "提前commit或回滚遗漏",
+      "failure_signal": "独立连接及重启可见未完成写入；恢复重试失败"
+    },
+    {
+      "scenario_id": "WB-health-static-dispatch",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:240-245、app/server.py:265-282；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按已登录门禁阻挡health或只固定回应不实际读库；路径拼接允许任意文件或HEAD发送正文。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "按已登录门禁阻挡health或只固定回应不实际读库；路径拼接允许任意文件或HEAD发送正文",
+      "failure_signal": "匿名200字段或真实库读取证据不符；内容资源错误、未知路径泄露或HEAD体非空；安全头仅实现观察不是新增需求"
+    },
+    {
+      "scenario_id": "WB-request-origin",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:197-204,246、web/index.html:1-53,web/app.js:38,83-84,107,117,130,135；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获某个入口绕过read_json或Origin宽松前缀匹配；DOM替换丢焦点/反馈无播报、onlyUI validation。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "某个入口绕过read_json或Origin宽松前缀匹配；DOM替换丢焦点/反馈无播报、onlyUI validation",
+      "failure_signal": "该入口错误接收且产生修改；键盘轨迹与可访问树错误或直接非法API接收"
+    },
+    {
+      "scenario_id": "WB-json-envelope",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:203-214、web/index.html:1-53,web/app.js:38,83-84,107,117,130,135；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按字符计数、忽略顶层数组或吞解码异常；DOM替换丢焦点/反馈无播报、onlyUI validation。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "按字符计数、忽略顶层数组或吞解码异常；DOM替换丢焦点/反馈无播报、onlyUI validation",
+      "failure_signal": "非法正文接收或预期稳定JSON错误变500；键盘轨迹与可访问树错误或直接非法API接收"
+    },
+    {
+      "scenario_id": "WB-errors-and-response",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:236-263；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获抛内部堆栈，错误类别合并，发送响应前未提交。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "抛内部堆栈，错误类别合并，发送响应前未提交",
+      "failure_signal": "HTTP JSON代码错误或日志/响应泄密；失败写残留"
+    },
+    {
+      "scenario_id": "WB-transaction-failure-matrix",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:107-120,249-252、app/server.py:284-307,315-387,388-401,470-479、app/server.py:298-309、app/server.py:315-319、app/server.py:470-479、app/server.py:357-362、app/server.py:366-368；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获提前commit或回滚遗漏；仅回滚预约而漏登录会话和单表写；只首次随机、误删全用户会话或先删除后失败提交；只删Cookie或全账号注销；提前提交booking或通知recipient错；重复改cancelled_at、时段释放按room误删新约；仅可见100、全库标读或失败部分标读。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "提前commit或回滚遗漏；仅回滚预约而漏登录会话和单表写；只首次随机、误删全用户会话或先删除后失败提交；只删Cookie或全账号注销；提前提交booking或通知recipient错；重复改cancelled_at、时段释放按room误删新约；仅可见100、全库标读或失败部分标读",
+      "failure_signal": "独立连接及重启可见未完成写入；恢复重试失败；失败后旧状态不一致或新会话/通知残留；因果熵/多浏览器对照失败；登录失败后会话库部分写；旧令牌还能用或第二浏览器被注销；独立连接记录残留或通知内容/数量错误；取消时间变、重复通知或后来预约被破坏；独立存储105条及其他用户read状态差异"
+    },
+    {
+      "scenario_id": "WB-session-join",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:216-234、app/server.py:249,382-386；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获缓存登录时角色或expires>=now、查询续期；count其他队管理员或检查锁外、降权旧会话授权。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "缓存登录时角色或expires>=now、查询续期；count其他队管理员或检查锁外、降权旧会话授权",
+      "failure_signal": "首业务权限错误、8h边界仍通过或expires改变；最终本队无admin或角色变更首写仍放行"
+    },
+    {
+      "scenario_id": "WB-session-expiry",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:298-309、app/server.py:216-234；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只首次随机、误删全用户会话或先删除后失败提交；缓存登录时角色或expires>=now、查询续期。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "只首次随机、误删全用户会话或先删除后失败提交；缓存登录时角色或expires>=now、查询续期",
+      "failure_signal": "因果熵/多浏览器对照失败；登录失败后会话库部分写；首业务权限错误、8h边界仍通过或expires改变"
+    },
+    {
+      "scenario_id": "WB-login-window-lock",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:284-293、app/server.py:287-293、app/server.py:289-293；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获无效格式消耗配额或成功不计数；计数锁外检查导致并发超额或全局池；>=端点包含或整批清空。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "无效格式消耗配额或成功不计数；计数锁外检查导致并发超额或全局池；>=端点包含或整批清空",
+      "failure_signal": "随后第八/九次额度错位；同IP超过8次被接收或独立IP被限；60.000仍限或过期一条释放多条"
+    },
+    {
+      "scenario_id": "WB-login-switch-and-cookies",
+      "verdict": "sufficient",
+      "reason": "完整链接且强制执行原AI-identity-session-14、AI-token-entropy-and-storage-scope、AI-subsequent-session-entropy；首次及四类实际前缀后的目标登录具同前态有效熵变化/同带重放控制，每新token直接真实身份/业务并查当前及其他会话，独立SHA256摘要及用户/到期比对，全进程树所有I/O出口与字段用途对账。首次随机后续确定或额外保存会话材料明确失败；未知出口/种子控制不足记录受阻。",
+      "plausible_fault": "仅首次随机、后续登录或切换按计数器生成但表面读取随机，摘要之外另存原token/恢复blob或错绑用户。",
+      "failure_signal": "同序号目标输出不受有效随机输入影响，真实身份/会话隔离错误、独立摘要不一致，或持久出口发现额外会话内容/未知字段。"
+    },
+    {
+      "scenario_id": "WB-logout-revocation",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:315-319；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只删Cookie或全账号注销。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "只删Cookie或全账号注销",
+      "failure_signal": "旧令牌还能用或第二浏览器被注销"
+    },
+    {
+      "scenario_id": "WB-route-authorizations",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:265-282、app/server.py:369-386；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获路径拼接允许任意文件或HEAD发送正文；成员自升、跨队改、非字符串异常泄露。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "路径拼接允许任意文件或HEAD发送正文；成员自升、跨队改、非字符串异常泄露",
+      "failure_signal": "内容资源错误、未知路径泄露或HEAD体非空；安全头仅实现观察不是新增需求；权限拒绝/角色集合字段或副作用不符"
+    },
+    {
+      "scenario_id": "WB-rooms-team-deserialization",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:320-332,405-409；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获过滤active或接受客户端team_id覆盖。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "过滤active或接受客户端team_id覆盖",
+      "failure_signal": "精确集合/字段不符、跨队泄漏"
+    },
+    {
+      "scenario_id": "WB-day-range-intersection",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:322-328,416-422、app/server.py:325-328；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获默认UTC日或按固定24h起点错误；只查开始日、<=端点或包含cancelled。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "默认UTC日或按固定24h起点错误；只查开始日、<=端点或包含cancelled",
+      "failure_signal": "相邻日/午夜区间ID集合不符；跨日历史fixture漏计、多计边界或排序错"
+    },
+    {
+      "scenario_id": "WB-agenda-title-redaction",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:329-331；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获用AND或仅UI脱敏、缓存旧角色。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "用AND或仅UI脱敏、缓存旧角色",
+      "failure_signal": "API私有主题泄露或本人/管理员缺主题"
+    },
+    {
+      "scenario_id": "WB-booking-fields-guards",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442、web/index.html:1-53,web/app.js:38,83-84,107,117,130,135；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区；DOM替换丢焦点/反馈无播报、onlyUI validation。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "强转bool、先len错误、自动补时区；DOM替换丢焦点/反馈无播报、onlyUI validation",
+      "failure_signal": "拒绝矩阵错误、非JSON500或部分写入；键盘轨迹与可访问树错误或直接非法API接收"
+    },
+    {
+      "scenario_id": "WB-datetime-parse-normalize",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "强转bool、先len错误、自动补时区",
+      "failure_signal": "拒绝矩阵错误、非JSON500或部分写入"
+    },
+    {
+      "scenario_id": "WB-booking-horizon",
+      "verdict": "sufficient",
+      "reason": "固定合法对齐T*=2030-04-11 10:00–11:00+08并将服务端datetime/time.time移到T*−1秒/T*/T*+1秒和T*−30天±1秒/等号共六项；各分支在设钟后建有效会话及独立空闲启用室/新K，其他守卫不掩盖日期判定。原AI-reservation-creation-4全部矩阵强制执行，并在浏览器钟前后一天重测实际API。时间舍入或上界宽容几秒会在±1秒对照失败。",
+      "plausible_fault": "将服务时钟先舍入整分钟/整刻、容许start==now，或三十天上界偷偷增加几秒。",
+      "failure_signal": "六项精确同payload的允许/拒绝结果与需求不符；成功记录通知增量非1或拒绝出现副作用；不能以其他守卫错误代替目标判断。"
+    },
+    {
+      "scenario_id": "WB-booking-duration",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:453-454；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只下界/只上界、端点严格排除。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "只下界/只上界、端点严格排除",
+      "failure_signal": "精确响应或无副作用断言失败"
+    },
+    {
+      "scenario_id": "WB-booking-open-hours",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:455-457、app/server.py:458-459；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按输入字符串日或漏local_end.second；仅查start或预先截微秒。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "按输入字符串日或漏local_end.second；仅查start或预先截微秒",
+      "failure_signal": "合法异offset被拒或越开放接受；违规结束/微秒创建成功"
+    },
+    {
+      "scenario_id": "WB-room-eligibility-capacity",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:460-466；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获客户端容量/停用缓存、全局id不隔team。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "客户端容量/停用缓存、全局id不隔team",
+      "failure_signal": "外队/停用/超容新约成功或错误归类无副作用缺失"
+    },
+    {
+      "scenario_id": "WB-booking-conflict-serialization",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:113,249,467-469；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获少一种包含关系或解除锁后insert。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "少一种包含关系或解除锁后insert",
+      "failure_signal": "任一重叠竞争双成功、相邻误拒或cancelled仍占用"
+    },
+    {
+      "scenario_id": "WB-booking-insert-notify",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:470-479；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获提前提交booking或通知recipient错。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "提前提交booking或通知recipient错",
+      "failure_signal": "独立连接记录残留或通知内容/数量错误"
+    },
+    {
+      "scenario_id": "WB-idempotency-priority",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:438-459；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获先日期资格检查而取消/过时重放拒绝。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "先日期资格检查而取消/过时重放拒绝",
+      "failure_signal": "原编号状态不返回、新增通知或恢复取消"
+    },
+    {
+      "scenario_id": "WB-idempotency-user-concurrency",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:47,249,445-449,470-475；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只查团队、竞争重复insert、败者静默覆盖。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "只查团队、竞争重复insert、败者静默覆盖",
+      "failure_signal": "最终双记录/双通知或错误内容返回成功"
+    },
+    {
+      "scenario_id": "WB-booking-query-scope-join",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:333-347,411-413；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获team静默退mine、跨队或暴露request_hash。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "team静默退mine、跨队或暴露request_hash",
+      "failure_signal": "精确结果集错、改室后旧资料、内部字段泄露"
+    },
+    {
+      "scenario_id": "WB-cancel-authorization-and-clock",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:350-359；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获全局找id泄露、先cancelled成功绕授权。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "全局找id泄露、先cancelled成功绕授权",
+      "failure_signal": "异队语义、其他成员重放取消结果或实际修改错误"
+    },
+    {
+      "scenario_id": "WB-cancel-atomic-idempotent",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:357-362；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获重复改cancelled_at、时段释放按room误删新约。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "重复改cancelled_at、时段释放按room误删新约",
+      "failure_signal": "取消时间变、重复通知或后来预约被破坏"
+    },
+    {
+      "scenario_id": "WB-notifications-select-limit",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:363-365；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按team过滤、created_at单排序或只未读。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "按team过滤、created_at单排序或只未读",
+      "failure_signal": "101/105数据精确ID集合和字段不符"
+    },
+    {
+      "scenario_id": "WB-notifications-mark-all",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:366-368；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获仅可见100、全库标读或失败部分标读。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "仅可见100、全库标读或失败部分标读",
+      "failure_signal": "独立存储105条及其他用户read状态差异"
+    },
+    {
+      "scenario_id": "WB-room-write-and-return",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:388-401,425-435；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获PATCH漏字段或按无团队id更新。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "PATCH漏字段或按无团队id更新",
+      "failure_signal": "最终字段/团队集合错误或异队修改"
+    },
+    {
+      "scenario_id": "WB-room-text-capacity-active",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442、app/server.py:429-435；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区；过滤非法元素、bool强转、只PATCH去重。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "强转bool、先len错误、自动补时区；过滤非法元素、bool强转、只PATCH去重",
+      "failure_signal": "拒绝矩阵错误、非JSON500或部分写入；保存集合/默认状态错，拒绝后字段改变"
+    },
+    {
+      "scenario_id": "WB-room-equipment-set",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442、app/server.py:429-435；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区；过滤非法元素、bool强转、只PATCH去重。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "强转bool、先len错误、自动补时区；过滤非法元素、bool强转、只PATCH去重",
+      "failure_signal": "拒绝矩阵错误、非JSON500或部分写入；保存集合/默认状态错，拒绝后字段改变"
+    },
+    {
+      "scenario_id": "WB-room-name-unique-concurrency",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:41,426,391,400；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只POST手工查名或把唯一性设全局。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "只POST手工查名或把唯一性设全局",
+      "failure_signal": "双同队同名或失败编辑留下其他字段修改"
+    },
+    {
+      "scenario_id": "WB-room-state-existing-bookings",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:399-400,460-467；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获停用删除原约、减容改人数或启用绕冲突。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "停用删除原约、减容改人数或启用绕冲突",
+      "failure_signal": "历史记录变化及新请求对照错误"
+    },
+    {
+      "scenario_id": "WB-member-select-role-guards",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:369-386；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获成员自升、跨队改、非字符串异常泄露。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "成员自升、跨队改、非字符串异常泄露",
+      "failure_signal": "权限拒绝/角色集合字段或副作用不符"
+    },
+    {
+      "scenario_id": "WB-last-admin-lock",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:249,382-386；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获count其他队管理员或检查锁外、降权旧会话授权。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "count其他队管理员或检查锁外、降权旧会话授权",
+      "failure_signal": "最终本队无admin或角色变更首写仍放行"
+    },
+    {
+      "scenario_id": "WB-ui-start-session-errors",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:268-276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获捕全部错误当登录/空workspace。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "捕全部错误当登录/空workspace",
+      "failure_signal": "非401失效表现不正确/无错误信息"
+    },
+    {
+      "scenario_id": "WB-ui-api-error-session-transition",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:20-35；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获非JSON成功当空、401登录也重置输入、错误无反馈。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "非JSON成功当空、401登录也重置输入、错误无反馈",
+      "failure_signal": "错误面板/表单保存/登录操作失败"
+    },
+    {
+      "scenario_id": "WB-ui-login-navigation",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:47-57,163-169,253-276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获角色本地推测、logout未增token或跨队残留。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "角色本地推测、logout未增token或跨队残留",
+      "failure_signal": "新身份页面含旧私有内容、管理入口残留或失败误降UI"
+    },
+    {
+      "scenario_id": "WB-ui-load-parallel-error",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:60-77；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获某一成功即写列表、旧finally清loading。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "某一成功即写列表、旧finally清loading",
+      "failure_signal": "pending期间旧内容/错误闪回、缺列表假空或加载提前结束"
+    },
+    {
+      "scenario_id": "WB-ui-load-token-races",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:25-29,60-77、web/app.js:60-77；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获api先清user，token过滤无法阻止过时401登出当前有效页面；某一成功即写列表、旧finally清loading。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "api先清user，token过滤无法阻止过时401登出当前有效页面；某一成功即写列表、旧finally清loading",
+      "failure_signal": "当前新身份/最新页面变登录或业务弹窗被旧响应关闭；pending期间旧内容/错误闪回、缺列表假空或加载提前结束"
+    },
+    {
+      "scenario_id": "WB-ui-filters-statistics",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:103-107；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获过滤用OR、从筛选列表计stats、把相交当mine开始日。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "过滤用OR、从筛选列表计stats、把相交当mine开始日",
+      "failure_signal": "交集室ID、筛前后指标或历史跨日mine数错"
+    },
+    {
+      "scenario_id": "WB-ui-room-timeline-agenda",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:110-117；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获<=导致相邻多格、错timezone或仅标题脱敏。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "<=导致相邻多格、错timezone或仅标题脱敏",
+      "failure_signal": "逐格与API已脱敏主题/owner不符"
+    },
+    {
+      "scenario_id": "WB-ui-timezone-format",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:13-16,105,112,127,172-192；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获某页面用浏览器local Date getter。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "某页面用浏览器local Date getter",
+      "failure_signal": "同绝对时间页面日期/slot不同"
+    },
+    {
+      "scenario_id": "WB-ui-booking-status-sort",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:120-130；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获比较端点错误、全部sort升序、进行中可取消。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "比较端点错误、全部sort升序、进行中可取消",
+      "failure_signal": "分组顺序状态/取消入口矩阵错误"
+    },
+    {
+      "scenario_id": "WB-ui-notification-render",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:82-83,133-135,154-160；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获历史总未读徽标、mark失败按钮永远锁。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "历史总未读徽标、mark失败按钮永远锁",
+      "failure_signal": "徽标计数/可重试性或已读后列表不符"
+    },
+    {
+      "scenario_id": "WB-ui-default-times",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:171-192；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获now exactly整刻选已经开始、20点默认明天错日。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "now exactly整刻选已经开始、20点默认明天错日",
+      "failure_signal": "日期不正确、粒度或开放时段无效"
+    },
+    {
+      "scenario_id": "WB-ui-booking-draft-key",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:188-214；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获retry每次新K、改字段仍旧K、重新打开复用旧草稿。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "retry每次新K、改字段仍旧K、重新打开复用旧草稿",
+      "failure_signal": "网络K关联与唯一记录/通知/变更结果错误"
+    },
+    {
+      "scenario_id": "WB-ui-submit-button-matrix",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:20-35、web/app.js:47-57,201-213,228-248；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获非JSON成功当空、401登录也重置输入、错误无反馈；只成功恢复按钮或丢输入、toast无编号。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "非JSON成功当空、401登录也重置输入、错误无反馈；只成功恢复按钮或丢输入、toast无编号",
+      "failure_signal": "错误面板/表单保存/登录操作失败；等待重入请求、失败后锁死或重试不能完成"
+    },
+    {
+      "scenario_id": "WB-ui-room-edit-draft",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:216-237；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获edit字段未回填或POST错target、add残上次值。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "edit字段未回填或POST错target、add残上次值",
+      "failure_signal": "请求路径方法/保存完整字段/失败重试对象错"
+    },
+    {
+      "scenario_id": "WB-ui-role-demotion-reload",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:47-57,163-169,253-276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获角色本地推测、logout未增token或跨队残留。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "角色本地推测、logout未增token或跨队残留",
+      "failure_signal": "新身份页面含旧私有内容、管理入口残留或失败误降UI"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:47-57,163-169,253-276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获角色本地推测、logout未增token或跨队残留。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "角色本地推测、logout未增token或跨队残留",
+      "failure_signal": "新身份页面含旧私有内容、管理入口残留或失败误降UI"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:239-248,262-263,web/index.html:18-50；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获formclose按钮type不对、点击内部当backdrop。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "formclose按钮type不对、点击内部当backdrop",
+      "failure_signal": "关闭产生写请求或内部操作失效"
+    },
+    {
+      "scenario_id": "WB-ui-text-escaping",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/app.js:12,38,84,116-117,130,135,139,190-191,241,276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只转<>忽略属性引号或安全删除正文。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "只转<>忽略属性引号或安全删除正文",
+      "failure_signal": "DOM执行标志、属性注入或原文缺失"
+    },
+    {
+      "scenario_id": "WB-ui-accessibility-focus",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/index.html:1-53,web/app.js:38,83-84,107,117,130,135；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获DOM替换丢焦点/反馈无播报、onlyUI validation。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "DOM替换丢焦点/反馈无播报、onlyUI validation",
+      "failure_signal": "键盘轨迹与可访问树错误或直接非法API接收"
+    },
+    {
+      "scenario_id": "WB-ui-responsive-breakpoints",
+      "verdict": "sufficient",
+      "reason": "独立对照 web/style.css:1-7；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获端点某一层隐藏必须入口、dialog/longtext遮挡。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "端点某一层隐藏必须入口、dialog/longtext遮挡",
+      "failure_signal": "控件boundingbox/可完成任务/横向scroll错误"
+    },
+    {
+      "scenario_id": "WB-seed-failure-retry",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:122-156,107-120、app/server.py:284-307,315-387,388-401,470-479；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获提前提交团队使重启永久跳过剩余播种；仅回滚预约而漏登录会话和单表写。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "提前提交团队使重启永久跳过剩余播种；仅回滚预约而漏登录会话和单表写",
+      "failure_signal": "独立库部分种子残留、重试缺账号/房间/会议；失败后旧状态不一致或新会话/通知残留"
+    },
+    {
+      "scenario_id": "WB-login-format-boundaries",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442、app/server.py:284-293；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区；无效格式消耗配额或成功不计数。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "强转bool、先len错误、自动补时区；无效格式消耗配额或成功不计数",
+      "failure_signal": "拒绝矩阵错误、非JSON500或部分写入；随后第八/九次额度错位"
+    },
+    {
+      "scenario_id": "WB-idempotency-absolute-precision",
+      "verdict": "sufficient",
+      "reason": "独立对照 app/server.py:442-449；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获把起/止微秒变化当相同内容重放。不以路径到达或计划证据当作应用通过。",
+      "plausible_fault": "把起/止微秒变化当相同内容重放",
+      "failure_signal": "同K变绝对时间返回replayed而未拒；不依赖代码截断作为预期"
+    }
+  ],
+  "branch_reviews": [
+    {
+      "target_id": "WBT-runtime-entry",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-runtime-entry"
+      ],
+      "reason": "独立对照 app/server.py:482-499；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获忽略 db 参数或依赖非标准库。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-seed-empty-existing",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-seed-empty-existing"
+      ],
+      "reason": "独立对照 app/server.py:99-105,122-156、app/server.py:144-156；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按固定团队ID判空，重开已有库重复播种；使用 UTC 明天。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-password-derivation",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-password-derivation"
+      ],
+      "reason": "完整链接并强制执行原AI-identity-session-13、AI-salt-entropy-dependence、AI-password-persistence-scope；新增方法明确同前态仅改变实际有效熵和同带重放、独立hashlib.scrypt复算、不调用被测密码函数获得预期，以及从进程创建至重启的全子进程I/O/数据库/WAL/临时/删除/外部出口对账。读随机但忽略结果、非密码派生或另存可恢复副本都将有明确失败信号；未知出口未覆盖不能判通过。原认证/输入分支仍保留。"
+    },
+    {
+      "target_id": "WBT-persistence-restart",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-persistence-restart"
+      ],
+      "reason": "独立对照 app/server.py:107-120,249-252；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获提前commit或回滚遗漏。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-health-static-dispatch",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-health-static-dispatch"
+      ],
+      "reason": "独立对照 app/server.py:240-245、app/server.py:265-282；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按已登录门禁阻挡health或只固定回应不实际读库；路径拼接允许任意文件或HEAD发送正文。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-request-origin",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-request-origin"
+      ],
+      "reason": "独立对照 app/server.py:197-204,246、web/index.html:1-53,web/app.js:38,83-84,107,117,130,135；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获某个入口绕过read_json或Origin宽松前缀匹配；DOM替换丢焦点/反馈无播报、onlyUI validation。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-json-envelope",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-json-envelope"
+      ],
+      "reason": "独立对照 app/server.py:203-214、web/index.html:1-53,web/app.js:38,83-84,107,117,130,135；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按字符计数、忽略顶层数组或吞解码异常；DOM替换丢焦点/反馈无播报、onlyUI validation。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-errors-and-response",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-errors-and-response"
+      ],
+      "reason": "独立对照 app/server.py:236-263；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获抛内部堆栈，错误类别合并，发送响应前未提交。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-transaction-failure-matrix",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-transaction-failure-matrix"
+      ],
+      "reason": "独立对照 app/server.py:107-120,249-252、app/server.py:284-307,315-387,388-401,470-479、app/server.py:298-309、app/server.py:315-319、app/server.py:470-479、app/server.py:357-362、app/server.py:366-368；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获提前commit或回滚遗漏；仅回滚预约而漏登录会话和单表写；只首次随机、误删全用户会话或先删除后失败提交；只删Cookie或全账号注销；提前提交booking或通知recipient错；重复改cancelled_at、时段释放按room误删新约；仅可见100、全库标读或失败部分标读。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-session-join",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-session-join"
+      ],
+      "reason": "独立对照 app/server.py:216-234、app/server.py:249,382-386；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获缓存登录时角色或expires>=now、查询续期；count其他队管理员或检查锁外、降权旧会话授权。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-session-expiry",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-session-expiry"
+      ],
+      "reason": "独立对照 app/server.py:298-309、app/server.py:216-234；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只首次随机、误删全用户会话或先删除后失败提交；缓存登录时角色或expires>=now、查询续期。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-login-window-lock",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-login-window-lock"
+      ],
+      "reason": "独立对照 app/server.py:284-293、app/server.py:287-293、app/server.py:289-293；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获无效格式消耗配额或成功不计数；计数锁外检查导致并发超额或全局池；>=端点包含或整批清空。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-login-switch-and-cookies",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-login-switch-and-cookies"
+      ],
+      "reason": "完整链接且强制执行原AI-identity-session-14、AI-token-entropy-and-storage-scope、AI-subsequent-session-entropy；首次及四类实际前缀后的目标登录具同前态有效熵变化/同带重放控制，每新token直接真实身份/业务并查当前及其他会话，独立SHA256摘要及用户/到期比对，全进程树所有I/O出口与字段用途对账。首次随机后续确定或额外保存会话材料明确失败；未知出口/种子控制不足记录受阻。"
+    },
+    {
+      "target_id": "WBT-logout-revocation",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-logout-revocation"
+      ],
+      "reason": "独立对照 app/server.py:315-319；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只删Cookie或全账号注销。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-route-authorizations",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-route-authorizations"
+      ],
+      "reason": "独立对照 app/server.py:265-282、app/server.py:369-386；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获路径拼接允许任意文件或HEAD发送正文；成员自升、跨队改、非字符串异常泄露。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-rooms-team-deserialization",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-rooms-team-deserialization"
+      ],
+      "reason": "独立对照 app/server.py:320-332,405-409；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获过滤active或接受客户端team_id覆盖。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-day-range-intersection",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-day-range-intersection"
+      ],
+      "reason": "独立对照 app/server.py:322-328,416-422、app/server.py:325-328；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获默认UTC日或按固定24h起点错误；只查开始日、<=端点或包含cancelled。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-agenda-title-redaction",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-agenda-title-redaction"
+      ],
+      "reason": "独立对照 app/server.py:329-331；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获用AND或仅UI脱敏、缓存旧角色。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-booking-fields-guards",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-fields-guards"
+      ],
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442、web/index.html:1-53,web/app.js:38,83-84,107,117,130,135；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区；DOM替换丢焦点/反馈无播报、onlyUI validation。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-datetime-parse-normalize",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-datetime-parse-normalize"
+      ],
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-booking-horizon",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-horizon"
+      ],
+      "reason": "固定合法对齐T*=2030-04-11 10:00–11:00+08并将服务端datetime/time.time移到T*−1秒/T*/T*+1秒和T*−30天±1秒/等号共六项；各分支在设钟后建有效会话及独立空闲启用室/新K，其他守卫不掩盖日期判定。原AI-reservation-creation-4全部矩阵强制执行，并在浏览器钟前后一天重测实际API。时间舍入或上界宽容几秒会在±1秒对照失败。"
+    },
+    {
+      "target_id": "WBT-booking-duration",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-duration"
+      ],
+      "reason": "独立对照 app/server.py:453-454；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只下界/只上界、端点严格排除。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-booking-open-hours",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-open-hours"
+      ],
+      "reason": "独立对照 app/server.py:455-457、app/server.py:458-459；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按输入字符串日或漏local_end.second；仅查start或预先截微秒。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-room-eligibility-capacity",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-eligibility-capacity"
+      ],
+      "reason": "独立对照 app/server.py:460-466；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获客户端容量/停用缓存、全局id不隔team。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-booking-conflict-serialization",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-conflict-serialization"
+      ],
+      "reason": "独立对照 app/server.py:113,249,467-469；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获少一种包含关系或解除锁后insert。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-booking-insert-notify",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-insert-notify"
+      ],
+      "reason": "独立对照 app/server.py:470-479；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获提前提交booking或通知recipient错。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-idempotency-priority",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-idempotency-priority"
+      ],
+      "reason": "独立对照 app/server.py:438-459；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获先日期资格检查而取消/过时重放拒绝。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-idempotency-user-concurrency",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-idempotency-user-concurrency"
+      ],
+      "reason": "独立对照 app/server.py:47,249,445-449,470-475；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只查团队、竞争重复insert、败者静默覆盖。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-booking-query-scope-join",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-query-scope-join"
+      ],
+      "reason": "独立对照 app/server.py:333-347,411-413；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获team静默退mine、跨队或暴露request_hash。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-cancel-authorization-and-clock",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "reason": "独立对照 app/server.py:350-359；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获全局找id泄露、先cancelled成功绕授权。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-cancel-atomic-idempotent",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-cancel-atomic-idempotent"
+      ],
+      "reason": "独立对照 app/server.py:357-362；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获重复改cancelled_at、时段释放按room误删新约。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-notifications-select-limit",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-notifications-select-limit"
+      ],
+      "reason": "独立对照 app/server.py:363-365；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获按team过滤、created_at单排序或只未读。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-notifications-mark-all",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-notifications-mark-all"
+      ],
+      "reason": "独立对照 app/server.py:366-368；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获仅可见100、全库标读或失败部分标读。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-room-write-and-return",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-write-and-return"
+      ],
+      "reason": "独立对照 app/server.py:388-401,425-435；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获PATCH漏字段或按无团队id更新。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-room-text-capacity-active",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-text-capacity-active"
+      ],
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442、app/server.py:429-435；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区；过滤非法元素、bool强转、只PATCH去重。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-room-equipment-set",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-equipment-set"
+      ],
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442、app/server.py:429-435；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区；过滤非法元素、bool强转、只PATCH去重。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-room-name-unique-concurrency",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-name-unique-concurrency"
+      ],
+      "reason": "独立对照 app/server.py:41,426,391,400；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只POST手工查名或把唯一性设全局。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-room-state-existing-bookings",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-state-existing-bookings"
+      ],
+      "reason": "独立对照 app/server.py:399-400,460-467；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获停用删除原约、减容改人数或启用绕冲突。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-member-select-role-guards",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-member-select-role-guards"
+      ],
+      "reason": "独立对照 app/server.py:369-386；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获成员自升、跨队改、非字符串异常泄露。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-last-admin-lock",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-last-admin-lock"
+      ],
+      "reason": "独立对照 app/server.py:249,382-386；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获count其他队管理员或检查锁外、降权旧会话授权。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-start-session-errors",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-start-session-errors"
+      ],
+      "reason": "独立对照 web/app.js:268-276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获捕全部错误当登录/空workspace。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-api-error-session-transition",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-api-error-session-transition"
+      ],
+      "reason": "独立对照 web/app.js:20-35；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获非JSON成功当空、401登录也重置输入、错误无反馈。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-login-navigation",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-login-navigation"
+      ],
+      "reason": "独立对照 web/app.js:47-57,163-169,253-276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获角色本地推测、logout未增token或跨队残留。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-load-parallel-error",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-load-parallel-error"
+      ],
+      "reason": "独立对照 web/app.js:60-77；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获某一成功即写列表、旧finally清loading。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-load-token-races",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-load-token-races"
+      ],
+      "reason": "独立对照 web/app.js:25-29,60-77、web/app.js:60-77；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获api先清user，token过滤无法阻止过时401登出当前有效页面；某一成功即写列表、旧finally清loading。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-filters-statistics",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "reason": "独立对照 web/app.js:103-107；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获过滤用OR、从筛选列表计stats、把相交当mine开始日。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-room-timeline-agenda",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-room-timeline-agenda"
+      ],
+      "reason": "独立对照 web/app.js:110-117；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获<=导致相邻多格、错timezone或仅标题脱敏。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-timezone-format",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-timezone-format"
+      ],
+      "reason": "独立对照 web/app.js:13-16,105,112,127,172-192；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获某页面用浏览器local Date getter。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-booking-status-sort",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-booking-status-sort"
+      ],
+      "reason": "独立对照 web/app.js:120-130；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获比较端点错误、全部sort升序、进行中可取消。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-notification-render",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-notification-render"
+      ],
+      "reason": "独立对照 web/app.js:82-83,133-135,154-160；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获历史总未读徽标、mark失败按钮永远锁。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-default-times",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-default-times"
+      ],
+      "reason": "独立对照 web/app.js:171-192；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获now exactly整刻选已经开始、20点默认明天错日。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-booking-draft-key",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-booking-draft-key"
+      ],
+      "reason": "独立对照 web/app.js:188-214；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获retry每次新K、改字段仍旧K、重新打开复用旧草稿。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-submit-button-matrix",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-submit-button-matrix"
+      ],
+      "reason": "独立对照 web/app.js:20-35、web/app.js:47-57,201-213,228-248；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获非JSON成功当空、401登录也重置输入、错误无反馈；只成功恢复按钮或丢输入、toast无编号。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-room-edit-draft",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-room-edit-draft"
+      ],
+      "reason": "独立对照 web/app.js:216-237；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获edit字段未回填或POST错target、add残上次值。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-role-demotion-reload",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-role-demotion-reload"
+      ],
+      "reason": "独立对照 web/app.js:47-57,163-169,253-276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获角色本地推测、logout未增token或跨队残留。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-logout-races",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-logout-races"
+      ],
+      "reason": "独立对照 web/app.js:47-57,163-169,253-276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获角色本地推测、logout未增token或跨队残留。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-dialog-close-no-write",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-dialog-close-no-write"
+      ],
+      "reason": "独立对照 web/app.js:239-248,262-263,web/index.html:18-50；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获formclose按钮type不对、点击内部当backdrop。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-text-escaping",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-text-escaping"
+      ],
+      "reason": "独立对照 web/app.js:12,38,84,116-117,130,135,139,190-191,241,276；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获只转<>忽略属性引号或安全删除正文。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-accessibility-focus",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-accessibility-focus"
+      ],
+      "reason": "独立对照 web/index.html:1-53,web/app.js:38,83-84,107,117,130,135；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获DOM替换丢焦点/反馈无播报、onlyUI validation。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-ui-responsive-breakpoints",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-responsive-breakpoints"
+      ],
+      "reason": "独立对照 web/style.css:1-7；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获端点某一层隐藏必须入口、dialog/longtext遮挡。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-seed-failure-retry",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-seed-failure-retry"
+      ],
+      "reason": "独立对照 app/server.py:122-156,107-120、app/server.py:284-307,315-387,388-401,470-479；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获提前提交团队使重启永久跳过剩余播种；仅回滚预约而漏登录会话和单表写。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-login-format-boundaries",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-login-format-boundaries"
+      ],
+      "reason": "独立对照 app/server.py:76-96,425-435,437-442、app/server.py:284-293；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获强转bool、先len错误、自动补时区；无效格式消耗配额或成功不计数。不以路径到达或计划证据当作应用通过。"
+    },
+    {
+      "target_id": "WBT-idempotency-absolute-precision",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-idempotency-absolute-precision"
+      ],
+      "reason": "独立对照 app/server.py:442-449；该场景方法有真实操作/目标路径追踪及独立结果断言，可捕获把起/止微秒变化当相同内容重放。不以路径到达或计划证据当作应用通过。"
+    }
+  ],
+  "inventory_checks": [
+    {
+      "inventory_id": "IWB-001",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-runtime-entry"
+      ],
+      "reason": "独立代码库存条件“main 默认/单参数/组合参数及 finally 关闭监听”由关联白盒明确触发；其真实可观察结果“监听地址端口、独立数据库读回与重启记录错位”能排除“忽略 db 参数或依赖非标准库”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-002",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-seed-empty-existing"
+      ],
+      "reason": "独立代码库存条件“不存在库/空团队播种；已有任意团队提前返回”由关联白盒明确触发；其真实可观察结果“精确初始记录增量与既有数据差异”能排除“按固定团队ID判空，重开已有库重复播种”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-003",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-seed-empty-existing"
+      ],
+      "reason": "独立代码库存条件“北京时间午夜附近明天与 UTC 同日/异日”由关联白盒明确触发；其真实可观察结果“三场会议落于错误北京时间日期”能排除“使用 UTC 明天”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-004",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-seed-failure-retry"
+      ],
+      "reason": "独立代码库存条件“团队、用户、会议室、初始会议各批实际写后失败再启动”由关联白盒明确触发；其真实可观察结果“独立库部分种子残留、重试缺账号/房间/会议”能排除“提前提交团队使重启永久跳过剩余播种”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-005",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-persistence-restart",
+        "WB-transaction-failure-matrix"
+      ],
+      "reason": "独立代码库存条件“BEGIN/BEGIN IMMEDIATE；yield后commit；异常rollback；finally关闭”由关联白盒明确触发；其真实可观察结果“独立连接及重启可见未完成写入；恢复重试失败”能排除“提前commit或回滚遗漏”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-006",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-seed-failure-retry"
+      ],
+      "reason": "独立代码库存条件“登录替换/退出/新室/编辑室/升降角色/全已读/创建/本人和代取消的实际写后及commit失败”由关联白盒明确触发；其真实可观察结果“失败后旧状态不一致或新会话/通知残留”能排除“仅回滚预约而漏登录会话和单表写”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-007",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-errors-and-response"
+      ],
+      "reason": "独立代码库存条件“AppError/IntegrityError/OperationalError/未知异常分别处理，连接断开无业务补偿”由关联白盒明确触发；其真实可观察结果“HTTP JSON代码错误或日志/响应泄密；失败写残留”能排除“抛内部堆栈，错误类别合并，发送响应前未提交”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-008",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-health-static-dispatch"
+      ],
+      "reason": "独立代码库存条件“匿名健康读取在认证和写正文校验之前”由关联白盒明确触发；其真实可观察结果“匿名200字段或真实库读取证据不符”能排除“按已登录门禁阻挡health或只固定回应不实际读库”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-009",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-health-static-dispatch",
+        "WB-route-authorizations"
+      ],
+      "reason": "独立代码库存条件“三白名单静态路由 GET/HEAD；未知路径/修改请求404；HEAD空体”由关联白盒明确触发；其真实可观察结果“内容资源错误、未知路径泄露或HEAD体非空；安全头仅实现观察不是新增需求”能排除“路径拼接允许任意文件或HEAD发送正文”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-010",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-fields-guards",
+        "WB-datetime-parse-normalize",
+        "WB-room-text-capacity-active",
+        "WB-room-equipment-set",
+        "WB-login-format-boundaries"
+      ],
+      "reason": "独立代码库存条件“bool不能冒充int；trim前后类型长度；时区有无、异常捕获”由关联白盒明确触发；其真实可观察结果“拒绝矩阵错误、非JSON500或部分写入”能排除“强转bool、先len错误、自动补时区”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-011",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-request-origin"
+      ],
+      "reason": "独立代码库存条件“全部POST/PATCH入口标记/Origin缺失同源异源scheme host port”由关联白盒明确触发；其真实可观察结果“该入口错误接收且产生修改”能排除“某个入口绕过read_json或Origin宽松前缀匹配”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-012",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-json-envelope"
+      ],
+      "reason": "独立代码库存条件“媒体类型带参数、字节长度0/65536/65537、UTF8损坏、JSON非对象”由关联白盒明确触发；其真实可观察结果“非法正文接收或预期稳定JSON错误变500”能排除“按字符计数、忽略顶层数组或吞解码异常”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-013",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-login-format-boundaries",
+        "WB-login-window-lock"
+      ],
+      "reason": "独立代码库存条件“格式验证先于IP配额，存在有效/无效凭据均计数”由关联白盒明确触发；其真实可观察结果“随后第八/九次额度错位”能排除“无效格式消耗配额或成功不计数”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-014",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-login-window-lock"
+      ],
+      "reason": "独立代码库存条件“同IP并发、独立IP、八次上限，60秒严格大于剔除”由关联白盒明确触发；其真实可观察结果“同IP超过8次被接收或独立IP被限”能排除“计数锁外检查导致并发超额或全局池”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-015",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-login-window-lock"
+      ],
+      "reason": "独立代码库存条件“60秒±1ms及多时间戳错开只逐条过期”由关联白盒明确触发；其真实可观察结果“60.000仍限或过期一条释放多条”能排除“>=端点包含或整批清空”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-016",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-password-derivation",
+        "WB-login-switch-and-cookies"
+      ],
+      "reason": "独立代码库存条件“找不到账号短路/错误密码/正确密码/有效旧会话错误重登”由关联白盒明确触发；其真实可观察结果“统一错误缺失或错误凭据建立目标会话”能排除“存在性反馈不同或旧会话绕过密码”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-017",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-password-derivation"
+      ],
+      "reason": "第2轮方法修订已关闭本独立库存反例：完整链接并强制执行原AI-identity-session-13、AI-salt-entropy-dependence、AI-password-persistence-scope；新增方法明确同前态仅改变实际有效熵和同带重放、独立hashlib.scrypt复算、不调用被测密码函数获得预期，以及从进程创建至重启的全子进程I/O/数据库/WAL/临时/删除/外部出口对账。读随机但忽略结果、非密码派生或另存可恢复副本都将有明确失败信号；未知出口未覆盖不能判通过。原认证/输入分支仍保留。"
+    },
+    {
+      "inventory_id": "IWB-018",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-login-switch-and-cookies",
+        "WB-session-expiry",
+        "WB-transaction-failure-matrix"
+      ],
+      "reason": "第2轮方法修订已关闭本独立库存反例：完整链接且强制执行原AI-identity-session-14、AI-token-entropy-and-storage-scope、AI-subsequent-session-entropy；首次及四类实际前缀后的目标登录具同前态有效熵变化/同带重放控制，每新token直接真实身份/业务并查当前及其他会话，独立SHA256摘要及用户/到期比对，全进程树所有I/O出口与字段用途对账。首次随机后续确定或额外保存会话材料明确失败；未知出口/种子控制不足记录受阻。"
+    },
+    {
+      "inventory_id": "IWB-019",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-session-join",
+        "WB-session-expiry"
+      ],
+      "reason": "独立代码库存条件“缺/坏Cookie、无摘要、expires==now及更早；JOIN当前user/team/role”由关联白盒明确触发；其真实可观察结果“首业务权限错误、8h边界仍通过或expires改变”能排除“缓存登录时角色或expires>=now、查询续期”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-020",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-logout-revocation",
+        "WB-transaction-failure-matrix"
+      ],
+      "reason": "独立代码库存条件“当前有效会话DELETE及clearcookie；其他同账号会话仍有效”由关联白盒明确触发；其真实可观察结果“旧令牌还能用或第二浏览器被注销”能排除“只删Cookie或全账号注销”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-021",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-rooms-team-deserialization"
+      ],
+      "reason": "独立代码库存条件“本队SQL、停用包含、设备JSON和active布尔转换”由关联白盒明确触发；其真实可观察结果“精确集合/字段不符、跨队泄漏”能排除“过滤active或接受客户端team_id覆盖”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-022",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-day-range-intersection"
+      ],
+      "reason": "独立代码库存条件“默认上海日期、parse_qs空值、day_range自然日转UTC”由关联白盒明确触发；其真实可观察结果“相邻日/午夜区间ID集合不符”能排除“默认UTC日或按固定24h起点错误”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-023",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-day-range-intersection"
+      ],
+      "reason": "独立代码库存条件“start<dayEnd且end>dayStart、confirmed、按start排序”由关联白盒明确触发；其真实可观察结果“跨日历史fixture漏计、多计边界或排序错”能排除“只查开始日、<=端点或包含cancelled”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-024",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-agenda-title-redaction"
+      ],
+      "reason": "独立代码库存条件“自己OR管理员可见，其他成员脱敏，角色变更首请求”由关联白盒明确触发；其真实可观察结果“API私有主题泄露或本人/管理员缺主题”能排除“用AND或仅UI脱敏、缓存旧角色”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-025",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-query-scope-join"
+      ],
+      "reason": "独立代码库存条件“mine默认限制user；team先admin；坏scope拒绝；当前室名位置JOIN与字段白名单”由关联白盒明确触发；其真实可观察结果“精确结果集错、改室后旧资料、内部字段泄露”能排除“team静默退mine、跨队或暴露request_hash”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-026",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-idempotency-priority"
+      ],
+      "reason": "独立代码库存条件“合法字段→规范化指纹→用户K查找→replay→新预约资格”由关联白盒明确触发；其真实可观察结果“原编号状态不返回、新增通知或恢复取消”能排除“先日期资格检查而取消/过时重放拒绝”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-027",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-idempotency-absolute-precision"
+      ],
+      "reason": "独立代码库存条件“同绝对时间异offset等价；仅微秒改动也不同绝对时刻（当前isoformat秒截断风险）”由关联白盒明确触发；其真实可观察结果“同K变绝对时间返回replayed而未拒；不依赖代码截断作为预期”能排除“把起/止微秒变化当相同内容重放”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-028",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-idempotency-user-concurrency"
+      ],
+      "reason": "独立代码库存条件“同用户K唯一，异用户K独立；空K首次并发同/异内容”由关联白盒明确触发；其真实可观察结果“最终双记录/双通知或错误内容返回成功”能排除“只查团队、竞争重复insert、败者静默覆盖”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-029",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-horizon"
+      ],
+      "reason": "第2轮方法修订已关闭本独立库存反例：固定合法对齐T*=2030-04-11 10:00–11:00+08并将服务端datetime/time.time移到T*−1秒/T*/T*+1秒和T*−30天±1秒/等号共六项；各分支在设钟后建有效会话及独立空闲启用室/新K，其他守卫不掩盖日期判定。原AI-reservation-creation-4全部矩阵强制执行，并在浏览器钟前后一天重测实际API。时间舍入或上界宽容几秒会在±1秒对照失败。"
+    },
+    {
+      "inventory_id": "IWB-030",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-duration"
+      ],
+      "reason": "独立代码库存条件“15min和8h含端，零/负/超长拒绝”由关联白盒明确触发；其真实可观察结果“精确响应或无副作用断言失败”能排除“只下界/只上界、端点严格排除”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-031",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-open-hours"
+      ],
+      "reason": "独立代码库存条件“上海起止同日；08:00允许；20:00分钟秒为0；不同offset”由关联白盒明确触发；其真实可观察结果“合法异offset被拒或越开放接受”能排除“按输入字符串日或漏local_end.second”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-032",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-open-hours"
+      ],
+      "reason": "独立代码库存条件“起和止分钟余数/秒/微秒任一非0拒绝；新K验证”由关联白盒明确触发；其真实可观察结果“违规结束/微秒创建成功”能排除“仅查start或预先截微秒”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-033",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-eligibility-capacity"
+      ],
+      "reason": "独立代码库存条件“团队不存在→active→最新capacity；管理员无豁免；旧弹窗变化”由关联白盒明确触发；其真实可观察结果“外队/停用/超容新约成功或错误归类无副作用缺失”能排除“客户端容量/停用缓存、全局id不隔team”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-034",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-conflict-serialization"
+      ],
+      "reason": "独立代码库存条件“confirmed start<newEnd AND end>newStart在BEGIN IMMEDIATE中读取+写”由关联白盒明确触发；其真实可观察结果“任一重叠竞争双成功、相邻误拒或cancelled仍占用”能排除“少一种包含关系或解除锁后insert”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-035",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-booking-insert-notify",
+        "WB-transaction-failure-matrix"
+      ],
+      "reason": "独立代码库存条件“booking insert后notify insert后commit失败和成功，用户/时区/主题关联”由关联白盒明确触发；其真实可观察结果“独立连接记录残留或通知内容/数量错误”能排除“提前提交booking或通知recipient错”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-036",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "reason": "独立代码库存条件“先团队存在→所有者ORadmin→非cancelled→服务钟start<=now拒绝”由关联白盒明确触发；其真实可观察结果“异队语义、其他成员重放取消结果或实际修改错误”能排除“全局找id泄露、先cancelled成功绕授权”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-037",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-cancel-atomic-idempotent",
+        "WB-transaction-failure-matrix"
+      ],
+      "reason": "独立代码库存条件“首次update+notify同事务、已取消即成功（原start前后）、并发取消仅一通知”由关联白盒明确触发；其真实可观察结果“取消时间变、重复通知或后来预约被破坏”能排除“重复改cancelled_at、时段释放按room误删新约”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-038",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-notifications-select-limit"
+      ],
+      "reason": "独立代码库存条件“user_id过滤、id DESC LIMIT100与全字段、同秒顺序”由关联白盒明确触发；其真实可观察结果“101/105数据精确ID集合和字段不符”能排除“按team过滤、created_at单排序或只未读”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-039",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-notifications-mark-all",
+        "WB-transaction-failure-matrix"
+      ],
+      "reason": "独立代码库存条件“更新用户全部超100记录、空/重复、rollback、并发新通知”由关联白盒明确触发；其真实可观察结果“独立存储105条及其他用户read状态差异”能排除“仅可见100、全库标读或失败部分标读”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-040",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-member-select-role-guards",
+        "WB-route-authorizations"
+      ],
+      "reason": "独立代码库存条件“先admin→精确enum→团队目标，GET本队投影”由关联白盒明确触发；其真实可观察结果“权限拒绝/角色集合字段或副作用不符”能排除“成员自升、跨队改、非字符串异常泄露”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-041",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-last-admin-lock",
+        "WB-session-join"
+      ],
+      "reason": "独立代码库存条件“仅admin→member计数、本队count<=1拒；合法同值/晋升；双管理员互降/自降并发”由关联白盒明确触发；其真实可观察结果“最终本队无admin或角色变更首写仍放行”能排除“count其他队管理员或检查锁外、降权旧会话授权”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-042",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-write-and-return"
+      ],
+      "reason": "独立代码库存条件“POST独立id团队与完整返回；PATCH先团队目标、五字段整组”由关联白盒明确触发；其真实可观察结果“最终字段/团队集合错误或异队修改”能排除“PATCH漏字段或按无团队id更新”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-043",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-name-unique-concurrency"
+      ],
+      "reason": "独立代码库存条件“trim名+UNIQUE(team,name)；self同名、停用占名、跨队可同名；C/C E/E C/E竞争”由关联白盒明确触发；其真实可观察结果“双同队同名或失败编辑留下其他字段修改”能排除“只POST手工查名或把唯一性设全局”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-044",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-equipment-set",
+        "WB-room-text-capacity-active"
+      ],
+      "reason": "独立代码库存条件“list且元素精确str枚举、空允许、去重；新增active默认True bool严格”由关联白盒明确触发；其真实可观察结果“保存集合/默认状态错，拒绝后字段改变”能排除“过滤非法元素、bool强转、只PATCH去重”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-045",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-room-state-existing-bookings"
+      ],
+      "reason": "独立代码库存条件“启用→停用→启用、减容、改名位置；已有约保留，新约新资格”由关联白盒明确触发；其真实可观察结果“历史记录变化及新请求对照错误”能排除“停用删除原约、减容改人数或启用绕冲突”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-046",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-api-error-session-transition",
+        "WB-ui-submit-button-matrix"
+      ],
+      "reason": "独立代码库存条件“JSON解析失败优先catch、非ok通用fallback、401登录路径例外”由关联白盒明确触发；其真实可观察结果“错误面板/表单保存/登录操作失败”能排除“非JSON成功当空、401登录也重置输入、错误无反馈”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-047",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-load-token-races"
+      ],
+      "reason": "独立代码库存条件“O请求旧会话401扣留，重新有效登录/N最新加载成功后释放O”由关联白盒明确触发；其真实可观察结果“当前新身份/最新页面变登录或业务弹窗被旧响应关闭”能排除“api先清user，token过滤无法阻止过时401登出当前有效页面”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-048",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-load-parallel-error",
+        "WB-ui-load-token-races"
+      ],
+      "reason": "独立代码库存条件“Promise.all3/4请求；manage/admin才members；部分失败；旧success/catch/finally先/后N结束”由关联白盒明确触发；其真实可观察结果“pending期间旧内容/错误闪回、缺列表假空或加载提前结束”能排除“某一成功即写列表、旧finally清loading”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-049",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-login-navigation",
+        "WB-ui-logout-races",
+        "WB-ui-role-demotion-reload"
+      ],
+      "reason": "独立代码库存条件“登录清四列表/页scope、logout增token关闭弹窗、role更新后session→自降spaces/mine”由关联白盒明确触发；其真实可观察结果“新身份页面含旧私有内容、管理入口残留或失败误降UI”能排除“角色本地推测、logout未增token或跨队残留”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-050",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-start-session-errors"
+      ],
+      "reason": "独立代码库存条件“session成功load、401login、非401连接错误页”由关联白盒明确触发；其真实可观察结果“非401失效表现不正确/无错误信息”能排除“捕全部错误当登录/空workspace”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-051",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "reason": "独立代码库存条件“active AND capacity AND equipment；stats基原列表；mine按start上海date”由关联白盒明确触发；其真实可观察结果“交集室ID、筛前后指标或历史跨日mine数错”能排除“过滤用OR、从筛选列表计stats、把相交当mine开始日”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-052",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-room-timeline-agenda"
+      ],
+      "reason": "独立代码库存条件“48个08..20半开格、日程空/非空、脱敏owner主题”由关联白盒明确触发；其真实可观察结果“逐格与API已脱敏主题/owner不符”能排除“<=导致相邻多格、错timezone或仅标题脱敏”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-053",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-booking-status-sort"
+      ],
+      "reason": "独立代码库存条件“cancelled优先；start/end等号；upcoming升序、history继承API降序、未来confirmed入口”由关联白盒明确触发；其真实可观察结果“分组顺序状态/取消入口矩阵错误”能排除“比较端点错误、全部sort升序、进行中可取消”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-054",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-notification-render"
+      ],
+      "reason": "独立代码库存条件“本次loaded未读计数、0无badge/按钮disabled、已读成功重载/失败恢复”由关联白盒明确触发；其真实可观察结果“徽标计数/可重试性或已读后列表不符”能排除“历史总未读徽标、mark失败按钮永远锁”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-055",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-default-times"
+      ],
+      "reason": "独立代码库存条件“今天ceil(+1min)/开门前max8/19:44 19:45/过期日期/未来日期/20点截end”由关联白盒明确触发；其真实可观察结果“日期不正确、粒度或开放时段无效”能排除“now exactly整刻选已经开始、20点默认明天错日”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-056",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-booking-draft-key"
+      ],
+      "reason": "独立代码库存条件“每打开重置draft；payloadtrim/number/offset；相同fingerprint复用、内容变化randomUUID”由关联白盒明确触发；其真实可观察结果“网络K关联与唯一记录/通知/变更结果错误”能排除“retry每次新K、改字段仍旧K、重新打开复用旧草稿”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-057",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-submit-button-matrix"
+      ],
+      "reason": "独立代码库存条件“login/booking/new-edit-room/cancel pending禁用、成功关闭重载toast、失败保留/finally恢复”由关联白盒明确触发；其真实可观察结果“等待重入请求、失败后锁死或重试不能完成”能排除“只成功恢复按钮或丢输入、toast无编号”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-058",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-room-edit-draft"
+      ],
+      "reason": "独立代码库存条件“add reset vs edit回填，truthy editingRoom选择POST/PATCH，check设备”由关联白盒明确触发；其真实可观察结果“请求路径方法/保存完整字段/失败重试对象错”能排除“edit字段未回填或POST错target、add残上次值”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-059",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-dialog-close-no-write"
+      ],
+      "reason": "独立代码库存条件“data-close、nativeEscape、外部坐标判定；内部点击不close、不submit”由关联白盒明确触发；其真实可观察结果“关闭产生写请求或内部操作失效”能排除“formclose按钮type不对、点击内部当backdrop”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-060",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-text-escaping"
+      ],
+      "reason": "独立代码库存条件“escapeHtml字符串和属性、textContent弹窗/toast，动态数据各sink”由关联白盒明确触发；其真实可观察结果“DOM执行标志、属性注入或原文缺失”能排除“只转<>忽略属性引号或安全删除正文”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-061",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-timezone-format"
+      ],
+      "reason": "独立代码库存条件“Intl上海格式日期时间、local浏览器UTC/LA、午夜跨日期”由关联白盒明确触发；其真实可观察结果“同绝对时间页面日期/slot不同”能排除“某页面用浏览器local Date getter”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-062",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-accessibility-focus",
+        "WB-booking-fields-guards",
+        "WB-request-origin",
+        "WB-json-envelope"
+      ],
+      "reason": "独立代码库存条件“labels、aria标题、role alert/status、焦点、native约束与后端独立校验”由关联白盒明确触发；其真实可观察结果“键盘轨迹与可访问树错误或直接非法API接收”能排除“DOM替换丢焦点/反馈无播报、onlyUI validation”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-063",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-responsive-breakpoints"
+      ],
+      "reason": "独立代码库存条件“>1500、1150、850、600端点上下以及320/390窄屏；导航/侧栏/toast/dialog变化”由关联白盒明确触发；其真实可观察结果“控件boundingbox/可完成任务/横向scroll错误”能排除“端点某一层隐藏必须入口、dialog/longtext遮挡”；不要求资源已验证。"
+    },
+    {
+      "inventory_id": "IWB-064",
+      "verdict": "excluded",
+      "scenario_ids": [],
+      "reason": "tests/test_smoke.py三冒烟是既有参考，不是新增发布功能或白盒覆盖依据。所有材料业务路径另有明确白盒方法；不运行或将既有冒烟声明为已通过。"
+    }
+  ],
+  "counts": {
+    "requirements_reviewed": 96,
+    "white_box_scenarios": 63,
+    "sufficient": 63,
+    "gaps": 0,
+    "material_targets": 63,
+    "independent_inventory_items": 64,
+    "inventory_sufficient": 63,
+    "inventory_excluded": 1,
+    "methods_total": 168
+  },
+  "observations": [
+    "旧身份延迟401与微秒重放精度疑似产品错误已有真实路径方法，归为充分覆盖的执行探针，不是设计缺口也不是已证明缺陷。",
+    "若进入实际测试须先单独验证时钟/有效熵控制/故障适配器和全I/O出口能力；设计阶段全部标为未验证，缺能力必须受阻，不能以设计审阅代替资源或实际结果。",
+    "少量源定位行号偏移仍有路径和符号精确定位，不影响当前分支行为设计判断；后续改定位文件须刷新所关联设计hash。"
+  ],
+  "execution_status": "not_started",
+  "resources_status": "not_verified",
+  "app_acceptance": "not_established",
+  "closed_findings": [
+    {
+      "gap_id": "WBG-01",
+      "scenario_id": "WB-password-derivation",
+      "resolution": "完整链接并强制执行原AI-identity-session-13、AI-salt-entropy-dependence、AI-password-persistence-scope；新增方法明确同前态仅改变实际有效熵和同带重放、独立hashlib.scrypt复算、不调用被测密码函数获得预期，以及从进程创建至重启的全子进程I/O/数据库/WAL/临时/删除/外部出口对账。读随机但忽略结果、非密码派生或另存可恢复副本都将有明确失败信号；未知出口未覆盖不能判通过。原认证/输入分支仍保留。"
+    },
+    {
+      "gap_id": "WBG-02",
+      "scenario_id": "WB-login-switch-and-cookies",
+      "resolution": "完整链接且强制执行原AI-identity-session-14、AI-token-entropy-and-storage-scope、AI-subsequent-session-entropy；首次及四类实际前缀后的目标登录具同前态有效熵变化/同带重放控制，每新token直接真实身份/业务并查当前及其他会话，独立SHA256摘要及用户/到期比对，全进程树所有I/O出口与字段用途对账。首次随机后续确定或额外保存会话材料明确失败；未知出口/种子控制不足记录受阻。"
+    },
+    {
+      "gap_id": "WBG-04",
+      "scenario_id": "WB-booking-horizon",
+      "resolution": "固定合法对齐T*=2030-04-11 10:00–11:00+08并将服务端datetime/time.time移到T*−1秒/T*/T*+1秒和T*−30天±1秒/等号共六项；各分支在设钟后建有效会话及独立空闲启用室/新K，其他守卫不掩盖日期判定。原AI-reservation-creation-4全部矩阵强制执行，并在浏览器钟前后一天重测实际API。时间舍入或上界宽容几秒会在±1秒对照失败。"
+    }
+  ]
+}

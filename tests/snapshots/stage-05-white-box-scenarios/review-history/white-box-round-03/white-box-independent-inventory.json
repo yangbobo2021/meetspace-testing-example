@@ -1,0 +1,823 @@
+{
+  "status": "independent_initial_inventory_not_final_review",
+  "basis": "独立阅读全部固定实现、96条确认需求、原96黑盒场景及105方法和独立黑盒审阅；未采用Analyst分支清单作为完整性假设。库存用于随后逐条挑战场景和方法，不是覆盖通过或代码缺陷实测证据。",
+  "created_at": "2026-10-08T11:50:49.449549+00:00",
+  "implementation_revision": "5a0fd19fa6691c2b25be1ac2356e3b0c55766c43",
+  "code_sha256": {
+    "app/server.py": "d108a24c318d51607d22a9bedfab77e8e9911a04c7df535a5882698d1e3963e4",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "795a77045b90f46c99851f52fee5bce6836e4b88b39d4e584c9bb9387921d293",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead"
+  },
+  "requirements_sha256": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+  "items": [
+    {
+      "id": "IWB-001",
+      "name": "runtime-entry",
+      "code_reference": "app/server.py:482-499",
+      "requirement_ids": [
+        "application-runtime-1",
+        "application-runtime-2"
+      ],
+      "material_path": "main 默认/单参数/组合参数及 finally 关闭监听",
+      "plausible_fault": "忽略 db 参数或依赖非标准库",
+      "failure_signal": "监听地址端口、独立数据库读回与重启记录错位"
+    },
+    {
+      "id": "IWB-002",
+      "name": "schema-seed-guard",
+      "code_reference": "app/server.py:99-105,122-156",
+      "requirement_ids": [
+        "application-runtime-3",
+        "application-runtime-4"
+      ],
+      "material_path": "不存在库/空团队播种；已有任意团队提前返回",
+      "plausible_fault": "按固定团队ID判空，重开已有库重复播种",
+      "failure_signal": "精确初始记录增量与既有数据差异"
+    },
+    {
+      "id": "IWB-003",
+      "name": "seed-timezone",
+      "code_reference": "app/server.py:144-156",
+      "requirement_ids": [
+        "application-runtime-3"
+      ],
+      "material_path": "北京时间午夜附近明天与 UTC 同日/异日",
+      "plausible_fault": "使用 UTC 明天",
+      "failure_signal": "三场会议落于错误北京时间日期"
+    },
+    {
+      "id": "IWB-004",
+      "name": "seed-atomic",
+      "code_reference": "app/server.py:122-156,107-120",
+      "requirement_ids": [
+        "application-runtime-3",
+        "application-runtime-9"
+      ],
+      "material_path": "团队、用户、会议室、初始会议各批实际写后失败再启动",
+      "plausible_fault": "提前提交团队使重启永久跳过剩余播种",
+      "failure_signal": "独立库部分种子残留、重试缺账号/房间/会议"
+    },
+    {
+      "id": "IWB-005",
+      "name": "transaction-read-write",
+      "code_reference": "app/server.py:107-120,249-252",
+      "requirement_ids": [
+        "application-runtime-5",
+        "application-runtime-9"
+      ],
+      "material_path": "BEGIN/BEGIN IMMEDIATE；yield后commit；异常rollback；finally关闭",
+      "plausible_fault": "提前commit或回滚遗漏",
+      "failure_signal": "独立连接及重启可见未完成写入；恢复重试失败"
+    },
+    {
+      "id": "IWB-006",
+      "name": "write-success-failure-matrix",
+      "code_reference": "app/server.py:284-307,315-387,388-401,470-479",
+      "requirement_ids": [
+        "application-runtime-9"
+      ],
+      "material_path": "登录替换/退出/新室/编辑室/升降角色/全已读/创建/本人和代取消的实际写后及commit失败",
+      "plausible_fault": "仅回滚预约而漏登录会话和单表写",
+      "failure_signal": "失败后旧状态不一致或新会话/通知残留"
+    },
+    {
+      "id": "IWB-007",
+      "name": "dispatch-errors",
+      "code_reference": "app/server.py:236-263",
+      "requirement_ids": [
+        "application-runtime-7",
+        "application-runtime-8"
+      ],
+      "material_path": "AppError/IntegrityError/OperationalError/未知异常分别处理，连接断开无业务补偿",
+      "plausible_fault": "抛内部堆栈，错误类别合并，发送响应前未提交",
+      "failure_signal": "HTTP JSON代码错误或日志/响应泄密；失败写残留"
+    },
+    {
+      "id": "IWB-008",
+      "name": "health-path",
+      "code_reference": "app/server.py:240-245",
+      "requirement_ids": [
+        "application-runtime-6"
+      ],
+      "material_path": "匿名健康读取在认证和写正文校验之前",
+      "plausible_fault": "按已登录门禁阻挡health或只固定回应不实际读库",
+      "failure_signal": "匿名200字段或真实库读取证据不符"
+    },
+    {
+      "id": "IWB-009",
+      "name": "static-routes",
+      "code_reference": "app/server.py:265-282",
+      "requirement_ids": [
+        "application-runtime-7"
+      ],
+      "material_path": "三白名单静态路由 GET/HEAD；未知路径/修改请求404；HEAD空体",
+      "plausible_fault": "路径拼接允许任意文件或HEAD发送正文",
+      "failure_signal": "内容资源错误、未知路径泄露或HEAD体非空；安全头仅实现观察不是新增需求"
+    },
+    {
+      "id": "IWB-010",
+      "name": "generic-value-types",
+      "code_reference": "app/server.py:76-96,425-435,437-442",
+      "requirement_ids": [
+        "identity-session-1",
+        "reservation-creation-2",
+        "reservation-creation-3",
+        "space-administration-5",
+        "space-administration-6"
+      ],
+      "material_path": "bool不能冒充int；trim前后类型长度；时区有无、异常捕获",
+      "plausible_fault": "强转bool、先len错误、自动补时区",
+      "failure_signal": "拒绝矩阵错误、非JSON500或部分写入"
+    },
+    {
+      "id": "IWB-011",
+      "name": "write-origin-guard",
+      "code_reference": "app/server.py:197-204,246",
+      "requirement_ids": [
+        "identity-session-10"
+      ],
+      "material_path": "全部POST/PATCH入口标记/Origin缺失同源异源scheme host port",
+      "plausible_fault": "某个入口绕过read_json或Origin宽松前缀匹配",
+      "failure_signal": "该入口错误接收且产生修改"
+    },
+    {
+      "id": "IWB-012",
+      "name": "body-byte-shape",
+      "code_reference": "app/server.py:203-214",
+      "requirement_ids": [
+        "identity-session-11"
+      ],
+      "material_path": "媒体类型带参数、字节长度0/65536/65537、UTF8损坏、JSON非对象",
+      "plausible_fault": "按字符计数、忽略顶层数组或吞解码异常",
+      "failure_signal": "非法正文接收或预期稳定JSON错误变500"
+    },
+    {
+      "id": "IWB-013",
+      "name": "login-format-before-budget",
+      "code_reference": "app/server.py:284-293",
+      "requirement_ids": [
+        "identity-session-1",
+        "identity-session-9"
+      ],
+      "material_path": "格式验证先于IP配额，存在有效/无效凭据均计数",
+      "plausible_fault": "无效格式消耗配额或成功不计数",
+      "failure_signal": "随后第八/九次额度错位"
+    },
+    {
+      "id": "IWB-014",
+      "name": "login-budget-lock",
+      "code_reference": "app/server.py:287-293",
+      "requirement_ids": [
+        "identity-session-9"
+      ],
+      "material_path": "同IP并发、独立IP、八次上限，60秒严格大于剔除",
+      "plausible_fault": "计数锁外检查导致并发超额或全局池",
+      "failure_signal": "同IP超过8次被接收或独立IP被限"
+    },
+    {
+      "id": "IWB-015",
+      "name": "login-window-endpoint",
+      "code_reference": "app/server.py:289-293",
+      "requirement_ids": [
+        "identity-session-9"
+      ],
+      "material_path": "60秒±1ms及多时间戳错开只逐条过期",
+      "plausible_fault": ">=端点包含或整批清空",
+      "failure_signal": "60.000仍限或过期一条释放多条"
+    },
+    {
+      "id": "IWB-016",
+      "name": "credential-branch",
+      "code_reference": "app/server.py:294-297,66-73",
+      "requirement_ids": [
+        "identity-session-2",
+        "identity-session-3",
+        "identity-session-13"
+      ],
+      "material_path": "找不到账号短路/错误密码/正确密码/有效旧会话错误重登",
+      "plausible_fault": "存在性反馈不同或旧会话绕过密码",
+      "failure_signal": "统一错误缺失或错误凭据建立目标会话"
+    },
+    {
+      "id": "IWB-017",
+      "name": "password-salt-derived",
+      "code_reference": "app/server.py:66-73,133-134",
+      "requirement_ids": [
+        "identity-session-13"
+      ],
+      "material_path": "新盐生成、已存盐复用、scrypt参数与compare_digest",
+      "plausible_fault": "固定盐或认证重新随机盐、保存恢复副本",
+      "failure_signal": "独立复算/熵因果/全部持久化出口检查失败"
+    },
+    {
+      "id": "IWB-018",
+      "name": "token-create-cleanup",
+      "code_reference": "app/server.py:298-309",
+      "requirement_ids": [
+        "identity-session-6",
+        "identity-session-7",
+        "identity-session-12",
+        "identity-session-14"
+      ],
+      "material_path": "每次登录生成随机值、清expired<=now、当前浏览器旧摘要删除、新摘要绑定插入",
+      "plausible_fault": "只首次随机、误删全用户会话或先删除后失败提交",
+      "failure_signal": "因果熵/多浏览器对照失败；登录失败后会话库部分写"
+    },
+    {
+      "id": "IWB-019",
+      "name": "auth-live-join",
+      "code_reference": "app/server.py:216-234",
+      "requirement_ids": [
+        "identity-session-4",
+        "identity-session-5",
+        "identity-session-6",
+        "team-administration-5"
+      ],
+      "material_path": "缺/坏Cookie、无摘要、expires==now及更早；JOIN当前user/team/role",
+      "plausible_fault": "缓存登录时角色或expires>=now、查询续期",
+      "failure_signal": "首业务权限错误、8h边界仍通过或expires改变"
+    },
+    {
+      "id": "IWB-020",
+      "name": "logout-isolation",
+      "code_reference": "app/server.py:315-319",
+      "requirement_ids": [
+        "identity-session-8",
+        "identity-session-12"
+      ],
+      "material_path": "当前有效会话DELETE及clearcookie；其他同账号会话仍有效",
+      "plausible_fault": "只删Cookie或全账号注销",
+      "failure_signal": "旧令牌还能用或第二浏览器被注销"
+    },
+    {
+      "id": "IWB-021",
+      "name": "room-query-team",
+      "code_reference": "app/server.py:320-332,405-409",
+      "requirement_ids": [
+        "room-discovery-1"
+      ],
+      "material_path": "本队SQL、停用包含、设备JSON和active布尔转换",
+      "plausible_fault": "过滤active或接受客户端team_id覆盖",
+      "failure_signal": "精确集合/字段不符、跨队泄漏"
+    },
+    {
+      "id": "IWB-022",
+      "name": "schedule-day-default",
+      "code_reference": "app/server.py:322-328,416-422",
+      "requirement_ids": [
+        "room-discovery-2",
+        "room-discovery-3"
+      ],
+      "material_path": "默认上海日期、parse_qs空值、day_range自然日转UTC",
+      "plausible_fault": "默认UTC日或按固定24h起点错误",
+      "failure_signal": "相邻日/午夜区间ID集合不符"
+    },
+    {
+      "id": "IWB-023",
+      "name": "schedule-half-open",
+      "code_reference": "app/server.py:325-328",
+      "requirement_ids": [
+        "room-discovery-3"
+      ],
+      "material_path": "start<dayEnd且end>dayStart、confirmed、按start排序",
+      "plausible_fault": "只查开始日、<=端点或包含cancelled",
+      "failure_signal": "跨日历史fixture漏计、多计边界或排序错"
+    },
+    {
+      "id": "IWB-024",
+      "name": "title-redaction",
+      "code_reference": "app/server.py:329-331",
+      "requirement_ids": [
+        "room-discovery-4"
+      ],
+      "material_path": "自己OR管理员可见，其他成员脱敏，角色变更首请求",
+      "plausible_fault": "用AND或仅UI脱敏、缓存旧角色",
+      "failure_signal": "API私有主题泄露或本人/管理员缺主题"
+    },
+    {
+      "id": "IWB-025",
+      "name": "booking-scope-join",
+      "code_reference": "app/server.py:333-347,411-413",
+      "requirement_ids": [
+        "reservation-management-1",
+        "reservation-management-2"
+      ],
+      "material_path": "mine默认限制user；team先admin；坏scope拒绝；当前室名位置JOIN与字段白名单",
+      "plausible_fault": "team静默退mine、跨队或暴露request_hash",
+      "failure_signal": "精确结果集错、改室后旧资料、内部字段泄露"
+    },
+    {
+      "id": "IWB-026",
+      "name": "idempotency-order",
+      "code_reference": "app/server.py:438-459",
+      "requirement_ids": [
+        "reservation-creation-11",
+        "reservation-creation-12",
+        "reservation-creation-13"
+      ],
+      "material_path": "合法字段→规范化指纹→用户K查找→replay→新预约资格",
+      "plausible_fault": "先日期资格检查而取消/过时重放拒绝",
+      "failure_signal": "原编号状态不返回、新增通知或恢复取消"
+    },
+    {
+      "id": "IWB-027",
+      "name": "fingerprint-full-precision",
+      "code_reference": "app/server.py:442-449",
+      "requirement_ids": [
+        "reservation-creation-3",
+        "reservation-creation-12"
+      ],
+      "material_path": "同绝对时间异offset等价；仅微秒改动也不同绝对时刻（当前isoformat秒截断风险）",
+      "plausible_fault": "把起/止微秒变化当相同内容重放",
+      "failure_signal": "同K变绝对时间返回replayed而未拒；不依赖代码截断作为预期"
+    },
+    {
+      "id": "IWB-028",
+      "name": "idempotency-user-key-lock",
+      "code_reference": "app/server.py:47,249,445-449,470-475",
+      "requirement_ids": [
+        "reservation-creation-9",
+        "reservation-creation-11",
+        "reservation-creation-12"
+      ],
+      "material_path": "同用户K唯一，异用户K独立；空K首次并发同/异内容",
+      "plausible_fault": "只查团队、竞争重复insert、败者静默覆盖",
+      "failure_signal": "最终双记录/双通知或错误内容返回成功"
+    },
+    {
+      "id": "IWB-029",
+      "name": "future-window",
+      "code_reference": "app/server.py:450-452",
+      "requirement_ids": [
+        "reservation-creation-4"
+      ],
+      "material_path": "start<=now拒绝、>now+30day拒绝，等上界允许",
+      "plausible_fault": "截自然日而非精确时刻或浏览器决定",
+      "failure_signal": "固定合法对齐start移动服务钟后边界结果错"
+    },
+    {
+      "id": "IWB-030",
+      "name": "duration",
+      "code_reference": "app/server.py:453-454",
+      "requirement_ids": [
+        "reservation-creation-5"
+      ],
+      "material_path": "15min和8h含端，零/负/超长拒绝",
+      "plausible_fault": "只下界/只上界、端点严格排除",
+      "failure_signal": "精确响应或无副作用断言失败"
+    },
+    {
+      "id": "IWB-031",
+      "name": "business-hours",
+      "code_reference": "app/server.py:455-457",
+      "requirement_ids": [
+        "reservation-creation-6"
+      ],
+      "material_path": "上海起止同日；08:00允许；20:00分钟秒为0；不同offset",
+      "plausible_fault": "按输入字符串日或漏local_end.second",
+      "failure_signal": "合法异offset被拒或越开放接受"
+    },
+    {
+      "id": "IWB-032",
+      "name": "interval-precision",
+      "code_reference": "app/server.py:458-459",
+      "requirement_ids": [
+        "reservation-creation-7"
+      ],
+      "material_path": "起和止分钟余数/秒/微秒任一非0拒绝；新K验证",
+      "plausible_fault": "仅查start或预先截微秒",
+      "failure_signal": "违规结束/微秒创建成功"
+    },
+    {
+      "id": "IWB-033",
+      "name": "room-eligibility-order",
+      "code_reference": "app/server.py:460-466",
+      "requirement_ids": [
+        "reservation-creation-1",
+        "reservation-creation-8",
+        "reservation-creation-14"
+      ],
+      "material_path": "团队不存在→active→最新capacity；管理员无豁免；旧弹窗变化",
+      "plausible_fault": "客户端容量/停用缓存、全局id不隔team",
+      "failure_signal": "外队/停用/超容新约成功或错误归类无副作用缺失"
+    },
+    {
+      "id": "IWB-034",
+      "name": "overlap-lock",
+      "code_reference": "app/server.py:113,249,467-469",
+      "requirement_ids": [
+        "reservation-creation-9"
+      ],
+      "material_path": "confirmed start<newEnd AND end>newStart在BEGIN IMMEDIATE中读取+写",
+      "plausible_fault": "少一种包含关系或解除锁后insert",
+      "failure_signal": "任一重叠竞争双成功、相邻误拒或cancelled仍占用"
+    },
+    {
+      "id": "IWB-035",
+      "name": "create-notify-atomic",
+      "code_reference": "app/server.py:470-479",
+      "requirement_ids": [
+        "reservation-creation-10",
+        "notification-center-1",
+        "application-runtime-9"
+      ],
+      "material_path": "booking insert后notify insert后commit失败和成功，用户/时区/主题关联",
+      "plausible_fault": "提前提交booking或通知recipient错",
+      "failure_signal": "独立连接记录残留或通知内容/数量错误"
+    },
+    {
+      "id": "IWB-036",
+      "name": "cancel-team-role-order",
+      "code_reference": "app/server.py:350-359",
+      "requirement_ids": [
+        "reservation-management-5",
+        "reservation-management-6",
+        "reservation-management-9"
+      ],
+      "material_path": "先团队存在→所有者ORadmin→非cancelled→服务钟start<=now拒绝",
+      "plausible_fault": "全局找id泄露、先cancelled成功绕授权",
+      "failure_signal": "异队语义、其他成员重放取消结果或实际修改错误"
+    },
+    {
+      "id": "IWB-037",
+      "name": "cancel-idempotent-atomic",
+      "code_reference": "app/server.py:357-362",
+      "requirement_ids": [
+        "reservation-management-7",
+        "reservation-management-8",
+        "notification-center-2"
+      ],
+      "material_path": "首次update+notify同事务、已取消即成功（原start前后）、并发取消仅一通知",
+      "plausible_fault": "重复改cancelled_at、时段释放按room误删新约",
+      "failure_signal": "取消时间变、重复通知或后来预约被破坏"
+    },
+    {
+      "id": "IWB-038",
+      "name": "notification-list",
+      "code_reference": "app/server.py:363-365",
+      "requirement_ids": [
+        "notification-center-3",
+        "notification-center-4"
+      ],
+      "material_path": "user_id过滤、id DESC LIMIT100与全字段、同秒顺序",
+      "plausible_fault": "按team过滤、created_at单排序或只未读",
+      "failure_signal": "101/105数据精确ID集合和字段不符"
+    },
+    {
+      "id": "IWB-039",
+      "name": "notification-all-read",
+      "code_reference": "app/server.py:366-368",
+      "requirement_ids": [
+        "notification-center-5",
+        "application-runtime-9"
+      ],
+      "material_path": "更新用户全部超100记录、空/重复、rollback、并发新通知",
+      "plausible_fault": "仅可见100、全库标读或失败部分标读",
+      "failure_signal": "独立存储105条及其他用户read状态差异"
+    },
+    {
+      "id": "IWB-040",
+      "name": "member-admin-isolation",
+      "code_reference": "app/server.py:369-386",
+      "requirement_ids": [
+        "team-administration-1",
+        "team-administration-2",
+        "team-administration-3",
+        "team-administration-6"
+      ],
+      "material_path": "先admin→精确enum→团队目标，GET本队投影",
+      "plausible_fault": "成员自升、跨队改、非字符串异常泄露",
+      "failure_signal": "权限拒绝/角色集合字段或副作用不符"
+    },
+    {
+      "id": "IWB-041",
+      "name": "last-admin-lock",
+      "code_reference": "app/server.py:249,382-386",
+      "requirement_ids": [
+        "team-administration-4",
+        "team-administration-5"
+      ],
+      "material_path": "仅admin→member计数、本队count<=1拒；合法同值/晋升；双管理员互降/自降并发",
+      "plausible_fault": "count其他队管理员或检查锁外、降权旧会话授权",
+      "failure_signal": "最终本队无admin或角色变更首写仍放行"
+    },
+    {
+      "id": "IWB-042",
+      "name": "room-insert-update",
+      "code_reference": "app/server.py:388-401,425-435",
+      "requirement_ids": [
+        "space-administration-1",
+        "space-administration-2",
+        "space-administration-3",
+        "space-administration-5",
+        "space-administration-9"
+      ],
+      "material_path": "POST独立id团队与完整返回；PATCH先团队目标、五字段整组",
+      "plausible_fault": "PATCH漏字段或按无团队id更新",
+      "failure_signal": "最终字段/团队集合错误或异队修改"
+    },
+    {
+      "id": "IWB-043",
+      "name": "room-name-unique",
+      "code_reference": "app/server.py:41,426,391,400",
+      "requirement_ids": [
+        "space-administration-4"
+      ],
+      "material_path": "trim名+UNIQUE(team,name)；self同名、停用占名、跨队可同名；C/C E/E C/E竞争",
+      "plausible_fault": "只POST手工查名或把唯一性设全局",
+      "failure_signal": "双同队同名或失败编辑留下其他字段修改"
+    },
+    {
+      "id": "IWB-044",
+      "name": "equipment-active",
+      "code_reference": "app/server.py:429-435",
+      "requirement_ids": [
+        "space-administration-5",
+        "space-administration-6"
+      ],
+      "material_path": "list且元素精确str枚举、空允许、去重；新增active默认True bool严格",
+      "plausible_fault": "过滤非法元素、bool强转、只PATCH去重",
+      "failure_signal": "保存集合/默认状态错，拒绝后字段改变"
+    },
+    {
+      "id": "IWB-045",
+      "name": "room-transition-existing",
+      "code_reference": "app/server.py:399-400,460-467",
+      "requirement_ids": [
+        "space-administration-7",
+        "space-administration-8",
+        "space-administration-10"
+      ],
+      "material_path": "启用→停用→启用、减容、改名位置；已有约保留，新约新资格",
+      "plausible_fault": "停用删除原约、减容改人数或启用绕冲突",
+      "failure_signal": "历史记录变化及新请求对照错误"
+    },
+    {
+      "id": "IWB-046",
+      "name": "frontend-api-json-error",
+      "code_reference": "web/app.js:20-35",
+      "requirement_ids": [
+        "interface-experience-4",
+        "interface-experience-9",
+        "interface-experience-10"
+      ],
+      "material_path": "JSON解析失败优先catch、非ok通用fallback、401登录路径例外",
+      "plausible_fault": "非JSON成功当空、401登录也重置输入、错误无反馈",
+      "failure_signal": "错误面板/表单保存/登录操作失败"
+    },
+    {
+      "id": "IWB-047",
+      "name": "frontend-old401-before-token",
+      "code_reference": "web/app.js:25-29,60-77",
+      "requirement_ids": [
+        "interface-experience-3",
+        "interface-experience-10"
+      ],
+      "material_path": "O请求旧会话401扣留，重新有效登录/N最新加载成功后释放O",
+      "plausible_fault": "api先清user，token过滤无法阻止过时401登出当前有效页面",
+      "failure_signal": "当前新身份/最新页面变登录或业务弹窗被旧响应关闭"
+    },
+    {
+      "id": "IWB-048",
+      "name": "frontend-load-aggregate",
+      "code_reference": "web/app.js:60-77",
+      "requirement_ids": [
+        "interface-experience-3",
+        "interface-experience-4"
+      ],
+      "material_path": "Promise.all3/4请求；manage/admin才members；部分失败；旧success/catch/finally先/后N结束",
+      "plausible_fault": "某一成功即写列表、旧finally清loading",
+      "failure_signal": "pending期间旧内容/错误闪回、缺列表假空或加载提前结束"
+    },
+    {
+      "id": "IWB-049",
+      "name": "frontend-auth-transitions",
+      "code_reference": "web/app.js:47-57,163-169,253-276",
+      "requirement_ids": [
+        "identity-session-7",
+        "interface-experience-1",
+        "interface-experience-8",
+        "interface-experience-10",
+        "team-administration-7"
+      ],
+      "material_path": "登录清四列表/页scope、logout增token关闭弹窗、role更新后session→自降spaces/mine",
+      "plausible_fault": "角色本地推测、logout未增token或跨队残留",
+      "failure_signal": "新身份页面含旧私有内容、管理入口残留或失败误降UI"
+    },
+    {
+      "id": "IWB-050",
+      "name": "frontend-start-path",
+      "code_reference": "web/app.js:268-276",
+      "requirement_ids": [
+        "identity-session-5",
+        "interface-experience-4",
+        "interface-experience-10"
+      ],
+      "material_path": "session成功load、401login、非401连接错误页",
+      "plausible_fault": "捕全部错误当登录/空workspace",
+      "failure_signal": "非401失效表现不正确/无错误信息"
+    },
+    {
+      "id": "IWB-051",
+      "name": "frontend-filter-stats",
+      "code_reference": "web/app.js:103-107",
+      "requirement_ids": [
+        "room-discovery-5",
+        "room-discovery-8",
+        "room-discovery-9"
+      ],
+      "material_path": "active AND capacity AND equipment；stats基原列表；mine按start上海date",
+      "plausible_fault": "过滤用OR、从筛选列表计stats、把相交当mine开始日",
+      "failure_signal": "交集室ID、筛前后指标或历史跨日mine数错"
+    },
+    {
+      "id": "IWB-052",
+      "name": "frontend-timeline-agenda",
+      "code_reference": "web/app.js:110-117",
+      "requirement_ids": [
+        "room-discovery-6",
+        "room-discovery-7"
+      ],
+      "material_path": "48个08..20半开格、日程空/非空、脱敏owner主题",
+      "plausible_fault": "<=导致相邻多格、错timezone或仅标题脱敏",
+      "failure_signal": "逐格与API已脱敏主题/owner不符"
+    },
+    {
+      "id": "IWB-053",
+      "name": "frontend-booking-classify",
+      "code_reference": "web/app.js:120-130",
+      "requirement_ids": [
+        "reservation-management-3",
+        "reservation-management-4",
+        "reservation-management-10"
+      ],
+      "material_path": "cancelled优先；start/end等号；upcoming升序、history继承API降序、未来confirmed入口",
+      "plausible_fault": "比较端点错误、全部sort升序、进行中可取消",
+      "failure_signal": "分组顺序状态/取消入口矩阵错误"
+    },
+    {
+      "id": "IWB-054",
+      "name": "frontend-inbox",
+      "code_reference": "web/app.js:82-83,133-135,154-160",
+      "requirement_ids": [
+        "notification-center-6",
+        "notification-center-7",
+        "notification-center-5"
+      ],
+      "material_path": "本次loaded未读计数、0无badge/按钮disabled、已读成功重载/失败恢复",
+      "plausible_fault": "历史总未读徽标、mark失败按钮永远锁",
+      "failure_signal": "徽标计数/可重试性或已读后列表不符"
+    },
+    {
+      "id": "IWB-055",
+      "name": "frontend-default-time",
+      "code_reference": "web/app.js:171-192",
+      "requirement_ids": [
+        "interface-experience-5",
+        "interface-experience-6"
+      ],
+      "material_path": "今天ceil(+1min)/开门前max8/19:44 19:45/过期日期/未来日期/20点截end",
+      "plausible_fault": "now exactly整刻选已经开始、20点默认明天错日",
+      "failure_signal": "日期不正确、粒度或开放时段无效"
+    },
+    {
+      "id": "IWB-056",
+      "name": "frontend-booking-key",
+      "code_reference": "web/app.js:188-214",
+      "requirement_ids": [
+        "interface-experience-16",
+        "reservation-creation-11",
+        "reservation-creation-12"
+      ],
+      "material_path": "每打开重置draft；payloadtrim/number/offset；相同fingerprint复用、内容变化randomUUID",
+      "plausible_fault": "retry每次新K、改字段仍旧K、重新打开复用旧草稿",
+      "failure_signal": "网络K关联与唯一记录/通知/变更结果错误"
+    },
+    {
+      "id": "IWB-057",
+      "name": "frontend-submit-recovery",
+      "code_reference": "web/app.js:47-57,201-213,228-248",
+      "requirement_ids": [
+        "interface-experience-7",
+        "interface-experience-8",
+        "interface-experience-9"
+      ],
+      "material_path": "login/booking/new-edit-room/cancel pending禁用、成功关闭重载toast、失败保留/finally恢复",
+      "plausible_fault": "只成功恢复按钮或丢输入、toast无编号",
+      "failure_signal": "等待重入请求、失败后锁死或重试不能完成"
+    },
+    {
+      "id": "IWB-058",
+      "name": "frontend-room-form-target",
+      "code_reference": "web/app.js:216-237",
+      "requirement_ids": [
+        "space-administration-2",
+        "space-administration-3",
+        "interface-experience-5",
+        "interface-experience-9"
+      ],
+      "material_path": "add reset vs edit回填，truthy editingRoom选择POST/PATCH，check设备",
+      "plausible_fault": "edit字段未回填或POST错target、add残上次值",
+      "failure_signal": "请求路径方法/保存完整字段/失败重试对象错"
+    },
+    {
+      "id": "IWB-059",
+      "name": "frontend-dialog-close",
+      "code_reference": "web/app.js:239-248,262-263,web/index.html:18-50",
+      "requirement_ids": [
+        "interface-experience-11",
+        "reservation-management-10"
+      ],
+      "material_path": "data-close、nativeEscape、外部坐标判定；内部点击不close、不submit",
+      "plausible_fault": "formclose按钮type不对、点击内部当backdrop",
+      "failure_signal": "关闭产生写请求或内部操作失效"
+    },
+    {
+      "id": "IWB-060",
+      "name": "frontend-xss-sinks",
+      "code_reference": "web/app.js:12,38,84,116-117,130,135,139,190-191,241,276",
+      "requirement_ids": [
+        "interface-experience-14"
+      ],
+      "material_path": "escapeHtml字符串和属性、textContent弹窗/toast，动态数据各sink",
+      "plausible_fault": "只转<>忽略属性引号或安全删除正文",
+      "failure_signal": "DOM执行标志、属性注入或原文缺失"
+    },
+    {
+      "id": "IWB-061",
+      "name": "frontend-timezone-format",
+      "code_reference": "web/app.js:13-16,105,112,127,172-192",
+      "requirement_ids": [
+        "interface-experience-15",
+        "room-discovery-2",
+        "room-discovery-7"
+      ],
+      "material_path": "Intl上海格式日期时间、local浏览器UTC/LA、午夜跨日期",
+      "plausible_fault": "某页面用浏览器local Date getter",
+      "failure_signal": "同绝对时间页面日期/slot不同"
+    },
+    {
+      "id": "IWB-062",
+      "name": "html-a11y-validation",
+      "code_reference": "web/index.html:1-53,web/app.js:38,83-84,107,117,130,135",
+      "requirement_ids": [
+        "interface-experience-5",
+        "interface-experience-13"
+      ],
+      "material_path": "labels、aria标题、role alert/status、焦点、native约束与后端独立校验",
+      "plausible_fault": "DOM替换丢焦点/反馈无播报、onlyUI validation",
+      "failure_signal": "键盘轨迹与可访问树错误或直接非法API接收"
+    },
+    {
+      "id": "IWB-063",
+      "name": "css-viewport-branches",
+      "code_reference": "web/style.css:1-7",
+      "requirement_ids": [
+        "interface-experience-12",
+        "interface-experience-13"
+      ],
+      "material_path": ">1500、1150、850、600端点上下以及320/390窄屏；导航/侧栏/toast/dialog变化",
+      "plausible_fault": "端点某一层隐藏必须入口、dialog/longtext遮挡",
+      "failure_signal": "控件boundingbox/可完成任务/横向scroll错误"
+    },
+    {
+      "id": "IWB-064",
+      "name": "existing-smoke-limit",
+      "code_reference": "tests/test_smoke.py:1-111",
+      "requirement_ids": [
+        "application-runtime-6",
+        "identity-session-2",
+        "reservation-creation-10",
+        "reservation-management-7",
+        "space-administration-2"
+      ],
+      "material_path": "既有三冒烟只happy paths；references可以复用但不能替代分支验证",
+      "plausible_fault": "把三冒烟当完整white_box",
+      "failure_signal": "上述异常/边界/并发/权限没有有力断言"
+    }
+  ],
+  "observed_design_risks": [
+    {
+      "code_reference": "web/app.js:25-29,60-77",
+      "description": "旧请求401可能在loadToken判断之前撤掉最新有效用户。需O旧会话/N新登录的真实响应延迟方法；只是静态疑似风险。"
+    },
+    {
+      "code_reference": "app/server.py:442-449",
+      "description": "已有K的仅微秒绝对时刻差异先按秒截断后比较，可能错判同内容。需求12比较绝对时刻，方法不能将实现秒截断奉为预期。"
+    },
+    {
+      "code_reference": "app/server.py:122-156,294-307",
+      "description": "全业务写回滚需包含首次seed和登录会话替换/退出，原黑盒方法重点房间预约等可能未显式覆盖这两组。"
+    }
+  ],
+  "excluded_without_new_requirements": [
+    "不引入密码重置、注册、邮件第三方通知、TLS部署、备份灾备、浏览器全组合等未确认产品范围。",
+    "CSP/Referrer/no-store和token强度参数等实现观察可记录，但无已确认需求时不将特定配置升级为新的验收标准。",
+    "main KeyboardInterrupt、BrokenPipe捕获等运行路径影响已确认行为时观察，不强行追求每语句覆盖率。"
+  ],
+  "execution_status": "not_started",
+  "resources_status": "not_verified"
+}

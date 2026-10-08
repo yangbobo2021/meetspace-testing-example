@@ -1,0 +1,2142 @@
+{
+  "black_box_complete": true,
+  "white_box_complete": false,
+  "items": [
+    {
+      "id": "BB-application-runtime-1",
+      "kind": "black_box",
+      "title": "默认启动的监听地址、依赖与数据库位置",
+      "requirement_ids": [
+        "application-runtime-1"
+      ],
+      "expected": "无第三方 Python 包时可以启动；只在127.0.0.1:8766监听；使用副本对应的 data/meetspace.sqlite，重启后创建的资料仍可读；不得依赖先前系统数据库或外部监听。",
+      "method_ids": [
+        "AI-application-runtime-1"
+      ]
+    },
+    {
+      "id": "BB-application-runtime-2",
+      "kind": "black_box",
+      "title": "启动参数单独与组合覆盖且默认项保留",
+      "requirement_ids": [
+        "application-runtime-2"
+      ],
+      "expected": "每个显式参数生效；未指定项仍为127.0.0.1、8766及副本 data/meetspace.sqlite；自定义库的新记录不出现在默认库，默认库未被覆盖。",
+      "method_ids": [
+        "AI-application-runtime-2"
+      ]
+    },
+    {
+      "id": "BB-application-runtime-3",
+      "kind": "black_box",
+      "title": "首次初始化的全部示例身份、空间和相对日期",
+      "requirement_ids": [
+        "application-runtime-3"
+      ],
+      "expected": "四个账号均能登录且团队/角色正确；两团队、五间室的名称位置容量设备启用状态及三场初始会议的日期时段人数主题与确认表完全一致；无跨团队混入。 在北京时间04-10 00:30而UTC仍04-09时，初始会议仍为北京时间04-11，系统时区UTC不能改变该日期。",
+      "method_ids": [
+        "AI-application-runtime-3"
+      ]
+    },
+    {
+      "id": "BB-application-runtime-4",
+      "kind": "black_box",
+      "title": "已有团队数据库重开不重复播种或移动初始会议",
+      "requirement_ids": [
+        "application-runtime-4"
+      ],
+      "expected": "原ID、修改、取消和新增资料保持；不重新出现已修改的云杉、不新增第二套示例记录；初始会议绝对日期不随重启日期移动。",
+      "method_ids": [
+        "AI-application-runtime-4"
+      ]
+    },
+    {
+      "id": "BB-application-runtime-5",
+      "kind": "black_box",
+      "title": "多类业务变更经过服务重启后持久保留",
+      "requirement_ids": [
+        "application-runtime-5"
+      ],
+      "expected": "团队与账号角色、会议室资料、预约内容、取消状态/时间、通知正文和已读状态均保持，重启不丢失或重复记录。",
+      "method_ids": [
+        "AI-application-runtime-5"
+      ]
+    },
+    {
+      "id": "BB-application-runtime-6",
+      "kind": "black_box",
+      "title": "未登录健康查询返回准确状态版本和时区",
+      "requirement_ids": [
+        "application-runtime-6"
+      ],
+      "expected": "无需登录即可返回 ok 状态、1.0.0-rc.1 和 Asia/Shanghai，不能跳转登录或以静态页面代替。",
+      "method_ids": [
+        "AI-application-runtime-6"
+      ]
+    },
+    {
+      "id": "BB-application-runtime-7",
+      "kind": "black_box",
+      "title": "错误响应保持JSON、稳定代码且不泄露敏感内容",
+      "requirement_ids": [
+        "application-runtime-7"
+      ],
+      "expected": "所有实际触发的错误均有JSON错误说明与稳定错误代码；同类错误代码相同，不出现密码或内部异常栈；未成功诱发的错误分支不得算通过。\n补充断言：完整性及未预期异常同样满足JSON、稳定代码和无敏感栈信息的契约。",
+      "method_ids": [
+        "AI-application-runtime-7",
+        "AI-storage-exception-boundary"
+      ]
+    },
+    {
+      "id": "BB-application-runtime-8",
+      "kind": "black_box",
+      "title": "外部存储故障的错误分类与恢复",
+      "requirement_ids": [
+        "application-runtime-8"
+      ],
+      "expected": "实际存储操作失败返回503/storage_unavailable；存储依赖完整性异常返回409/data_conflict；未预期异常返回500/internal_error。三类均为有说明的JSON，不能暴露异常栈；解除故障后合法保存成功。此为依赖故障边界测试，不声明真实依赖所有故障形式均已执行。",
+      "method_ids": [
+        "AI-application-runtime-8",
+        "AI-storage-exception-boundary"
+      ]
+    },
+    {
+      "id": "BB-application-runtime-9",
+      "kind": "black_box",
+      "title": "业务写失败后无可见部分状态并可重新提交",
+      "requirement_ids": [
+        "application-runtime-9",
+        "notification-center-1",
+        "notification-center-2"
+      ],
+      "expected": "失败后无持久化半成品；创建失败无预约/占用/通知，取消失败原状态和取消时间不变、仍占用且无取消通知；含部分写成功后再失败和commit前失败。恢复后重试只生效一次，分步提交未回滚必须使本场景失败。 房间多字段保存、角色升降及全部已读在实际业务写后或提交失败时也必须全部保持操作前状态；包括列表外旧通知及其他用户状态。只在预约路径回滚不能通过。 新增会议室也须覆盖实际写后、适用写间隙及提交失败：不得留下新室或孤立设备，原两队资料不变；停用新室不能以列表隐藏掩盖残留，恢复后相同资料重试仅创建一间完整新室。",
+      "method_ids": [
+        "AI-application-runtime-9",
+        "AI-transaction-midwrite-boundary",
+        "AI-other-writes-failure-boundary",
+        "AI-new-room-write-failure-boundary"
+      ]
+    },
+    {
+      "id": "BB-identity-session-1",
+      "kind": "black_box",
+      "title": "登录格式、去空格及邮箱大小写边界",
+      "requirement_ids": [
+        "identity-session-1"
+      ],
+      "expected": "邮箱去空格转小写匹配，密码去空格；只接受字符串及确认长度边界，缺失、错误类型、去空格为空和超界被拒；合法格式不等于凭证正确，二者错误可区分且均不建立会话。",
+      "method_ids": [
+        "AI-identity-session-1"
+      ]
+    },
+    {
+      "id": "BB-identity-session-2",
+      "kind": "black_box",
+      "title": "四种示例身份正确登录建立可用会话",
+      "requirement_ids": [
+        "identity-session-2"
+      ],
+      "expected": "登录成功后身份准确，会话可用于后续请求，不发生默认账号串用或仅前端显示成功而API仍未登录。",
+      "method_ids": [
+        "AI-identity-session-2"
+      ]
+    },
+    {
+      "id": "BB-identity-session-3",
+      "kind": "black_box",
+      "title": "不存在账号与错误密码反馈一致",
+      "requirement_ids": [
+        "identity-session-3"
+      ],
+      "expected": "不存在账号与错误密码均显示“邮箱或密码不正确”，不通过错误文案区分账号存在与否。无会话分支不建立有效会话，后续业务请求拒绝；已有有效会话时仍须校验本次提交的凭据并拒绝错误登录，不能以原会话有效为由返回登录成功、授予所请求账号身份或切换权限。需求未规定失败登录后旧会话必须保留还是撤销，不以该行为另立通过条件。",
+      "method_ids": [
+        "AI-identity-session-3"
+      ]
+    },
+    {
+      "id": "BB-identity-session-4",
+      "kind": "black_box",
+      "title": "身份信息完整且反映当前团队角色",
+      "requirement_ids": [
+        "identity-session-4",
+        "team-administration-5"
+      ],
+      "expected": "字段齐全且值与各身份一致；团队间编号不混淆，角色变更立即反映；版本及Asia/Shanghai正确。",
+      "method_ids": [
+        "AI-identity-session-4"
+      ]
+    },
+    {
+      "id": "BB-identity-session-5",
+      "kind": "black_box",
+      "title": "全部工作空间入口拒绝缺失与失效会话",
+      "requirement_ids": [
+        "identity-session-5"
+      ],
+      "expected": "所有工作空间业务请求拒绝且要求登录，不泄露业务列表、不执行写入；仅界面隐藏不算通过。",
+      "method_ids": [
+        "AI-identity-session-5"
+      ]
+    },
+    {
+      "id": "BB-identity-session-6",
+      "kind": "black_box",
+      "title": "八小时绝对有效期不被访问延长",
+      "requirement_ids": [
+        "identity-session-6"
+      ],
+      "expected": "到期前有效，在八小时恰好及之后均失效；普通业务访问不能续期；到期写入不得改变预约或通知。",
+      "method_ids": [
+        "AI-identity-session-6"
+      ]
+    },
+    {
+      "id": "BB-identity-session-7",
+      "kind": "black_box",
+      "title": "同浏览器切换身份且其他浏览器不被注销",
+      "requirement_ids": [
+        "identity-session-7"
+      ],
+      "expected": "甲只使用新身份及新团队权限，甲原会话不再有效；乙U会话仍有效且未被改成新账号。\n补充断言：管理员转成员后新会话立即失去全部管理员权限；不能保留旧管理员授权或管理入口，其他浏览器管理员会话仍有效。 切换成功后的第一条业务请求就必须使用新账号的用户、团队和权限，不能依赖先查询身份或成员列表刷新；跨团队读取/写入只使用新团队，管理员切成员第一条管理请求即拒绝，成员切管理员第一条合法管理请求允许。",
+      "method_ids": [
+        "AI-identity-session-7"
+      ]
+    },
+    {
+      "id": "BB-identity-session-8",
+      "kind": "black_box",
+      "title": "退出撤销当前会话并清除Cookie",
+      "requirement_ids": [
+        "identity-session-8"
+      ],
+      "expected": "甲会话失效、浏览器会话Cookie被清除，刷新或重放不能访问；乙独立会话保留。",
+      "method_ids": [
+        "AI-identity-session-8"
+      ]
+    },
+    {
+      "id": "BB-identity-session-9",
+      "kind": "black_box",
+      "title": "滚动60秒限频计入成功并排除格式错误",
+      "requirement_ids": [
+        "identity-session-9"
+      ],
+      "expected": "同来源IP按(t−60秒,t]滚动窗口只接收前八次格式有效的登录尝试，成功与凭证失败均计数，格式错误不占名额，不同IP独立。八次历史位于t=0/5/10/15/20/25/30/35秒时，独立分支的第九次在59.999秒受限、60.000秒及60.001秒允许；允许后同一时刻再发一次仍受限，不能一次释放整个窗口。精确60秒预期来自已确认DR-004，不由实现推断。",
+      "method_ids": [
+        "AI-identity-session-9"
+      ]
+    },
+    {
+      "id": "BB-identity-session-10",
+      "kind": "black_box",
+      "title": "修改入口验证应用标记与来源",
+      "requirement_ids": [
+        "identity-session-10"
+      ],
+      "expected": "POST和PATCH缺X-Meeting-App: 1或携带异源Origin必拒绝且无修改；同源带正确标记能执行。需求未要求Origin必须存在，不额外引入该限制。\n补充断言：取消、退出、全部已读与其他POST/PATCH一样不能绕过头部保护；被拒请求不得产生取消、登出或已读副作用。",
+      "method_ids": [
+        "AI-identity-session-10"
+      ]
+    },
+    {
+      "id": "BB-identity-session-11",
+      "kind": "black_box",
+      "title": "修改正文媒体类型、对象类型与字节边界",
+      "requirement_ids": [
+        "identity-session-11"
+      ],
+      "expected": "只接收application/json对象且字节数1至65536；65536有效业务对象成功，65537被拒；空、非对象、损坏JSON、错误媒体类型拒绝。1字节不存在合法对象，不能要求成功；合法空对象应在业务层拒绝而非解析为非对象。",
+      "method_ids": [
+        "AI-identity-session-11"
+      ]
+    },
+    {
+      "id": "BB-identity-session-12",
+      "kind": "black_box",
+      "title": "建立及清除会话均使用限定Cookie属性",
+      "requirement_ids": [
+        "identity-session-12"
+      ],
+      "expected": "建立和清除均为Path=/、HttpOnly、SameSite=Lax；脚本不可读取会话Cookie，退出不遗留其他路径有效会话。 已有会话下成功切换账号所设置的新Cookie同样必须具有Path=/、HttpOnly、SameSite=Lax；不能只在首次登录和退出时设置正确。",
+      "method_ids": [
+        "AI-identity-session-12"
+      ]
+    },
+    {
+      "id": "BB-identity-session-13",
+      "kind": "black_box",
+      "title": "初始化密码仅保留随机盐派生值，全部持久化出口无可恢复副本",
+      "requirement_ids": [
+        "identity-session-13"
+      ],
+      "expected": "四个示例身份可用正确密码认证且错误密码拒绝，公开服务响应不泄露密码。在操作系统与持久存储边界观察初始化全过程：保存的凭据是可独立核对的带随机盐派生值，盐生成依赖有效随机输入；应用全部持久化出口不得另存可恢复密码，包括恢复文件、日志、临时文件及已删除写事件。主库正确但另存副本仍失败。未知格式或未覆盖出口必须记为缺证，不能用登录成功或未搜到明文替代存储检查；不规定表名或具体派生算法。",
+      "method_ids": [
+        "AI-identity-session-13",
+        "AI-salt-entropy-dependence",
+        "AI-password-persistence-scope"
+      ]
+    },
+    {
+      "id": "BB-identity-session-14",
+      "kind": "black_box",
+      "title": "首次及后续会话随机生成，持久化仅保留摘要、用户与到期时间",
+      "requirement_ids": [
+        "identity-session-14"
+      ],
+      "expected": "首次登录、同用户再次登录、退出后重登录及同浏览器切换账号均生成依赖有效随机输入的会话令牌，身份关联正确，当前撤销和到期行为符合要求且不误伤另一有效会话。应用全部持久化出口的会话业务内容仅包含令牌摘要、用户关联与到期时间，不得有原令牌或可恢复副本；摘要应可与内存中的实际令牌独立核对。不指定算法、表布局或每次熵调用方式；未知格式/未覆盖出口保持缺证，样本不同或HTTP可用不等于存储及生成已符合。",
+      "method_ids": [
+        "AI-identity-session-14",
+        "AI-token-entropy-and-storage-scope",
+        "AI-subsequent-session-entropy"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-1",
+      "kind": "black_box",
+      "title": "角色对应导航与会话切换后的入口",
+      "requirement_ids": [
+        "interface-experience-1"
+      ],
+      "expected": "所有有效用户有三个工作空间入口且能打开对应内容；仅管理员有空间管理入口；管理员转成员或切换后不残留管理操作。",
+      "method_ids": [
+        "AI-interface-experience-1"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-2",
+      "kind": "black_box",
+      "title": "示例账号选择仅填表不自动登录",
+      "requirement_ids": [
+        "interface-experience-2"
+      ],
+      "expected": "选择只填入所选邮箱和公开示例密码；点击登录前无登录请求和有效会话，仍在登录页；主动点击后登录的是最后选择的账号。",
+      "method_ids": [
+        "AI-interface-experience-2"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-3",
+      "kind": "black_box",
+      "title": "加载提示与乱序响应只更新最新页面",
+      "requirement_ids": [
+        "interface-experience-3"
+      ],
+      "expected": "等待期间显示加载状态；最终只呈现最新页面和日期的数据，迟到旧成功不能覆盖，旧失败也不能把新页面改成错误。\n补充断言：最新请求失败后旧成功晚到也不得清除当前错误、改变选中日期或用旧数据冒充当前成功；用户明确重载最新页面成功后才转成功。 最新请求尚未完成时，较旧成功或失败返回也不得更新当前内容/错误、改变当前选择或提前结束当前加载状态；当前请求完成后才展示其成功或失败结果。",
+      "method_ids": [
+        "AI-interface-experience-3"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-4",
+      "kind": "black_box",
+      "title": "数据加载失败可见且重载能恢复",
+      "requirement_ids": [
+        "interface-experience-4"
+      ],
+      "expected": "失败显示错误和重新加载入口，不冒充成功空列表；恢复后重载显示实际记录；正常空列表呈现空状态而非错误。",
+      "method_ids": [
+        "AI-interface-experience-4"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-5",
+      "kind": "black_box",
+      "title": "不同会议室预约弹窗资料和输入完整",
+      "requirement_ids": [
+        "interface-experience-5"
+      ],
+      "expected": "显示的是当前所选室而非缓存旧室；五类输入齐全可用；时间规则与确认的未来30天、15分钟粒度、15分钟至8小时、北京时间08:00–20:00等规则不矛盾。",
+      "method_ids": [
+        "AI-interface-experience-5"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-6",
+      "kind": "black_box",
+      "title": "默认时段在日界和营业结束处仍有效",
+      "requirement_ids": [
+        "interface-experience-6"
+      ],
+      "expected": "默认时段满足北京时间开放范围、15分钟对齐且结束不晚于20:00；过去日期或今天已无可用时段改明天；其他情况不擅自改成过去时段；相同绝对时刻不因浏览器时区改变日期。确切默认时长未规定，不新增固定一小时断言。",
+      "method_ids": [
+        "AI-interface-experience-6"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-7",
+      "kind": "black_box",
+      "title": "提交等待期间禁用并在成功或失败后解除",
+      "requirement_ids": [
+        "interface-experience-7"
+      ],
+      "expected": "请求处理中相应按钮禁用且不会因重复点击重复提交；请求结束后仍存在的按钮恢复，成功关闭后重开可正常提交，失败不永久锁死。",
+      "method_ids": [
+        "AI-interface-experience-7"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-8",
+      "kind": "black_box",
+      "title": "成功反馈与列表刷新反映刚完成修改",
+      "requirement_ids": [
+        "interface-experience-8"
+      ],
+      "expected": "每操作出现对应成功反馈并重新载入相关列表；新状态真实反映刚完成操作；预约成功反馈包含实际预约编号，不只显示泛化成功。",
+      "method_ids": [
+        "AI-interface-experience-8"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-9",
+      "kind": "black_box",
+      "title": "表单失败保留输入且可修正重试",
+      "requirement_ids": [
+        "interface-experience-9"
+      ],
+      "expected": "错误可见且原可修改输入保留，允许修正和重试；成功产生正确记录，不跳回空白表单或永久禁用。",
+      "method_ids": [
+        "AI-interface-experience-9"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-10",
+      "kind": "black_box",
+      "title": "弹窗内会话失效返回登录并关闭业务界面",
+      "requirement_ids": [
+        "interface-experience-10"
+      ],
+      "expected": "发现会话失效后所有业务弹窗关闭并返回登录页，不显示成功或继续暴露可操作管理界面；重新登录正常进入当前身份空间。",
+      "method_ids": [
+        "AI-interface-experience-10"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-11",
+      "kind": "black_box",
+      "title": "三种关闭手势均不隐式提交",
+      "requirement_ids": [
+        "interface-experience-11"
+      ],
+      "expected": "关闭按钮、Escape和点击弹窗外均关闭弹窗，不发业务修改请求、不保存输入或取消预约；内部正常点击不误判为遮罩。",
+      "method_ids": [
+        "AI-interface-experience-11"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-12",
+      "kind": "black_box",
+      "title": "桌面与窄屏完整完成主要用户任务",
+      "requirement_ids": [
+        "interface-experience-12"
+      ],
+      "expected": "所需内容和操作可见可达，无横向遮挡导致无法提交/关闭/阅读；五项任务均能完成，长文本不会挤出关键操作。",
+      "method_ids": [
+        "AI-interface-experience-12"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-13",
+      "kind": "black_box",
+      "title": "键盘与辅助技术能理解并操作表单反馈",
+      "requirement_ids": [
+        "interface-experience-13"
+      ],
+      "expected": "主要输入有标签，焦点可见、弹窗有标题；成功错误能被辅助技术感知；仅键盘可完成主要操作，不把某种ARIA实现作为唯一合格方式。",
+      "method_ids": [
+        "AI-interface-experience-13"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-14",
+      "kind": "black_box",
+      "title": "用户文本中的标记在所有展示位置保持文本",
+      "requirement_ids": [
+        "interface-experience-14"
+      ],
+      "expected": "有权看到原文的位置以文本呈现、不产生用户注入img元素、不执行标记(window.__bb保持0)；无权成员仍只见已预约；不将HTML删除造成无故改写原业务文本。",
+      "method_ids": [
+        "AI-interface-experience-14"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-15",
+      "kind": "black_box",
+      "title": "跨浏览器时区显示同一北京时间日期与时段",
+      "requirement_ids": [
+        "interface-experience-15"
+      ],
+      "expected": "全部按Asia/Shanghai显示，同一绝对时刻显示相同北京时间日期时段，并明确标示北京时间UTC+8；不按浏览器时区前移一天或偏移小时。",
+      "method_ids": [
+        "AI-interface-experience-15"
+      ]
+    },
+    {
+      "id": "BB-interface-experience-16",
+      "kind": "black_box",
+      "title": "同一弹窗重试按内容复用或更换请求标识",
+      "requirement_ids": [
+        "interface-experience-16",
+        "reservation-creation-11",
+        "reservation-creation-12"
+      ],
+      "expected": "未变内容复用原标识且至多一个预约一条确认通知；任一内容改变使用新标识，不能误返回原预约或因复用冲突；不要求不同弹窗的额外语义。",
+      "method_ids": [
+        "AI-interface-experience-16",
+        "AI-reservation-creation-11",
+        "AI-reservation-creation-12"
+      ]
+    },
+    {
+      "id": "BB-notification-center-1",
+      "kind": "black_box",
+      "title": "预约成功只给预约人一条完整未读确认通知",
+      "requirement_ids": [
+        "notification-center-1",
+        "reservation-creation-10"
+      ],
+      "expected": "每次成功仅预约人新增一条未读确认通知，关联正确编号，正文含主题室名北京时间时段及生成时间；失败无通知。 同时执行AI-transaction-midwrite-boundary中对应创建/取消分支：已有业务部分写入后失败，所有预约、日程与通知状态仍须回到操作前；存在分步提交残留即失败。",
+      "method_ids": [
+        "AI-notification-center-1",
+        "AI-application-runtime-9",
+        "AI-reservation-creation-10",
+        "AI-transaction-midwrite-boundary"
+      ]
+    },
+    {
+      "id": "BB-notification-center-2",
+      "kind": "black_box",
+      "title": "本人或管理员取消的通知始终归预约人",
+      "requirement_ids": [
+        "notification-center-2",
+        "reservation-management-8"
+      ],
+      "expected": "首次取消各向U新增一条未读取消通知，含编号、主题、取消和时段释放说明及生成时间；代取消不会把通知发给管理员；重复取消无新增。 同时执行AI-transaction-midwrite-boundary中对应创建/取消分支：已有业务部分写入后失败，所有预约、日程与通知状态仍须回到操作前；存在分步提交残留即失败。",
+      "method_ids": [
+        "AI-notification-center-2",
+        "AI-application-runtime-9",
+        "AI-reservation-management-7",
+        "AI-reservation-management-8",
+        "AI-transaction-midwrite-boundary"
+      ]
+    },
+    {
+      "id": "BB-notification-center-3",
+      "kind": "black_box",
+      "title": "通知访问只限当前用户且管理员无例外",
+      "requirement_ids": [
+        "notification-center-3"
+      ],
+      "expected": "每次只返回当前用户通知，管理员也不能看到他人通知；无论伪造选择参数是否被拒绝都不得越权泄漏。",
+      "method_ids": [
+        "AI-notification-center-3"
+      ]
+    },
+    {
+      "id": "BB-notification-center-4",
+      "kind": "black_box",
+      "title": "通知最近100条按生成顺序倒序并字段完整",
+      "requirement_ids": [
+        "notification-center-4"
+      ],
+      "expected": "不足100全返，超过100仅最新100；按生成顺序倒序包括时间相同的记录；每条有通知编号、预约编号、正文、生成时间和已读状态，不以已读状态过滤。",
+      "method_ids": [
+        "AI-notification-center-4"
+      ]
+    },
+    {
+      "id": "BB-notification-center-5",
+      "kind": "black_box",
+      "title": "全部已读包含未载入旧记录并隔离其他用户",
+      "requirement_ids": [
+        "notification-center-5"
+      ],
+      "expected": "空集合及重复全部已读成功无副作用；105条包括未载入的最旧5条全变已读，其他用户不变；后续新增仍未读。最新100条API与只读快照互相校验，若旧5条仍未读即失败。",
+      "method_ids": [
+        "AI-notification-center-5"
+      ]
+    },
+    {
+      "id": "BB-notification-center-6",
+      "kind": "black_box",
+      "title": "徽标只统计本次载入列表未读且零值隐藏",
+      "requirement_ids": [
+        "notification-center-6"
+      ],
+      "expected": "徽标等于当前返回列表未读数，不显示全历史未读数、总通知数或最大100固定值；为零不显示数字徽标。模拟响应只证明前端计算。",
+      "method_ids": [
+        "AI-notification-center-6"
+      ]
+    },
+    {
+      "id": "BB-notification-center-7",
+      "kind": "black_box",
+      "title": "通知中心空状态与创建取消通知阅读",
+      "requirement_ids": [
+        "notification-center-7"
+      ],
+      "expected": "无通知显示空状态；有通知显示完整正文、北京时间生成时间和关联预约编号，已读后内容仍可阅读，不因浏览器时区偏移。",
+      "method_ids": [
+        "AI-notification-center-7"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-1",
+      "kind": "black_box",
+      "title": "团队与启用资格组合拒绝无效房间",
+      "requirement_ids": [
+        "reservation-creation-1",
+        "space-administration-7"
+      ],
+      "expected": "仅同队启用室可创建；管理员也不能绕过团队或停用限制；提交前变停用的旧弹窗被拒；拒绝无预约占用和通知。",
+      "method_ids": [
+        "AI-reservation-creation-1"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-2",
+      "kind": "black_box",
+      "title": "新预约必填字段类型与长度数值边界",
+      "requirement_ids": [
+        "reservation-creation-2"
+      ],
+      "expected": "只接受规定类型和范围；主题/标识去首尾空格；1和100字符、人数1和100在其他条件满足时成功；所有无效分支具体拒绝且无写入；不能把资源不存在视为数字边界验证失败。",
+      "method_ids": [
+        "AI-reservation-creation-2"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-3",
+      "kind": "black_box",
+      "title": "带时区时间按绝对时刻比较",
+      "requirement_ids": [
+        "reservation-creation-3"
+      ],
+      "expected": "等价绝对时刻得到相同时段判断；可解析且带时区才允许；实际倒序/零时长拒绝，不按字符串时钟顺序比较，错误不保存。",
+      "method_ids": [
+        "AI-reservation-creation-3"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-4",
+      "kind": "black_box",
+      "title": "可预约开始必须晚于现在且不超过30天",
+      "requirement_ids": [
+        "reservation-creation-4"
+      ],
+      "expected": "开始严格大于服务当前时刻且小于等于服务时刻加30天；30天等号允许，超过1秒拒；判定不依赖浏览器日期，拒绝无副作用。",
+      "method_ids": [
+        "AI-reservation-creation-4"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-5",
+      "kind": "black_box",
+      "title": "时长含15分钟及8小时边界",
+      "requirement_ids": [
+        "reservation-creation-5"
+      ],
+      "expected": "15分钟和8小时都允许；零、负和超过8小时拒绝；不因端点错误将8小时边界排除；所有拒绝不占时段。",
+      "method_ids": [
+        "AI-reservation-creation-5"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-6",
+      "kind": "black_box",
+      "title": "北京时间同日及08至20点开放边界",
+      "requirement_ids": [
+        "reservation-creation-6"
+      ],
+      "expected": "包含08:00起点和20:00终点，同一北京时间日期才允许；起点早于开门、终点晚于关门及跨北京时间日拒绝；不按传入字符串日期或服务器其他时区判定。",
+      "method_ids": [
+        "AI-reservation-creation-6"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-7",
+      "kind": "black_box",
+      "title": "起止均满足15分钟且秒微秒为零",
+      "requirement_ids": [
+        "reservation-creation-7"
+      ],
+      "expected": "起止都必须分钟为0/15/30/45且秒微秒为0，任一端违规拒绝；零微秒显式表示允许，不能截断秒后接受。",
+      "method_ids": [
+        "AI-reservation-creation-7"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-8",
+      "kind": "black_box",
+      "title": "容量临界与打开弹窗后的容量变更",
+      "requirement_ids": [
+        "reservation-creation-8"
+      ],
+      "expected": "人数等于或低于当前容量成功，超过当前容量拒绝；使用提交时当前容量，不能采信旧弹窗或客户端容量；失败不留占用。",
+      "method_ids": [
+        "AI-reservation-creation-8"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-9",
+      "kind": "black_box",
+      "title": "重叠形态、相邻时段及同时竞争",
+      "requirement_ids": [
+        "reservation-creation-9",
+        "reservation-creation-14"
+      ],
+      "expected": "所有正长度重叠拒绝，相邻边界允许；不同室不互相排斥；取消不占用；并发重叠最多一个成功、一份占用且只有成功者获得通知，并发相邻可双成功。",
+      "method_ids": [
+        "AI-reservation-creation-9"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-10",
+      "kind": "black_box",
+      "title": "合法创建的完整字段与对外一致性",
+      "requirement_ids": [
+        "reservation-creation-10",
+        "notification-center-1"
+      ],
+      "expected": "成功返回独立编号，保存团队、室、预约人、主题、绝对起止、人数、创建时间及confirmed；所有读取一致且有一条确认通知；不能只显示成功但缺记录。 同时执行AI-transaction-midwrite-boundary中对应创建/取消分支：已有业务部分写入后失败，所有预约、日程与通知状态仍须回到操作前；存在分步提交残留即失败。",
+      "method_ids": [
+        "AI-reservation-creation-10",
+        "AI-application-runtime-9",
+        "AI-transaction-midwrite-boundary"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-11",
+      "kind": "black_box",
+      "title": "相同请求重放不再验证原时段资格",
+      "requirement_ids": [
+        "reservation-creation-11"
+      ],
+      "expected": "同用户相同内容返回原编号和当前状态并标识重放，不新增记录通知，不因原时段过去、停用或减容重新拒绝；并发同标识最终仅一个预约；其他用户的标识不串用原记录。\n补充断言：同一新标识的首次并发也须收敛为同一预约且后到请求按重放成功；取消后返回当前cancelled而非缓存首次confirmed。",
+      "method_ids": [
+        "AI-reservation-creation-11",
+        "AI-reservation-creation-13"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-12",
+      "kind": "black_box",
+      "title": "同标识内容改变拒绝而规范化等价可重放",
+      "requirement_ids": [
+        "reservation-creation-12"
+      ],
+      "expected": "比较室、去空格主题、绝对起止及人数；真正差异拒绝且原对象不变，语义等价不误拒绝；不同用户请求标识独立。\n补充断言：首次新标识不同内容竞争只有一个内容获保存；另一内容被拒且无法覆写胜者，最终仅一个预约一条通知，后续重放稳定。",
+      "method_ids": [
+        "AI-reservation-creation-12"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-13",
+      "kind": "black_box",
+      "title": "取消后重放保持取消且不抢回已释放时段",
+      "requirement_ids": [
+        "reservation-creation-13",
+        "reservation-management-7"
+      ],
+      "expected": "返回原编号和cancelled，不恢复原预约、不增加通知或占用、不影响V；原时段已过去仍返回原当前取消状态。",
+      "method_ids": [
+        "AI-reservation-creation-13"
+      ]
+    },
+    {
+      "id": "BB-reservation-creation-14",
+      "kind": "black_box",
+      "title": "各拒绝原因均具体报错且没有三类副作用",
+      "requirement_ids": [
+        "reservation-creation-14"
+      ],
+      "expected": "错误能指明相应失败原因，不是无解释成功/空响应；无新增预约、占用和确认通知；修正后成功，失败不永久占用请求或时段。",
+      "method_ids": [
+        "AI-reservation-creation-14",
+        "AI-reservation-creation-9"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-1",
+      "kind": "black_box",
+      "title": "预约查询范围与当前权限矩阵",
+      "requirement_ids": [
+        "reservation-management-1",
+        "team-administration-5"
+      ],
+      "expected": "省略及mine只返回自己全部状态记录，管理员team返回本团队全部状态，成员team拒绝，无效scope拒绝；权限按当前角色，绝不包含另一团队。",
+      "method_ids": [
+        "AI-reservation-management-1"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-2",
+      "kind": "black_box",
+      "title": "预约详情字段完整并读取会议室当前资料",
+      "requirement_ids": [
+        "reservation-management-2",
+        "space-administration-3",
+        "space-administration-8"
+      ],
+      "expected": "字段完整，未取消的取消时间为空或规范空值、取消记录有实际时间；室名位置反映当前资料，历史预约时间人数状态不被修改。",
+      "method_ids": [
+        "AI-reservation-management-2"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-3",
+      "kind": "black_box",
+      "title": "预约状态按浏览器时钟在边界转换",
+      "requirement_ids": [
+        "reservation-management-3"
+      ],
+      "expected": "有效记录依次已确认、进行中、进行中、已结束、已结束；取消记录所有时点均已取消，不能被时间分类覆盖。",
+      "method_ids": [
+        "AI-reservation-management-3"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-4",
+      "kind": "black_box",
+      "title": "当前与历史分组分别按指定起点排序",
+      "requirement_ids": [
+        "reservation-management-4"
+      ],
+      "expected": "未取消且未结束含进行中都在即将进行，开始升序；已结束或已取消在历史，开始降序；边界和取消后正确移组，不能按创建顺序排序。",
+      "method_ids": [
+        "AI-reservation-management-4"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-5",
+      "kind": "black_box",
+      "title": "取消授权按所有者和团队角色判断",
+      "requirement_ids": [
+        "reservation-management-5"
+      ],
+      "expected": "仅本人或当前本团队管理员允许，普通他人及跨队管理员拒绝；拒绝不改变状态、占用或通知；提升后允许降权后不允许。",
+      "method_ids": [
+        "AI-reservation-management-5"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-6",
+      "kind": "black_box",
+      "title": "首次取消以服务时钟严格排除已开始预约",
+      "requirement_ids": [
+        "reservation-management-6"
+      ],
+      "expected": "只有开始前允许；开始等号及之后有效预约不得首次取消，不能以错误浏览器时间绕过；失败不生成取消通知或释放占用。",
+      "method_ids": [
+        "AI-reservation-management-6"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-7",
+      "kind": "black_box",
+      "title": "取消保留历史、释放时段且通知正确",
+      "requirement_ids": [
+        "reservation-management-7",
+        "notification-center-2"
+      ],
+      "expected": "原ID和预约资料保留，状态cancelled且有取消时间；日程释放，V能创建新预约；仅U得到一条取消通知；不删除原历史。 同时执行AI-transaction-midwrite-boundary中对应创建/取消分支：已有业务部分写入后失败，所有预约、日程与通知状态仍须回到操作前；存在分步提交残留即失败。",
+      "method_ids": [
+        "AI-reservation-management-7",
+        "AI-application-runtime-9",
+        "AI-transaction-midwrite-boundary"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-8",
+      "kind": "black_box",
+      "title": "重复取消不改首次时间也不影响后续占用",
+      "requirement_ids": [
+        "reservation-management-8"
+      ],
+      "expected": "有权重复取消仍成功，首次取消时间不变、不重复通知；不能把时段上的V预约取消或释放；并发最终一次取消效果。",
+      "method_ids": [
+        "AI-reservation-management-8"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-9",
+      "kind": "black_box",
+      "title": "不存在和异团队预约以相同不存在语义拒绝",
+      "requirement_ids": [
+        "reservation-management-9"
+      ],
+      "expected": "两种目标均返回预约不存在，不泄露异队主题、所有者、时段；B预约保持有效且无取消通知。",
+      "method_ids": [
+        "AI-reservation-management-9"
+      ]
+    },
+    {
+      "id": "BB-reservation-management-10",
+      "kind": "black_box",
+      "title": "取消入口资格和确认弹窗防止误操作",
+      "requirement_ids": [
+        "reservation-management-10"
+      ],
+      "expected": "只对有权且尚未开始未取消预约提供入口；弹窗显示正确主题、时间、会议室；放弃不提交，明确确认才取消。",
+      "method_ids": [
+        "AI-reservation-management-10"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-1",
+      "kind": "black_box",
+      "title": "会议室查询完整字段及团队隔离包含停用室",
+      "requirement_ids": [
+        "room-discovery-1"
+      ],
+      "expected": "只返回当前团队房间，包含本团队停用室供管理读取；字段完整不混队；用户页面筛选隐藏停用室不等于API可漏掉停用资料。",
+      "method_ids": [
+        "AI-room-discovery-1"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-2",
+      "kind": "black_box",
+      "title": "日程日期按北京时间解释并拒绝非法日期",
+      "requirement_ids": [
+        "room-discovery-2"
+      ],
+      "expected": "合法显式日期按Asia/Shanghai解释，省略date参数使用当前北京时间自然日；显式空串和其他不可解析日期均拒绝而非回退今天，不返回当前日占用冒充成功。",
+      "method_ids": [
+        "AI-room-discovery-2"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-3",
+      "kind": "black_box",
+      "title": "当日日程仅含相交未取消记录并按开始排序",
+      "requirement_ids": [
+        "room-discovery-3"
+      ],
+      "expected": "所有已存在未取消区间按start<所选日次日00:00且end>所选日00:00选择，并按开始升序；只按开始日期筛选会漏H1/H5，应失败。恰好所选日00:00结束或次日00:00开始不占用该日，取消记录排除。历史fixture仅用于读取行为，不批准跨日新预约。",
+      "method_ids": [
+        "AI-room-discovery-3"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-4",
+      "kind": "black_box",
+      "title": "日程主题按所有者与当前角色脱敏",
+      "requirement_ids": [
+        "room-discovery-4"
+      ],
+      "expected": "U和当前管理员看真实主题，同队其他成员仅“已预约”；API和UI一致，不可仅视觉遮挡而响应泄漏；降权后不保留缓存私有主题。",
+      "method_ids": [
+        "AI-room-discovery-4"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-5",
+      "kind": "black_box",
+      "title": "容量与设备筛选独立并可组合恢复",
+      "requirement_ids": [
+        "room-discovery-5"
+      ],
+      "expected": "只展示启用室，容量不少于人数含等号，设备必须包含选择项；条件共同作用，未选条件不参与过滤，清除恢复；停用大室不混入。",
+      "method_ids": [
+        "AI-room-discovery-5"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-6",
+      "kind": "black_box",
+      "title": "展开日程展示时段预约人及授权主题",
+      "requirement_ids": [
+        "room-discovery-6",
+        "room-discovery-4"
+      ],
+      "expected": "显示所选日正确占用时段和预约人；主题按本人/管理员真实、其他成员已预约规则；切日和展开不复用旧数据。",
+      "method_ids": [
+        "AI-room-discovery-6"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-7",
+      "kind": "black_box",
+      "title": "15分钟占用条准确呈现首尾格与取消释放",
+      "requirement_ids": [
+        "room-discovery-7"
+      ],
+      "expected": "12小时按15分钟表示，共48个时间区间；首尾格准确，邻接不多占下一格；取消的10:00–10:30清空但10:30–10:45保留；空日无占用。",
+      "method_ids": [
+        "AI-room-discovery-7"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-8",
+      "kind": "black_box",
+      "title": "总览统计基于原团队列表不随筛选变动",
+      "requirement_ids": [
+        "room-discovery-8"
+      ],
+      "expected": "D可预约室=4，所选日有效预约=3（含停用室已有有效预约），我的当日会议=2；筛选不改数字；D+1按其原始记录更新；取消和他人会议不计入我的会议。 独立跨午夜历史fixture中：D有H1/H2/H3三条相交未取消预约，总数3；U在D开始且未取消的仅H2，我的当日会议=1，V则=1。D−1总数2且U我的=2；D+1总数2且U我的=1。所有日期可预约室=4，筛选至零房间也不改变统计；以相交数充当我的当日会议、或以开始日期计团队当日总数都应失败。",
+      "method_ids": [
+        "AI-room-discovery-8"
+      ]
+    },
+    {
+      "id": "BB-room-discovery-9",
+      "kind": "black_box",
+      "title": "无匹配提示且筛选可调整恢复",
+      "requirement_ids": [
+        "room-discovery-9"
+      ],
+      "expected": "显示无匹配空间提示而非加载错误，筛选入口保留；调整后显示真实匹配空间，不需要重新登录或刷新全部应用。",
+      "method_ids": [
+        "AI-room-discovery-9"
+      ]
+    },
+    {
+      "id": "BB-space-administration-1",
+      "kind": "black_box",
+      "title": "空间写操作UI及直接接口都要求本团队管理员",
+      "requirement_ids": [
+        "space-administration-1"
+      ],
+      "expected": "本队管理员能操作，普通成员不能绕过UI通过接口修改；跨队管理员无权，降权即时拒绝；失败原资料不变。",
+      "method_ids": [
+        "AI-space-administration-1"
+      ]
+    },
+    {
+      "id": "BB-space-administration-2",
+      "kind": "black_box",
+      "title": "新增会议室独立编号且只进入操作者团队",
+      "requirement_ids": [
+        "space-administration-2"
+      ],
+      "expected": "每个新增有独立编号并属于操作者团队，返回完整规范化资料；不覆盖原房间；同名不同队允许，跨队不可见。",
+      "method_ids": [
+        "AI-space-administration-2"
+      ]
+    },
+    {
+      "id": "BB-space-administration-3",
+      "kind": "black_box",
+      "title": "房间各字段保存后所有读取使用新值",
+      "requirement_ids": [
+        "space-administration-3"
+      ],
+      "expected": "所有合法字段保存且后续查询一致使用当前值；不丢其他未修改字段；已有预约显示当前室名位置。",
+      "method_ids": [
+        "AI-space-administration-3"
+      ]
+    },
+    {
+      "id": "BB-space-administration-4",
+      "kind": "black_box",
+      "title": "室名去空格唯一约束在新增编辑和并发均有效",
+      "requirement_ids": [
+        "space-administration-4"
+      ],
+      "expected": "同队名称去空格后唯一，包括停用室；冲突不改变已有室；编辑自己原名不误冲突，不同队允许；并发至多一个R3。 同队不同房间并发编辑为同一归一化名称，以及新增与编辑竞争同一名称，均只能保存一份该名称；竞争失败的编辑目标保持全部原字段，失败新增不留新室，不能覆盖胜者或其他房间。",
+      "method_ids": [
+        "AI-space-administration-4"
+      ]
+    },
+    {
+      "id": "BB-space-administration-5",
+      "kind": "black_box",
+      "title": "房间新增编辑的字段边界与默认启用",
+      "requirement_ids": [
+        "space-administration-5"
+      ],
+      "expected": "名称1–40、位置1–80、容量整数1–100及布尔启用规则准确；去空格后再判长度；新增未提供启用默认true；无效请求不部分保存。",
+      "method_ids": [
+        "AI-space-administration-5"
+      ]
+    },
+    {
+      "id": "BB-space-administration-6",
+      "kind": "black_box",
+      "title": "设备列表允许空集并去重，拒绝非法成员和类型",
+      "requirement_ids": [
+        "space-administration-6"
+      ],
+      "expected": "仅支持显示屏/白板/视频会议/电话会议列表，空集允许；保存时重复项只保留一次，不规定未确认的排序；非法列表整体拒绝且不丢原设备。\n补充断言：新增与编辑均遵守相同空集、支持列表、去重和整体拒绝规则；新增非法设备不能留下房间记录。",
+      "method_ids": [
+        "AI-space-administration-6"
+      ]
+    },
+    {
+      "id": "BB-space-administration-7",
+      "kind": "black_box",
+      "title": "停用保留历史并阻止所有新预约入口",
+      "requirement_ids": [
+        "space-administration-7",
+        "reservation-creation-1"
+      ],
+      "expected": "房间及已有预约保留、原有效预约仍占用；所有新预约拒绝；普通可预约列表隐藏停用室而管理读取仍有资料。",
+      "method_ids": [
+        "AI-space-administration-7",
+        "AI-reservation-creation-1"
+      ]
+    },
+    {
+      "id": "BB-space-administration-8",
+      "kind": "black_box",
+      "title": "修改资料及减容不改既有预约事实",
+      "requirement_ids": [
+        "space-administration-8",
+        "reservation-creation-8"
+      ],
+      "expected": "原预约起止人数状态保持且不自动取消，历史不被重写；新预约受当前容量限制；原预约室名位置可随当前资料变化。",
+      "method_ids": [
+        "AI-space-administration-8",
+        "AI-reservation-management-2"
+      ]
+    },
+    {
+      "id": "BB-space-administration-9",
+      "kind": "black_box",
+      "title": "不存在及异队会议室修改不泄漏且无效",
+      "requirement_ids": [
+        "space-administration-9"
+      ],
+      "expected": "均返回会议室不存在，异队房间资料不出现在错误中且没有任何变更；不能把异队目标改为操作者团队。",
+      "method_ids": [
+        "AI-space-administration-9"
+      ]
+    },
+    {
+      "id": "BB-space-administration-10",
+      "kind": "black_box",
+      "title": "停用再启用恢复资格但仍执行冲突容量规则",
+      "requirement_ids": [
+        "space-administration-10"
+      ],
+      "expected": "启用恢复新预约资格，旧记录保持；不因启用而绕过冲突或当前容量规则，不要求删除重建会议室。",
+      "method_ids": [
+        "AI-space-administration-10"
+      ]
+    },
+    {
+      "id": "BB-team-administration-1",
+      "kind": "black_box",
+      "title": "成员列表仅向当前本团队管理员开放",
+      "requirement_ids": [
+        "team-administration-1"
+      ],
+      "expected": "仅当前本队管理员能访问，返回本队完整成员字段而无异队信息；成员和刚降权会话拒绝。",
+      "method_ids": [
+        "AI-team-administration-1"
+      ]
+    },
+    {
+      "id": "BB-team-administration-2",
+      "kind": "black_box",
+      "title": "角色修改禁止普通成员和跨团队越权",
+      "requirement_ids": [
+        "team-administration-2"
+      ],
+      "expected": "普通成员任何直接请求不能变更角色，异队管理员不能变更本队成员；合法管理员同队操作成功；拒绝不改变任何角色。",
+      "method_ids": [
+        "AI-team-administration-2"
+      ]
+    },
+    {
+      "id": "BB-team-administration-3",
+      "kind": "black_box",
+      "title": "角色枚举只接受精确admin和member",
+      "requirement_ids": [
+        "team-administration-3"
+      ],
+      "expected": "仅精确admin和member允许，其他值拒绝并保留原角色；合法同值请求不能造成额外身份变化。",
+      "method_ids": [
+        "AI-team-administration-3"
+      ]
+    },
+    {
+      "id": "BB-team-administration-4",
+      "kind": "black_box",
+      "title": "任何降权路径均不能留下无管理员团队",
+      "requirement_ids": [
+        "team-administration-4"
+      ],
+      "expected": "任何顺序或并发结果都至少保留一名管理员；单次合法降权允许，不能一律拒绝；拒绝的目标角色保持；不依赖另一团队管理员满足本队约束。",
+      "method_ids": [
+        "AI-team-administration-4"
+      ]
+    },
+    {
+      "id": "BB-team-administration-5",
+      "kind": "black_box",
+      "title": "角色变化下一次请求生效且无需重登录",
+      "requirement_ids": [
+        "team-administration-5",
+        "identity-session-4"
+      ],
+      "expected": "授权按最新角色，提升下一请求可用、降权下一请求撤销，不缓存旧权限到会话到期；降权不妨碍普通成员功能。\n补充断言：编辑、角色修改、代取消也在升降权后的第一条业务请求使用当前角色；不能依赖一次身份读取才更新授权。 新增空间和team查询各自独立作为升/降权后的第一条业务请求，无任何先行身份或成员查询；升权允许，降权拒绝且新增无副作用。",
+      "method_ids": [
+        "AI-team-administration-5",
+        "AI-identity-session-4",
+        "AI-role-first-request-new-room-team"
+      ]
+    },
+    {
+      "id": "BB-team-administration-6",
+      "kind": "black_box",
+      "title": "修改不存在或异团队成员返回不存在且不改角色",
+      "requirement_ids": [
+        "team-administration-6"
+      ],
+      "expected": "均返回成员不存在，不包含异队成员资料，不改变目标角色或误改本队同名成员。",
+      "method_ids": [
+        "AI-team-administration-6"
+      ]
+    },
+    {
+      "id": "BB-team-administration-7",
+      "kind": "black_box",
+      "title": "管理员合法自降后界面立即回会议室并撤去管理入口",
+      "requirement_ids": [
+        "team-administration-7"
+      ],
+      "expected": "合法自降后重新读取身份，回会议室页、撤掉管理入口，后续管理请求拒绝；唯一管理员自降失败不误把UI降为成员。",
+      "method_ids": [
+        "AI-team-administration-7"
+      ]
+    },
+    {
+      "id": "WB-runtime-entry",
+      "kind": "white_box",
+      "title": "启动参数到服务与数据库的绑定路径",
+      "requirement_ids": [
+        "application-runtime-1",
+        "application-runtime-2"
+      ],
+      "target_condition": "app/server.py:99–105 / Store.__init__；app/server.py:162–166 / ApplicationServer.__init__；app/server.py:482–495 / main：main 默认值/单项覆盖/组合覆盖进入实际 Store 和监听地址，数据库父目录不存在与存在两路",
+      "expected": "默认标准库依赖、127.0.0.1:8766 和 data/meetspace.sqlite 生效；每个覆盖参数生效，其他默认不变；创建父目录后数据保存到指定库，未选库不被改写。",
+      "method_ids": [
+        "AI-WB-runtime-entry"
+      ]
+    },
+    {
+      "id": "WB-seed-empty-existing",
+      "kind": "white_box",
+      "title": "初始化空团队分支与已有团队早返回",
+      "requirement_ids": [
+        "application-runtime-3",
+        "application-runtime-4"
+      ],
+      "target_condition": "app/server.py:122–156 / Store.seed：count(teams)==0 执行全种子；非零直接返回，不改变初始会议日期",
+      "expected": "仅无团队时填入两团队四账号五会议室及北京时间明天三场会议；已有团队时不补种、覆盖业务资料或移动种子会议日期；所有示例账号可正常登录。",
+      "method_ids": [
+        "AI-WB-seed-empty-existing"
+      ]
+    },
+    {
+      "id": "WB-password-derivation",
+      "kind": "white_box",
+      "title": "随机盐派生与密码匹配的持久化路径",
+      "requirement_ids": [
+        "identity-session-1",
+        "identity-session-2",
+        "identity-session-3",
+        "identity-session-13"
+      ],
+      "target_condition": "app/server.py:66–69 / password_hash；app/server.py:72–73 / password_matches；app/server.py:126–134 / Store.seed (password derivation)；app/server.py:284–297 / Handler.login (credential check)：salt=None 生成随机盐；提供既有盐重算并 compare_digest；不存在账号短路与错误/正确密码三路",
+      "expected": "按需求清理邮箱/密码空格并小写邮箱，正确密码建立会话；不存在账号和错密统一拒绝；仅随机盐加密码派生值持久化，账号/轮次盐不复用，无明文或可恢复密码副本。 所有关联方法须完整执行：有效随机输入与盐输出有因果关系，独立派生复算匹配，全部持久化出口没有可恢复密码副本；仅随机API调用、样本不同或主表看似派生不构成符合证据。",
+      "method_ids": [
+        "AI-WB-password-derivation",
+        "AI-identity-session-13",
+        "AI-salt-entropy-dependence",
+        "AI-password-persistence-scope"
+      ]
+    },
+    {
+      "id": "WB-persistence-restart",
+      "kind": "white_box",
+      "title": "各业务写入的重启持久化与只读连接",
+      "requirement_ids": [
+        "application-runtime-5"
+      ],
+      "target_condition": "app/server.py:108–120 / Store.connect；app/server.py:28–53 / SCHEMA；app/server.py:99–105 / Store.__init__：成功 commit 与 finally close，重新打开同一数据文件读取已修改状态",
+      "expected": "相同数据库重启保留团队、账号角色、房间、预约、取消记录、通知和已读状态，不因连接关闭或重新建表回退资料。",
+      "method_ids": [
+        "AI-WB-persistence-restart"
+      ]
+    },
+    {
+      "id": "WB-health-static-dispatch",
+      "kind": "white_box",
+      "title": "公开健康和静态资源的入口分流",
+      "requirement_ids": [
+        "application-runtime-1",
+        "application-runtime-6",
+        "application-runtime-7",
+        "identity-session-5"
+      ],
+      "target_condition": "app/server.py:172–173 / Handler.do_GET；app/server.py:181–182 / Handler.do_HEAD；app/server.py:236–245 / Handler.dispatch (health/static entry)；app/server.py:265–282 / Handler.static_file；app/server.py:184–195 / Handler.send_json：GET /api/health 在身份读取前探测数据库；非 /api/ 静态 allowlist；HEAD 不写正文",
+      "expected": "健康无需登录返回 ok、版本和 Asia/Shanghai；静态真实资源使默认应用可用，HEAD 与 GET 元数据对应且无实体；工作空间业务拒绝无效会话；不支持路径返回 JSON 错误而不泄露内部栈。",
+      "method_ids": [
+        "AI-WB-health-static-dispatch"
+      ]
+    },
+    {
+      "id": "WB-request-origin",
+      "kind": "white_box",
+      "title": "写请求标记与 Origin 拒绝路径",
+      "requirement_ids": [
+        "identity-session-10",
+        "application-runtime-9"
+      ],
+      "target_condition": "app/server.py:197–203 / Handler.read_json (marker/origin)；app/server.py:246–248 / Handler.dispatch (POST/PATCH read_json)：标记不等于1短路；Origin 缺省/严格同当前 http://Host/不一致两路",
+      "expected": "缺少或错误标记、携带不同当前 HTTP 来源的 Origin 均拒绝；合法同源或未携带 Origin 的请求可按其后业务规则处理；拒绝不得提交修改。",
+      "method_ids": [
+        "AI-WB-request-origin"
+      ]
+    },
+    {
+      "id": "WB-json-envelope",
+      "kind": "white_box",
+      "title": "JSON 对象、媒体类型与字节长度边界",
+      "requirement_ids": [
+        "identity-session-11",
+        "application-runtime-7",
+        "application-runtime-9"
+      ],
+      "target_condition": "app/server.py:204–214 / Handler.read_json (type/length/object)：Content-Type 拆分分号、长度int解析、rfile字节读取、JSON对象判断、UnicodeDecodeError/ValueError",
+      "expected": "只接受 application/json 的对象且正文实际满足1–65536字节；合法类型参数与65536字节对象可进入业务，其他输入返回 JSON 具体错误，无业务写入或内部栈。",
+      "method_ids": [
+        "AI-WB-json-envelope"
+      ]
+    },
+    {
+      "id": "WB-errors-and-response",
+      "kind": "white_box",
+      "title": "异常分类与 JSON 序列化的公开响应",
+      "requirement_ids": [
+        "application-runtime-7",
+        "application-runtime-8"
+      ],
+      "target_condition": "app/server.py:56–59 / AppError.__init__；app/server.py:184–195 / Handler.send_json；app/server.py:253–263 / Handler.dispatch (exception classification)：AppError/IntegrityError/OperationalError/未知Exception映射，json UTF8、Cookie可选与 HEAD无正文",
+      "expected": "完整性冲突409/data_conflict，存储操作失败503/storage_unavailable，未知异常500/internal_error；业务错误有稳定代码及说明；公开响应不含异常栈、密码或内部错误内容。",
+      "method_ids": [
+        "AI-WB-errors-and-response"
+      ]
+    },
+    {
+      "id": "WB-transaction-failure-matrix",
+      "kind": "white_box",
+      "title": "业务事务在实际写入后和提交时失败的回滚",
+      "requirement_ids": [
+        "application-runtime-9",
+        "application-runtime-8",
+        "reservation-creation-10",
+        "reservation-management-7",
+        "notification-center-1",
+        "notification-center-2"
+      ],
+      "target_condition": "app/server.py:108–120 / Store.connect；app/server.py:249–263 / Handler.dispatch (transaction then response)；app/server.py:294–309 / Handler.login (session write)；app/server.py:315–319 / Handler.api (logout)；app/server.py:350–362 / Handler.api (cancel)；app/server.py:366–368 / Handler.api (mark-read)；app/server.py:373–387 / Handler.api (member role)；app/server.py:388–401 / Handler.api (room writes)；app/server.py:470–475 / Handler.create_booking (booking/notification write)；app/server.py:478–479 / Handler.notify：BEGIN IMMEDIATE→多个实际DML→commit；异常→rollback→close，写后/两写之间/最后写后/最终commit失败",
+      "expected": "失败业务所有部分写入撤销，旧资料/角色/会话/已读状态保留；预约与通知、取消与通知不能部分保存；无成功返回、无未提交数据占用；错误分类符合需求；恢复后合法请求可完成。",
+      "method_ids": [
+        "AI-WB-transaction-failure-matrix"
+      ]
+    },
+    {
+      "id": "WB-session-join",
+      "kind": "white_box",
+      "title": "会话摘要查询与动态身份团队/角色联接",
+      "requirement_ids": [
+        "identity-session-4",
+        "identity-session-5",
+        "team-administration-5"
+      ],
+      "target_condition": "app/server.py:216–229 / Handler.current_user；app/server.py:313–314 / Handler.api (session response)：Cookie缺失/解析失败→401；SHA256(token)联接sessions/users/teams且expires>time.time；角色每次动态读取",
+      "expected": "身份字段、团队名称、版本时区正确；没有有效会话拒绝业务；当前角色下一业务请求即更新无需重登录，动态联接不能回落旧权限或跨团队资料。",
+      "method_ids": [
+        "AI-WB-session-join"
+      ]
+    },
+    {
+      "id": "WB-session-expiry",
+      "kind": "white_box",
+      "title": "八小时绝对期限、相等端点和登录清理",
+      "requirement_ids": [
+        "identity-session-6",
+        "identity-session-2"
+      ],
+      "target_condition": "app/server.py:224–229 / Handler.current_user (expires comparison)；app/server.py:298–309 / Handler.login (expiry cleanup and deadline)；app/server.py:26–26 / SESSION_SECONDS：expires>now 有效；expires==now无效；login DELETE expires<=now；业务读写无续期",
+      "expected": "会话八小时相等即失效，普通业务不延长；有效期间正常访问，登录清理过期项不注销其他有效会话。",
+      "method_ids": [
+        "AI-WB-session-expiry"
+      ]
+    },
+    {
+      "id": "WB-login-window-lock",
+      "kind": "white_box",
+      "title": "来源IP滚动窗口、格式前置与并发锁",
+      "requirement_ids": [
+        "identity-session-1",
+        "identity-session-3",
+        "identity-session-9"
+      ],
+      "target_condition": "app/server.py:284–297 / Handler.login (format/IP/window/lock)；app/server.py:162–166 / ApplicationServer.__init__ (attempts/lock)：text_field校验在计数前，login_lock覆盖过滤/阈值/append，stamp>now−60，成功也append",
+      "expected": "仅资料格式有效尝试计数，成功也计数；同IP六十秒窗口仅前8次接受，第9频控；恰满60秒的t=0不计入，释放槽；并发不能绕过阈值，其他IP独立。",
+      "method_ids": [
+        "AI-WB-login-window-lock"
+      ]
+    },
+    {
+      "id": "WB-login-switch-and-cookies",
+      "kind": "white_box",
+      "title": "成功登录替换当前浏览器会话与 Cookie 属性",
+      "requirement_ids": [
+        "identity-session-2",
+        "identity-session-3",
+        "identity-session-7",
+        "identity-session-12",
+        "identity-session-14"
+      ],
+      "target_condition": "app/server.py:294–309 / Handler.login (token/replace/cookie)；app/server.py:35–36 / SCHEMA sessions：valid credentials→random token→清到期→删除Cookie旧摘要→插入新摘要，Cookie统一属性；错密在删除前拒绝",
+      "expected": "成功登录建立目标身份并替换本浏览器旧会话，不影响另一浏览器；错密/未知账号统一拒绝且不得获得新身份；建立Cookie均Path=/、HttpOnly、SameSite=Lax；持久存储仅随机令牌摘要、用户和到期。 全部关联方法均须执行，首次及后续登录/切换令牌必须依赖有效随机输入，所有持久化出口仅允许摘要、关联用户与到期，不得额外保存原令牌、可恢复副本或未知用途字段；仅调用随机API或观察数个不同令牌不能判符合。",
+      "method_ids": [
+        "AI-WB-login-switch-and-cookies",
+        "AI-identity-session-14",
+        "AI-token-entropy-and-storage-scope",
+        "AI-subsequent-session-entropy"
+      ]
+    },
+    {
+      "id": "WB-logout-revocation",
+      "kind": "white_box",
+      "title": "退出事务与清除 Cookie 的分支",
+      "requirement_ids": [
+        "identity-session-8",
+        "identity-session-12",
+        "application-runtime-9"
+      ],
+      "target_condition": "app/server.py:315–319 / Handler.api (POST /api/logout)；app/server.py:249–252 / Handler.dispatch (commit before response)：通过current_user后DELETE当前token_hash并提交，再发Max-Age=0 Cookie",
+      "expected": "退出撤销当前会话并清除当前浏览器Cookie，属性正确；其他浏览器会话不被注销，旧token无业务访问权。",
+      "method_ids": [
+        "AI-WB-logout-revocation"
+      ]
+    },
+    {
+      "id": "WB-route-authorizations",
+      "kind": "white_box",
+      "title": "所有管理员路由与方法匹配的权限门",
+      "requirement_ids": [
+        "space-administration-1",
+        "team-administration-1",
+        "team-administration-2",
+        "reservation-management-1",
+        "identity-session-5"
+      ],
+      "target_condition": "app/server.py:232–234 / Handler.admin；app/server.py:333–347 / Handler.api (scope admin)；app/server.py:369–402 / Handler.api (members and rooms authorization)；app/server.py:246–252 / Handler.dispatch (HTTP method/body/identity entry)：admin守卫在团队查询/room写/member读写前；method+path完全匹配，未知路径最后404",
+      "expected": "普通成员不能绕过管理员限制；已登录未知接口/方法返回稳定JSON错误且不写入；无效会话拒绝工作空间请求，A仅可访问其团队。",
+      "method_ids": [
+        "AI-WB-route-authorizations"
+      ]
+    },
+    {
+      "id": "WB-rooms-team-deserialization",
+      "kind": "white_box",
+      "title": "团队会议室查询与设备/状态转换",
+      "requirement_ids": [
+        "room-discovery-1",
+        "space-administration-7"
+      ],
+      "target_condition": "app/server.py:320–332 / Handler.api (GET /api/rooms)；app/server.py:405–409 / Handler.room_data：WHERE team_id；json.loads设备，bool(active)，包括停用室",
+      "expected": "仅本团队且完整资料，包括停用房间；设备正确数组、状态布尔，不丢已有预约。",
+      "method_ids": [
+        "AI-WB-rooms-team-deserialization"
+      ]
+    },
+    {
+      "id": "WB-day-range-intersection",
+      "kind": "white_box",
+      "title": "北京时间日边界与严格相交SQL",
+      "requirement_ids": [
+        "room-discovery-2",
+        "room-discovery-3"
+      ],
+      "target_condition": "app/server.py:320–332 / Handler.api (date and intersection)；app/server.py:416–422 / Handler.day_range：缺省Shanghai日期；strptime异常；b.start<dayEnd AND b.end>dayStart AND confirmed、排序ASC",
+      "expected": "缺省当前北京时间日，无效日期拒绝；仅confirmed且严格相交，贴边不计入，按开始升序；跨午夜fixture按相交查询正确但不据此放宽新预约规则。",
+      "method_ids": [
+        "AI-WB-day-range-intersection"
+      ]
+    },
+    {
+      "id": "WB-agenda-title-redaction",
+      "kind": "white_box",
+      "title": "日程主题的本人/管理员/其他成员分支",
+      "requirement_ids": [
+        "room-discovery-4",
+        "room-discovery-6"
+      ],
+      "target_condition": "app/server.py:324–332 / Handler.api (agenda title redaction)：user_id!=current AND role!=admin 才把title改已预约",
+      "expected": "本人和本团队管理员实际主题，其他成员仅已预约；时段/预约人仍正确，角色变化动态生效，跨团队无泄漏。",
+      "method_ids": [
+        "AI-WB-agenda-title-redaction"
+      ]
+    },
+    {
+      "id": "WB-booking-fields-guards",
+      "kind": "white_box",
+      "title": "预约 integer/text_field 的类型短路与去空格边界",
+      "requirement_ids": [
+        "reservation-creation-2",
+        "reservation-creation-14"
+      ],
+      "target_condition": "app/server.py:437–445 / Handler.create_booking (field validation)；app/server.py:76–79 / integer；app/server.py:82–87 / text_field：room/title/attendees/key按序校验，bool先于int，trim后长度判断",
+      "expected": "ID1–2147483647、人数1–100整数且非布尔/小数；主题/key trim后1–100，保存规范化主题；失败具体错误，无预约、占用、通知。",
+      "method_ids": [
+        "AI-WB-booking-fields-guards"
+      ]
+    },
+    {
+      "id": "WB-datetime-parse-normalize",
+      "kind": "white_box",
+      "title": "时间解析类型异常与绝对时刻规范化",
+      "requirement_ids": [
+        "reservation-creation-3",
+        "reservation-creation-12"
+      ],
+      "target_condition": "app/server.py:89–96 / date_time；app/server.py:442–449 / Handler.create_booking (time/fingerprint)：fromisoformat→tzinfo/utcoffset非空→astimezoneUTC；捕ValueError/TypeError/OverflowError；fingerprint含UTC规范化时刻",
+      "expected": "两时间均必须可解析且有时区；无效拒绝且无副作用；等价时刻视作同内容重放，保存绝对UTC时刻和正确北京时间。",
+      "method_ids": [
+        "AI-WB-datetime-parse-normalize"
+      ]
+    },
+    {
+      "id": "WB-booking-horizon",
+      "kind": "white_box",
+      "title": "服务端时刻和三十天范围两分支",
+      "requirement_ids": [
+        "reservation-creation-4",
+        "reservation-creation-14"
+      ],
+      "target_condition": "app/server.py:450–452 / Handler.create_booking (date horizon)：start<=current OR start>current+30days；replay先于日期守卫",
+      "expected": "仅开始晚于服务端当前且<=30天；两端判定正确，非法无创建与通知，不能以浏览器时钟代替。 固定合法对齐开始T*时，now=T*−1秒允许、T*或T*+1秒拒绝；now=T*−30天允许、T*−30天−1秒拒绝、T*−30天+1秒允许，其他全部约束保持合法；浏览器时钟变化不改变此判定。",
+      "method_ids": [
+        "AI-WB-booking-horizon",
+        "AI-reservation-creation-4"
+      ]
+    },
+    {
+      "id": "WB-booking-duration",
+      "kind": "white_box",
+      "title": "预约时长闭区间和负/零时长",
+      "requirement_ids": [
+        "reservation-creation-5",
+        "reservation-creation-14"
+      ],
+      "target_condition": "app/server.py:453–454 / Handler.create_booking (duration)：not 15min<=end−start<=8h；绝对时刻差",
+      "expected": "时长15分钟和8小时含两端；过短过长/负/零拒绝，无写入；时长范围合法仍需满足其他规则。",
+      "method_ids": [
+        "AI-WB-booking-duration"
+      ]
+    },
+    {
+      "id": "WB-booking-open-hours",
+      "kind": "white_box",
+      "title": "营业时间OR各项及秒/微秒交互",
+      "requirement_ids": [
+        "reservation-creation-6",
+        "reservation-creation-7",
+        "reservation-creation-14"
+      ],
+      "target_condition": "app/server.py:455–459 / Handler.create_booking (hours/interval)：上海date不同/start.hour<8/end.hour>20/end20:xx任分量；任endpoint minute%15 or second or microsecond",
+      "expected": "同北京日期且08:00–20:00；两端均十五分钟对齐且秒/微秒零；不得因规范化截断、OR短路或浏览器时区放过非法输入。",
+      "method_ids": [
+        "AI-WB-booking-open-hours"
+      ]
+    },
+    {
+      "id": "WB-room-eligibility-capacity",
+      "kind": "white_box",
+      "title": "房间团队、启用与容量校验顺序",
+      "requirement_ids": [
+        "reservation-creation-1",
+        "reservation-creation-8",
+        "space-administration-7",
+        "space-administration-10"
+      ],
+      "target_condition": "app/server.py:460–466 / Handler.create_booking (team/active/capacity)：team过滤→not found、active false→conflict、人数>当前capacity→400",
+      "expected": "只当前团队已启用room接受，外团队/缺失不泄露；人数不超当前容量，停用拒新单，重启用恢复资格，旧预约不变。",
+      "method_ids": [
+        "AI-WB-room-eligibility-capacity"
+      ]
+    },
+    {
+      "id": "WB-booking-conflict-serialization",
+      "kind": "white_box",
+      "title": "严格重叠与 BEGIN IMMEDIATE 竞争序列",
+      "requirement_ids": [
+        "reservation-creation-9",
+        "reservation-creation-14",
+        "application-runtime-9"
+      ],
+      "target_condition": "app/server.py:467–475 / Handler.create_booking (conflict and insert)；app/server.py:108–120 / Store.connect (BEGIN IMMEDIATE)：confirmed AND start<newEnd AND end>newStart；写事务串行化冲突读取和INSERT",
+      "expected": "任何confirmed同室重叠拒绝，相邻允许，取消不占用；同时竞争不产生双重预订，仅成功单生成通知；失败不写入。",
+      "method_ids": [
+        "AI-WB-booking-conflict-serialization"
+      ]
+    },
+    {
+      "id": "WB-booking-insert-notify",
+      "kind": "white_box",
+      "title": "预约 INSERT、通知与保存字段联动",
+      "requirement_ids": [
+        "reservation-creation-10",
+        "notification-center-1"
+      ],
+      "target_condition": "app/server.py:470–475 / Handler.create_booking (INSERT and notify)；app/server.py:478–479 / Handler.notify；app/server.py:42–47 / SCHEMA bookings；app/server.py:49–52 / SCHEMA notifications：booking INSERT lastrowid→notify同连接→commit后201；DEFAULT confirmed/read=0",
+      "expected": "预约全部要求字段原子保存且状态confirmed，恰一条未读通知归属预约人、编号一致、内容和北京时间正确；不是先预约提交再发通知。",
+      "method_ids": [
+        "AI-WB-booking-insert-notify"
+      ]
+    },
+    {
+      "id": "WB-idempotency-priority",
+      "kind": "white_box",
+      "title": "幂等优先于时段、启用和容量的重判",
+      "requirement_ids": [
+        "reservation-creation-11",
+        "reservation-creation-13",
+        "reservation-creation-12"
+      ],
+      "target_condition": "app/server.py:437–452 / Handler.create_booking (validation/fingerprint/replay before horizon)：fingerprint规范化→user+key读取→不同hash409/相同直接replay；日期资格前返回",
+      "expected": "同key相同内容返回原编号/当前状态/replayed，不重新判资格或新通知；已取消不会恢复；不同内容各维度均冲突且原单不变。 内容不同包括仅改变开始或结束微秒的绝对时刻，不允许按当前秒级fingerprint假定它仍是同内容；精度探针另由WB-idempotency-absolute-precision详列。",
+      "method_ids": [
+        "AI-WB-idempotency-priority"
+      ]
+    },
+    {
+      "id": "WB-idempotency-user-concurrency",
+      "kind": "white_box",
+      "title": "用户作用域 UNIQUE 与并发重放竞争",
+      "requirement_ids": [
+        "reservation-creation-11",
+        "reservation-creation-12",
+        "reservation-creation-10"
+      ],
+      "target_condition": "app/server.py:442–449 / Handler.create_booking (previous/replay)；app/server.py:42–47 / SCHEMA bookings (UNIQUE user/key)；app/server.py:108–120 / Store.connect (write serialization)：UNIQUE(user_id,key)与事务在previous读取/插入之间一致；不同user同key独立",
+      "expected": "同用户幂等竞争不重复单/通知，不同内容冲突；不同用户标识相同不互相重放或阻塞，资料隔离。",
+      "method_ids": [
+        "AI-WB-idempotency-user-concurrency"
+      ]
+    },
+    {
+      "id": "WB-booking-query-scope-join",
+      "kind": "white_box",
+      "title": "预约范围分支与当前会议室资料联接",
+      "requirement_ids": [
+        "reservation-management-1",
+        "reservation-management-2",
+        "space-administration-3",
+        "identity-session-4"
+      ],
+      "target_condition": "app/server.py:333–347 / Handler.api (GET /api/bookings)；app/server.py:412–413 / Handler.booking_data：scope缺省mine/team/非法；b.team_id过滤、mine b.user_id、rooms/users JOIN、ORDER start DESC,id DESC",
+      "expected": "范围身份正确，只本人或合法团队全量；返回编号/room/user/name/title/time/attendees/status/created/cancelled及当前room名称位置，不能用预约时旧缓存。",
+      "method_ids": [
+        "AI-WB-booking-query-scope-join"
+      ]
+    },
+    {
+      "id": "WB-cancel-authorization-and-clock",
+      "kind": "white_box",
+      "title": "取消的团队过滤、角色守卫与开始边界",
+      "requirement_ids": [
+        "reservation-management-5",
+        "reservation-management-6",
+        "reservation-management-9"
+      ],
+      "target_condition": "app/server.py:350–362 / Handler.api (cancel team/owner/start guards)；app/server.py:89–96 / date_time：先id AND team_id，再owner OR admin，再status!=cancelled且start<=serverNow",
+      "expected": "仅本人/本队管理员取消，其他成员403、外队/缺失404；首次已开始或结束confirmed拒绝，恰start就拒，原资料和通知不变。",
+      "method_ids": [
+        "AI-WB-cancel-authorization-and-clock"
+      ]
+    },
+    {
+      "id": "WB-cancel-atomic-idempotent",
+      "kind": "white_box",
+      "title": "首次取消与已取消短路及并发",
+      "requirement_ids": [
+        "reservation-management-7",
+        "reservation-management-8",
+        "notification-center-2"
+      ],
+      "target_condition": "app/server.py:350–362 / Handler.api (cancel state/update/notify)；app/server.py:478–479 / Handler.notify；app/server.py:108–120 / Store.connect：status confirmed→UPDATE cancel_time→notify owner；cancelled绕过时钟/更新/通知",
+      "expected": "首次取消原子状态/时间和一条owner未读取消通知，释放占用保留原资料；重复/并发同单取消成功且不改时间不重复通知，不因已过开始时间拒绝已取消项。",
+      "method_ids": [
+        "AI-WB-cancel-atomic-idempotent"
+      ]
+    },
+    {
+      "id": "WB-notifications-select-limit",
+      "kind": "white_box",
+      "title": "通知 user_id 过滤、ID倒序与 LIMIT100",
+      "requirement_ids": [
+        "notification-center-3",
+        "notification-center-4"
+      ],
+      "target_condition": "app/server.py:363–365 / Handler.api (GET /api/notifications)：WHERE current user ORDER BY id DESC LIMIT100，不以created_at排序或团队角色放宽",
+      "expected": "只当前用户最近100条，按生成顺序倒序含ID、预约ID、正文、时间、read；不因管理员身份读取成员私信，不以相同时间丢条。",
+      "method_ids": [
+        "AI-WB-notifications-select-limit"
+      ]
+    },
+    {
+      "id": "WB-notifications-mark-all",
+      "kind": "white_box",
+      "title": "全部已读 UPDATE 无LIMIT 与其他用户隔离",
+      "requirement_ids": [
+        "notification-center-5",
+        "application-runtime-9"
+      ],
+      "target_condition": "app/server.py:366–368 / Handler.api (POST /api/notifications/read)：UPDATE WHERE user_id 无LIMIT，包括不在最新100的旧通知；repeat幂等",
+      "expected": "所有当前已有U通知read=1，包括未载入早期，其他用户不改；重复安全；事务失败不留部分已读。",
+      "method_ids": [
+        "AI-WB-notifications-mark-all"
+      ]
+    },
+    {
+      "id": "WB-room-write-and-return",
+      "kind": "white_box",
+      "title": "room新增/修改不同SQL路径与读回",
+      "requirement_ids": [
+        "space-administration-2",
+        "space-administration-3",
+        "space-administration-9"
+      ],
+      "target_condition": "app/server.py:388–401 / Handler.api (POST/PATCH /api/rooms)；app/server.py:405–409 / Handler.room_data：POST INSERT lastrowid读回；PATCH先 team过滤再 UPDATE五字段；缺失/外队404",
+      "expected": "新室属于管理员本队且独立编号、完整资料；修改全部字段持久，后续查询当前资料；外队和不存在返回not_found不改资料。",
+      "method_ids": [
+        "AI-WB-room-write-and-return"
+      ]
+    },
+    {
+      "id": "WB-room-text-capacity-active",
+      "kind": "white_box",
+      "title": "room字段校验、默认active与trim",
+      "requirement_ids": [
+        "space-administration-5",
+        "space-administration-2",
+        "space-administration-3"
+      ],
+      "target_condition": "app/server.py:425–435 / Handler.room_values；app/server.py:76–79 / integer；app/server.py:82–87 / text_field：name/location trim长度；capacity拒bool/浮点；data.get(active,True) 与bool检查",
+      "expected": "名称1–40位置1–80且trim、容量1–100整数非bool/小数，active布尔；新增未传active默认启用，非法不得改原室。",
+      "method_ids": [
+        "AI-WB-room-text-capacity-active"
+      ]
+    },
+    {
+      "id": "WB-room-equipment-set",
+      "kind": "white_box",
+      "title": "设备列表类型、any短路与去重规范化",
+      "requirement_ids": [
+        "space-administration-6"
+      ],
+      "target_condition": "app/server.py:429–435 / Handler.room_values (equipment validation/deduplication)；app/server.py:27–27 / EQUIPMENT：not list OR any(not str OR not EQUIPMENT)，sorted(set(equipment))",
+      "expected": "仅四合法设备列表，空列表允许，保存去重；非法设备或元素类型拒绝无改动，数组形式正确。",
+      "method_ids": [
+        "AI-WB-room-equipment-set"
+      ]
+    },
+    {
+      "id": "WB-room-name-unique-concurrency",
+      "kind": "white_box",
+      "title": "团队名称 UNIQUE 与新增/编辑竞争",
+      "requirement_ids": [
+        "space-administration-4",
+        "application-runtime-8",
+        "application-runtime-9"
+      ],
+      "target_condition": "app/server.py:37–41 / SCHEMA rooms (UNIQUE team/name)；app/server.py:425–435 / Handler.room_values (trim name)；app/server.py:388–401 / Handler.api (room writes)；app/server.py:108–120 / Store.connect (write serialization)：trim后的name进入UNIQUE(team_id,name)，create×create/edit×edit/create×edit同时写",
+      "expected": "同队trim名称唯一且冲突无改变已有室；不同队不相互冲突；并发竞争不产生重复且按409 data_conflict处理。",
+      "method_ids": [
+        "AI-WB-room-name-unique-concurrency"
+      ]
+    },
+    {
+      "id": "WB-room-state-existing-bookings",
+      "kind": "white_box",
+      "title": "停用/降容/重启用不改已有预约",
+      "requirement_ids": [
+        "space-administration-7",
+        "space-administration-8",
+        "space-administration-10"
+      ],
+      "target_condition": "app/server.py:393–401 / Handler.api (PATCH room)；app/server.py:460–466 / Handler.create_booking (new active/capacity)：UPDATE仅rooms，保留bookings；new booking读取active/capacity当前值",
+      "expected": "资料修改保留所有原预约，不自动改人数时间或取消；停用只阻止新单，重启用按当前资料恢复新预约资格。",
+      "method_ids": [
+        "AI-WB-room-state-existing-bookings"
+      ]
+    },
+    {
+      "id": "WB-member-select-role-guards",
+      "kind": "white_box",
+      "title": "成员列表与角色修改的团队/值守卫",
+      "requirement_ids": [
+        "team-administration-1",
+        "team-administration-2",
+        "team-administration-3",
+        "team-administration-6"
+      ],
+      "target_condition": "app/server.py:369–387 / Handler.api (GET/PATCH members)；app/server.py:232–234 / Handler.admin：admin→role集合→team id选择→notfound→UPDATE，GET只本队显式字段",
+      "expected": "仅本队管理员读/改本队成员；列表id/email/name/role，合法role只有admin/member，非法不改；缺失/外队not_found无泄露。",
+      "method_ids": [
+        "AI-WB-member-select-role-guards"
+      ]
+    },
+    {
+      "id": "WB-last-admin-lock",
+      "kind": "white_box",
+      "title": "最后管理员守卫、无操作及并发降权",
+      "requirement_ids": [
+        "team-administration-4",
+        "team-administration-5"
+      ],
+      "target_condition": "app/server.py:374–387 / Handler.api (role transition/count/update)；app/server.py:216–229 / Handler.current_user (current role)；app/server.py:108–120 / Store.connect (write serialization)：原role admin且目标member才count；count<=1拒绝，BEGIN IMMEDIATE同步授权/计数/UPDATE",
+      "expected": "不允许零管理员含唯一者自降；合法变更下一请求权限即变化；并发不能使两个计数都看旧数量而全部降权；同值安全。",
+      "method_ids": [
+        "AI-WB-last-admin-lock"
+      ]
+    },
+    {
+      "id": "WB-ui-start-session-errors",
+      "kind": "white_box",
+      "title": "页面启动身份恢复、401与非401异常",
+      "requirement_ids": [
+        "identity-session-4",
+        "interface-experience-4",
+        "interface-experience-10"
+      ],
+      "target_condition": "web/app.js:260–266 / start；web/app.js:20–34 / api；web/app.js:37–45 / renderLogin：start成功session→loadPage，401→renderLogin，非401连接错误→error-page",
+      "expected": "有效身份工作空间正常，失效返回登录，加载错误明确可感知而非空列表；恢复后可继续。",
+      "method_ids": [
+        "AI-WB-ui-start-session-errors"
+      ]
+    },
+    {
+      "id": "WB-ui-api-error-session-transition",
+      "kind": "white_box",
+      "title": "API非JSON、401业务和/login401分支",
+      "requirement_ids": [
+        "interface-experience-9",
+        "interface-experience-10",
+        "identity-session-3"
+      ],
+      "target_condition": "web/app.js:20–34 / api：response.json失败，非ok，业务401关闭全部dialog清user，/login401例外；error.status赋值",
+      "expected": "工作空间会话失效关闭业务弹窗回登录；错密仍在登录页且统一反馈；解析/其他错误可见，预约/room资料失败保留可改输入。",
+      "method_ids": [
+        "AI-WB-ui-api-error-session-transition"
+      ]
+    },
+    {
+      "id": "WB-ui-login-navigation",
+      "kind": "white_box",
+      "title": "示例填入、登录成功清缓存与管理员导航",
+      "requirement_ids": [
+        "interface-experience-1",
+        "interface-experience-2",
+        "identity-session-2",
+        "identity-session-7"
+      ],
+      "target_condition": "web/app.js:37–45 / renderLogin；web/app.js:47–58 / login；web/app.js:80–89 / renderShell；web/app.js:142–151 / wirePage (navigation controls)：data-account只填字段，login成功/session读回重置page/scope/四列表，nav管理员条件",
+      "expected": "示例选择不登录，点击登录建立会话；只有管理员管理入口，新账号资料与权限正确且无旧队/旧成员缓存泄漏。",
+      "method_ids": [
+        "AI-WB-ui-login-navigation"
+      ]
+    },
+    {
+      "id": "WB-ui-load-parallel-error",
+      "kind": "white_box",
+      "title": "Promise.all 数据集合和加载/错误/重试三态",
+      "requirement_ids": [
+        "interface-experience-3",
+        "interface-experience-4"
+      ],
+      "target_condition": "web/app.js:60–78 / loadPage；web/app.js:80–89 / renderShell (loading/error)：无user早返回；loading→Promise.all rooms/bookings/notifications(+admin manage members)→赋值或loadError→finally render",
+      "expected": "加载状态明确，只有完整最新结果显示成功；每条失败有错误和重试，不能误呈空成功列表；恢复重载正常；成员请求只admin manage发起。",
+      "method_ids": [
+        "AI-WB-ui-load-parallel-error"
+      ]
+    },
+    {
+      "id": "WB-ui-load-token-races",
+      "kind": "white_box",
+      "title": "最新加载token与旧成功/旧失败/401到达",
+      "requirement_ids": [
+        "interface-experience-3",
+        "interface-experience-4",
+        "interface-experience-10"
+      ],
+      "target_condition": "web/app.js:60–78 / loadPage；web/app.js:20–34 / api (401 side effect)；web/app.js:159–164 / logout；web/app.js:47–58 / login (new identity)：token!=loadToken或!user早返回；finally仅当前token清loading；旧401在api内早触发user清空",
+      "expected": "只有最新加载更新当前页面资料与加载/错误状态；旧非401响应不得覆盖最新结果。当前会话世代确实失效时401关闭弹窗回登录；前身份O的延迟401在新会话N已实际生效且业务仍有效后不得撤掉N身份或页面。退出后旧响应不恢复工作空间。",
+      "method_ids": [
+        "AI-WB-ui-load-token-races"
+      ]
+    },
+    {
+      "id": "WB-ui-filters-statistics",
+      "kind": "white_box",
+      "title": "容量设备active过滤与原列表统计",
+      "requirement_ids": [
+        "room-discovery-5",
+        "room-discovery-8",
+        "room-discovery-9"
+      ],
+      "target_condition": "web/app.js:103–108 / spacesContent；web/app.js:142–145 / wirePage (filter changes)：active && capacity条件 && equipment条件，myToday按start日，total按原rooms，empty分支",
+      "expected": "仅启用且满足>=容量及包含设备的室；指标不随筛选变化，日程相交与本人起始日期指标区分；无匹配提示但可调整。",
+      "method_ids": [
+        "AI-WB-ui-filters-statistics"
+      ]
+    },
+    {
+      "id": "WB-ui-room-timeline-agenda",
+      "kind": "white_box",
+      "title": "48格严格相交、日程折叠和管理roomCard分支",
+      "requirement_ids": [
+        "room-discovery-6",
+        "room-discovery-7",
+        "space-administration-7"
+      ],
+      "target_condition": "web/app.js:110–118 / roomCard；web/app.js:138–140 / manageContent：Array48各slot用start<slotEnd/end>slotStart；空预约/有预约，manage编辑vs预约，空设备",
+      "expected": "08–20恰48十五分钟格，严格相交仅有效预约占用，取消释放；展开日程展示已处理主题/owner/time；管理保留停用室编辑资料。",
+      "method_ids": [
+        "AI-WB-ui-room-timeline-agenda"
+      ]
+    },
+    {
+      "id": "WB-ui-timezone-format",
+      "kind": "white_box",
+      "title": "全部日期格式函数的固定上海时区路径",
+      "requirement_ids": [
+        "interface-experience-15",
+        "room-discovery-2"
+      ],
+      "target_condition": "web/app.js:13–13 / dateString；web/app.js:14–14 / timeString；web/app.js:15–15 / prettyDate；web/app.js:16–16 / fullDate：Intl显式Asia/Shanghai，prettyDate本地中午输入；DOM北京时间提示",
+      "expected": "所有业务日期时段通知按上海显示，不因浏览器时区改变自然日含义，明确北京时间UTC+8。",
+      "method_ids": [
+        "AI-WB-ui-timezone-format"
+      ]
+    },
+    {
+      "id": "WB-ui-booking-status-sort",
+      "kind": "white_box",
+      "title": "四状态判定、分组升降序与取消入口",
+      "requirement_ids": [
+        "reservation-management-3",
+        "reservation-management-4",
+        "reservation-management-10"
+      ],
+      "target_condition": "web/app.js:120–124 / bookingsContent；web/app.js:126–131 / bookingRow；web/app.js:232–238 / openCancel：cancelled优先；end<=now；start<=now；canCancel confirmed&&start>now；upcoming升序history继承API降序",
+      "expected": "状态、分组、顺序按需求，已开始/取消/结束无取消入口；未开始确认信息完整且先确认再发送。",
+      "method_ids": [
+        "AI-WB-ui-booking-status-sort"
+      ]
+    },
+    {
+      "id": "WB-ui-notification-render",
+      "kind": "white_box",
+      "title": "通知徽标、已读按钮、空状态与北京时间",
+      "requirement_ids": [
+        "notification-center-6",
+        "notification-center-7",
+        "notification-center-5",
+        "interface-experience-7"
+      ],
+      "target_condition": "web/app.js:80–89 / renderShell (unread badge)；web/app.js:133–136 / inboxContent；web/app.js:152–156 / wirePage (mark-read)：loaded notifications read过滤；unread0按钮disabled/no badge；列表空/非空；mark-read请求中disable/失败恢复",
+      "expected": "载入集未读徽标正确零不显示，通知内容北京time和ID，空状态；全标已读提交反馈可感知，失败不假装成功。",
+      "method_ids": [
+        "AI-WB-ui-notification-render"
+      ]
+    },
+    {
+      "id": "WB-ui-default-times",
+      "kind": "white_box",
+      "title": "默认时间的今天、过去、未来和20点分支",
+      "requirement_ids": [
+        "interface-experience-6",
+        "interface-experience-5"
+      ],
+      "target_condition": "web/app.js:166–176 / defaultTimes；web/app.js:178–191 / openBooking：day==today ceil((minute+1)/15)，过去或minutes>=20:00→明天09；max8；end min(start+60,20)",
+      "expected": "默认开放且对齐，今天按当前时钟找未来刻度、无余开放时段/过去改明天，end<=20；完整room和规则及五输入可见。",
+      "method_ids": [
+        "AI-WB-ui-default-times"
+      ]
+    },
+    {
+      "id": "WB-ui-booking-draft-key",
+      "kind": "white_box",
+      "title": "预约payload规范化、随机key复用和改变",
+      "requirement_ids": [
+        "interface-experience-16",
+        "reservation-creation-11",
+        "reservation-creation-12",
+        "interface-experience-9"
+      ],
+      "target_condition": "web/app.js:178–191 / openBooking (draft reset)；web/app.js:193–206 / booking-form submit listener：新dialog清fingerprint/key；JSON payload含trim title/number人数/+08时间；变化randomUUID不变复用",
+      "expected": "同弹窗规范化内容未变复用原标识，变内容新标识；响应丢失重试不重复预约通知；失败保留输入与可重试。",
+      "method_ids": [
+        "AI-WB-ui-booking-draft-key"
+      ]
+    },
+    {
+      "id": "WB-ui-submit-button-matrix",
+      "kind": "white_box",
+      "title": "登录预约房间取消提交的try/catch/finally按钮恢复",
+      "requirement_ids": [
+        "interface-experience-7",
+        "interface-experience-9",
+        "interface-experience-8"
+      ],
+      "target_condition": "web/app.js:47–58 / login；web/app.js:193–206 / booking-form submit listener；web/app.js:220–230 / room-form submit listener；web/app.js:240–245 / confirm-cancel click listener：请求前disable，成功重载，catch错误，finally恢复；合法HTML验证优先，crypto指纹准备在booking try外",
+      "expected": "处理中禁相应按钮，完成恢复；错误可感知保留可改资料与重试，成功反馈重载且预约含ID，不用toast证明持久结果。",
+      "method_ids": [
+        "AI-WB-ui-submit-button-matrix"
+      ]
+    },
+    {
+      "id": "WB-ui-room-edit-draft",
+      "kind": "white_box",
+      "title": "添加/编辑room默认值与完整payload",
+      "requirement_ids": [
+        "space-administration-2",
+        "space-administration-3",
+        "interface-experience-9"
+      ],
+      "target_condition": "web/app.js:208–218 / openRoom；web/app.js:220–230 / room-form submit listener：roomId存在预填，null新增form.reset；editingRoom决定PATCH/POST；checkbox列表和active布尔",
+      "expected": "编辑完整当前资料并保存五字段；新增不残留旧room值，正确新增本队室；失败保留输入可改重试。",
+      "method_ids": [
+        "AI-WB-ui-room-edit-draft"
+      ]
+    },
+    {
+      "id": "WB-ui-role-demotion-reload",
+      "kind": "white_box",
+      "title": "角色修改后session刷新、自降导航和失败恢复",
+      "requirement_ids": [
+        "team-administration-7",
+        "team-administration-4",
+        "interface-experience-8"
+      ],
+      "target_condition": "web/app.js:247–255 / changeRole：PATCH→session读取→role非admin重置spaces/mine→loadPage；catch toast并reload",
+      "expected": "自降后重新读取身份，会议室页及管理入口撤去；合法role修改反馈重载，唯一admin失败保留角色且错误可见。",
+      "method_ids": [
+        "AI-WB-ui-role-demotion-reload"
+      ]
+    },
+    {
+      "id": "WB-ui-logout-races",
+      "kind": "white_box",
+      "title": "退出禁用、成功失效token和失败恢复",
+      "requirement_ids": [
+        "identity-session-8",
+        "interface-experience-10",
+        "interface-experience-3"
+      ],
+      "target_condition": "web/app.js:159–164 / logout；web/app.js:20–34 / api (401)；web/app.js:60–78 / loadPage：logout成功loadToken++/user=null/dialog.close/renderLogin；失败toast+button恢复",
+      "expected": "成功退出撤销Cookie会话、关闭业务弹窗回登录，旧加载不能恢复；失败明确反馈且按钮可重试。",
+      "method_ids": [
+        "AI-WB-ui-logout-races"
+      ]
+    },
+    {
+      "id": "WB-ui-dialog-close-no-write",
+      "kind": "white_box",
+      "title": "关闭按钮、原生Escape与外区域判断",
+      "requirement_ids": [
+        "interface-experience-11",
+        "reservation-management-10"
+      ],
+      "target_condition": "web/app.js:257–257 / data-close click listener；web/app.js:258–258 / dialog backdrop click listener；web/index.html:16–46 / dialog markup and close controls：data-close.closest.close；event.target===dialog且坐标在rect外才关闭；native Escape",
+      "expected": "三关闭方式可用且不提交任何业务变更，内部点击不会误关闭，cancel保留按钮不取消预约。",
+      "method_ids": [
+        "AI-WB-ui-dialog-close-no-write"
+      ]
+    },
+    {
+      "id": "WB-ui-text-escaping",
+      "kind": "white_box",
+      "title": "全部业务文本插值与textContent安全输出",
+      "requirement_ids": [
+        "interface-experience-14",
+        "interface-experience-13"
+      ],
+      "target_condition": "web/app.js:12–12 / escapeHtml；web/app.js:18–18 / toast；web/app.js:37–45 / renderLogin；web/app.js:80–89 / renderShell；web/app.js:110–118 / roomCard；web/app.js:126–131 / bookingRow；web/app.js:133–136 / inboxContent；web/app.js:138–140 / manageContent；web/app.js:186–188 / openBooking (textContent)；web/app.js:211–212 / openRoom (textContent)；web/app.js:232–238 / openCancel (textContent)：五字符escapeHtml与属性文本；innerHTML渲染所有业务字段，title/error/confirm/toast textContent",
+      "expected": "名称主题位置通知正文按文本显示，无业务文本生成可执行节点/事件；aria与textContent保持实际文字，不能仅依赖CSP屏蔽已注入标记。",
+      "method_ids": [
+        "AI-WB-ui-text-escaping"
+      ]
+    },
+    {
+      "id": "WB-ui-accessibility-focus",
+      "kind": "white_box",
+      "title": "表单label、dialog标题、焦点和状态语义",
+      "requirement_ids": [
+        "interface-experience-13"
+      ],
+      "target_condition": "web/index.html:15–15 / toast role=status；web/index.html:16–27 / booking dialog labels/aria/errors；web/index.html:28–40 / room dialog labels/aria/errors；web/index.html:41–46 / cancel dialog title/feedback；web/style.css:2–2 / focus selectors；web/app.js:18–18 / toast；web/app.js:37–45 / renderLogin；web/app.js:80–89 / renderShell：label嵌套输入、dialog aria-labelledby，表单error role=alert、toast aria-live；CSS focus-visible/input-focus",
+      "expected": "主要表单标签、可见焦点、弹窗标题和成功/错误反馈可感知，键盘能够完成操作。",
+      "method_ids": [
+        "AI-WB-ui-accessibility-focus"
+      ]
+    },
+    {
+      "id": "WB-ui-responsive-breakpoints",
+      "kind": "white_box",
+      "title": "CSS断点附近桌面/手机业务可完成",
+      "requirement_ids": [
+        "interface-experience-12"
+      ],
+      "target_condition": "web/style.css:2–2 / base layout and dialog max-width；web/style.css:3–3 / @media min-width:1500px；web/style.css:4–4 / @media max-width:1150px；web/style.css:5–5 / @media max-width:850px；web/style.css:6–6 / @media max-width:600px：断点切sidebar/nav/grid/login-story/topbar、dialog max-width，列宽与内容换行",
+      "expected": "桌面和手机内容操作可见可完成，无横向遮挡；弹窗不超视口，导航可到所有所属身份页面。",
+      "method_ids": [
+        "AI-WB-ui-responsive-breakpoints"
+      ]
+    },
+    {
+      "id": "WB-seed-failure-retry",
+      "kind": "white_box",
+      "title": "初始种子各批写入与提交失败后的完整重试",
+      "requirement_ids": [
+        "application-runtime-3",
+        "application-runtime-4",
+        "application-runtime-9"
+      ],
+      "target_condition": "app/server.py:99–105 / Store.__init__；app/server.py:108–120 / Store.connect；app/server.py:122–156 / Store.seed；app/server.py:28–53 / SCHEMA：初始化SCHEMA后，seed同一事务teams→users→rooms→三bookings；任批实际写后/commit失败回滚，下一启动count仍空",
+      "expected": "首轮失败不保存部分团队/账号/房间/会议，未完成初始化不报业务成功；可恢复后完整填入原需求示例，不因部分team残留永远跳过；已有团队不补种或覆盖。",
+      "method_ids": [
+        "AI-WB-seed-failure-retry"
+      ]
+    },
+    {
+      "id": "WB-login-format-boundaries",
+      "kind": "white_box",
+      "title": "登录文本类型及格式校验早于频率计数",
+      "requirement_ids": [
+        "identity-session-1",
+        "identity-session-9"
+      ],
+      "target_condition": "app/server.py:82–87 / text_field；app/server.py:284–295 / Handler.login (format before attempts)：strip后长度1–160邮箱/1–256密码，非str/空/超限在attempts更新前拒绝",
+      "expected": "邮箱和密码为字符串且trim后在各闭区间，小写邮箱匹配；非法格式不消耗配额，格式有效的成功或失败尝试都计数。",
+      "method_ids": [
+        "AI-WB-login-format-boundaries"
+      ]
+    },
+    {
+      "id": "WB-idempotency-absolute-precision",
+      "kind": "white_box",
+      "title": "已有请求标识的绝对时刻微秒差异拒绝",
+      "requirement_ids": [
+        "reservation-creation-3",
+        "reservation-creation-12",
+        "reservation-creation-11"
+      ],
+      "target_condition": "app/server.py:442–449 / Handler.create_booking (time/fingerprint/replay)；app/server.py:89–96 / date_time：UTC isoformat秒精度在fingerprint前，existing key返回在invalid_interval前；不同绝对微秒不能误判重放",
+      "expected": "内容比较保留绝对时刻差异，已有K仅微秒改变亦是不同内容而拒绝，不新增或修改原单通知；真正等价绝对时刻返回原编号/当前状态及重放。",
+      "method_ids": [
+        "AI-WB-idempotency-absolute-precision"
+      ]
+    }
+  ]
+}

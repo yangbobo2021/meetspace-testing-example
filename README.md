@@ -63,8 +63,8 @@ python3 -m unittest discover -s tests -v
 
 ## 接手做发布验收
 
-1. 阅读 [需求规约地图](specs/map.md) 和 [版本交接](docs/release-handoff.md)，审阅并确认需求基线。这些条目是对实现和原有规则逆向整理的候选需求，目前尚未得到用户逐项确认。
-2. 用户选择测试资产目录，再由 `app-delivery-acceptance` Skill 导出需求快照、设计和独立审阅场景。
+1. 阅读 [需求规约地图](specs/map.md) 和 [版本交接](docs/release-handoff.md)。用户已确认 `stage-02-requirements`（`12d503a`）全部 96 条需求作为黑盒场景设计基线，见 [DR-002](specs/decisions/002-black-box-baseline-confirmation.md)。
+2. 用户已选择 `tests` 目录；由 `app-delivery-acceptance` Skill 在 `tests/delivery-acceptance/` 保存需求快照、设计和独立审阅场景。当前授权限于黑盒场景设计。
 3. 固定 Git 修订和数据库初始状态，执行实际界面、API 和必要的实现检查，保存证据。
 4. 根据事实输出通过、失败、未覆盖和受阻项。测试流程不修改应用代码；发现缺陷后在开发流程中修复，再对新修订复测。
 
@@ -95,7 +95,7 @@ web/                    中文响应式操作界面
 tests/test_smoke.py      原有少量冒烟测试
 specs/map.md            需求入口与规约索引
 specs/meta.md           沿用自行车项目的存储与语法规范
-specs/packages/         按业务意图拆分的候选需求条目
+specs/packages/         按业务意图拆分的需求条目
 specs/decisions/        结构决策、逆向来源与边界
 docs/requirements.md    旧需求 ID 到新条目的映射
 docs/release-handoff.md  版本边界、资源和接手验收说明

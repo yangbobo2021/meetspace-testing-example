@@ -1,7 +1,8 @@
 # 规约地图
 
 本阶段从 `stage-01-implemented`（`32306826ae8531d03d84d4465d51d419783a5d8a`）逆向整理候选需求。
-条目尚待业务确认；验证章节仅占位，没有生成场景或执行测试。
+用户于 2026-10-08 确认 `stage-02-requirements`（`12d503a`）全部 96 条需求作为黑盒场景设计基线，见 [DR-002](decisions/002-black-box-baseline-confirmation.md)。
+验证章节保留需求阶段占位；黑盒场景与审阅台账存放于 `tests/delivery-acceptance/`，本阶段不执行应用测试。
 规约正文集中在 `packages/`；旧的 `docs/requirements.md` 仅保留迁移入口与旧 ID 对照。
 
 ## 编写与审阅
@@ -24,6 +25,7 @@ meta.md       结构、语法与引用规范
 | --- | --- | --- |
 | [DR-000](decisions/000-spec-structure-format.md) | 000-spec-structure-format.md | 沿用的规约结构与格式 |
 | [DR-001](decisions/001-reverse-engineered-requirements.md) | 001-reverse-engineered-requirements.md | 逆向来源、范围、状态与旧 ID 迁移 |
+| [DR-002](decisions/002-black-box-baseline-confirmation.md) | 002-black-box-baseline-confirmation.md | 用户确认 96 条需求及黑盒设计范围 |
 
 ## 规约包
 

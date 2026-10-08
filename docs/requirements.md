@@ -2,7 +2,7 @@
 
 当前需求正文已迁移到 [specs/map.md](../specs/map.md)。
 按自行车示例的规范，需求集中存放在 `specs/packages/`，使用 GEARS 条目和稳定的 `<pack>-<N>` ID。
-当前状态为从实现逆向整理的候选需求，尚待业务确认，未开展新的测试或验收。
+用户已确认 `stage-02-requirements`（`12d503a`）全部 96 条需求作为本次黑盒场景设计基线，见 [DR-002](../specs/decisions/002-black-box-baseline-confirmation.md)。确认不代表应用已经验收。
 
 原粗粒度规则可在 GitHub 的 [stage-01-implemented 版本](https://github.com/yangbobo2021/meetspace-testing-example/blob/stage-01-implemented/docs/requirements.md) 查阅。
 旧 ID 已公开，保持原事项关联；本文件仅维护到新条目的映射，不再保存第二份业务正文。

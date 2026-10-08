@@ -1,0 +1,80 @@
+{
+  "status": "analyst_static_analysis_pending_independent_review",
+  "items": [
+    {
+      "id": "COV-DEF-001",
+      "source_ref": "web/app.js:56",
+      "subject": "login catch的login-error DOM缺失",
+      "static_basis": "renderLogin总是创建login-error；login依次await login、session、loadPage；loadPage内部处理请求失败。正常提交按钮在请求中禁用，但异步身份/DOM重建可交错，静态审查不能证明绝对不可达。",
+      "reachability": "not_proven_reachable_in_agreed_ui",
+      "disposition": "不新增业务场景；在既有身份/加载竞态后续执行时观察DOM重建与未处理异常。如果实际合法UI时序出现缺节点，则新建对应时序补测，不把本分析当覆盖命中。",
+      "related_scenario_ids": [
+        "WB-ui-load-token-races",
+        "WB-ui-api-error-session-transition"
+      ],
+      "optional_probe": "隔离UI中刻意删除login-error可验证内部空节点防御，仅证明DOM故障依赖，不作为正常用户路径或本轮执行证据。",
+      "execution_status": "not_executed",
+      "coverage_policy": "保留在原覆盖率分母；不使用exclude或pragma提分"
+    },
+    {
+      "id": "COV-DEF-002",
+      "source_ref": "web/app.js:81",
+      "subject": "renderShell无用户guard",
+      "static_basis": "loadPage入口61检查user，finally76再次检查；标已读catch155先检查；capacity/equipment控件只在已登录空间存在。",
+      "reachability": "normal_callers_guard_identity",
+      "disposition": "保留防御分析，不新增已确认业务行为；后续真实401/退出矩阵观察无旧shell复现。",
+      "related_scenario_ids": [
+        "WB-ui-api-error-session-transition",
+        "WB-ui-logout-races",
+        "WB-ui-mark-read-session-expiry"
+      ],
+      "optional_probe": "隔离页直接调用renderShell且user=null只证明内部guard，不能冒充真实业务UI验收。",
+      "execution_status": "not_executed",
+      "coverage_policy": "保留在原覆盖率分母；不使用exclude或pragma提分"
+    },
+    {
+      "id": "COV-DEF-003",
+      "source_ref": "web/app.js:95-96",
+      "subject": "pageContent非法page默认分支",
+      "static_basis": "初始state.page及login/self-demotion写入spaces；renderShell导航只给spaces/bookings/inbox/条件manage，导航事件读这些固定data-page。",
+      "reachability": "no_invalid_enum_entry_found",
+      "disposition": "未发现约定UI能生成非法枚举，暂不为篡改内部state新增业务场景，仍保留未命中指标。",
+      "related_scenario_ids": [
+        "WB-ui-login-navigation"
+      ],
+      "optional_probe": "隔离页直接设置非法state.page然后调用pageContent，限定为内部防御测试；非业务状态证明。",
+      "execution_status": "not_executed",
+      "coverage_policy": "保留在原覆盖率分母；不使用exclude或pragma提分"
+    },
+    {
+      "id": "COV-DEF-004",
+      "source_ref": "web/app.js:99",
+      "subject": "heading默认aside参数",
+      "static_basis": "spacesContent107、bookingsContent123、inboxContent135、manageContent139的生产调用均显式传入第四参数。",
+      "reachability": "all_production_calls_supply_argument",
+      "disposition": "不新增正式验收场景；未使用的默认值辅助出口仍在代码覆盖分母。",
+      "related_scenario_ids": [
+        "WB-ui-login-navigation"
+      ],
+      "optional_probe": "隔离环境直接省略第四参数调用heading，只证明辅助函数默认值，不能证明用户状态。",
+      "execution_status": "not_executed",
+      "coverage_policy": "保留在原覆盖率分母；不使用exclude或pragma提分"
+    },
+    {
+      "id": "COV-DEF-005",
+      "source_ref": "web/app.js:107",
+      "subject": "prettyDate星期后缀fallback",
+      "static_basis": "prettyDate15使用zh-CN、Asia/Shanghai和month/day/weekday；当前已验证Chromium输出有日分隔，fallback是Intl输出变化防御。",
+      "reachability": "support_environment_variation_not_demonstrated",
+      "disposition": "当前支持环境没有已证明格式差异，不扩展浏览器兼容要求；未来实际支持环境出现差异时补环境矩阵。",
+      "related_scenario_ids": [
+        "WB-ui-timezone-format"
+      ],
+      "optional_probe": "透明Intl依赖格式适配器去掉星期后缀可测fallback，仅证明格式依赖故障，不证明真实浏览器兼容。",
+      "execution_status": "not_executed",
+      "coverage_policy": "保留在原覆盖率分母；不使用exclude或pragma提分"
+    }
+  ],
+  "basis_revision": "9abe0809a7996f27bbcb974e3bd3ffef963303b6",
+  "execution_status": "not_executed"
+}

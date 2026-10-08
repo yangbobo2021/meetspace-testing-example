@@ -1,0 +1,1293 @@
+{
+  "status": "passed",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "/root/coverage_scenario_reviewer 独立静态复审 round 02；R1提出定位、真实UI时序、Cookie撤销因果及五维内容探针修订后逐项重读",
+  "implementation_revision": "9abe0809a7996f27bbcb974e3bd3ffef963303b6",
+  "created_at": "2026-10-08T22:50:41.595540+00:00",
+  "basis": [
+    "读取测试Skill与data-model；独立反事实审阅，不执行或导入App，不把设计充分作为发布证明。",
+    "独立先读stage07八组补测建议/未覆盖库存及五防御路径，再阅读固定app/server.py、web/app.js、HTML/CSS、冒烟测试；71场景/71目标逐项source_refs对照。",
+    "全部原159场景/168方法与冻结基线逐对象比较，原63白盒保留；61白盒设计不变，其中json-envelope与filters-statistics另重读覆盖审阅code_review所记录的R1/R2既有修订及当前完整方法。",
+    "完整阅读新增8方法、细化2方法与所有关联原方法；矩阵项要求逐项判定。R1修订明确两个实际UI加载恢复按钮、独立Cookie容器撤销、五维内容变化及DEF004行123。",
+    "8组缺口映射为8新增和2细化；连接捕获与已提交响应丢失分开；继承标准库方法不由app文件branch100%推定。",
+    "五防御处置经静态callsite/枚举/参数/Intl核对；没有绝对不可达声明、没有exclude/pragma提分、没有把内部直接调用当正常业务通过。",
+    "核实96确认需求、黑盒设计和独立coverage_review不变，六源码哈希及历史run/review/gate SHA与binding一致；本审阅只绑定当前设计哈希，不重新认证旧run。"
+  ],
+  "scope_hashes": {
+    "requirements_sha256": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "white_box_scenarios_sha256": "6a48c666aab90c83a93300d9577850453c9e0f0d8489759d22816a108e7c917a",
+    "white_box_methods_sha256": "c0ae44c655b3e4f65f0d4f81885c238fd8dfea07e5ffe497341e182828dad7eb",
+    "white_box_map_sha256": "16781f60899c6c50dad13d69f3220158bbfeb15f69bf36eeb9a98a5d8ba14ee6",
+    "context_sha256": "4700a2f044d9415e5edfd4e6bfbdd04e72f104e01d003471b11c59881d6c54cf",
+    "independent_inventory_sha256": "96460a8663ca4939d29d3eae10788b4658bc70eea0badc9b9899aec946d421e7",
+    "baseline_binding_sha256": "3b0b910fc6b73dea82774c04cd39935c29547652471e042db569c950700eec23",
+    "supplement_changes_sha256": "dd8af073d7230de138c0246e363ccaab629ce134f8be4d88d0752d6d3b31cf93",
+    "defensive_reachability_sha256": "e6546dc476bd5c4271eedd4523c9727009af4257c17287fa4b564b212ae9a3d0"
+  },
+  "requirements_reviewed": [
+    "application-runtime-1",
+    "application-runtime-2",
+    "application-runtime-3",
+    "application-runtime-4",
+    "application-runtime-5",
+    "application-runtime-6",
+    "application-runtime-7",
+    "application-runtime-8",
+    "application-runtime-9",
+    "identity-session-1",
+    "identity-session-2",
+    "identity-session-3",
+    "identity-session-4",
+    "identity-session-5",
+    "identity-session-6",
+    "identity-session-7",
+    "identity-session-8",
+    "identity-session-9",
+    "identity-session-10",
+    "identity-session-11",
+    "identity-session-12",
+    "identity-session-13",
+    "identity-session-14",
+    "interface-experience-1",
+    "interface-experience-2",
+    "interface-experience-3",
+    "interface-experience-4",
+    "interface-experience-5",
+    "interface-experience-6",
+    "interface-experience-7",
+    "interface-experience-8",
+    "interface-experience-9",
+    "interface-experience-10",
+    "interface-experience-11",
+    "interface-experience-12",
+    "interface-experience-13",
+    "interface-experience-14",
+    "interface-experience-15",
+    "interface-experience-16",
+    "notification-center-1",
+    "notification-center-2",
+    "notification-center-3",
+    "notification-center-4",
+    "notification-center-5",
+    "notification-center-6",
+    "notification-center-7",
+    "reservation-creation-1",
+    "reservation-creation-2",
+    "reservation-creation-3",
+    "reservation-creation-4",
+    "reservation-creation-5",
+    "reservation-creation-6",
+    "reservation-creation-7",
+    "reservation-creation-8",
+    "reservation-creation-9",
+    "reservation-creation-10",
+    "reservation-creation-11",
+    "reservation-creation-12",
+    "reservation-creation-13",
+    "reservation-creation-14",
+    "reservation-management-1",
+    "reservation-management-2",
+    "reservation-management-3",
+    "reservation-management-4",
+    "reservation-management-5",
+    "reservation-management-6",
+    "reservation-management-7",
+    "reservation-management-8",
+    "reservation-management-9",
+    "reservation-management-10",
+    "room-discovery-1",
+    "room-discovery-2",
+    "room-discovery-3",
+    "room-discovery-4",
+    "room-discovery-5",
+    "room-discovery-6",
+    "room-discovery-7",
+    "room-discovery-8",
+    "room-discovery-9",
+    "space-administration-1",
+    "space-administration-2",
+    "space-administration-3",
+    "space-administration-4",
+    "space-administration-5",
+    "space-administration-6",
+    "space-administration-7",
+    "space-administration-8",
+    "space-administration-9",
+    "space-administration-10",
+    "team-administration-1",
+    "team-administration-2",
+    "team-administration-3",
+    "team-administration-4",
+    "team-administration-5",
+    "team-administration-6",
+    "team-administration-7"
+  ],
+  "uncovered_branches": [],
+  "items": [
+    {
+      "scenario_id": "WB-runtime-entry",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘main 默认值/单项覆盖/组合覆盖进入实际 Store 和监听地址，数据库父目录不存在与存在两路’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘忽略单项启动参数或意外引入第三方依赖’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:99–105、app/server.py:162–166、app/server.py:482–495。仅设计判断，尚未执行。",
+      "plausible_fault": "忽略单项启动参数或意外引入第三方依赖",
+      "failure_signal": "实际监听、库路径或重启记录与指定参数不一致"
+    },
+    {
+      "scenario_id": "WB-seed-empty-existing",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘count(teams)==0 执行全种子；非零直接返回，不改变初始会议日期’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘已有团队仍重新播种，或按UTC日期生成初始会议’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:122–156。仅设计判断，尚未执行。",
+      "plausible_fault": "已有团队仍重新播种，或按UTC日期生成初始会议",
+      "failure_signal": "种子字段增量、既有记录或北京时间明天日期不一致"
+    },
+    {
+      "scenario_id": "WB-password-derivation",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘salt=None 生成随机盐；提供既有盐重算并 compare_digest；不存在账号短路与错误/正确密码三路’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘读取熵却忽略结果，派生伪造或在另一个持久化出口保存可恢复密码’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:66–69、app/server.py:72–73、app/server.py:126–134、app/server.py:284–297。仅设计判断，尚未执行。",
+      "plausible_fault": "读取熵却忽略结果，派生伪造或在另一个持久化出口保存可恢复密码",
+      "failure_signal": "有效熵因果/独立派生复算错误，或出口对账出现副本/未知遗漏"
+    },
+    {
+      "scenario_id": "WB-persistence-restart",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘成功 commit 与 finally close，重新打开同一数据文件读取已修改状态’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘已提交记录仅留内存或重启回退业务字段’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:108–120、app/server.py:28–53、app/server.py:99–105。仅设计判断，尚未执行。",
+      "plausible_fault": "已提交记录仅留内存或重启回退业务字段",
+      "failure_signal": "同库重启API与独立快照的房间、角色、预约、取消、通知不一致"
+    },
+    {
+      "scenario_id": "WB-health-static-dispatch",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘GET /api/health 在身份读取前探测数据库；非 /api/ 静态 allowlist；HEAD 不写正文’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘健康受登录门禁阻挡、不读取真实库，或HEAD发送正文’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:172–173、app/server.py:181–182、app/server.py:236–245、app/server.py:265–282、app/server.py:184–195。仅设计判断，尚未执行。",
+      "plausible_fault": "健康受登录门禁阻挡、不读取真实库，或HEAD发送正文",
+      "failure_signal": "匿名健康字段/真实读取、静态资源或HEAD无正文断言失败"
+    },
+    {
+      "scenario_id": "WB-request-origin",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘标记不等于1短路；Origin 缺省/严格同当前 http://Host/不一致两路’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘某条修改路由跳过标记/来源守卫，或宽松前缀匹配Origin’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:197–203、app/server.py:246–248。仅设计判断，尚未执行。",
+      "plausible_fault": "某条修改路由跳过标记/来源守卫，或宽松前缀匹配Origin",
+      "failure_signal": "对应拒绝矩阵产生真实业务修改或错误接受"
+    },
+    {
+      "scenario_id": "WB-json-envelope",
+      "verdict": "sufficient",
+      "reason": "本轮逐对象复核R1八入口{}：read_json解析合法对象后，三个无参数业务成功与五个缺字段业务拒绝分别判定，原UTF8/字节长度矩阵未移除；与coverage_review.code_review一致。 对照源码：app/server.py:204–214。仅设计判断，尚未执行。",
+      "plausible_fault": "把{}当解析失败或把对象合法等同所有业务成功",
+      "failure_signal": "三个无参数入口未成功、五个缺字段写入或解析/业务阶段归因错误"
+    },
+    {
+      "scenario_id": "WB-errors-and-response",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘AppError/IntegrityError/OperationalError/未知Exception映射，json UTF8、Cookie可选与 HEAD无正文’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘异常类别合并或公开响应泄漏内部堆栈’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:56–59、app/server.py:184–195、app/server.py:253–263。仅设计判断，尚未执行。",
+      "plausible_fault": "异常类别合并或公开响应泄漏内部堆栈",
+      "failure_signal": "真实依赖故障的状态/code/JSON内容与恢复请求不符合"
+    },
+    {
+      "scenario_id": "WB-transaction-failure-matrix",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘BEGIN IMMEDIATE→多个实际DML→commit；异常→rollback→close，写后/两写之间/最后写后/最终commit失败’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘仅预约回滚，其他单表/会话写提前提交，或通知与预约分步提交’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:108–120、app/server.py:249–263、app/server.py:294–309、app/server.py:315–319、app/server.py:350–362、app/server.py:366–368、app/server.py:373–387、app/server.py:388–401、app/server.py:470–475、app/server.py:478–479。仅设计判断，尚未执行。",
+      "plausible_fault": "仅预约回滚，其他单表/会话写提前提交，或通知与预约分步提交",
+      "failure_signal": "逐业务实际DML后/commit失败留下部分状态，恢复重试计数错误"
+    },
+    {
+      "scenario_id": "WB-session-join",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘Cookie缺失/解析失败→401；SHA256(token)联接sessions/users/teams且expires>time.time；角色每次动态读取’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘授权缓存登录时角色、用户团队或误接受过期摘要’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:216–229、app/server.py:313–314。仅设计判断，尚未执行。",
+      "plausible_fault": "授权缓存登录时角色、用户团队或误接受过期摘要",
+      "failure_signal": "首个业务请求权限/团队集合、身份字段或无会话拒绝不符合"
+    },
+    {
+      "scenario_id": "WB-session-expiry",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘expires>now 有效；expires==now无效；login DELETE expires<=now；业务读写无续期’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘相等端点仍有效或普通查询续期’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:224–229、app/server.py:298–309、app/server.py:26–26。仅设计判断，尚未执行。",
+      "plausible_fault": "相等端点仍有效或普通查询续期",
+      "failure_signal": "八小时精确边界响应、持久expires及其他有效会话对照错误"
+    },
+    {
+      "scenario_id": "WB-login-window-lock",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘text_field校验在计数前，login_lock覆盖过滤/阈值/append，stamp>now−60，成功也append’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘格式错误占槽、成功不计数或并发检查移到锁外’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:284–297、app/server.py:162–166。仅设计判断，尚未执行。",
+      "plausible_fault": "格式错误占槽、成功不计数或并发检查移到锁外",
+      "failure_signal": "精确滚动窗口配额、同IP并发接受数或独立IP对照错误"
+    },
+    {
+      "scenario_id": "WB-login-switch-and-cookies",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘valid credentials→random token→清到期→删除Cookie旧摘要→插入新摘要，Cookie统一属性；错密在删除前拒绝’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘后续令牌按计数确定生成、保留旧当前会话或额外保存原令牌’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:294–309、app/server.py:35–36。仅设计判断，尚未执行。",
+      "plausible_fault": "后续令牌按计数确定生成、保留旧当前会话或额外保存原令牌",
+      "failure_signal": "有效熵因果、真实身份/会话隔离、Cookie属性或完整出口对账错误"
+    },
+    {
+      "scenario_id": "WB-logout-revocation",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘通过current_user后DELETE当前token_hash并提交，再发Max-Age=0 Cookie’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只清Cookie而不撤销摘要，或注销该用户所有浏览器’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:315–319、app/server.py:249–252。仅设计判断，尚未执行。",
+      "plausible_fault": "只清Cookie而不撤销摘要，或注销该用户所有浏览器",
+      "failure_signal": "旧令牌仍有效或另一独立会话被注销"
+    },
+    {
+      "scenario_id": "WB-route-authorizations",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘admin守卫在团队查询/room写/member读写前；method+path完全匹配，未知路径最后404’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘某管理员路由缺守卫，或只匹配路径而忽略方法’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:232–234、app/server.py:333–347、app/server.py:369–402、app/server.py:246–252。仅设计判断，尚未执行。",
+      "plausible_fault": "某管理员路由缺守卫，或只匹配路径而忽略方法",
+      "failure_signal": "成员直连成功、跨队改动或错方法越过业务门禁"
+    },
+    {
+      "scenario_id": "WB-rooms-team-deserialization",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘WHERE team_id；json.loads设备，bool(active)，包括停用室’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只查启用室或接受客户端team_id覆盖’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:320–332、app/server.py:405–409。仅设计判断，尚未执行。",
+      "plausible_fault": "只查启用室或接受客户端team_id覆盖",
+      "failure_signal": "当前团队精确集合、停用资料、设备数组或active布尔不符"
+    },
+    {
+      "scenario_id": "WB-day-range-intersection",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘缺省Shanghai日期；strptime异常；b.start<dayEnd AND b.end>dayStart AND confirmed、排序ASC’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘按UTC日或仅开始日过滤、放宽贴边相交、包含取消记录’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:320–332、app/server.py:416–422。仅设计判断，尚未执行。",
+      "plausible_fault": "按UTC日或仅开始日过滤、放宽贴边相交、包含取消记录",
+      "failure_signal": "指定/默认日期的严格相交ID集合、排序或取消排除不符"
+    },
+    {
+      "scenario_id": "WB-agenda-title-redaction",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘user_id!=current AND role!=admin 才把title改已预约’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘仅界面脱敏或缓存旧角色’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:324–332。仅设计判断，尚未执行。",
+      "plausible_fault": "仅界面脱敏或缓存旧角色",
+      "failure_signal": "原始API向无权成员泄露主题，或本人/管理员实际主题缺失"
+    },
+    {
+      "scenario_id": "WB-booking-fields-guards",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘room/title/attendees/key按序校验，bool先于int，trim后长度判断’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘强制转换布尔/小数或遗漏字段trim长度边界’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:437–445、app/server.py:76–79、app/server.py:82–87。仅设计判断，尚未执行。",
+      "plausible_fault": "强制转换布尔/小数或遗漏字段trim长度边界",
+      "failure_signal": "逐字段类型/边界拒绝、规范化保存或无写快照错误"
+    },
+    {
+      "scenario_id": "WB-datetime-parse-normalize",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘fromisoformat→tzinfo/utcoffset非空→astimezoneUTC；捕ValueError/TypeError/OverflowError；fingerprint含UTC规范化时刻’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘自动补时区或按输入字符串比较绝对时刻’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:89–96、app/server.py:442–449。仅设计判断，尚未执行。",
+      "plausible_fault": "自动补时区或按输入字符串比较绝对时刻",
+      "failure_signal": "非法时间接受、等价offset误冲突或保存绝对时刻不符"
+    },
+    {
+      "scenario_id": "WB-booking-horizon",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘start<=current OR start>current+30days；replay先于日期守卫’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘舍入服务时间、容许start==now或偷偷扩展30天上界’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:450–452。仅设计判断，尚未执行。",
+      "plausible_fault": "舍入服务时间、容许start==now或偷偷扩展30天上界",
+      "failure_signal": "固定合法payload六个精确服务时钟端点允许/拒绝或副作用错误"
+    },
+    {
+      "scenario_id": "WB-booking-duration",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘not 15min<=end−start<=8h；绝对时刻差’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只检查一个界限或将闭区间端点排除’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:453–454。仅设计判断，尚未执行。",
+      "plausible_fault": "只检查一个界限或将闭区间端点排除",
+      "failure_signal": "15分钟/8小时对照及过短/过长拒绝或后续粒度归因错误"
+    },
+    {
+      "scenario_id": "WB-booking-open-hours",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘上海date不同/start.hour<8/end.hour>20/end20:xx任分量；任endpoint minute%15 or second or microsecond’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘按输入日期判定或只检查开始端点，截掉非零微秒’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:455–459。仅设计判断，尚未执行。",
+      "plausible_fault": "按输入日期判定或只检查开始端点，截掉非零微秒",
+      "failure_signal": "营业OR各项、起止粒度、秒/微秒与异offset允许/拒绝错误"
+    },
+    {
+      "scenario_id": "WB-room-eligibility-capacity",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘team过滤→not found、active false→conflict、人数>当前capacity→400’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘使用客户端容量/启用缓存或忽略团队归属’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:460–466。仅设计判断，尚未执行。",
+      "plausible_fault": "使用客户端容量/启用缓存或忽略团队归属",
+      "failure_signal": "外队/停用/超容量新预约成功或原记录不变量错误"
+    },
+    {
+      "scenario_id": "WB-booking-conflict-serialization",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘confirmed AND start<newEnd AND end>newStart；写事务串行化冲突读取和INSERT’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘遗漏包含形态或把INSERT移出串行事务’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:467–475、app/server.py:108–120。仅设计判断，尚未执行。",
+      "plausible_fault": "遗漏包含形态或把INSERT移出串行事务",
+      "failure_signal": "真实并发重叠双成功、相邻误拒或通知/占用计数错误"
+    },
+    {
+      "scenario_id": "WB-booking-insert-notify",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘booking INSERT lastrowid→notify同连接→commit后201；DEFAULT confirmed/read=0’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘提前提交预约、错误通知接收者或遗漏保存字段’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:470–475、app/server.py:478–479、app/server.py:42–47、app/server.py:49–52。仅设计判断，尚未执行。",
+      "plausible_fault": "提前提交预约、错误通知接收者或遗漏保存字段",
+      "failure_signal": "同事务轨迹、完整记录与恰一条通知归属/内容不符"
+    },
+    {
+      "scenario_id": "WB-idempotency-priority",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘fingerprint规范化→user+key读取→不同hash409/相同直接replay；日期资格前返回’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘重放前重新判定时段资格，或取消后恢复预约’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:437–452。仅设计判断，尚未执行。",
+      "plausible_fault": "重放前重新判定时段资格，或取消后恢复预约",
+      "failure_signal": "原编号/当前状态不返回，资格变化导致拒绝或通知/占用增加"
+    },
+    {
+      "scenario_id": "WB-idempotency-user-concurrency",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘UNIQUE(user_id,key)与事务在previous读取/插入之间一致；不同user同key独立’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘按团队查key或竞争请求重复插入/覆盖’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:442–449、app/server.py:42–47、app/server.py:108–120。仅设计判断，尚未执行。",
+      "plausible_fault": "按团队查key或竞争请求重复插入/覆盖",
+      "failure_signal": "同用户竞争产生双记录/通知，或不同用户同key串用结果"
+    },
+    {
+      "scenario_id": "WB-booking-query-scope-join",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘scope缺省mine/team/非法；b.team_id过滤、mine b.user_id、rooms/users JOIN、ORDER start DESC,id DESC’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘team退化为mine、遗漏团队过滤或使用旧会议室缓存’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:333–347、app/server.py:412–413。仅设计判断，尚未执行。",
+      "plausible_fault": "team退化为mine、遗漏团队过滤或使用旧会议室缓存",
+      "failure_signal": "精确身份/范围集合、当前名称位置或显式返回字段不符"
+    },
+    {
+      "scenario_id": "WB-cancel-authorization-and-clock",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘先id AND team_id，再owner OR admin，再status!=cancelled且start<=serverNow’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘全局ID查找泄露，或已取消短路绕过授权’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:350–362、app/server.py:89–96。仅设计判断，尚未执行。",
+      "plausible_fault": "全局ID查找泄露，或已取消短路绕过授权",
+      "failure_signal": "另一团队语义、本人/管理员授权及服务开始端点拒绝错误"
+    },
+    {
+      "scenario_id": "WB-cancel-atomic-idempotent",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘status confirmed→UPDATE cancel_time→notify owner；cancelled绕过时钟/更新/通知’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘重复更新取消时间或重复通知，释放时段误伤新预约’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:350–362、app/server.py:478–479、app/server.py:108–120。仅设计判断，尚未执行。",
+      "plausible_fault": "重复更新取消时间或重复通知，释放时段误伤新预约",
+      "failure_signal": "取消时间/通知数量改变或新预约被破坏"
+    },
+    {
+      "scenario_id": "WB-notifications-select-limit",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘WHERE current user ORDER BY id DESC LIMIT100，不以created_at排序或团队角色放宽’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘按团队过滤、按created_at排序或只返回未读’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:363–365。仅设计判断，尚未执行。",
+      "plausible_fault": "按团队过滤、按created_at排序或只返回未读",
+      "failure_signal": "105条fixture最新100精确ID与字段/账号隔离不符"
+    },
+    {
+      "scenario_id": "WB-notifications-mark-all",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘UPDATE WHERE user_id 无LIMIT，包括不在最新100的旧通知；repeat幂等’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只标可见100条或缺user过滤’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:366–368。仅设计判断，尚未执行。",
+      "plausible_fault": "只标可见100条或缺user过滤",
+      "failure_signal": "未载入5条仍未读或另一用户通知被改变"
+    },
+    {
+      "scenario_id": "WB-room-write-and-return",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘POST INSERT lastrowid读回；PATCH先 team过滤再 UPDATE五字段；缺失/外队404’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘PATCH遗漏字段或更新另一团队房间’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:388–401、app/server.py:405–409。仅设计判断，尚未执行。",
+      "plausible_fault": "PATCH遗漏字段或更新另一团队房间",
+      "failure_signal": "保存/立即读回字段、独立编号或跨队不变量错误"
+    },
+    {
+      "scenario_id": "WB-room-text-capacity-active",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘name/location trim长度；capacity拒bool/浮点；data.get(active,True) 与bool检查’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘强制转换容量/active类型或漏trim/新增默认值’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:425–435、app/server.py:76–79、app/server.py:82–87。仅设计判断，尚未执行。",
+      "plausible_fault": "强制转换容量/active类型或漏trim/新增默认值",
+      "failure_signal": "新增/修改类型边界、规范化值和拒绝后原资料错误"
+    },
+    {
+      "scenario_id": "WB-room-equipment-set",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘not list OR any(not str OR not EQUIPMENT)，sorted(set(equipment))’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只验证首项、静默过滤非法项或仅一条路由去重’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:429–435、app/server.py:27–27。仅设计判断，尚未执行。",
+      "plausible_fault": "只验证首项、静默过滤非法项或仅一条路由去重",
+      "failure_signal": "首中尾错误项被接受、合法空集/重复集合或返回数组错误"
+    },
+    {
+      "scenario_id": "WB-room-name-unique-concurrency",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘trim后的name进入UNIQUE(team_id,name)，create×create/edit×edit/create×edit同时写’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只在POST手工查重或唯一性设为全局’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:37–41、app/server.py:425–435、app/server.py:388–401、app/server.py:108–120。仅设计判断，尚未执行。",
+      "plausible_fault": "只在POST手工查重或唯一性设为全局",
+      "failure_signal": "同队并发重复名、跨队同名误拒或失败编辑修改其他字段"
+    },
+    {
+      "scenario_id": "WB-room-state-existing-bookings",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘UPDATE仅rooms，保留bookings；new booking读取active/capacity当前值’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘停用删除预约、降容更改原人数或重启用忽略当前容量’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:393–401、app/server.py:460–466。仅设计判断，尚未执行。",
+      "plausible_fault": "停用删除预约、降容更改原人数或重启用忽略当前容量",
+      "failure_signal": "旧预约字段变化或启用/停用新预约对照错误"
+    },
+    {
+      "scenario_id": "WB-member-select-role-guards",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘admin→role集合→team id选择→notfound→UPDATE，GET只本队显式字段’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘成员可自升、角色非法仍被写入或遗漏团队过滤’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:369–387、app/server.py:232–234。仅设计判断，尚未执行。",
+      "plausible_fault": "成员可自升、角色非法仍被写入或遗漏团队过滤",
+      "failure_signal": "成员列表/角色变更授权、枚举拒绝和前后role快照错误"
+    },
+    {
+      "scenario_id": "WB-last-admin-lock",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘原role admin且目标member才count；count<=1拒绝，BEGIN IMMEDIATE同步授权/计数/UPDATE’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘计入另一团队管理员或把计数更新分离到锁外’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:374–387、app/server.py:216–229、app/server.py:108–120。仅设计判断，尚未执行。",
+      "plausible_fault": "计入另一团队管理员或把计数更新分离到锁外",
+      "failure_signal": "并发后本队零管理员或已降身份首个管理请求仍放行"
+    },
+    {
+      "scenario_id": "WB-ui-start-session-errors",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘start成功session→loadPage，401→renderLogin，非401连接错误→error-page’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘将所有启动错误当成未登录或成功空空间’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:260–266、web/app.js:20–34、web/app.js:37–45。仅设计判断，尚未执行。",
+      "plausible_fault": "将所有启动错误当成未登录或成功空空间",
+      "failure_signal": "真实401与非401启动错误DOM及恢复结果不符"
+    },
+    {
+      "scenario_id": "WB-ui-api-error-session-transition",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘response.json失败，非ok，业务401关闭全部dialog清user，/login401例外；error.status赋值’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘业务401保留弹窗、login401误清表单或非JSON假成功’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:20–34。仅设计判断，尚未执行。",
+      "plausible_fault": "业务401保留弹窗、login401误清表单或非JSON假成功",
+      "failure_signal": "身份/弹窗/login表单与错误可见性及输入保留不符"
+    },
+    {
+      "scenario_id": "WB-ui-login-navigation",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘data-account只填字段，login成功/session读回重置page/scope/四列表，nav管理员条件’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘示例按钮自动登录、角色本地推测或新账号保留旧缓存’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:37–45、web/app.js:47–58、web/app.js:80–89、web/app.js:142–151。仅设计判断，尚未执行。",
+      "plausible_fault": "示例按钮自动登录、角色本地推测或新账号保留旧缓存",
+      "failure_signal": "零POST填入、实际登录身份或跨队导航/缓存断言错误"
+    },
+    {
+      "scenario_id": "WB-ui-load-parallel-error",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘无user早返回；loading→Promise.all rooms/bookings/notifications(+admin manage members)→赋值或loadError→finally render’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘单个请求成功即画部分新数据或错误变空列表’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:60–78、web/app.js:80–89。仅设计判断，尚未执行。",
+      "plausible_fault": "单个请求成功即画部分新数据或错误变空列表",
+      "failure_signal": "等待状态提前结束、某集合失败被掩盖或重试结果不符"
+    },
+    {
+      "scenario_id": "WB-ui-load-token-races",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘token!=loadToken或!user早返回；finally仅当前token清loading；旧401在api内早触发user清空’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘迟到旧401清除有效新身份，或旧finally结束最新加载’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:60–78、web/app.js:20–34、web/app.js:159–164、web/app.js:47–58。仅设计判断，尚未执行。",
+      "plausible_fault": "迟到旧401清除有效新身份，或旧finally结束最新加载",
+      "failure_signal": "新身份/最新页面被清除、旧内容错误覆盖或加载提前结束"
+    },
+    {
+      "scenario_id": "WB-ui-filters-statistics",
+      "verdict": "sufficient",
+      "reason": "本轮逐对象复核R2真实4/6/8/12 option、每阈值N±1以及6人三前态；容量/四设备交集、全队期望集合和明确零匹配fixture保留，统计/跨日分支未移除。 对照源码：web/app.js:103–108、web/app.js:142–145。仅设计判断，尚未执行。",
+      "plausible_fault": "6人标签误绑4、事件不更新或容量与设备用OR组合",
+      "failure_signal": "真实option/state与独立卡片ID集合或不随筛选变化的统计错误"
+    },
+    {
+      "scenario_id": "WB-ui-room-timeline-agenda",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘Array48各slot用start<slotEnd/end>slotStart；空预约/有预约，manage编辑vs预约，空设备’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘相邻端点用<=、采用浏览器时区或日程使用未脱敏主题’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:110–118、web/app.js:138–140。仅设计判断，尚未执行。",
+      "plausible_fault": "相邻端点用<=、采用浏览器时区或日程使用未脱敏主题",
+      "failure_signal": "48格逐格与API主题/owner、取消释放或管理编辑入口不符"
+    },
+    {
+      "scenario_id": "WB-ui-timezone-format",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘Intl显式Asia/Shanghai，prettyDate本地中午输入；DOM北京时间提示’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘某一页面使用浏览器本地日期getter’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:13–13、web/app.js:14–14、web/app.js:15–15、web/app.js:16–16。仅设计判断，尚未执行。",
+      "plausible_fault": "某一页面使用浏览器本地日期getter",
+      "failure_signal": "同一绝对时刻跨浏览器时区的北京时间日期/时段显示不同"
+    },
+    {
+      "scenario_id": "WB-ui-booking-status-sort",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘cancelled优先；end<=now；start<=now；canCancel confirmed&&start>now；upcoming升序history继承API降序’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘时间等号端点错误、历史全部升序或进行中仍有取消入口’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:120–124、web/app.js:126–131、web/app.js:232–238。仅设计判断，尚未执行。",
+      "plausible_fault": "时间等号端点错误、历史全部升序或进行中仍有取消入口",
+      "failure_signal": "四状态/分组/顺序、取消可见性或确认资料错误"
+    },
+    {
+      "scenario_id": "WB-ui-notification-render",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘loaded notifications read过滤；unread0按钮disabled/no badge；列表空/非空；mark-read请求中disable/失败恢复’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘徽标按历史总未读计数或失败按钮永久禁用’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:80–89、web/app.js:133–136、web/app.js:152–156。仅设计判断，尚未执行。",
+      "plausible_fault": "徽标按历史总未读计数或失败按钮永久禁用",
+      "failure_signal": "最新100未读/零徽标、通知字段或失败重试对照错误"
+    },
+    {
+      "scenario_id": "WB-ui-default-times",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘day==today ceil((minute+1)/15)，过去或minutes>=20:00→明天09；max8；end min(start+60,20)’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘整刻选择已开始时间或19:45之后仍选择今天’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:166–176、web/app.js:178–191。仅设计判断，尚未执行。",
+      "plausible_fault": "整刻选择已开始时间或19:45之后仍选择今天",
+      "failure_signal": "所选日期、默认粒度/开放范围/结束端点或房间资料错误"
+    },
+    {
+      "scenario_id": "WB-ui-booking-draft-key",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘新dialog清fingerprint/key；JSON payload含trim title/number人数/+08时间；变化randomUUID不变复用’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘重试每次新K或修改内容后仍旧K’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:178–191、web/app.js:193–206。仅设计判断，尚未执行。",
+      "plausible_fault": "重试每次新K或修改内容后仍旧K",
+      "failure_signal": "同弹窗key关联、实际唯一预约/通知或改变后结果不符"
+    },
+    {
+      "scenario_id": "WB-ui-submit-button-matrix",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘请求前disable，成功重载，catch错误，finally恢复；合法HTML验证优先，crypto指纹准备在booking try外’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘仅成功恢复按钮、错误丢输入或预约toast缺编号’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:47–58、web/app.js:193–206、web/app.js:220–230、web/app.js:240–245。仅设计判断，尚未执行。",
+      "plausible_fault": "仅成功恢复按钮、错误丢输入或预约toast缺编号",
+      "failure_signal": "等待重入请求、失败锁死/输入丢失或实际保存与反馈错误"
+    },
+    {
+      "scenario_id": "WB-ui-room-edit-draft",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘roomId存在预填，null新增form.reset；editingRoom决定PATCH/POST；checkbox列表和active布尔’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘编辑未预填、新增残留旧资料或发送错POST/PATCH目标’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:208–218、web/app.js:220–230。仅设计判断，尚未执行。",
+      "plausible_fault": "编辑未预填、新增残留旧资料或发送错POST/PATCH目标",
+      "failure_signal": "输入/payload/目标对象、保存完整字段或失败重试不符"
+    },
+    {
+      "scenario_id": "WB-ui-role-demotion-reload",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘PATCH→session读取→role非admin重置spaces/mine→loadPage；catch toast并reload’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘自降后沿用旧身份且不切回spaces/mine’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:247–255。仅设计判断，尚未执行。",
+      "plausible_fault": "自降后沿用旧身份且不切回spaces/mine",
+      "failure_signal": "实际PATCH/session顺序、后台role、导航或下一管理拒绝错误"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "verdict": "sufficient",
+      "reason": "旧加载由真实UI发起、第二导航最新加载完成恢复业务按钮，随后暂存真实logout成功再原生开三种弹窗；关闭回调、旧响应/旧会话、新登录及原失败恢复矩阵均保留。 对照源码：web/app.js:159–164、web/app.js:20–34、web/app.js:60–78。仅设计判断，尚未执行。",
+      "plausible_fault": "退出没有关闭业务弹窗，或迟到旧响应恢复旧身份表单",
+      "failure_signal": "162关闭回调/全部dialog状态、登录DOM及旧响应到达后状态不符"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "verdict": "sufficient",
+      "reason": "原关闭/内部矩阵保留，三弹窗四方向短路条件及dialog自身padding独立原生指针，桌面/窄屏可达性、零POST/PATCH和快照均明示。 对照源码：web/app.js:257–257、web/app.js:258–258、web/index.html:16–46。仅设计判断，尚未执行。",
+      "plausible_fault": "只左侧外部点击能关、右上下注漏，或内部padding误关闭",
+      "failure_signal": "坐标/target/求值出口、dialog.open或零写快照不符合"
+    },
+    {
+      "scenario_id": "WB-ui-text-escaping",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘五字符escapeHtml与属性文本；innerHTML渲染所有业务字段，title/error/confirm/toast textContent’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只转<>而漏属性引号或删除原文替代按文本展示’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:12–12、web/app.js:18–18、web/app.js:37–45、web/app.js:80–89、web/app.js:110–118、web/app.js:126–131、web/app.js:133–136、web/app.js:138–140、web/app.js:186–188、web/app.js:211–212、web/app.js:232–238。仅设计判断，尚未执行。",
+      "plausible_fault": "只转<>而漏属性引号或删除原文替代按文本展示",
+      "failure_signal": "DOM生成可执行节点/属性或业务原文不完整"
+    },
+    {
+      "scenario_id": "WB-ui-accessibility-focus",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘label嵌套输入、dialog aria-labelledby，表单error role=alert、toast aria-live；CSS focus-visible/input-focus’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘重渲染丢焦点、表单缺标签或反馈不能被感知’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/index.html:15–15、web/index.html:16–27、web/index.html:28–40、web/index.html:41–46、web/style.css:2–2、web/app.js:18–18、web/app.js:37–45、web/app.js:80–89。仅设计判断，尚未执行。",
+      "plausible_fault": "重渲染丢焦点、表单缺标签或反馈不能被感知",
+      "failure_signal": "实际键盘轨迹、可访问名称/树、焦点与反馈错误"
+    },
+    {
+      "scenario_id": "WB-ui-responsive-breakpoints",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘断点切sidebar/nav/grid/login-story/topbar、dialog max-width，列宽与内容换行’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘某断点隐藏必要入口或长文本将提交/关闭遮挡’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/style.css:2–2、web/style.css:3–3、web/style.css:4–4、web/style.css:5–5、web/style.css:6–6。仅设计判断，尚未执行。",
+      "plausible_fault": "某断点隐藏必要入口或长文本将提交/关闭遮挡",
+      "failure_signal": "布局尺寸、控件rect、横向遮挡或完整任务不能完成"
+    },
+    {
+      "scenario_id": "WB-seed-failure-retry",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘初始化SCHEMA后，seed同一事务teams→users→rooms→三bookings；任批实际写后/commit失败回滚，下一启动count仍空’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘种子部分提交使count非零，下一启动永久跳过补全’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:99–105、app/server.py:108–120、app/server.py:122–156、app/server.py:28–53。仅设计判断，尚未执行。",
+      "plausible_fault": "种子部分提交使count非零，下一启动永久跳过补全",
+      "failure_signal": "各批实际写后/commit故障留下部分种子或恢复重试缺资料"
+    },
+    {
+      "scenario_id": "WB-login-format-boundaries",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘strip后长度1–160邮箱/1–256密码，非str/空/超限在attempts更新前拒绝’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘格式强转或非法格式消耗尝试配额’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:82–87、app/server.py:284–295。仅设计判断，尚未执行。",
+      "plausible_fault": "格式强转或非法格式消耗尝试配额",
+      "failure_signal": "trim后类型/长度界限、统一凭证拒绝或剩余8槽错误"
+    },
+    {
+      "scenario_id": "WB-idempotency-absolute-precision",
+      "verdict": "sufficient",
+      "reason": "逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘UTC isoformat秒精度在fingerprint前，existing key返回在invalid_interval前；不同绝对微秒不能误判重放’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘仅微秒差异被秒级fingerprint误判相同内容’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:442–449、app/server.py:89–96。仅设计判断，尚未执行。",
+      "plausible_fault": "仅微秒差异被秒级fingerprint误判相同内容",
+      "failure_signal": "同K异绝对时刻误返回replayed，而等价offset对照错误"
+    },
+    {
+      "scenario_id": "WB-response-transport-disconnect",
+      "verdict": "sufficient",
+      "reason": "成功/拒绝响应×BrokenPipe/Reset四项到达位置分开，拒绝except body不硬要求260命中；独立持久状态、新连接业务与正常JSON对照能区分断开和事务失败。 对照源码：app/server.py:184–195、app/server.py:249–263。仅设计判断，尚未执行。",
+      "plausible_fault": "连接断开杀死服务，或把已提交写入误称回滚",
+      "failure_signal": "PID/新连接恢复失败或提交/拒绝前后状态对账错误"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "verdict": "sufficient",
+      "reason": "commit后真实响应丢失与DML后commit前故障分开，原ID/一单一通知重试、全部五维合法异内容拒绝及trim/UTC等价对照必做。 对照源码：app/server.py:107–120、app/server.py:249–252、app/server.py:443–449、app/server.py:470–479。仅设计判断，尚未执行。",
+      "plausible_fault": "丢失响应后的重试再建一单，或把未提交失败伪造为重放",
+      "failure_signal": "独立commit因果与K记录/通知计数或首次/重放标志不符"
+    },
+    {
+      "scenario_id": "WB-runtime-sigint-persistence",
+      "verdict": "sufficient",
+      "reason": "指定PID/监听归属的真实CLI、SIGINT到KeyboardInterrupt/finally路径、同端口同库新进程API与快照对账完整；没有增加具体退出码/硬超时义务。 对照源码：app/server.py:482–495、app/server.py:99–156。仅设计判断，尚未执行。",
+      "plausible_fault": "中断路径未释放监听或重开同库丢失已提交业务",
+      "failure_signal": "端口不能由新目标进程持有或重启资料/种子日期不一致"
+    },
+    {
+      "scenario_id": "WB-ui-mark-read-session-expiry",
+      "verdict": "sufficient",
+      "reason": "精确到期与独立Cookie容器撤销分别令被测UI旧Cookie真实401；拒绝无写、155 false、登录DOM及恢复对照完整，新Cookie不会污染被测浏览器。 对照源码：web/app.js:20–34、web/app.js:152–156。仅设计判断，尚未执行。",
+      "plausible_fault": "401后catch重画旧空间或已读拒绝仍修改通知",
+      "failure_signal": "真实POST401后旧workspace/成功提示出现或通知快照改变"
+    },
+    {
+      "scenario_id": "WB-ui-role-update-session-expiry",
+      "verdict": "sufficient",
+      "reason": "自身/他人×PATCH前失效/commit后session前失效四项实际401，独立Cookie/请求屏障保持因果；提交后role不误判回滚，254 false和重新登录权限可观测。 对照源码：web/app.js:20–34、web/app.js:247–255、app/server.py:373–387。仅设计判断，尚未执行。",
+      "plausible_fault": "PATCH401仍写角色，或session401后用旧user继续加载管理员空间",
+      "failure_signal": "后台role与阶段不符、254 false未到达或401后旧业务加载/菜单残留"
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "verdict": "sufficient",
+      "reason": "先有第二管理员，真实自降commit后只在session制造503/网络失败；两类故障×数据重试/整页刷新四项独立验证实际重新读身份与菜单，按钮不可达明确缺证。 对照源码：web/app.js:247–255、web/app.js:60–89、app/server.py:373–387。仅设计判断，尚未执行。",
+      "plausible_fault": "仅他人修改故障被测，自降故障后数据重试沿用旧管理员身份",
+      "failure_signal": "真实role已member而恢复未读取session、未回spaces/mine或管理入口残留"
+    },
+    {
+      "scenario_id": "WB-ui-date-filter-empty-recovery",
+      "verdict": "sufficient",
+      "reason": "原生控件change空值路径、无date=空查询与合法D+1可区分日程恢复有独立网络/状态/快照；未新增提示或固定回填政策。 对照源码：web/app.js:142–145、web/app.js:60–78。仅设计判断，尚未执行。",
+      "plausible_fault": "清空控件发送空日期，或合法恢复后查询/当前日程仍错位",
+      "failure_signal": "143 false出口、请求参数与合法选择后的state/date/日程对照错误"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "verdict": "sufficient",
+      "reason": "DELETE/OPTIONS/PUT×四身份×五API路径60项穿过真实标准库分派，重复code/JSON/无写及恢复对照，不以应用文件branch计数代替继承入口；不指定拒绝优先级。 对照源码：app/server.py:168–195、app/server.py:236–252。仅设计判断，尚未执行。",
+      "plausible_fault": "继承入口返回HTML或未知方法越过授权执行业务",
+      "failure_signal": "真实Content-Type/JSON结构/稳定code不符或业务快照变化"
+    }
+  ],
+  "branch_reviews": [
+    {
+      "target_id": "WBT-runtime-entry",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘main 默认值/单项覆盖/组合覆盖进入实际 Store 和监听地址，数据库父目录不存在与存在两路’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘忽略单项启动参数或意外引入第三方依赖’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:99–105、app/server.py:162–166、app/server.py:482–495。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-runtime-entry"
+      ]
+    },
+    {
+      "target_id": "WBT-seed-empty-existing",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘count(teams)==0 执行全种子；非零直接返回，不改变初始会议日期’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘已有团队仍重新播种，或按UTC日期生成初始会议’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:122–156。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-seed-empty-existing"
+      ]
+    },
+    {
+      "target_id": "WBT-password-derivation",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘salt=None 生成随机盐；提供既有盐重算并 compare_digest；不存在账号短路与错误/正确密码三路’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘读取熵却忽略结果，派生伪造或在另一个持久化出口保存可恢复密码’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:66–69、app/server.py:72–73、app/server.py:126–134、app/server.py:284–297。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-password-derivation"
+      ]
+    },
+    {
+      "target_id": "WBT-persistence-restart",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘成功 commit 与 finally close，重新打开同一数据文件读取已修改状态’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘已提交记录仅留内存或重启回退业务字段’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:108–120、app/server.py:28–53、app/server.py:99–105。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-persistence-restart"
+      ]
+    },
+    {
+      "target_id": "WBT-health-static-dispatch",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘GET /api/health 在身份读取前探测数据库；非 /api/ 静态 allowlist；HEAD 不写正文’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘健康受登录门禁阻挡、不读取真实库，或HEAD发送正文’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:172–173、app/server.py:181–182、app/server.py:236–245、app/server.py:265–282、app/server.py:184–195。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-health-static-dispatch"
+      ]
+    },
+    {
+      "target_id": "WBT-request-origin",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘标记不等于1短路；Origin 缺省/严格同当前 http://Host/不一致两路’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘某条修改路由跳过标记/来源守卫，或宽松前缀匹配Origin’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:197–203、app/server.py:246–248。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-request-origin"
+      ]
+    },
+    {
+      "target_id": "WBT-json-envelope",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；本轮逐对象复核R1八入口{}：read_json解析合法对象后，三个无参数业务成功与五个缺字段业务拒绝分别判定，原UTF8/字节长度矩阵未移除；与coverage_review.code_review一致。 对照源码：app/server.py:204–214。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-json-envelope"
+      ]
+    },
+    {
+      "target_id": "WBT-errors-and-response",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘AppError/IntegrityError/OperationalError/未知Exception映射，json UTF8、Cookie可选与 HEAD无正文’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘异常类别合并或公开响应泄漏内部堆栈’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:56–59、app/server.py:184–195、app/server.py:253–263。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-errors-and-response"
+      ]
+    },
+    {
+      "target_id": "WBT-transaction-failure-matrix",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘BEGIN IMMEDIATE→多个实际DML→commit；异常→rollback→close，写后/两写之间/最后写后/最终commit失败’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘仅预约回滚，其他单表/会话写提前提交，或通知与预约分步提交’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:108–120、app/server.py:249–263、app/server.py:294–309、app/server.py:315–319、app/server.py:350–362、app/server.py:366–368、app/server.py:373–387、app/server.py:388–401、app/server.py:470–475、app/server.py:478–479。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-transaction-failure-matrix"
+      ]
+    },
+    {
+      "target_id": "WBT-session-join",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘Cookie缺失/解析失败→401；SHA256(token)联接sessions/users/teams且expires>time.time；角色每次动态读取’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘授权缓存登录时角色、用户团队或误接受过期摘要’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:216–229、app/server.py:313–314。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-session-join"
+      ]
+    },
+    {
+      "target_id": "WBT-session-expiry",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘expires>now 有效；expires==now无效；login DELETE expires<=now；业务读写无续期’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘相等端点仍有效或普通查询续期’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:224–229、app/server.py:298–309、app/server.py:26–26。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-session-expiry"
+      ]
+    },
+    {
+      "target_id": "WBT-login-window-lock",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘text_field校验在计数前，login_lock覆盖过滤/阈值/append，stamp>now−60，成功也append’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘格式错误占槽、成功不计数或并发检查移到锁外’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:284–297、app/server.py:162–166。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-login-window-lock"
+      ]
+    },
+    {
+      "target_id": "WBT-login-switch-and-cookies",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘valid credentials→random token→清到期→删除Cookie旧摘要→插入新摘要，Cookie统一属性；错密在删除前拒绝’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘后续令牌按计数确定生成、保留旧当前会话或额外保存原令牌’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:294–309、app/server.py:35–36。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-login-switch-and-cookies"
+      ]
+    },
+    {
+      "target_id": "WBT-logout-revocation",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘通过current_user后DELETE当前token_hash并提交，再发Max-Age=0 Cookie’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只清Cookie而不撤销摘要，或注销该用户所有浏览器’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:315–319、app/server.py:249–252。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-logout-revocation"
+      ]
+    },
+    {
+      "target_id": "WBT-route-authorizations",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘admin守卫在团队查询/room写/member读写前；method+path完全匹配，未知路径最后404’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘某管理员路由缺守卫，或只匹配路径而忽略方法’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:232–234、app/server.py:333–347、app/server.py:369–402、app/server.py:246–252。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-route-authorizations"
+      ]
+    },
+    {
+      "target_id": "WBT-rooms-team-deserialization",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘WHERE team_id；json.loads设备，bool(active)，包括停用室’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只查启用室或接受客户端team_id覆盖’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:320–332、app/server.py:405–409。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-rooms-team-deserialization"
+      ]
+    },
+    {
+      "target_id": "WBT-day-range-intersection",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘缺省Shanghai日期；strptime异常；b.start<dayEnd AND b.end>dayStart AND confirmed、排序ASC’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘按UTC日或仅开始日过滤、放宽贴边相交、包含取消记录’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:320–332、app/server.py:416–422。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-day-range-intersection"
+      ]
+    },
+    {
+      "target_id": "WBT-agenda-title-redaction",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘user_id!=current AND role!=admin 才把title改已预约’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘仅界面脱敏或缓存旧角色’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:324–332。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-agenda-title-redaction"
+      ]
+    },
+    {
+      "target_id": "WBT-booking-fields-guards",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘room/title/attendees/key按序校验，bool先于int，trim后长度判断’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘强制转换布尔/小数或遗漏字段trim长度边界’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:437–445、app/server.py:76–79、app/server.py:82–87。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-booking-fields-guards"
+      ]
+    },
+    {
+      "target_id": "WBT-datetime-parse-normalize",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘fromisoformat→tzinfo/utcoffset非空→astimezoneUTC；捕ValueError/TypeError/OverflowError；fingerprint含UTC规范化时刻’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘自动补时区或按输入字符串比较绝对时刻’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:89–96、app/server.py:442–449。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-datetime-parse-normalize"
+      ]
+    },
+    {
+      "target_id": "WBT-booking-horizon",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘start<=current OR start>current+30days；replay先于日期守卫’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘舍入服务时间、容许start==now或偷偷扩展30天上界’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:450–452。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-booking-horizon"
+      ]
+    },
+    {
+      "target_id": "WBT-booking-duration",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘not 15min<=end−start<=8h；绝对时刻差’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只检查一个界限或将闭区间端点排除’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:453–454。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-booking-duration"
+      ]
+    },
+    {
+      "target_id": "WBT-booking-open-hours",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘上海date不同/start.hour<8/end.hour>20/end20:xx任分量；任endpoint minute%15 or second or microsecond’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘按输入日期判定或只检查开始端点，截掉非零微秒’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:455–459。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-booking-open-hours"
+      ]
+    },
+    {
+      "target_id": "WBT-room-eligibility-capacity",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘team过滤→not found、active false→conflict、人数>当前capacity→400’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘使用客户端容量/启用缓存或忽略团队归属’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:460–466。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-room-eligibility-capacity"
+      ]
+    },
+    {
+      "target_id": "WBT-booking-conflict-serialization",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘confirmed AND start<newEnd AND end>newStart；写事务串行化冲突读取和INSERT’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘遗漏包含形态或把INSERT移出串行事务’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:467–475、app/server.py:108–120。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-booking-conflict-serialization"
+      ]
+    },
+    {
+      "target_id": "WBT-booking-insert-notify",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘booking INSERT lastrowid→notify同连接→commit后201；DEFAULT confirmed/read=0’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘提前提交预约、错误通知接收者或遗漏保存字段’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:470–475、app/server.py:478–479、app/server.py:42–47、app/server.py:49–52。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-booking-insert-notify"
+      ]
+    },
+    {
+      "target_id": "WBT-idempotency-priority",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘fingerprint规范化→user+key读取→不同hash409/相同直接replay；日期资格前返回’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘重放前重新判定时段资格，或取消后恢复预约’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:437–452。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-idempotency-priority"
+      ]
+    },
+    {
+      "target_id": "WBT-idempotency-user-concurrency",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘UNIQUE(user_id,key)与事务在previous读取/插入之间一致；不同user同key独立’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘按团队查key或竞争请求重复插入/覆盖’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:442–449、app/server.py:42–47、app/server.py:108–120。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-idempotency-user-concurrency"
+      ]
+    },
+    {
+      "target_id": "WBT-booking-query-scope-join",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘scope缺省mine/team/非法；b.team_id过滤、mine b.user_id、rooms/users JOIN、ORDER start DESC,id DESC’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘team退化为mine、遗漏团队过滤或使用旧会议室缓存’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:333–347、app/server.py:412–413。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-booking-query-scope-join"
+      ]
+    },
+    {
+      "target_id": "WBT-cancel-authorization-and-clock",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘先id AND team_id，再owner OR admin，再status!=cancelled且start<=serverNow’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘全局ID查找泄露，或已取消短路绕过授权’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:350–362、app/server.py:89–96。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ]
+    },
+    {
+      "target_id": "WBT-cancel-atomic-idempotent",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘status confirmed→UPDATE cancel_time→notify owner；cancelled绕过时钟/更新/通知’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘重复更新取消时间或重复通知，释放时段误伤新预约’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:350–362、app/server.py:478–479、app/server.py:108–120。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-cancel-atomic-idempotent"
+      ]
+    },
+    {
+      "target_id": "WBT-notifications-select-limit",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘WHERE current user ORDER BY id DESC LIMIT100，不以created_at排序或团队角色放宽’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘按团队过滤、按created_at排序或只返回未读’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:363–365。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-notifications-select-limit"
+      ]
+    },
+    {
+      "target_id": "WBT-notifications-mark-all",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘UPDATE WHERE user_id 无LIMIT，包括不在最新100的旧通知；repeat幂等’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只标可见100条或缺user过滤’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:366–368。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-notifications-mark-all"
+      ]
+    },
+    {
+      "target_id": "WBT-room-write-and-return",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘POST INSERT lastrowid读回；PATCH先 team过滤再 UPDATE五字段；缺失/外队404’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘PATCH遗漏字段或更新另一团队房间’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:388–401、app/server.py:405–409。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-room-write-and-return"
+      ]
+    },
+    {
+      "target_id": "WBT-room-text-capacity-active",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘name/location trim长度；capacity拒bool/浮点；data.get(active,True) 与bool检查’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘强制转换容量/active类型或漏trim/新增默认值’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:425–435、app/server.py:76–79、app/server.py:82–87。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-room-text-capacity-active"
+      ]
+    },
+    {
+      "target_id": "WBT-room-equipment-set",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘not list OR any(not str OR not EQUIPMENT)，sorted(set(equipment))’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只验证首项、静默过滤非法项或仅一条路由去重’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:429–435、app/server.py:27–27。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-room-equipment-set"
+      ]
+    },
+    {
+      "target_id": "WBT-room-name-unique-concurrency",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘trim后的name进入UNIQUE(team_id,name)，create×create/edit×edit/create×edit同时写’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只在POST手工查重或唯一性设为全局’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:37–41、app/server.py:425–435、app/server.py:388–401、app/server.py:108–120。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-room-name-unique-concurrency"
+      ]
+    },
+    {
+      "target_id": "WBT-room-state-existing-bookings",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘UPDATE仅rooms，保留bookings；new booking读取active/capacity当前值’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘停用删除预约、降容更改原人数或重启用忽略当前容量’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:393–401、app/server.py:460–466。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-room-state-existing-bookings"
+      ]
+    },
+    {
+      "target_id": "WBT-member-select-role-guards",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘admin→role集合→team id选择→notfound→UPDATE，GET只本队显式字段’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘成员可自升、角色非法仍被写入或遗漏团队过滤’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:369–387、app/server.py:232–234。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-member-select-role-guards"
+      ]
+    },
+    {
+      "target_id": "WBT-last-admin-lock",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘原role admin且目标member才count；count<=1拒绝，BEGIN IMMEDIATE同步授权/计数/UPDATE’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘计入另一团队管理员或把计数更新分离到锁外’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:374–387、app/server.py:216–229、app/server.py:108–120。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-last-admin-lock"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-start-session-errors",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘start成功session→loadPage，401→renderLogin，非401连接错误→error-page’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘将所有启动错误当成未登录或成功空空间’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:260–266、web/app.js:20–34、web/app.js:37–45。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-start-session-errors"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-api-error-session-transition",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘response.json失败，非ok，业务401关闭全部dialog清user，/login401例外；error.status赋值’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘业务401保留弹窗、login401误清表单或非JSON假成功’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:20–34。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-api-error-session-transition"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-login-navigation",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘data-account只填字段，login成功/session读回重置page/scope/四列表，nav管理员条件’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘示例按钮自动登录、角色本地推测或新账号保留旧缓存’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:37–45、web/app.js:47–58、web/app.js:80–89、web/app.js:142–151。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-login-navigation"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-load-parallel-error",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘无user早返回；loading→Promise.all rooms/bookings/notifications(+admin manage members)→赋值或loadError→finally render’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘单个请求成功即画部分新数据或错误变空列表’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:60–78、web/app.js:80–89。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-load-parallel-error"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-load-token-races",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘token!=loadToken或!user早返回；finally仅当前token清loading；旧401在api内早触发user清空’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘迟到旧401清除有效新身份，或旧finally结束最新加载’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:60–78、web/app.js:20–34、web/app.js:159–164、web/app.js:47–58。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-load-token-races"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-filters-statistics",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；本轮逐对象复核R2真实4/6/8/12 option、每阈值N±1以及6人三前态；容量/四设备交集、全队期望集合和明确零匹配fixture保留，统计/跨日分支未移除。 对照源码：web/app.js:103–108、web/app.js:142–145。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-filters-statistics"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-room-timeline-agenda",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘Array48各slot用start<slotEnd/end>slotStart；空预约/有预约，manage编辑vs预约，空设备’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘相邻端点用<=、采用浏览器时区或日程使用未脱敏主题’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:110–118、web/app.js:138–140。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-room-timeline-agenda"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-timezone-format",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘Intl显式Asia/Shanghai，prettyDate本地中午输入；DOM北京时间提示’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘某一页面使用浏览器本地日期getter’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:13–13、web/app.js:14–14、web/app.js:15–15、web/app.js:16–16。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-timezone-format"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-booking-status-sort",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘cancelled优先；end<=now；start<=now；canCancel confirmed&&start>now；upcoming升序history继承API降序’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘时间等号端点错误、历史全部升序或进行中仍有取消入口’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:120–124、web/app.js:126–131、web/app.js:232–238。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-booking-status-sort"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-notification-render",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘loaded notifications read过滤；unread0按钮disabled/no badge；列表空/非空；mark-read请求中disable/失败恢复’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘徽标按历史总未读计数或失败按钮永久禁用’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:80–89、web/app.js:133–136、web/app.js:152–156。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-notification-render"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-default-times",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘day==today ceil((minute+1)/15)，过去或minutes>=20:00→明天09；max8；end min(start+60,20)’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘整刻选择已开始时间或19:45之后仍选择今天’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:166–176、web/app.js:178–191。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-default-times"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-booking-draft-key",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘新dialog清fingerprint/key；JSON payload含trim title/number人数/+08时间；变化randomUUID不变复用’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘重试每次新K或修改内容后仍旧K’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:178–191、web/app.js:193–206。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-booking-draft-key"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-submit-button-matrix",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘请求前disable，成功重载，catch错误，finally恢复；合法HTML验证优先，crypto指纹准备在booking try外’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘仅成功恢复按钮、错误丢输入或预约toast缺编号’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:47–58、web/app.js:193–206、web/app.js:220–230、web/app.js:240–245。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-submit-button-matrix"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-room-edit-draft",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘roomId存在预填，null新增form.reset；editingRoom决定PATCH/POST；checkbox列表和active布尔’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘编辑未预填、新增残留旧资料或发送错POST/PATCH目标’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:208–218、web/app.js:220–230。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-room-edit-draft"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-role-demotion-reload",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘PATCH→session读取→role非admin重置spaces/mine→loadPage；catch toast并reload’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘自降后沿用旧身份且不切回spaces/mine’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:247–255。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-role-demotion-reload"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-logout-races",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；旧加载由真实UI发起、第二导航最新加载完成恢复业务按钮，随后暂存真实logout成功再原生开三种弹窗；关闭回调、旧响应/旧会话、新登录及原失败恢复矩阵均保留。 对照源码：web/app.js:159–164、web/app.js:20–34、web/app.js:60–78。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-logout-races"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-dialog-close-no-write",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；原关闭/内部矩阵保留，三弹窗四方向短路条件及dialog自身padding独立原生指针，桌面/窄屏可达性、零POST/PATCH和快照均明示。 对照源码：web/app.js:257–257、web/app.js:258–258、web/index.html:16–46。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-dialog-close-no-write"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-text-escaping",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘五字符escapeHtml与属性文本；innerHTML渲染所有业务字段，title/error/confirm/toast textContent’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘只转<>而漏属性引号或删除原文替代按文本展示’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/app.js:12–12、web/app.js:18–18、web/app.js:37–45、web/app.js:80–89、web/app.js:110–118、web/app.js:126–131、web/app.js:133–136、web/app.js:138–140、web/app.js:186–188、web/app.js:211–212、web/app.js:232–238。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-text-escaping"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-accessibility-focus",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘label嵌套输入、dialog aria-labelledby，表单error role=alert、toast aria-live；CSS focus-visible/input-focus’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘重渲染丢焦点、表单缺标签或反馈不能被感知’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/index.html:15–15、web/index.html:16–27、web/index.html:28–40、web/index.html:41–46、web/style.css:2–2、web/app.js:18–18、web/app.js:37–45、web/app.js:80–89。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-accessibility-focus"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-responsive-breakpoints",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘断点切sidebar/nav/grid/login-story/topbar、dialog max-width，列宽与内容换行’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘某断点隐藏必要入口或长文本将提交/关闭遮挡’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：web/style.css:2–2、web/style.css:3–3、web/style.css:4–4、web/style.css:5–5、web/style.css:6–6。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-responsive-breakpoints"
+      ]
+    },
+    {
+      "target_id": "WBT-seed-failure-retry",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘初始化SCHEMA后，seed同一事务teams→users→rooms→三bookings；任批实际写后/commit失败回滚，下一启动count仍空’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘种子部分提交使count非零，下一启动永久跳过补全’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:99–105、app/server.py:108–120、app/server.py:122–156、app/server.py:28–53。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-seed-failure-retry"
+      ]
+    },
+    {
+      "target_id": "WBT-login-format-boundaries",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘strip后长度1–160邮箱/1–256密码，非str/空/超限在attempts更新前拒绝’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘格式强转或非法格式消耗尝试配额’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:82–87、app/server.py:284–295。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-login-format-boundaries"
+      ]
+    },
+    {
+      "target_id": "WBT-idempotency-absolute-precision",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；逐对象核对场景和全部关联方法与冻结基线一致，并重读当前目标源码及方法前置/动作/证据；目标‘UTC isoformat秒精度在fingerprint前，existing key返回在invalid_interval前；不同绝对微秒不能误判重放’仍有正常、拒绝及适用边界/状态矩阵，真实响应/独立状态与到达证据共同判定，可识别‘仅微秒差异被秒级fingerprint误判相同内容’的逃逸实现。有效复用范围是该不变设计与固定实现的语义，不沿用旧执行通过结论。 对照源码：app/server.py:442–449、app/server.py:89–96。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-idempotency-absolute-precision"
+      ]
+    },
+    {
+      "target_id": "WBT-response-transport-disconnect",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；成功/拒绝响应×BrokenPipe/Reset四项到达位置分开，拒绝except body不硬要求260命中；独立持久状态、新连接业务与正常JSON对照能区分断开和事务失败。 对照源码：app/server.py:184–195、app/server.py:249–263。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-response-transport-disconnect"
+      ]
+    },
+    {
+      "target_id": "WBT-booking-response-loss-replay",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；commit后真实响应丢失与DML后commit前故障分开，原ID/一单一通知重试、全部五维合法异内容拒绝及trim/UTC等价对照必做。 对照源码：app/server.py:107–120、app/server.py:249–252、app/server.py:443–449、app/server.py:470–479。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-booking-response-loss-replay"
+      ]
+    },
+    {
+      "target_id": "WBT-runtime-sigint-persistence",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；指定PID/监听归属的真实CLI、SIGINT到KeyboardInterrupt/finally路径、同端口同库新进程API与快照对账完整；没有增加具体退出码/硬超时义务。 对照源码：app/server.py:482–495、app/server.py:99–156。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-runtime-sigint-persistence"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-mark-read-session-expiry",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；精确到期与独立Cookie容器撤销分别令被测UI旧Cookie真实401；拒绝无写、155 false、登录DOM及恢复对照完整，新Cookie不会污染被测浏览器。 对照源码：web/app.js:20–34、web/app.js:152–156。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-mark-read-session-expiry"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-role-update-session-expiry",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；自身/他人×PATCH前失效/commit后session前失效四项实际401，独立Cookie/请求屏障保持因果；提交后role不误判回滚，254 false和重新登录权限可观测。 对照源码：web/app.js:20–34、web/app.js:247–255、app/server.py:373–387。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-role-update-session-expiry"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-self-demotion-session-failure",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；先有第二管理员，真实自降commit后只在session制造503/网络失败；两类故障×数据重试/整页刷新四项独立验证实际重新读身份与菜单，按钮不可达明确缺证。 对照源码：web/app.js:247–255、web/app.js:60–89、app/server.py:373–387。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-self-demotion-session-failure"
+      ]
+    },
+    {
+      "target_id": "WBT-ui-date-filter-empty-recovery",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；原生控件change空值路径、无date=空查询与合法D+1可区分日程恢复有独立网络/状态/快照；未新增提示或固定回填政策。 对照源码：web/app.js:142–145、web/app.js:60–78。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-ui-date-filter-empty-recovery"
+      ]
+    },
+    {
+      "target_id": "WBT-http-unsupported-methods",
+      "verdict": "sufficient",
+      "reason": "已独立对照当前source_refs的函数/分支与场景链接及方法；DELETE/OPTIONS/PUT×四身份×五API路径60项穿过真实标准库分派，重复code/JSON/无写及恢复对照，不以应用文件branch计数代替继承入口；不指定拒绝优先级。 对照源码：app/server.py:168–195、app/server.py:236–252。仅设计判断，尚未执行。",
+      "scenario_ids": [
+        "WB-http-unsupported-methods"
+      ]
+    }
+  ],
+  "supplement_gap_reviews": [
+    {
+      "gap_id": "COV-GAP-001",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-response-transport-disconnect",
+        "WB-booking-response-loss-replay"
+      ],
+      "reason": "成功/拒绝响应×BrokenPipe/Reset四项到达位置分开，拒绝except body不硬要求260命中；独立持久状态、新连接业务与正常JSON对照能区分断开和事务失败。 commit后真实响应丢失与DML后commit前故障分开，原ID/一单一通知重试、全部五维合法异内容拒绝及trim/UTC等价对照必做。本记录只关闭设计遗漏，执行/覆盖命中仍待后续新run。"
+    },
+    {
+      "gap_id": "COV-GAP-002",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-runtime-sigint-persistence"
+      ],
+      "reason": "指定PID/监听归属的真实CLI、SIGINT到KeyboardInterrupt/finally路径、同端口同库新进程API与快照对账完整；没有增加具体退出码/硬超时义务。本记录只关闭设计遗漏，执行/覆盖命中仍待后续新run。"
+    },
+    {
+      "gap_id": "COV-GAP-003",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-dialog-close-no-write"
+      ],
+      "reason": "原关闭/内部矩阵保留，三弹窗四方向短路条件及dialog自身padding独立原生指针，桌面/窄屏可达性、零POST/PATCH和快照均明示。本记录只关闭设计遗漏，执行/覆盖命中仍待后续新run。"
+    },
+    {
+      "gap_id": "COV-GAP-004",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-logout-races"
+      ],
+      "reason": "旧加载由真实UI发起、第二导航最新加载完成恢复业务按钮，随后暂存真实logout成功再原生开三种弹窗；关闭回调、旧响应/旧会话、新登录及原失败恢复矩阵均保留。本记录只关闭设计遗漏，执行/覆盖命中仍待后续新run。"
+    },
+    {
+      "gap_id": "COV-GAP-005",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-mark-read-session-expiry"
+      ],
+      "reason": "精确到期与独立Cookie容器撤销分别令被测UI旧Cookie真实401；拒绝无写、155 false、登录DOM及恢复对照完整，新Cookie不会污染被测浏览器。本记录只关闭设计遗漏，执行/覆盖命中仍待后续新run。"
+    },
+    {
+      "gap_id": "COV-GAP-006",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-role-update-session-expiry",
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "reason": "自身/他人×PATCH前失效/commit后session前失效四项实际401，独立Cookie/请求屏障保持因果；提交后role不误判回滚，254 false和重新登录权限可观测。 先有第二管理员，真实自降commit后只在session制造503/网络失败；两类故障×数据重试/整页刷新四项独立验证实际重新读身份与菜单，按钮不可达明确缺证。本记录只关闭设计遗漏，执行/覆盖命中仍待后续新run。"
+    },
+    {
+      "gap_id": "COV-GAP-007",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-ui-date-filter-empty-recovery"
+      ],
+      "reason": "原生控件change空值路径、无date=空查询与合法D+1可区分日程恢复有独立网络/状态/快照；未新增提示或固定回填政策。本记录只关闭设计遗漏，执行/覆盖命中仍待后续新run。"
+    },
+    {
+      "gap_id": "COV-GAP-008",
+      "verdict": "sufficient",
+      "scenario_ids": [
+        "WB-http-unsupported-methods"
+      ],
+      "reason": "DELETE/OPTIONS/PUT×四身份×五API路径60项穿过真实标准库分派，重复code/JSON/无写及恢复对照，不以应用文件branch计数代替继承入口；不指定拒绝优先级。本记录只关闭设计遗漏，执行/覆盖命中仍待后续新run。"
+    }
+  ],
+  "defensive_path_reviews": [
+    {
+      "id": "COV-DEF-001",
+      "verdict": "excluded",
+      "reason": "逐行核对37–58和60–78：普通登录DOM有节点且loadPage内部处理数据异常，但异步DOM/身份交错不能证明绝对不可达；保留未证明状态及竞态观察/限定DOM故障探针合理。 excluded仅指不新增正式业务场景，不从代码覆盖率分母删除；未执行，不宣称命中。"
+    },
+    {
+      "id": "COV-DEF-002",
+      "verdict": "excluded",
+      "reason": "核对61/64/76、144–145/155等调用点：正常调用有身份前提；直接调用null guard只证明内部防御，真实401/退出矩阵负责防旧shell，不新增用户流程。 excluded仅指不新增正式业务场景，不从代码覆盖率分母删除；未执行，不宣称命中。"
+    },
+    {
+      "id": "COV-DEF-003",
+      "verdict": "excluded",
+      "reason": "核对5/54/83/85/92–96/252：生产入口枚举固定，没有发现非法page输入来源；直接篡改state的helper探针不能当作用户路径，继续保留覆盖分母。 excluded仅指不新增正式业务场景，不从代码覆盖率分母删除；未执行，不宣称命中。"
+    },
+    {
+      "id": "COV-DEF-004",
+      "verdict": "excluded",
+      "reason": "核对heading99及四生产调用107/123/135/139，第四参数均显式提供；省略参数属于辅助函数限定探针，不扩展业务验收义务。定位123已修正。 excluded仅指不新增正式业务场景，不从代码覆盖率分母删除；未执行，不宣称命中。"
+    },
+    {
+      "id": "COV-DEF-005",
+      "verdict": "excluded",
+      "reason": "核对prettyDate15及107的日分割：真实支持环境格式差异尚未证明，Intl适配器可检fallback但不证明浏览器兼容；现有上海时区场景继续有效，未缩减覆盖分母。 excluded仅指不新增正式业务场景，不从代码覆盖率分母删除；未执行，不宣称命中。"
+    }
+  ],
+  "execution_status": "not_started_for_updated_design",
+  "app_acceptance": "not_established",
+  "coverage_statement": "旧实测覆盖率不变；本审阅没有运行新测试，不能声称100%覆盖或当前版本通过验收。"
+}

@@ -1,0 +1,123 @@
+{
+  "status": "passed",
+  "scope": "stage-10 development fixes and focused regressions only; not full 167-scenario acceptance or release approval",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "/root/fix_code_reviewer",
+  "reviewed_parent_revision": "87b578b53477ef5fb1f24a53c34fb216baf021fb",
+  "reviewed_source_state": "uncommitted development patch, bind exact SHA below rather than claiming parent revision contains fixes",
+  "reviewed_at": "2026-10-09T07:29:19.184620+08:00",
+  "source_sha256": {
+    "app/server.py": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322",
+    "tests/test_regressions.py": "763b220fe5ac9e62ec381d4763fd1e8c1d39a79b17b305c31ba94143d7d7cc92",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead"
+  },
+  "requirements_sha256": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+  "findings": [],
+  "fix_reviews": [
+    {
+      "defect": "显式空日期被默认为当天",
+      "status": "passed",
+      "reason": "parse_qs keep_blank_values=True 将省略date与date=区分；现有day_range严格拒绝空值。独立真实HTTP回归同时验证省略200与显式空值400；没有修改原需求。"
+    },
+    {
+      "defect": "已有key微秒绝对时间差误重放",
+      "status": "passed",
+      "reason": "fingerprint以UTC datetime.isoformat()保留非零微秒，零微秒输出与旧秒格式完全一致；真实HTTP已验证start/end+1µs冲突以及零微秒显式文本与trim等价重放。额外独立探针用旧版本真实创建并关服、新版本同库同旧session重启：4类等价重放原ID、两种微秒差409、原hash与通知数不变。确认无需迁移旧合法booking记录。"
+    },
+    {
+      "defect": "Python3.12通知日期和起点丢失",
+      "status": "passed",
+      "reason": "用month/day/hour/minute数字明确格式化中文日期和完整区间，消除平台strftime对非ASCII格式串差异；独立3.12真实HTTP通知正文包含MM月DD日 10:00–11:00。日期源仍为Asia/Shanghai。"
+    },
+    {
+      "defect": "未支持HTTP方法继承入口返回HTML",
+      "status": "passed",
+      "reason": "覆盖BaseHTTPRequestHandler.send_error，/api/错误走现有JSON发送器，501稳定method_not_allowed；非API仍调用基类。独立HTTP DELETE/OPTIONS/PUT/TRACE验证Content-Type和code且业务预约不变；后续正式验收仍需完整四身份五端点矩阵，未由4次回归替代。"
+    },
+    {
+      "defect": "前身份迟到401清除新身份UI",
+      "status": "passed",
+      "reason": "api发起时捕获identityGeneration，只有当前世代401可清UI；login、logout和当前401都递增世代。独立阅读22时序项原始证据，实际旧会话401被hold，新Bob身份与业务真实200后释放401，Bob页面及服务200保留；真实当前401仍关闭dialogs回登录。16个日期/导航成功/网络错误顺序对照和logout/relogin对照均有实证，未忽略所有401。"
+    },
+    {
+      "defect": "已提交自身降权后session故障的数据重试不刷新身份",
+      "status": "passed",
+      "reason": "真实PATCH成功才置identityPending，自身合法降权立即隐藏管理员身份意图；初次session失败显示错误/重试，loadPage在pending时先读session再业务加载。503/network×data-retry/reload四项真实已提交member及后台403、session恢复200、member/spaces/mine和无admin菜单成立。独立额外native正常降权检查严格等待响应与DOM完成，确认成功反馈及旧cookie管理员403。"
+    }
+  ],
+  "independent_execution": {
+    "http_regression_tests": {
+      "count": 7,
+      "status": "passed",
+      "python": "3.12.4"
+    },
+    "old_database_compatibility": {
+      "checks": 5,
+      "status": "passed"
+    },
+    "native_normal_demotion": {
+      "checks": 2,
+      "status": "passed"
+    }
+  },
+  "harness_review": [
+    {
+      "observation": "旧harness规定故障时UI必须继续admin，与正式预期无关；新补丁可基于已提交角色显示member。",
+      "disposition": "允许admin/member临时显示，但实际DB必须member、故障反馈/无假成功/恢复后成员菜单要求保持。属于纠正旧错误假设，没有放宽正式场景。"
+    },
+    {
+      "observation": "旧data-retry点击后等待retry-panel继续可见，正确恢复即消失。",
+      "disposition": "改等待真实工作区并严格验证新session请求、角色、页面、scope及错误消除。"
+    },
+    {
+      "observation": "正常自降控制先等state.user.role=member，新补丁早于await session设该字段，可能在旧DOM时过早观察。corrected ui-identity-results 当前此项failed。",
+      "disposition": "开发前两轮早观察失败均保留历史，不用于发布或单项合并通过；最终独立副本完整重新执行全部13项，以identityPending false、loading false、spaces、无管理员DOM及成功toast作为完成观测，汇总与单项全部passed。Reviewer额外正常降权探针亦通过。"
+    }
+  ],
+  "evidence_sha256": {
+    "reviewer-http-regressions.json": "595190a0a2caa371f97a5f291a76fc3339c54c6c9afa538e3630d42cf009e59d",
+    "reviewer-http-regressions.log": "0813cb0fa4e48deb7b3d57f1eb2223ca3434e939b77f974fd563a914a9c416bb",
+    "reviewer-legacy-replay.json": "7e5f7515f65e24b94f1b31eaa742a634df6e20c4ca146511e277dcfca723415c",
+    "reviewer-normal-demotion.json": "72357dec3bc08d28273b0529a2aef1eeb906ab276842aab5812e93b83927159c",
+    "dev-ui-project/tests/delivery-acceptance/runs/dev-ui-races/ui-races-results.json": "9f0844d854caf4e58aa606ffed5125d665e33b8419577fca8c3d222aa76dbc58",
+    "dev-ui-project/tests/delivery-acceptance/runs/dev-ui-races/evidence/ui-races/old401-new-session.json": "391d08d405d61a5a97054c0e76b07833c1037597b252071bfadfb05478028388",
+    "dev-ui-project/tests/delivery-acceptance/runs/dev-ui-races/evidence/ui-races/current401-old-token.json": "d6360d4117ea802a6f9a82d78c16f4fbabd04bb3de2c18047fd8265e197d04b4",
+    "dev-ui-identity-corrected/ui-identity/demote-503-data-retry.json": "6e7e573ab35d5ef60bae3b4e56ea58bcaa694e43b9a0e378c8d64e030a41317b",
+    "dev-ui-identity-corrected/ui-identity/demote-network-data-retry.json": "8ba125223b846a3088c4c32f53e1522227326c16c016b5897d4cbbb2030ba1a4",
+    "dev-ui-identity-corrected/ui-identity/demote-503-reload.json": "d9056962429fa8529fc302618594dde72e48d170ce3759303d98b820d867291e",
+    "dev-ui-identity-corrected/ui-identity/demote-network-reload.json": "ff5a281452148372ab6b47370bb0e04e7cea5b0f3c25de6a4cb0ed28858de09d",
+    "dev-ui-identity-corrected/ui-identity/role-self-after-commit.json": "bced981be37af0a40ad693aac499db16f757d215f6a47239ac7224d0630b3396",
+    "dev-ui-identity-corrected/ui-identity/role-other-after-commit.json": "42d99cc8594b210af7f73cdb2d44fe6f9fa9afed735c4ce465d898ad8af9142b",
+    "dev-ui-identity-corrected/ui-identity/mark-revocation.json": "d480647985da4670e8a755e068f45ae6392211148ff96d9f4175aae5f55b25a9",
+    "dev-ui-identity-corrected/ui-identity/mark-expiry.json": "061beb8866f7ee6ce77f1d70517cf1708f68670be8f96a452f4260678ea6018f",
+    "dev-ui-identity-final/execute_ui_identity.py": "4b57045c33821d3df097309ff270ec9e07e7d90ac7bff30a865db693ac548539",
+    "dev-ui-identity-final/ui-identity-results.json": "cee04b759c2bdfbb8d712762926e7c28e7941083d7804c65ceb1387a90133b60",
+    "dev-ui-identity-final/ui-identity/mark-revocation.json": "3665e0a116a8c892404fafb76fbe41aff1311c0385d6180877987360c6592b62",
+    "dev-ui-identity-final/ui-identity/role-self-before-patch.json": "1dae8793d71bd9db3c39f97c364ea91c7e0f74a27542be4dd13d44ad8a3e5954",
+    "dev-ui-identity-final/ui-identity/demote-503-data-retry.json": "c0e32d4304ce8a254690e6b7688cc7a7d1b37a1dc0f1571bc28576f0b8644cef",
+    "dev-ui-identity-final/ui-identity/mark-expiry.json": "2604b729bccebc4a0042d2e08386d67fe070f0cd0120baecb48aeb5c661de4b8",
+    "dev-ui-identity-final/ui-identity/other-patch-failure-control.json": "406141cba58f7d4b6895e536b4ac41b6d2ed53dfb6c1b6ab17c687a8a7ebf5de",
+    "dev-ui-identity-final/ui-identity/date-empty-recovery.json": "db0d6023e989048963e9b16d156cbb1df991985f60c90ba724baa877f1f2ff62",
+    "dev-ui-identity-final/ui-identity/role-other-after-commit.json": "17d71dab34f3c6368a037cda28b0a26884bc2c96716d4219b66dc27717891b95",
+    "dev-ui-identity-final/ui-identity/demote-network-data-retry.json": "0bcc4c4fc9c7ab35c67df8b5012ddd65cba491d4cf3b99797dec58efed4f9699",
+    "dev-ui-identity-final/ui-identity/demote-network-reload.json": "180cb9acc2db41f7abf8ffe4acdffa77a610f9378b8d65a6da7bf3212f1b4bf7",
+    "dev-ui-identity-final/ui-identity/role-other-before-patch.json": "68088a3f4142e907781429b1658670f9b778d342a002453c02cf9077bfc21050",
+    "dev-ui-identity-final/ui-identity/demote-503-reload.json": "5129e3bfb9e60b346b4aae0b66e7c3cdb48764882c58aa57ec3b0ab15a08d5cf",
+    "dev-ui-identity-final/ui-identity/role-self-after-commit.json": "cfd42f8cde7a7df8a777edd367d02b0ab6406d5613d56727358edaa6673752fc",
+    "dev-ui-identity-final/ui-identity/demote-normal-control.json": "7617520d2e72e57816e5a29523dde60b0f363e75c8634a7673677a5dc30c6493"
+  },
+  "remaining_required_work": [
+    "提交修复后的新revision，由compiled测试Skill重新审阅源码映射和白盒新增identityPending/世代路径。",
+    "在单一新run中执行全部167条正式场景，重新验证环境资源和OS故障，不能沿用旧运行通过结果。",
+    "对修复后源码单独测量覆盖率并独立审阅完整验收证据与发布门禁。"
+  ],
+  "release_approved": false,
+  "final_ui_regressions": {
+    "status": "passed",
+    "scenario_count": 4,
+    "matrix_count": 13,
+    "evidence": "dev-ui-identity-final/ui-identity-results.json",
+    "review_reason": "独立逐13项核对真实响应、角色提交/拒绝SQL快照、阶段401、503/网络恢复轨迹、最终身份/DOM菜单与无假成功反馈；最终汇总与13单项一致。正常控制改等待identityPending解除及最终DOM成功反馈，不以提前写入内部role当异步完成。"
+  }
+}

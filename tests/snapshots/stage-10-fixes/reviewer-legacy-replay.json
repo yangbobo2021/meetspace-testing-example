@@ -1,0 +1,147 @@
+{
+  "scope": "development-only independent old database compatibility; not full acceptance",
+  "old_revision": "87b578b",
+  "source_sha256": {
+    "old": "d108a24c318d51607d22a9bedfab77e8e9911a04c7df535a5882698d1e3963e4",
+    "new": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5"
+  },
+  "checks": [
+    {
+      "assertion": "旧版本真实HTTP创建成功",
+      "passed": true,
+      "actual": {
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 4,
+            "status": "confirmed",
+            "replayed": false
+          }
+        }
+      }
+    },
+    {
+      "assertion": "新版本同数据库既有session及四种等价重放",
+      "passed": true,
+      "actual": [
+        {
+          "status": 201,
+          "body": {
+            "booking": {
+              "id": 4,
+              "status": "confirmed",
+              "replayed": true
+            }
+          }
+        },
+        {
+          "status": 201,
+          "body": {
+            "booking": {
+              "id": 4,
+              "status": "confirmed",
+              "replayed": true
+            }
+          }
+        },
+        {
+          "status": 201,
+          "body": {
+            "booking": {
+              "id": 4,
+              "status": "confirmed",
+              "replayed": true
+            }
+          }
+        },
+        {
+          "status": 201,
+          "body": {
+            "booking": {
+              "id": 4,
+              "status": "confirmed",
+              "replayed": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "assertion": "旧记录start微秒变化被拒绝",
+      "passed": true,
+      "actual": {
+        "status": 409,
+        "body": {
+          "error": "同一请求标识不能用于不同预约",
+          "code": "idempotency_conflict"
+        }
+      }
+    },
+    {
+      "assertion": "旧记录end微秒变化被拒绝",
+      "passed": true,
+      "actual": {
+        "status": 409,
+        "body": {
+          "error": "同一请求标识不能用于不同预约",
+          "code": "idempotency_conflict"
+        }
+      }
+    },
+    {
+      "assertion": "既有记录哈希未迁移且无重复通知",
+      "passed": true,
+      "actual": {
+        "before": [
+          [
+            1,
+            "confirmed",
+            "seed"
+          ],
+          [
+            2,
+            "confirmed",
+            "seed"
+          ],
+          [
+            3,
+            "confirmed",
+            "seed"
+          ],
+          [
+            4,
+            "confirmed",
+            "af2fc7db282738d398bc75ba4620c8c4f9870d8c1a58ad38eb03dfda4d70fa2c"
+          ]
+        ],
+        "after": [
+          [
+            1,
+            "confirmed",
+            "seed"
+          ],
+          [
+            2,
+            "confirmed",
+            "seed"
+          ],
+          [
+            3,
+            "confirmed",
+            "seed"
+          ],
+          [
+            4,
+            "confirmed",
+            "af2fc7db282738d398bc75ba4620c8c4f9870d8c1a58ad38eb03dfda4d70fa2c"
+          ]
+        ],
+        "notification_counts": [
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "status": "passed"
+}

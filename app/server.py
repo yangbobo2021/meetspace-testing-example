@@ -181,6 +181,15 @@ class Handler(BaseHTTPRequestHandler):
     def do_HEAD(self):
         self.dispatch()
 
+    def send_error(self, code, message=None, explain=None):
+        if getattr(self, "path", "").startswith("/api/"):
+            self.send_json(code, {
+                "error": "请求方法不受支持" if code == 501 else "HTTP 请求无效",
+                "code": "method_not_allowed" if code == 501 else "invalid_request",
+            })
+        else:
+            super().send_error(code, message, explain)
+
     def send_json(self, status: int, data: dict, cookie: str | None = None):
         payload = json.dumps(data, ensure_ascii=False).encode()
         self.send_response(status)
@@ -236,7 +245,7 @@ class Handler(BaseHTTPRequestHandler):
     def dispatch(self):
         try:
             path = urlparse(self.path).path
-            query = parse_qs(urlparse(self.path).query)
+            query = parse_qs(urlparse(self.path).query, keep_blank_values=True)
             if not path.startswith("/api/"):
                 return self.static_file(path)
             if self.command == "GET" and path == "/api/health":
@@ -441,7 +450,7 @@ class Handler(BaseHTTPRequestHandler):
         key = text_field(data, "idempotency_key", "请求标识", 100)
         start, end = date_time(data.get("start")), date_time(data.get("end"))
         start_iso, end_iso = start.isoformat(timespec="seconds"), end.isoformat(timespec="seconds")
-        fingerprint = hashlib.sha256(json.dumps([room_id, title, start_iso, end_iso, attendees], ensure_ascii=False).encode()).hexdigest()
+        fingerprint = hashlib.sha256(json.dumps([room_id, title, start.isoformat(), end.isoformat(), attendees], ensure_ascii=False).encode()).hexdigest()
         previous = db.execute("SELECT * FROM bookings WHERE user_id=? AND idempotency_key=?", (user["id"], key)).fetchone()
         if previous:
             if previous["request_hash"] != fingerprint:
@@ -471,7 +480,10 @@ class Handler(BaseHTTPRequestHandler):
             (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                             (user["team_id"], room_id, user["id"], title, start_iso, end_iso, attendees, now_iso(), key, fingerprint))
-        self.notify(db, user["id"], cursor.lastrowid, f"「{title}」预约成功：{room['name']} · {local_start:%m月%d日 %H:%M}–{local_end:%H:%M}。")
+        meeting_time = (f"{local_start.month:02d}月{local_start.day:02d}日 "
+                        f"{local_start.hour:02d}:{local_start.minute:02d}–"
+                        f"{local_end.hour:02d}:{local_end.minute:02d}")
+        self.notify(db, user["id"], cursor.lastrowid, f"「{title}」预约成功：{room['name']} · {meeting_time}。")
         return {"id": cursor.lastrowid, "status": "confirmed", "replayed": False}
 
     @staticmethod

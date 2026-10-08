@@ -59,7 +59,7 @@ python3 -m unittest discover -s tests -v
 
 现有三项测试通过真实 HTTP 服务验证：基础登录与退出、成员预约与取消及通知、管理员添加和停用会议室。测试使用临时数据库，不污染页面示例数据。
 
-这些测试主要覆盖正常路径，未形成权限矩阵、并发测试、边界时间测试、重试与故障恢复、持久化重启、多浏览器或移动端的完整验收证据。对这些路径的状态应写“未验证”，不能写“通过”。
+最初三项测试主要覆盖正常路径。阶段10新增四项真实HTTP回归，验证空日期、保留微秒的幂等重放、完整通知时间及未支持方法的JSON拒绝；合计七项开发回归通过。这些开发回归不能替代167条场景的完整发布验收。
 
 ## 接手做发布验收
 
@@ -77,6 +77,8 @@ python3 -m unittest discover -s tests -v
 
 后续补测已执行并独立审阅：**10条场景中8通过、2失败**，178个矩阵项116通过、62失败；另3个原冒烟复验通过。两个失败分别为未支持HTTP方法返回501 HTML、自身降权后数据重试未刷新身份。相同业务源码下联合既有测试与本轮命中，后端行384/384、分支124/124均为**100%**；前端行180/181为**99.44%**、分支172/177为**97.17%**、函数86/86为**100%**。剩余5个防御出口仍保留在分母，独立复查未提出新的正式场景建议，总场景数仍167；其他157条场景没有在本轮重新验收。计数收敛不表示缺陷消除或发布通过，详见 [阶段09档案](tests/snapshots/stage-09-supplemental-coverage-cycle/README.md) 与 [DR-010](specs/decisions/010-supplemental-coverage-cycle.md)。
 
+六类已知缺陷随后在开发阶段修复，保留原冒烟和历史失败。修复阶段七项HTTP回归、22项前端加载竞态和13项身份矩阵通过；独立检查还验证旧版本真实建库到新实现同库重放兼容。修复代码与独立审查见 [阶段10档案](tests/snapshots/stage-10-fixes/README.md) 及 [DR-011](specs/decisions/011-release-defect-fixes.md)。这些结果支持修复效果；完整167场景复验、新源码覆盖率及发布判断仍须另行完成和提交。
+
 ## GitHub 阶段对比
 
 公共仓库：<https://github.com/yangbobo2021/meetspace-testing-example>。
@@ -91,7 +93,8 @@ python3 -m unittest discover -s tests -v
 - `stage-07-coverage-audit` 保存[代码覆盖率审计档案](tests/snapshots/stage-07-coverage-audit/README.md)：既有测试重跑计数、逐位置未覆盖映射、补测建议与测量范围；不修改应用或升级验收结论。
 - `stage-08-coverage-scenarios` 保存[覆盖率驱动的设计更新档案](tests/snapshots/stage-08-coverage-scenarios/README.md)：新增8白盒、细化2旧场景，正式台账167场景/176方法，五处防御逻辑按可达性处置；本轮不执行补测。
 - `stage-09-supplemental-coverage-cycle` 保存[补测执行与覆盖率循环档案](tests/snapshots/stage-09-supplemental-coverage-cycle/README.md)：固定新run、178矩阵项、8场景通过/2失败、累计及仅本轮计数、独立剩余路径审查；无新增场景建议，发布验收未通过。
-- 后续修复和复测分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
+- `stage-10-fixes` 保存[六类缺陷修复与开发回归档案](tests/snapshots/stage-10-fixes/README.md)：业务修复、七项HTTP回归、22项前端竞态、13项身份矩阵及独立兼容复核；尚未完成修复后的全部167条正式验收。
+- 完整复验及独立发布判断分别提交真实产出，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：
 

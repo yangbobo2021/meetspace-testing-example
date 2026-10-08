@@ -1,0 +1,139 @@
+diff --git a/app/server.py b/app/server.py
+index 284aff0..35ddd2c 100644
+--- a/app/server.py
++++ b/app/server.py
+@@ -181,6 +181,15 @@ class Handler(BaseHTTPRequestHandler):
+     def do_HEAD(self):
+         self.dispatch()
+ 
++    def send_error(self, code, message=None, explain=None):
++        if getattr(self, "path", "").startswith("/api/"):
++            self.send_json(code, {
++                "error": "请求方法不受支持" if code == 501 else "HTTP 请求无效",
++                "code": "method_not_allowed" if code == 501 else "invalid_request",
++            })
++        else:
++            super().send_error(code, message, explain)
++
+     def send_json(self, status: int, data: dict, cookie: str | None = None):
+         payload = json.dumps(data, ensure_ascii=False).encode()
+         self.send_response(status)
+@@ -236,7 +245,7 @@ class Handler(BaseHTTPRequestHandler):
+     def dispatch(self):
+         try:
+             path = urlparse(self.path).path
+-            query = parse_qs(urlparse(self.path).query)
++            query = parse_qs(urlparse(self.path).query, keep_blank_values=True)
+             if not path.startswith("/api/"):
+                 return self.static_file(path)
+             if self.command == "GET" and path == "/api/health":
+@@ -441,7 +450,7 @@ class Handler(BaseHTTPRequestHandler):
+         key = text_field(data, "idempotency_key", "请求标识", 100)
+         start, end = date_time(data.get("start")), date_time(data.get("end"))
+         start_iso, end_iso = start.isoformat(timespec="seconds"), end.isoformat(timespec="seconds")
+-        fingerprint = hashlib.sha256(json.dumps([room_id, title, start_iso, end_iso, attendees], ensure_ascii=False).encode()).hexdigest()
++        fingerprint = hashlib.sha256(json.dumps([room_id, title, start.isoformat(), end.isoformat(), attendees], ensure_ascii=False).encode()).hexdigest()
+         previous = db.execute("SELECT * FROM bookings WHERE user_id=? AND idempotency_key=?", (user["id"], key)).fetchone()
+         if previous:
+             if previous["request_hash"] != fingerprint:
+@@ -471,7 +480,10 @@ class Handler(BaseHTTPRequestHandler):
+             (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                             (user["team_id"], room_id, user["id"], title, start_iso, end_iso, attendees, now_iso(), key, fingerprint))
+-        self.notify(db, user["id"], cursor.lastrowid, f"「{title}」预约成功：{room['name']} · {local_start:%m月%d日 %H:%M}–{local_end:%H:%M}。")
++        meeting_time = (f"{local_start.month:02d}月{local_start.day:02d}日 "
++                        f"{local_start.hour:02d}:{local_start.minute:02d}–"
++                        f"{local_end.hour:02d}:{local_end.minute:02d}")
++        self.notify(db, user["id"], cursor.lastrowid, f"「{title}」预约成功：{room['name']} · {meeting_time}。")
+         return {"id": cursor.lastrowid, "status": "confirmed", "replayed": False}
+ 
+     @staticmethod
+diff --git a/web/app.js b/web/app.js
+index 27329c3..7a32081 100644
+--- a/web/app.js
++++ b/web/app.js
+@@ -2,7 +2,7 @@
+ 
+ const $ = (selector, root = document) => root.querySelector(selector);
+ const app = $('#app');
+-const state = { user: null, page: 'spaces', date: dateString(), capacity: '', equipment: '', rooms: [], bookings: [], notifications: [], members: [], scope: 'mine', bookingDraft: null, editingRoom: null, cancelId: null, loading: false, loadError: '', loadToken: 0 };
++const state = { user: null, page: 'spaces', date: dateString(), capacity: '', equipment: '', rooms: [], bookings: [], notifications: [], members: [], scope: 'mine', bookingDraft: null, editingRoom: null, cancelId: null, loading: false, loadError: '', loadToken: 0, identityGeneration: 0, identityPending: false };
+ const equipmentOptions = ['显示屏', '白板', '视频会议', '电话会议'];
+ const icons = { spaces: '▦', bookings: '▤', inbox: '◷', manage: '⚙' };
+ const pageNames = { spaces: '会议室', bookings: '我的预约', inbox: '通知中心', manage: '空间管理' };
+@@ -18,12 +18,15 @@ function option(value, current) { return `<option value="${escapeHtml(value)}" $
+ function toast(message) { $('#toast').textContent = message; $('#toast').classList.add('visible'); clearTimeout(toast.timer); toast.timer = setTimeout(() => $('#toast').classList.remove('visible'), 4500); }
+ 
+ async function api(path, method = 'GET', data) {
++  const identityGeneration = state.identityGeneration;
+   const response = await fetch(`/api${path}`, { method, credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-Meeting-App': '1' }, ...(data === undefined ? {} : { body: JSON.stringify(data) }) });
+   let result;
+   try { result = await response.json(); } catch { throw new Error('服务返回异常，请稍后重试'); }
+   if (!response.ok) {
+-    if (response.status === 401 && path !== '/login') {
++    if (response.status === 401 && path !== '/login' && identityGeneration === state.identityGeneration) {
++      state.identityGeneration++;
+       state.user = null;
++      state.identityPending = false;
+       document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close());
+       renderLogin();
+     }
+@@ -46,11 +49,13 @@ function renderLogin() {
+ 
+ async function login(event) {
+   event.preventDefault();
++  state.identityGeneration++;
+   const form = event.currentTarget, submit = $('button[type=submit]', form);
+   submit.disabled = true; $('#login-error').textContent = '';
+   try {
+     await api('/login', 'POST', { email: form.elements.email.value, password: form.elements.password.value });
+     state.user = (await api('/session')).user;
++    state.identityPending = false;
+     state.page = 'spaces'; state.scope = 'mine'; state.rooms = []; state.bookings = []; state.notifications = []; state.members = [];
+     await loadPage();
+   } catch (error) { const target = $('#login-error'); if (target) target.textContent = error.message; }
+@@ -63,6 +68,12 @@ async function loadPage() {
+   state.loading = true; state.loadError = '';
+   renderShell();
+   try {
++    if (state.identityPending) {
++      const session = await api('/session');
++      if (token !== state.loadToken || !state.user) return;
++      state.user = session.user; state.identityPending = false;
++      if (state.user.role !== 'admin') { state.page = 'spaces'; state.scope = 'mine'; }
++    }
+     const params = `?date=${encodeURIComponent(state.date)}`;
+     const requests = [api(`/rooms${params}`), api(`/bookings?scope=${state.scope}`), api('/notifications')];
+     if (state.page === 'manage' && state.user.role === 'admin') requests.push(api('/members'));
+@@ -159,7 +170,7 @@ function wirePage() {
+ async function logout(event) {
+   const button = event.currentTarget;
+   button.disabled = true;
+-  try { await api('/logout', 'POST', {}); state.loadToken++; state.user = null; document.querySelectorAll('dialog[open]').forEach(d => d.close()); renderLogin(); }
++  try { await api('/logout', 'POST', {}); state.identityGeneration++; state.identityPending = false; state.loadToken++; state.user = null; document.querySelectorAll('dialog[open]').forEach(d => d.close()); renderLogin(); }
+   catch (error) { toast(error.message); button.disabled = false; }
+ }
+ 
+@@ -248,10 +259,21 @@ async function changeRole(event) {
+   const select = event.currentTarget; select.disabled = true;
+   try {
+     await api(`/members/${select.dataset.member}`, 'PATCH', { role: select.value });
++    state.identityPending = true;
++    if (Number(select.dataset.member) === state.user.id && select.value === 'member') {
++      state.user = { ...state.user, role: 'member' }; state.page = 'spaces'; state.scope = 'mine';
++    }
+     state.user = (await api('/session')).user;
++    state.identityPending = false;
+     if (state.user.role !== 'admin') { state.page = 'spaces'; state.scope = 'mine'; }
+     await loadPage(); toast('成员角色已更新');
+-  } catch (error) { toast(error.message); if (state.user) await loadPage(); }
++  } catch (error) {
++    toast(error.message);
++    if (state.user) {
++      if (state.identityPending) { state.loadError = error.message; renderShell(); }
++      else await loadPage();
++    }
++  }
+ }
+ 
+ document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));

@@ -1,0 +1,1624 @@
+{
+  "revision": "43bea9de0b8e2f8d3bd7723a6b734f242f36c794",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "evidence/coverage-cycle/independent-review.json",
+  "independent_review_sha256": "f46e268d15cf287e8dc8950f71fc7a0952e2d3e86c87a2e8ef96cb5a28dc2297",
+  "scope": {
+    "revision": "43bea9de0b8e2f8d3bd7723a6b734f242f36c794",
+    "executed_scenario_ids": [
+      "WB-booking-response-loss-replay",
+      "WB-http-unsupported-methods",
+      "WB-response-transport-disconnect",
+      "WB-runtime-sigint-persistence",
+      "WB-ui-date-filter-empty-recovery",
+      "WB-ui-dialog-close-no-write",
+      "WB-ui-logout-races",
+      "WB-ui-mark-read-session-expiry",
+      "WB-ui-role-update-session-expiry",
+      "WB-ui-self-demotion-session-failure"
+    ],
+    "not_reexecuted_count": 157,
+    "policy": "本轮只对10个补测定义作独立执行结论。其他157个场景没有重执行，不继承历史passed。原三smokes只作资源复验。",
+    "scope_hashes": {
+      "project.json": "c86c5481cd12eb70509fabbcb3cf01d754ff54cbc13bfd7687a9e4f8387fb6c0",
+      "requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+      "resources.json": "de1422275b32c2b822baa6073bb134b94a0a74eb3188dfe722bdfe183c3aa7e5",
+      "scenarios.json": "a6516a2ecc08b11275cf4632251e6d9d102587d9c9f23ab4deb38dde9a9554d0",
+      "methods.json": "737b2c99ec6eac3cda65097d0228a08cf6ad58ea9156ddfb954b86f670ef85ce",
+      "coverage_review.json": "caf74373c657eee5e43f5a1e6ada80f8fbad0a9bf938f6fb3ef2fdf981b28728"
+    }
+  },
+  "coverage": {
+    "status": "unproven",
+    "reason": "补测设计与剩余路径审查已收敛；本run仅证明10条补测，其他157条没有重执行。保留5个实测未命中防御出口，不将本轮结论升级为完整发布验收。",
+    "requirements_reviewed": [
+      "application-runtime-1",
+      "application-runtime-2",
+      "application-runtime-3",
+      "application-runtime-4",
+      "application-runtime-5",
+      "application-runtime-6",
+      "application-runtime-7",
+      "application-runtime-8",
+      "application-runtime-9",
+      "identity-session-1",
+      "identity-session-2",
+      "identity-session-3",
+      "identity-session-4",
+      "identity-session-5",
+      "identity-session-6",
+      "identity-session-7",
+      "identity-session-8",
+      "identity-session-9",
+      "identity-session-10",
+      "identity-session-11",
+      "identity-session-12",
+      "identity-session-13",
+      "identity-session-14",
+      "interface-experience-1",
+      "interface-experience-2",
+      "interface-experience-3",
+      "interface-experience-4",
+      "interface-experience-5",
+      "interface-experience-6",
+      "interface-experience-7",
+      "interface-experience-8",
+      "interface-experience-9",
+      "interface-experience-10",
+      "interface-experience-11",
+      "interface-experience-12",
+      "interface-experience-13",
+      "interface-experience-14",
+      "interface-experience-15",
+      "interface-experience-16",
+      "notification-center-1",
+      "notification-center-2",
+      "notification-center-3",
+      "notification-center-4",
+      "notification-center-5",
+      "notification-center-6",
+      "notification-center-7",
+      "reservation-creation-1",
+      "reservation-creation-2",
+      "reservation-creation-3",
+      "reservation-creation-4",
+      "reservation-creation-5",
+      "reservation-creation-6",
+      "reservation-creation-7",
+      "reservation-creation-8",
+      "reservation-creation-9",
+      "reservation-creation-10",
+      "reservation-creation-11",
+      "reservation-creation-12",
+      "reservation-creation-13",
+      "reservation-creation-14",
+      "reservation-management-1",
+      "reservation-management-2",
+      "reservation-management-3",
+      "reservation-management-4",
+      "reservation-management-5",
+      "reservation-management-6",
+      "reservation-management-7",
+      "reservation-management-8",
+      "reservation-management-9",
+      "reservation-management-10",
+      "room-discovery-1",
+      "room-discovery-2",
+      "room-discovery-3",
+      "room-discovery-4",
+      "room-discovery-5",
+      "room-discovery-6",
+      "room-discovery-7",
+      "room-discovery-8",
+      "room-discovery-9",
+      "space-administration-1",
+      "space-administration-2",
+      "space-administration-3",
+      "space-administration-4",
+      "space-administration-5",
+      "space-administration-6",
+      "space-administration-7",
+      "space-administration-8",
+      "space-administration-9",
+      "space-administration-10",
+      "team-administration-1",
+      "team-administration-2",
+      "team-administration-3",
+      "team-administration-4",
+      "team-administration-5",
+      "team-administration-6",
+      "team-administration-7"
+    ],
+    "white_box_basis": [
+      "当前71白盒目标的独立设计审阅及相同业务源码SHA",
+      "evidence/coverage-cycle/independent-review.json",
+      "evidence/coverage-cycle/cumulative/backend-coverage.json",
+      "evidence/coverage-cycle/cumulative/frontend-coverage.json"
+    ],
+    "uncovered_branches": [
+      {
+        "id": "COV-DEF-001",
+        "source_ref": "web/app.js:56",
+        "branch_id": "9",
+        "branch_index": 1,
+        "status": "retained_uncovered_defensive_path",
+        "reason": "renderLogin总建login-error，login成功后loadPage自行处理异步错误；本轮身份/退出证据未发现正常DOM交错能使login catch缺节点。不能证明所有未来异步路径绝对不可达，若真实UI发生该时序再补场景。",
+        "formal_scene_change_required": false,
+        "coverage_exclusion": false,
+        "execution_pass_claim": false
+      },
+      {
+        "id": "COV-DEF-002",
+        "source_ref": "web/app.js:81",
+        "branch_id": "20",
+        "branch_index": 0,
+        "status": "retained_uncovered_defensive_path",
+        "reason": "loadPage入口/最终块与mark-read catch都有user守卫；容量设备控件来自已登录页面。本轮401与退出没有旧shell复现，未发现正常调用者绕过守卫。",
+        "formal_scene_change_required": false,
+        "coverage_exclusion": false,
+        "execution_pass_claim": false
+      },
+      {
+        "id": "COV-DEF-003",
+        "source_ref": "web/app.js:95",
+        "branch_id": "33",
+        "branch_index": 1,
+        "status": "retained_uncovered_defensive_path",
+        "reason": "page枚举由初始值、真实导航固定四值和降权spaces赋值；未发现合法UI输入非法枚举。96行return空和此分支继续留分母。",
+        "formal_scene_change_required": false,
+        "coverage_exclusion": false,
+        "execution_pass_claim": false
+      },
+      {
+        "id": "COV-DEF-004",
+        "source_ref": "web/app.js:99",
+        "branch_id": "34",
+        "branch_index": 0,
+        "status": "retained_uncovered_defensive_path",
+        "reason": "所有生产heading调用107/123/135/139均显式第四参数，省略参数仅辅助函数直调；无新增业务场景理由。",
+        "formal_scene_change_required": false,
+        "coverage_exclusion": false,
+        "execution_pass_claim": false
+      },
+      {
+        "id": "COV-DEF-005",
+        "source_ref": "web/app.js:107",
+        "branch_id": "37",
+        "branch_index": 1,
+        "status": "retained_uncovered_defensive_path",
+        "reason": "实际Chromium143 zh-CN/Shanghai日期输出含日及星期，本轮日期对照亦证明；暂无已约定支持环境产生缺星期后缀的证据。不扩大浏览器环境要求，未来真实支持环境差异再补。",
+        "formal_scene_change_required": false,
+        "coverage_exclusion": false,
+        "execution_pass_claim": false
+      }
+    ]
+  },
+  "results": [
+    {
+      "scenario_id": "BB-application-runtime-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-8",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-9",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-8",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-9",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-10",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-11",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-12",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-13",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-14",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-8",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-9",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-10",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-11",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-12",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-13",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-14",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-15",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-interface-experience-16",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-8",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-9",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-10",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-11",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-12",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-13",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-14",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-8",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-9",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-10",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-8",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-room-discovery-9",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-8",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-9",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-space-administration-10",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-team-administration-1",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-team-administration-2",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-team-administration-3",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-team-administration-4",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-team-administration-5",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-team-administration-6",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-team-administration-7",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-runtime-entry",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-seed-empty-existing",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-password-derivation",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-persistence-restart",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-health-static-dispatch",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-request-origin",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-json-envelope",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-errors-and-response",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-transaction-failure-matrix",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-session-join",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-session-expiry",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-login-window-lock",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-login-switch-and-cookies",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-logout-revocation",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-route-authorizations",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-rooms-team-deserialization",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-day-range-intersection",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-agenda-title-redaction",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-fields-guards",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-datetime-parse-normalize",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-horizon",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-duration",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-open-hours",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-room-eligibility-capacity",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-conflict-serialization",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-insert-notify",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-idempotency-priority",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-idempotency-user-concurrency",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-query-scope-join",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-cancel-authorization-and-clock",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-cancel-atomic-idempotent",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-notifications-select-limit",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-notifications-mark-all",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-room-write-and-return",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-room-text-capacity-active",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-room-equipment-set",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-room-name-unique-concurrency",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-room-state-existing-bookings",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-member-select-role-guards",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-last-admin-lock",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-start-session-errors",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-api-error-session-transition",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-login-navigation",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-load-parallel-error",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-load-token-races",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-filters-statistics",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-room-timeline-agenda",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-timezone-format",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-booking-status-sort",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-notification-render",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-default-times",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-booking-draft-key",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-submit-button-matrix",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-room-edit-draft",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-role-demotion-reload",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "status": "passed",
+      "reason": "逐8项核对真实旧UI导航加载被hold→第二次UI导航最新加载完成且loading=false→真实logout响应已处理被hold→原生业务按钮开三种弹窗→释放logout关闭/login并token增长→旧成功/非401错误释放不恢复→真实新用户登录无旧弹窗。旧Cookie实际session401且业务快照等值。另503/网络2项同按钮重复原生点击仅一次POST、失败按钮恢复会话保持，再真实退出拒旧Cookie。",
+      "evidence": [
+        "evidence/coverage-cycle/evidence/ui-dialogs/booking-success.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/booking-non401-error.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/room-success.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/room-non401-error.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/confirm-success.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/confirm-non401-error.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/503.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/network.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "status": "passed",
+      "reason": "逐75文件复核3视口×3弹窗×X/Escape/四方向/内padding/子节点及取消retain；全部原生可达。独立重算实际event目标、trusted、矩形与坐标不等式，右/上/下不会靠左侧OR短路伪命中。所有POST/PATCH为空、83项含此75项脱敏后业务快照等值，内部不误关，关闭后再次原生打开；五列users足以保留相关不变量。",
+      "evidence": [
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-booking-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-booking-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-booking-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-booking-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-booking-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-booking-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-booking-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-booking-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-room-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-room-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-room-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-room-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-room-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-room-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-room-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-room-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/1280-confirm-retain.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-booking-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-booking-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-booking-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-booking-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-booking-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-booking-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-booking-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-booking-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-room-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-room-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-room-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-room-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-room-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-room-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-room-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-room-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/390-confirm-retain.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-booking-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-booking-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-booking-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-booking-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-booking-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-booking-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-booking-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-booking-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-room-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-room-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-room-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-room-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-room-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-room-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-room-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-room-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-X.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-Escape.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-left.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-right.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-top.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-bottom.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-padding.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-child.json",
+        "evidence/coverage-cycle/evidence/ui-dialogs/320-confirm-retain.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-text-escaping",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-accessibility-focus",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-responsive-breakpoints",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-seed-failure-retry",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-login-format-boundaries",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-idempotency-absolute-precision",
+      "status": "unproven",
+      "reason": "独立审阅限定本轮10条补测；此项未重新执行，不复制旧run通过结论。",
+      "evidence": [
+        "scope.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-response-transport-disconnect",
+      "status": "passed",
+      "reason": "独立核对4项真实HTTP与SQLite快照、write依赖故障调用栈、提交早于响应写故障的单调时间及健康/session/写入恢复；成功路径到260，AppError响应写位于except体，不把其请求线程异常误认为应进入260。两种异常均缺完整客户端响应；已提交房间保留，拒绝项无业务写入。",
+      "evidence": [
+        "evidence/coverage-cycle/api-evidence/WB-response-transport-disconnect.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "status": "passed",
+      "reason": "逐17项核对提交后断响应与真实重发、原booking ID/replayed、单条关联通知和快照不增写；两种写异常分别覆盖同内容、五个合法单维变更、trim及UTC等价。另项通知DML后/提交前依赖失败有真实rollback、503及全业务快照不变，恢复首次成功后再重放。与既有幂等/精度场景互补，没有把传输失败当业务回滚。",
+      "evidence": [
+        "evidence/coverage-cycle/api-evidence/WB-booking-response-loss-replay.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-runtime-sigint-persistence",
+      "status": "passed",
+      "reason": "真实CLI PID73721监听53602，SIGINT后退出且监听为空，新PID73729同端口同库启动，完整业务快照逐行等值、房间/预约/已读通知API读回。独立结合本轮492/493/495覆盖计数证明异常与finally路径。实际北京时间次日10–11时是合法未来空闲业务时段，符合方法默认日期可替换目的；不替代Python3.11/默认8766原矩阵，也不新增固定退出码或20秒产品义务。",
+      "evidence": [
+        "evidence/coverage-cycle/api-evidence/WB-runtime-sigint-persistence.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-mark-read-session-expiry",
+      "status": "passed",
+      "reason": "2项分别是真正到期临界时间和独立Cookie容器携旧Cookie登录撤销；前端Cookie未替换，真实标已读POST401。逐证据核对user清空、登录DOM、无成功提示/U与V未读不变量、重新登录后真实POST200仅U通知变已读。断言针对相关业务字段；源码身份守卫先于业务写入，与旧全量验收互补。",
+      "evidence": [
+        "evidence/coverage-cycle/ui-identity/mark-expiry.json",
+        "evidence/coverage-cycle/ui-identity/mark-revocation.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-role-update-session-expiry",
+      "status": "passed",
+      "reason": "4项自身/他人×PATCH前/实际提交后session阶段401。独立核对真实Cookie撤销与真实401、角色提交时序、只有目标角色可能变更、旧管理员Cookie401、无catch后旧业务加载，重新登录按真实角色恢复菜单；自身合法降权后管理员API403。不是拦截模拟401。",
+      "evidence": [
+        "evidence/coverage-cycle/ui-identity/role-other-after-commit.json",
+        "evidence/coverage-cycle/ui-identity/role-other-before-patch.json",
+        "evidence/coverage-cycle/ui-identity/role-self-after-commit.json",
+        "evidence/coverage-cycle/ui-identity/role-self-before-patch.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "status": "failed",
+      "reason": "6项包含503/网络 ×数据重载/全页刷新及正常自降与他人PATCH失败对照。真实自身PATCH200持久member后session前端故障，后台admin接口403。两项数据重载请求均没有/session，仍显示admin和管理菜单并重得403，故失败成立。全页刷新恢复member及正常对照通过不能抵消；失败后cleanup reload明确不计指定恢复通过。控制项他人失败观察曾处在loading，角色无变化及随后真实200网络均保留，未据此主张额外稳定性通过。",
+      "evidence": [
+        "evidence/coverage-cycle/ui-identity/demote-503-data-retry.json",
+        "evidence/coverage-cycle/ui-identity/demote-503-reload.json",
+        "evidence/coverage-cycle/ui-identity/demote-network-data-retry.json",
+        "evidence/coverage-cycle/ui-identity/demote-network-reload.json",
+        "evidence/coverage-cycle/ui-identity/demote-normal-control.json",
+        "evidence/coverage-cycle/ui-identity/other-patch-failure-control.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-date-filter-empty-recovery",
+      "status": "passed",
+      "reason": "真实date控件fill清空产生change，guard不更新state.date且无空日期查询，随后D+1有效控件输入发实际GET并与不同日程对照相符，业务快照不变。自动化change的isTrusted=false已记录，不声称硬件输入事件，也没有console改state/调用handler。保留旧合法日期画面不被新增为失败；此项不替代后端空date参数的既有缺陷场景。",
+      "evidence": [
+        "evidence/coverage-cycle/ui-identity/date-empty-recovery.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "status": "failed",
+      "reason": "逐60项复核DELETE/OPTIONS/PUT ×四种已验证身份×五端点；真实继承handle_one_request/send_error 501而非Handler.dispatch，首次和重发均text/html、无JSON code。完整业务前后快照等值，真实受支持读写恢复成功。60项失败集中为同一JSON错误契约缺陷，不能被app/server.py分支100%掩盖。",
+      "evidence": [
+        "evidence/coverage-cycle/api-evidence/WB-http-unsupported-methods.json"
+      ]
+    }
+  ]
+}

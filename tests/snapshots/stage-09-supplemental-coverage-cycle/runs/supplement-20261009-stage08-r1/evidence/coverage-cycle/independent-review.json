@@ -1,0 +1,1902 @@
+{
+  "status": "completed",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "coverage_scenario_reviewer/stage08-r1-real-evidence-and-residual-review",
+  "created_at": "2026-10-08T23:09:08.808925+00:00",
+  "implementation_revision": "43bea9de0b8e2f8d3bd7723a6b734f242f36c794",
+  "source_hashes": {
+    "app/server.py": "d108a24c318d51607d22a9bedfab77e8e9911a04c7df535a5882698d1e3963e4",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "795a77045b90f46c99851f52fee5bce6836e4b88b39d4e584c9bb9387921d293",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead"
+  },
+  "ledger_hashes": {
+    "project.json": "c86c5481cd12eb70509fabbcb3cf01d754ff54cbc13bfd7687a9e4f8387fb6c0",
+    "requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "resources.json": "de1422275b32c2b822baa6073bb134b94a0a74eb3188dfe722bdfe183c3aa7e5",
+    "scenarios.json": "a6516a2ecc08b11275cf4632251e6d9d102587d9c9f23ab4deb38dde9a9554d0",
+    "methods.json": "737b2c99ec6eac3cda65097d0228a08cf6ad58ea9156ddfb954b86f670ef85ce",
+    "coverage_review.json": "caf74373c657eee5e43f5a1e6ada80f8fbad0a9bf938f6fb3ef2fdf981b28728"
+  },
+  "formal_run_sha256": "25007f1ef07c019ce88ed8b16a789bd0806c778f9c6a47ea95b9eeff491a5a8a",
+  "scope_hashes": {
+    "execution-context.json": "33525742b42d1db09e7bd2484fe344ab808ea24232bef723876a63e1bb840a83",
+    "metrics.json": "5f2c2ec17b2f1c6adf27d96765157c1a33ce30ace07e69b8a97dc3c4b6ffe527",
+    "api-results.json": "56f386dfa80a440ec403a56bcc27b93a48122104c86c48cc63106a6fa316968b",
+    "ui-identity-results.json": "38b27d1009b5715cce2edfc82993dbf8491e3af36be1c340e6e17742a86c0019",
+    "ui-dialog-results.json": "57dbe4d7bdfc7b60d1318bdafb794d320b005dc6cb4ad4ccb088c66284d6f99e",
+    "resource-preflight.json": "19e3cd699e29f87bac88732d6262865d096b48d5d95e71e811134449e09af712",
+    "backend-coverage.json": "f17e727f4b1372ab1db1b47b24170356be17cfa4a38e8a3dd05a1fc5b32277c9",
+    "frontend-coverage.json": "8dccc4b63212b20e7e46d971c46c01198df630f0b85e91df99a9e7bc45455c21",
+    "cumulative/backend-coverage.json": "bb3b3559e200d6f48a9795af972eb8e4095f56f1293e4e2397340aa03bcac17b",
+    "cumulative/frontend-coverage.json": "42ee726904df9c191dbda0c118a79873a0dc4b235189993b6e7e3ca95fcda7cd",
+    "evidence-redaction.json": "8727891c63eb9d952c72e6d3b5debd5b509f9d6ae2233bc366d3e30d7159e011",
+    "frontend-source-map.json": "9fa2313e3985bac00e24117c364242391180a7ae85f889f2844abba446b96de3",
+    "frontend-static-map.json": "5db03ca8754b4b5a92c0a2f94bafa836a0ff032b961e2c8f12f2093f4731b38e",
+    "coverage.ini": "1e88835a93a1d38b6b278dd52a568fcbe26929330fb83d03f015c8c0862d360c",
+    "smoke-execution.log": "c91f8cb007d4a5fce61051e12beb6fb5720f217f61718044b84879829c9d95ca"
+  },
+  "basis": {
+    "skill": "/Users/boboyang/.codex/skills/app-delivery-acceptance/SKILL.md",
+    "review_mode": "read_only_application_and_historical_runs; independent_review_artifact_only",
+    "reviewed_scope": "current 8 added +2 refined scenarios,178 actual matrix items; agreed normal business paths plus already-covered semantic faults; five static DEF dispositions",
+    "application_execution_by_reviewer": false,
+    "reused_design_review": "Independent prior 71 white-box targets/methods review bound to identical business source SHA; current methods/scenarios hashes unchanged. Current real evidence newly read; old passing verdicts not copied as fresh execution."
+  },
+  "execution_summary": {
+    "scenarios_executed": 10,
+    "scenario_passed": 8,
+    "scenario_failed": 2,
+    "matrix_items": 178,
+    "matrix_passed": 116,
+    "matrix_failed": 62,
+    "matrix_unproven": 0,
+    "other_scenarios_not_rerun": 157,
+    "original_smokes_separate": 3
+  },
+  "scenario_reviews": [
+    {
+      "scenario_id": "WB-response-transport-disconnect",
+      "status": "passed",
+      "reason": "独立核对4项真实HTTP与SQLite快照、write依赖故障调用栈、提交早于响应写故障的单调时间及健康/session/写入恢复；成功路径到260，AppError响应写位于except体，不把其请求线程异常误认为应进入260。两种异常均缺完整客户端响应；已提交房间保留，拒绝项无业务写入。",
+      "matrix_items": 4,
+      "evidence": [
+        "api-evidence/WB-response-transport-disconnect.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "status": "passed",
+      "reason": "逐17项核对提交后断响应与真实重发、原booking ID/replayed、单条关联通知和快照不增写；两种写异常分别覆盖同内容、五个合法单维变更、trim及UTC等价。另项通知DML后/提交前依赖失败有真实rollback、503及全业务快照不变，恢复首次成功后再重放。与既有幂等/精度场景互补，没有把传输失败当业务回滚。",
+      "matrix_items": 17,
+      "evidence": [
+        "api-evidence/WB-booking-response-loss-replay.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-runtime-sigint-persistence",
+      "status": "passed",
+      "reason": "真实CLI PID73721监听53602，SIGINT后退出且监听为空，新PID73729同端口同库启动，完整业务快照逐行等值、房间/预约/已读通知API读回。独立结合本轮492/493/495覆盖计数证明异常与finally路径。实际北京时间次日10–11时是合法未来空闲业务时段，符合方法默认日期可替换目的；不替代Python3.11/默认8766原矩阵，也不新增固定退出码或20秒产品义务。",
+      "matrix_items": 1,
+      "evidence": [
+        "api-evidence/WB-runtime-sigint-persistence.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "status": "failed",
+      "reason": "逐60项复核DELETE/OPTIONS/PUT ×四种已验证身份×五端点；真实继承handle_one_request/send_error 501而非Handler.dispatch，首次和重发均text/html、无JSON code。完整业务前后快照等值，真实受支持读写恢复成功。60项失败集中为同一JSON错误契约缺陷，不能被app/server.py分支100%掩盖。",
+      "matrix_items": 60,
+      "evidence": [
+        "api-evidence/WB-http-unsupported-methods.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-role-update-session-expiry",
+      "status": "passed",
+      "reason": "4项自身/他人×PATCH前/实际提交后session阶段401。独立核对真实Cookie撤销与真实401、角色提交时序、只有目标角色可能变更、旧管理员Cookie401、无catch后旧业务加载，重新登录按真实角色恢复菜单；自身合法降权后管理员API403。不是拦截模拟401。",
+      "matrix_items": 4,
+      "evidence": [
+        "ui-identity/role-other-after-commit.json",
+        "ui-identity/role-other-before-patch.json",
+        "ui-identity/role-self-after-commit.json",
+        "ui-identity/role-self-before-patch.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "status": "failed",
+      "reason": "6项包含503/网络 ×数据重载/全页刷新及正常自降与他人PATCH失败对照。真实自身PATCH200持久member后session前端故障，后台admin接口403。两项数据重载请求均没有/session，仍显示admin和管理菜单并重得403，故失败成立。全页刷新恢复member及正常对照通过不能抵消；失败后cleanup reload明确不计指定恢复通过。控制项他人失败观察曾处在loading，角色无变化及随后真实200网络均保留，未据此主张额外稳定性通过。",
+      "matrix_items": 6,
+      "evidence": [
+        "ui-identity/demote-503-data-retry.json",
+        "ui-identity/demote-503-reload.json",
+        "ui-identity/demote-network-data-retry.json",
+        "ui-identity/demote-network-reload.json",
+        "ui-identity/demote-normal-control.json",
+        "ui-identity/other-patch-failure-control.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-mark-read-session-expiry",
+      "status": "passed",
+      "reason": "2项分别是真正到期临界时间和独立Cookie容器携旧Cookie登录撤销；前端Cookie未替换，真实标已读POST401。逐证据核对user清空、登录DOM、无成功提示/U与V未读不变量、重新登录后真实POST200仅U通知变已读。断言针对相关业务字段；源码身份守卫先于业务写入，与旧全量验收互补。",
+      "matrix_items": 2,
+      "evidence": [
+        "ui-identity/mark-expiry.json",
+        "ui-identity/mark-revocation.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-date-filter-empty-recovery",
+      "status": "passed",
+      "reason": "真实date控件fill清空产生change，guard不更新state.date且无空日期查询，随后D+1有效控件输入发实际GET并与不同日程对照相符，业务快照不变。自动化change的isTrusted=false已记录，不声称硬件输入事件，也没有console改state/调用handler。保留旧合法日期画面不被新增为失败；此项不替代后端空date参数的既有缺陷场景。",
+      "matrix_items": 1,
+      "evidence": [
+        "ui-identity/date-empty-recovery.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "status": "passed",
+      "reason": "逐75文件复核3视口×3弹窗×X/Escape/四方向/内padding/子节点及取消retain；全部原生可达。独立重算实际event目标、trusted、矩形与坐标不等式，右/上/下不会靠左侧OR短路伪命中。所有POST/PATCH为空、83项含此75项脱敏后业务快照等值，内部不误关，关闭后再次原生打开；五列users足以保留相关不变量。",
+      "matrix_items": 75,
+      "evidence": [
+        "evidence/ui-dialogs/1280-booking-X.json",
+        "evidence/ui-dialogs/1280-booking-Escape.json",
+        "evidence/ui-dialogs/1280-booking-left.json",
+        "evidence/ui-dialogs/1280-booking-right.json",
+        "evidence/ui-dialogs/1280-booking-top.json",
+        "evidence/ui-dialogs/1280-booking-bottom.json",
+        "evidence/ui-dialogs/1280-booking-padding.json",
+        "evidence/ui-dialogs/1280-booking-child.json",
+        "evidence/ui-dialogs/1280-room-X.json",
+        "evidence/ui-dialogs/1280-room-Escape.json",
+        "evidence/ui-dialogs/1280-room-left.json",
+        "evidence/ui-dialogs/1280-room-right.json",
+        "evidence/ui-dialogs/1280-room-top.json",
+        "evidence/ui-dialogs/1280-room-bottom.json",
+        "evidence/ui-dialogs/1280-room-padding.json",
+        "evidence/ui-dialogs/1280-room-child.json",
+        "evidence/ui-dialogs/1280-confirm-X.json",
+        "evidence/ui-dialogs/1280-confirm-Escape.json",
+        "evidence/ui-dialogs/1280-confirm-left.json",
+        "evidence/ui-dialogs/1280-confirm-right.json",
+        "evidence/ui-dialogs/1280-confirm-top.json",
+        "evidence/ui-dialogs/1280-confirm-bottom.json",
+        "evidence/ui-dialogs/1280-confirm-padding.json",
+        "evidence/ui-dialogs/1280-confirm-child.json",
+        "evidence/ui-dialogs/1280-confirm-retain.json",
+        "evidence/ui-dialogs/390-booking-X.json",
+        "evidence/ui-dialogs/390-booking-Escape.json",
+        "evidence/ui-dialogs/390-booking-left.json",
+        "evidence/ui-dialogs/390-booking-right.json",
+        "evidence/ui-dialogs/390-booking-top.json",
+        "evidence/ui-dialogs/390-booking-bottom.json",
+        "evidence/ui-dialogs/390-booking-padding.json",
+        "evidence/ui-dialogs/390-booking-child.json",
+        "evidence/ui-dialogs/390-room-X.json",
+        "evidence/ui-dialogs/390-room-Escape.json",
+        "evidence/ui-dialogs/390-room-left.json",
+        "evidence/ui-dialogs/390-room-right.json",
+        "evidence/ui-dialogs/390-room-top.json",
+        "evidence/ui-dialogs/390-room-bottom.json",
+        "evidence/ui-dialogs/390-room-padding.json",
+        "evidence/ui-dialogs/390-room-child.json",
+        "evidence/ui-dialogs/390-confirm-X.json",
+        "evidence/ui-dialogs/390-confirm-Escape.json",
+        "evidence/ui-dialogs/390-confirm-left.json",
+        "evidence/ui-dialogs/390-confirm-right.json",
+        "evidence/ui-dialogs/390-confirm-top.json",
+        "evidence/ui-dialogs/390-confirm-bottom.json",
+        "evidence/ui-dialogs/390-confirm-padding.json",
+        "evidence/ui-dialogs/390-confirm-child.json",
+        "evidence/ui-dialogs/390-confirm-retain.json",
+        "evidence/ui-dialogs/320-booking-X.json",
+        "evidence/ui-dialogs/320-booking-Escape.json",
+        "evidence/ui-dialogs/320-booking-left.json",
+        "evidence/ui-dialogs/320-booking-right.json",
+        "evidence/ui-dialogs/320-booking-top.json",
+        "evidence/ui-dialogs/320-booking-bottom.json",
+        "evidence/ui-dialogs/320-booking-padding.json",
+        "evidence/ui-dialogs/320-booking-child.json",
+        "evidence/ui-dialogs/320-room-X.json",
+        "evidence/ui-dialogs/320-room-Escape.json",
+        "evidence/ui-dialogs/320-room-left.json",
+        "evidence/ui-dialogs/320-room-right.json",
+        "evidence/ui-dialogs/320-room-top.json",
+        "evidence/ui-dialogs/320-room-bottom.json",
+        "evidence/ui-dialogs/320-room-padding.json",
+        "evidence/ui-dialogs/320-room-child.json",
+        "evidence/ui-dialogs/320-confirm-X.json",
+        "evidence/ui-dialogs/320-confirm-Escape.json",
+        "evidence/ui-dialogs/320-confirm-left.json",
+        "evidence/ui-dialogs/320-confirm-right.json",
+        "evidence/ui-dialogs/320-confirm-top.json",
+        "evidence/ui-dialogs/320-confirm-bottom.json",
+        "evidence/ui-dialogs/320-confirm-padding.json",
+        "evidence/ui-dialogs/320-confirm-child.json",
+        "evidence/ui-dialogs/320-confirm-retain.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "status": "passed",
+      "reason": "逐8项核对真实旧UI导航加载被hold→第二次UI导航最新加载完成且loading=false→真实logout响应已处理被hold→原生业务按钮开三种弹窗→释放logout关闭/login并token增长→旧成功/非401错误释放不恢复→真实新用户登录无旧弹窗。旧Cookie实际session401且业务快照等值。另503/网络2项同按钮重复原生点击仅一次POST、失败按钮恢复会话保持，再真实退出拒旧Cookie。",
+      "matrix_items": 8,
+      "evidence": [
+        "evidence/ui-dialogs/booking-success.json",
+        "evidence/ui-dialogs/booking-non401-error.json",
+        "evidence/ui-dialogs/room-success.json",
+        "evidence/ui-dialogs/room-non401-error.json",
+        "evidence/ui-dialogs/confirm-success.json",
+        "evidence/ui-dialogs/confirm-non401-error.json",
+        "evidence/ui-dialogs/503.json",
+        "evidence/ui-dialogs/network.json"
+      ]
+    }
+  ],
+  "matrix_evidence_reviews": [
+    {
+      "scenario_id": "WB-response-transport-disconnect",
+      "item": "success/BrokenPipeError",
+      "status": "passed",
+      "evidence": "api-evidence/WB-response-transport-disconnect.json",
+      "evidence_sha256": "2c7a2ac87bbc6a5d0e49abc5419c38da34487359573610b64f5ba0256178fb06",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-response-transport-disconnect",
+      "item": "success/ConnectionResetError",
+      "status": "passed",
+      "evidence": "api-evidence/WB-response-transport-disconnect.json",
+      "evidence_sha256": "2c7a2ac87bbc6a5d0e49abc5419c38da34487359573610b64f5ba0256178fb06",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-response-transport-disconnect",
+      "item": "AppError/BrokenPipeError",
+      "status": "passed",
+      "evidence": "api-evidence/WB-response-transport-disconnect.json",
+      "evidence_sha256": "2c7a2ac87bbc6a5d0e49abc5419c38da34487359573610b64f5ba0256178fb06",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-response-transport-disconnect",
+      "item": "AppError/ConnectionResetError",
+      "status": "passed",
+      "evidence": "api-evidence/WB-response-transport-disconnect.json",
+      "evidence_sha256": "2c7a2ac87bbc6a5d0e49abc5419c38da34487359573610b64f5ba0256178fb06",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "BrokenPipeError/same",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "BrokenPipeError/different_room_id",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "BrokenPipeError/different_title",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "BrokenPipeError/different_start",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "BrokenPipeError/different_end",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "BrokenPipeError/different_attendees",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "BrokenPipeError/normalized_trim",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "BrokenPipeError/normalized_UTC",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "ConnectionResetError/same",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "ConnectionResetError/different_room_id",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "ConnectionResetError/different_title",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "ConnectionResetError/different_start",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "ConnectionResetError/different_end",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "ConnectionResetError/different_attendees",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "ConnectionResetError/normalized_trim",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "ConnectionResetError/normalized_UTC",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-booking-response-loss-replay",
+      "item": "storage_after_DML_before_commit",
+      "status": "passed",
+      "evidence": "api-evidence/WB-booking-response-loss-replay.json",
+      "evidence_sha256": "70cc9f193d9914771ff0f9be4a4b09b5f706bebe764b012f64a637b911b19783",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-runtime-sigint-persistence",
+      "item": "CLI_SIGINT_restart",
+      "status": "passed",
+      "evidence": "api-evidence/WB-runtime-sigint-persistence.json",
+      "evidence_sha256": "a43a5e68c66705a8dbf8599fa6dd336a2c449a342078b3065dbddd06a4c72e2a",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/anonymous/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/anonymous/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/anonymous/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/anonymous/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/anonymous/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/member/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/member/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/member/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/member/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/member/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/admin/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/admin/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/admin/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/admin/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/admin/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/revoked/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/revoked/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/revoked/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/revoked/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "DELETE/revoked/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/anonymous/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/anonymous/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/anonymous/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/anonymous/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/anonymous/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/member/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/member/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/member/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/member/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/member/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/admin/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/admin/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/admin/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/admin/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/admin/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/revoked/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/revoked/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/revoked/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/revoked/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "OPTIONS/revoked/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/anonymous/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/anonymous/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/anonymous/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/anonymous/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/anonymous/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/member/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/member/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/member/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/member/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/member/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/admin/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/admin/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/admin/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/admin/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/admin/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/revoked/api/health",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/revoked/api/rooms",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/revoked/api/bookings",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/revoked/api/members",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "item": "PUT/revoked/api/unknown",
+      "status": "failed",
+      "evidence": "api-evidence/WB-http-unsupported-methods.json",
+      "evidence_sha256": "9360a0d395b7282535764d2dc2fa1cf8f8acc5161e1b670847174a813d6a52fe",
+      "review_verdict": "supported_by_raw_response_state_and_dependency_trace"
+    },
+    {
+      "scenario_id": "WB-ui-role-update-session-expiry",
+      "item": "role-other-after-commit",
+      "status": "passed",
+      "evidence": "ui-identity/role-other-after-commit.json",
+      "evidence_sha256": "814e6dd4950628b611f0530c64f2478de4d59e9f9b7cf3c16de815dc126ad908",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-role-update-session-expiry",
+      "item": "role-other-before-patch",
+      "status": "passed",
+      "evidence": "ui-identity/role-other-before-patch.json",
+      "evidence_sha256": "a8af65f92d78d9ab819f4ff549f4c9c8dc4d4e909c6d0463ac4070141521c817",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-role-update-session-expiry",
+      "item": "role-self-after-commit",
+      "status": "passed",
+      "evidence": "ui-identity/role-self-after-commit.json",
+      "evidence_sha256": "c474b566a63792566db21063cf9770c6e510b6d8b379391369d0c1498d8954a3",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-role-update-session-expiry",
+      "item": "role-self-before-patch",
+      "status": "passed",
+      "evidence": "ui-identity/role-self-before-patch.json",
+      "evidence_sha256": "007c122dfbcc42e63a7e36f373b1ebf9dea2ad4a3ee8452100a07a407e2362bd",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "item": "demote-503-data-retry",
+      "status": "failed",
+      "evidence": "ui-identity/demote-503-data-retry.json",
+      "evidence_sha256": "439b5698af1b01f8d7f867a7c41e74865fb1c331580f97228dad1f10493e18e0",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "item": "demote-503-reload",
+      "status": "passed",
+      "evidence": "ui-identity/demote-503-reload.json",
+      "evidence_sha256": "7427d877bf64f64eb43ea2a52932cd3cd43080fad8bf88b4a5da303c8f663794",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "item": "demote-network-data-retry",
+      "status": "failed",
+      "evidence": "ui-identity/demote-network-data-retry.json",
+      "evidence_sha256": "62060bfa77e5bf99543f076ac815b73b4fc1109f5d76d0f00a0c9ad70a7857d5",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "item": "demote-network-reload",
+      "status": "passed",
+      "evidence": "ui-identity/demote-network-reload.json",
+      "evidence_sha256": "7185b60dd6c0cd4dcbd7b0f0e896520b6addd00afd7c83fc21090e54398c8095",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "item": "demote-normal-control",
+      "status": "passed",
+      "evidence": "ui-identity/demote-normal-control.json",
+      "evidence_sha256": "d790ad126a2174e10b29b909e0726683a11f7d68f72e27c5ec3b1a92d4e5b961",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "item": "other-patch-failure-control",
+      "status": "passed",
+      "evidence": "ui-identity/other-patch-failure-control.json",
+      "evidence_sha256": "aa11ed21359525d4fb36956c3a3b6ab337fcfb0f52e815110bfb6bcc84b14b9c",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-mark-read-session-expiry",
+      "item": "mark-expiry",
+      "status": "passed",
+      "evidence": "ui-identity/mark-expiry.json",
+      "evidence_sha256": "8b5f1c12a4dbdb5a419b65c42133b1c689392d16732ce438dc777a95e97f533d",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-mark-read-session-expiry",
+      "item": "mark-revocation",
+      "status": "passed",
+      "evidence": "ui-identity/mark-revocation.json",
+      "evidence_sha256": "5455eb802fc621407d2fe2eb472f7181d892271c5ad1eccdb84bc54f95fd7a33",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-date-filter-empty-recovery",
+      "item": "date-empty-recovery",
+      "status": "passed",
+      "evidence": "ui-identity/date-empty-recovery.json",
+      "evidence_sha256": "81fbfd9c05f3cff6caadd3675fa85ee0a09a3ef0baef5ddb238140df8e215c03",
+      "review_verdict": "supported_by_HTTP_state_DOM_and_ordered_events"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-booking-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-booking-X.json",
+      "evidence_sha256": "acd37798fe08a57d7cdd4fe5204b2dde706c724010cb1c0f8225a7ecc55b453c",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-booking-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-booking-Escape.json",
+      "evidence_sha256": "7ce7fb6d2430c5fa4b719a8945792d713ec510ff8fd03f1e18eeb8b38a75b986",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-booking-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-booking-left.json",
+      "evidence_sha256": "5b72bb18693e35e68ae82ac9503d293a3e611d80f15ee77903e66999c6fd81c0",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-booking-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-booking-right.json",
+      "evidence_sha256": "37cf67812ae2ac43c22c8ee8f86d43394cd4ed5dc8af71b1dcd11aae42229e26",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-booking-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-booking-top.json",
+      "evidence_sha256": "dbdd7013f90b4ffac12f581475b9eb27f253615fa5e1e752d610dfba6204dabc",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-booking-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-booking-bottom.json",
+      "evidence_sha256": "881dfb54b78651cde8b0673664ba8302ef067704c4babfbaf8e5361bc5428ab4",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-booking-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-booking-padding.json",
+      "evidence_sha256": "8f6458f7de3bbf062b2218738da9638299fd45f240ac945d106c9ded9571c21e",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-booking-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-booking-child.json",
+      "evidence_sha256": "e4763f31d2066c9201c419f5d950f9f5944483718733ca081e875968ef6953f0",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-room-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-room-X.json",
+      "evidence_sha256": "5f6395478704f1724554d48237ebf817b754c708734c49d468d2763797ee075f",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-room-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-room-Escape.json",
+      "evidence_sha256": "e87de0f10bd0fbcbe91613786ab3b7a8aa0d4dd12c7c809b34a98bba8ba42232",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-room-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-room-left.json",
+      "evidence_sha256": "56e387abf1a6d3916b00eff27f7430f18b268c878d7d43967492afc89844db45",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-room-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-room-right.json",
+      "evidence_sha256": "c85db128b04c8b2ad4000486fb88a409afe550fa5b9de56288c9b7801e14f4ff",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-room-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-room-top.json",
+      "evidence_sha256": "60dcaf276961be7b0f5833559d62c24aec9506308ab842809f033fec6c8a1cb8",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-room-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-room-bottom.json",
+      "evidence_sha256": "19dc452c475f9025a3ee05504c95148ba330d02aaa3ed16524ca7b8fb45b1617",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-room-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-room-padding.json",
+      "evidence_sha256": "d1014040beaaffe86d423d4cb61d48929c6f7b38af90670f8cbf058c16ac32ed",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-room-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-room-child.json",
+      "evidence_sha256": "d40b4117e833e3713734b3829b4b3ca25830ae2e40e235c282156084598a4b7a",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-X.json",
+      "evidence_sha256": "fb410a796881ed5553585630086934cd179c494a304eca8a07dd96eff2c25262",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-Escape.json",
+      "evidence_sha256": "ab27c90bdeb8ca890735a79a6f70515e2e51e8c8ff2828a1d3856ab5fb2a879e",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-left.json",
+      "evidence_sha256": "704135c7e45c9d9043f7368643a65864aee3772836af7a099482acd7a7fb6edf",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-right.json",
+      "evidence_sha256": "5e910d5f86d7ede1ae790d902db5e63b267da4b06914cfd51a901fe37d5c7ac1",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-top.json",
+      "evidence_sha256": "d26391f4d7158164c66f9e8a3d019be6e2e7c28a52707f71ea8c09c5d522c506",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-bottom.json",
+      "evidence_sha256": "6ac56463bfe1c426e586faec9ec31328d8cafc7922d49d92edbdaf2ba6095eb1",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-padding.json",
+      "evidence_sha256": "1b54ca8e9cbe5d873890797c3468dd78c655618270cdd2fbb65f90d7bd834646",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-child.json",
+      "evidence_sha256": "fd56a96943ebe65d105d61e57f1c7288e34b0312239f80ceebd022c415958c30",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "1280-confirm-retain",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/1280-confirm-retain.json",
+      "evidence_sha256": "0f22fa713fb10e130390e358e928f47feac85e49624fc9f9cc2cc334e3d5f97b",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-booking-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-booking-X.json",
+      "evidence_sha256": "fb3c2f8df4cb990f6137f1478985b056a8eef7f3ada0a1213e53f0f615f16241",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-booking-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-booking-Escape.json",
+      "evidence_sha256": "031d49e9ce1a2e8b5661eb2ffd2245e58e3e67a35067b74681bed07eb790e997",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-booking-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-booking-left.json",
+      "evidence_sha256": "5a9c151e0946b1f780289534e437944e54e0792a518400d3c8229824984f969f",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-booking-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-booking-right.json",
+      "evidence_sha256": "82d7b1abb2e8674cd33c76eeacd3e0f598bf78307dd0f4a66b84a6485de5d2dc",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-booking-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-booking-top.json",
+      "evidence_sha256": "63f4867730e54768c35f28f2a47922549a24fb7ca51f512ed297576307aa65d9",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-booking-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-booking-bottom.json",
+      "evidence_sha256": "d3dfef1054053e688b5097554cee8eba8b622678bb4b19b404052c1e53dbe61c",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-booking-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-booking-padding.json",
+      "evidence_sha256": "ac7519bbd0585a003990767c4b543f56503f3861c8d224b3cd08f9ddb3a1d5aa",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-booking-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-booking-child.json",
+      "evidence_sha256": "b53da3b34dce0607a5650a5a915c524ec5219f2cc727a495a11314a7544e550e",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-room-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-room-X.json",
+      "evidence_sha256": "6bae99efe4fe4855e177ecdca52ea8c3b9d271a4356f48afb4ba8b0857f3472c",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-room-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-room-Escape.json",
+      "evidence_sha256": "bbdb686cfd2ae3494e68c103f38a719b2c3611805524003a07b5f8c490905461",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-room-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-room-left.json",
+      "evidence_sha256": "7153711cf3473a55bcb0d29efe336254326860949f98293fc3d4cfb3e8be2a53",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-room-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-room-right.json",
+      "evidence_sha256": "072c198c203c715124cb19c570284501042c1a59c4b73561bf23eda9b6b10654",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-room-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-room-top.json",
+      "evidence_sha256": "f9deb4a28f47e874def8fd1996848cbc350988fa0295d4ba32079d0ed45da60a",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-room-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-room-bottom.json",
+      "evidence_sha256": "bbeb6482397e95b7719feb16cc26bbd07e5e577ff6ea30fd7862df2ac7bf348e",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-room-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-room-padding.json",
+      "evidence_sha256": "1718138f843eabeac0288503db6b6e3a088df38a1dd3a7a161f1a82846d67435",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-room-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-room-child.json",
+      "evidence_sha256": "3720f9fa8021970541a6105b973a6236c315d0f110a42c358c83286bc128373c",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-X.json",
+      "evidence_sha256": "24a281351b0fbf4ed4a5d1aabc5508f799795b1c79b7f545c5d9e6ee75fb5939",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-Escape.json",
+      "evidence_sha256": "b725817b260d39c1e62451869246691e8cec04e8d0146e4928768ff096305db2",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-left.json",
+      "evidence_sha256": "8b7803dfaec7756d4689a1ad96c44df676b468f780b82731ad09cd7290e2256a",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-right.json",
+      "evidence_sha256": "35b87bc997f69d8638df0807f445e6fb5c505d059ac35f465a5c2508c6cf6fa1",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-top.json",
+      "evidence_sha256": "484bcced1288e03bb3f9c4940de548114ce744089f856d497745f5da33f86cad",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-bottom.json",
+      "evidence_sha256": "71e8efa5c418e42d53e84f6f0ddec23be9d442ffc15677109e5bc587bfc2de23",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-padding.json",
+      "evidence_sha256": "3f6caef800e528c627f9dfabf830187f302f2ecc71a9356d4e1be4f73e7b31d9",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-child.json",
+      "evidence_sha256": "c3d0270234e4bf27da4fcf16aa44c998a8050736e3d009c98407b0fd9b05d4af",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "390-confirm-retain",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/390-confirm-retain.json",
+      "evidence_sha256": "73641c988538e5c102ba1422f5a205211c7eaf5d7df46738e266dde617521a03",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-booking-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-booking-X.json",
+      "evidence_sha256": "81f499ed92af0599e8ad338b70b1258d4b141acd060916043b43b8714be9afe4",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-booking-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-booking-Escape.json",
+      "evidence_sha256": "9374917b30a025f933907f4ba9beddd0a65fb1dec3a9f3600c627df05a09af38",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-booking-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-booking-left.json",
+      "evidence_sha256": "5d1eb7957d9889ac5cbf11c1cdd07c1624456b0e9e4408477e1fb60ed14ef026",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-booking-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-booking-right.json",
+      "evidence_sha256": "ea3000ca2f1af7a3324f71f7891027e759eeb1202ba22179176549615ae9b5e6",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-booking-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-booking-top.json",
+      "evidence_sha256": "7486711c0bab62b35c665e729267a6a9d3d981c339727728e4090db5f0a9e511",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-booking-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-booking-bottom.json",
+      "evidence_sha256": "f9f0475e9f6d5d81dcc5a070b133917d504c892a96338d93f5a7c1f4683f57c7",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-booking-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-booking-padding.json",
+      "evidence_sha256": "314233e713c2d4764a8980b11029eeeda47cecc27a0e71b894de8071e5871f50",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-booking-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-booking-child.json",
+      "evidence_sha256": "ed266c4c996e3ffd3840ce715e05ca06f19e89b9a9fdc0c07d1abc475c099956",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-room-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-room-X.json",
+      "evidence_sha256": "1fa33245895b89fb99e0aeee7944cdaf702e69f8065b4372ba6fc9ad35dd015a",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-room-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-room-Escape.json",
+      "evidence_sha256": "fa4817d1d4b106f8c6532f157891d05b61dafa216ade00477feef86adb55a3b2",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-room-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-room-left.json",
+      "evidence_sha256": "c82650da37d4b0ed81d7e754ecfe26a327146664128f38464ef1347de8102112",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-room-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-room-right.json",
+      "evidence_sha256": "2980eb72b31713790790ae82b93dc06a18a817c2edf0db677683fb6b3db3bd9f",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-room-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-room-top.json",
+      "evidence_sha256": "b32985b8cda8a5864aca338fd5f36b175943f2fc6602d7b2b477cac9883dde08",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-room-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-room-bottom.json",
+      "evidence_sha256": "3e0fc5de2a1d53d4ef410440c27fb81838c04ba4b030381865cca157030f7b14",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-room-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-room-padding.json",
+      "evidence_sha256": "7b91abb7ae2a9bbbf4361c980f7ef1fb3a00664f1db72040dc98426eb42ebc41",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-room-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-room-child.json",
+      "evidence_sha256": "de8ae2a6b2e9c7868550170c89e04f43ca805a3e478097edf903db70a47035f9",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-X",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-X.json",
+      "evidence_sha256": "faedcf44e57f80abb9c60c707528e78e42eb1b96d76bdad2764bd7e004849789",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-Escape",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-Escape.json",
+      "evidence_sha256": "3db2b89b4ea8ebbf8722573cb282c3102dc3d89c4c80b674d5ca27371099fbeb",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-left",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-left.json",
+      "evidence_sha256": "201dc302a59023c0b72be57687f818f14e9758293ca5e67f6600f6244e8f83fe",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-right",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-right.json",
+      "evidence_sha256": "2a85ce4183ac620f0cc6612d37c79ca5346a998f068df1b5210b9ab34d1067df",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-top",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-top.json",
+      "evidence_sha256": "a5a89138dd570e0b17a44f17dde1e0c1c356e86cf6c0c51f43c7e7259c08a406",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-bottom",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-bottom.json",
+      "evidence_sha256": "a7e078dd24fcf96e78924fc1a9bbc895f784ef83605ea14989c0163497093b46",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-padding",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-padding.json",
+      "evidence_sha256": "24385bcb471852b8ce849cececc892f54d10dbe4fd514dc182b2e7d461e5699c",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-child",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-child.json",
+      "evidence_sha256": "2cd2ab9d25eca744b884e0b05c52dbe2314c6ef7d928bf675cc27665927983bd",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-dialog-close-no-write",
+      "item": "320-confirm-retain",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/320-confirm-retain.json",
+      "evidence_sha256": "02267a9dd15a0e2ecc2f03a3ffa27d1e2584017a0bbd70692a325131a8636044",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "item": "booking-success",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/booking-success.json",
+      "evidence_sha256": "bcb65e4ec391552a834538a719bc8ee0c39c45b1aa69c3f42d36dff9b4874259",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "item": "booking-non401-error",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/booking-non401-error.json",
+      "evidence_sha256": "cca444e138ae276b3367bb883e060000b393ecaf7779028d89d69d86bf2d4b35",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "item": "room-success",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/room-success.json",
+      "evidence_sha256": "787a9ac55c4efaa72517f8a2d8d098e1169fa5e052717c3f47a0687e8b6ab0d6",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "item": "room-non401-error",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/room-non401-error.json",
+      "evidence_sha256": "4ddb64526cc03da1b1692f90d2531b0051fcdb1daa62b11266b62cc0cd1560b8",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "item": "confirm-success",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/confirm-success.json",
+      "evidence_sha256": "1b544883d050935d82720f7fe2c7ec203d9f6437d08eb245aed389912445caea",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "item": "confirm-non401-error",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/confirm-non401-error.json",
+      "evidence_sha256": "e38b251d91f57c183086e8d0d3f706ce061856162224890a9e82fe47bb5d160e",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "item": "503",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/503.json",
+      "evidence_sha256": "52c6f949176c03fb07161ce78ba287f17bf9ef821eec6e63c4c6e50ed71112d8",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "item": "network",
+      "status": "passed",
+      "evidence": "evidence/ui-dialogs/network.json",
+      "evidence_sha256": "9182c80ebf788cbeae16c1133361b99db3e7e2f0e9bb4f700bbf4218bfca8230",
+      "review_verdict": "supported_by_native_UI_geometry_state_and_business_snapshot"
+    }
+  ],
+  "remaining_path_assessments": [
+    {
+      "id": "COV-DEF-001",
+      "source_ref": "web/app.js:56",
+      "branch_id": "9",
+      "branch_index": 1,
+      "status": "retained_uncovered_defensive_path",
+      "reason": "renderLogin总建login-error，login成功后loadPage自行处理异步错误；本轮身份/退出证据未发现正常DOM交错能使login catch缺节点。不能证明所有未来异步路径绝对不可达，若真实UI发生该时序再补场景。",
+      "formal_scene_change_required": false,
+      "coverage_exclusion": false,
+      "execution_pass_claim": false
+    },
+    {
+      "id": "COV-DEF-002",
+      "source_ref": "web/app.js:81",
+      "branch_id": "20",
+      "branch_index": 0,
+      "status": "retained_uncovered_defensive_path",
+      "reason": "loadPage入口/最终块与mark-read catch都有user守卫；容量设备控件来自已登录页面。本轮401与退出没有旧shell复现，未发现正常调用者绕过守卫。",
+      "formal_scene_change_required": false,
+      "coverage_exclusion": false,
+      "execution_pass_claim": false
+    },
+    {
+      "id": "COV-DEF-003",
+      "source_ref": "web/app.js:95",
+      "branch_id": "33",
+      "branch_index": 1,
+      "status": "retained_uncovered_defensive_path",
+      "reason": "page枚举由初始值、真实导航固定四值和降权spaces赋值；未发现合法UI输入非法枚举。96行return空和此分支继续留分母。",
+      "formal_scene_change_required": false,
+      "coverage_exclusion": false,
+      "execution_pass_claim": false
+    },
+    {
+      "id": "COV-DEF-004",
+      "source_ref": "web/app.js:99",
+      "branch_id": "34",
+      "branch_index": 0,
+      "status": "retained_uncovered_defensive_path",
+      "reason": "所有生产heading调用107/123/135/139均显式第四参数，省略参数仅辅助函数直调；无新增业务场景理由。",
+      "formal_scene_change_required": false,
+      "coverage_exclusion": false,
+      "execution_pass_claim": false
+    },
+    {
+      "id": "COV-DEF-005",
+      "source_ref": "web/app.js:107",
+      "branch_id": "37",
+      "branch_index": 1,
+      "status": "retained_uncovered_defensive_path",
+      "reason": "实际Chromium143 zh-CN/Shanghai日期输出含日及星期，本轮日期对照亦证明；暂无已约定支持环境产生缺星期后缀的证据。不扩大浏览器环境要求，未来真实支持环境差异再补。",
+      "formal_scene_change_required": false,
+      "coverage_exclusion": false,
+      "execution_pass_claim": false
+    }
+  ],
+  "coverage_review": {
+    "status": "verified_same_source_counter_union",
+    "metrics": {
+      "revision": "43bea9de0b8e2f8d3bd7723a6b734f242f36c794",
+      "source_hashes": {
+        "app/server.py": "d108a24c318d51607d22a9bedfab77e8e9911a04c7df535a5882698d1e3963e4",
+        "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+        "web/app.js": "795a77045b90f46c99851f52fee5bce6836e4b88b39d4e584c9bb9387921d293",
+        "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+        "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+        "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead"
+      },
+      "baseline": {
+        "revision": "5b7e2461476d4ee6bd6819d084cb1e4787c302c1",
+        "backend": {
+          "lines": {
+            "covered": 380,
+            "total": 384,
+            "pct": 98.95833333333333
+          },
+          "branches": {
+            "covered": 124,
+            "total": 124,
+            "pct": 100.0
+          }
+        },
+        "frontend": {
+          "lines": {
+            "total": 181,
+            "covered": 180,
+            "skipped": 0,
+            "pct": 99.44
+          },
+          "functions": {
+            "total": 86,
+            "covered": 85,
+            "skipped": 0,
+            "pct": 98.83
+          },
+          "statements": {
+            "total": 320,
+            "covered": 317,
+            "skipped": 0,
+            "pct": 99.06
+          },
+          "branches": {
+            "total": 177,
+            "covered": 165,
+            "skipped": 0,
+            "pct": 93.22
+          }
+        },
+        "weighted_executable_lines": {
+          "covered": 560,
+          "total": 565,
+          "pct": 99.11504424778761
+        },
+        "original_smoke_backend": {
+          "lines_pct": 75.52083333333333,
+          "branches_pct": 57.25806451612903
+        }
+      },
+      "supplemental_only": {
+        "backend": {
+          "lines": {
+            "covered": 345,
+            "total": 384,
+            "pct": 89.84375
+          },
+          "branches": {
+            "covered": 92,
+            "total": 124,
+            "pct": 74.19354838709677
+          }
+        },
+        "frontend": {
+          "lines": {
+            "total": 181,
+            "covered": 150,
+            "skipped": 0,
+            "pct": 82.87
+          },
+          "functions": {
+            "total": 86,
+            "covered": 74,
+            "skipped": 0,
+            "pct": 86.04
+          },
+          "statements": {
+            "total": 320,
+            "covered": 251,
+            "skipped": 0,
+            "pct": 78.43
+          },
+          "branches": {
+            "total": 177,
+            "covered": 135,
+            "skipped": 0,
+            "pct": 76.27
+          }
+        }
+      },
+      "cumulative": {
+        "backend": {
+          "lines": {
+            "covered": 384,
+            "total": 384,
+            "pct": 100.0
+          },
+          "branches": {
+            "covered": 124,
+            "total": 124,
+            "pct": 100.0
+          }
+        },
+        "frontend": {
+          "lines": {
+            "total": 181,
+            "covered": 180,
+            "skipped": 0,
+            "pct": 99.44
+          },
+          "functions": {
+            "total": 86,
+            "covered": 86,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 320,
+            "covered": 318,
+            "skipped": 0,
+            "pct": 99.37
+          },
+          "branches": {
+            "total": 177,
+            "covered": 172,
+            "skipped": 0,
+            "pct": 97.17
+          }
+        }
+      },
+      "aggregation": "同业务源码SHA下stage07全部27入口实测计数＋本轮补测与原3smokes命中并集；绝不合并验收通过结果"
+    },
+    "independent_checks": [
+      "Current source six SHA and ledger six SHA matched execution context. 186 local isolated server source copies hash-identical; frontend source-map sourcesContent equals original app.js SHA.",
+      "Both backend reports canonical single app/server.py,384 lines/124 branches; cumulative executed lines and arcs exactly baseline OR supplemental. Unique new backend lines260/492/493/495.",
+      "JS baseline/current/cumulative statementMap,fnMap,branchMap identical; positive statement/function/branch hits independently equal baseline OR supplemental.",
+      "JS residuals exactly five branch exits9[1],20[0],33[1],34[0],37[1],line96 and two defensive statements; functions86/86. No exclude/pragma lowering denominator.",
+      "Coverage may count real harness setup/repeated attempts with same source; only completed final178 items are acceptance verdicts. Coverage count is reachability, not assertion sufficiency or app release pass."
+    ]
+  },
+  "resolved_review_findings": [
+    {
+      "subject": "dialog evidence users.password_hash",
+      "status": "resolved_by_redaction_without_product_or_test_rerun",
+      "evidence": "evidence-redaction.json",
+      "reason": "83 public evidence files now users five business columns, before/after equality preserved; original raw retained local-private and excluded from public snapshot. Independent final review hashes bind redacted evidence."
+    }
+  ],
+  "additional_test_recommendations": [],
+  "scenario_updates_required": false,
+  "fixed_point": {
+    "status": "reached_for_current_source_and_agreed_acceptance_scope",
+    "reason": "8 coverage supplement groups and2 refinements are executed with full matrices; residual five static defenses do not presently identify proven normal business entry or missing confirmed requirement. Covered-but-risky transport commit/replay, real401 writes, self-role fault/recovery, stale logout responses, inherited HTTP dispatch, native dialog short circuit and empty-date semantics have explicit assertions. No further material formal scene addition identified.",
+    "termination_is_not_product_acceptance": true,
+    "reopen_when": "Business source changes, supported environment expands, actual normal UI demonstrates a retained defensive path, or corrective changes introduce a new fault combination."
+  },
+  "app_acceptance": "failed_in_executed_subset; full_updated_suite_not_established",
+  "release_approved": false,
+  "limitations": [
+    "Current full ledger has167 scenarios;157 are unproven/not rerun in this partial run, with original full acceptance immutable.",
+    "The two known failures are actionable product defects already represented in current scenes; a fix requires rerunning affected full matrices and justified regression, not weakening expected assertions.",
+    "Synthetic dependency faults verify frontend/I/O behavior at stated boundary, not real OS socket unpredictability or external integrations.",
+    "Actual CLI Python3.12/random explicit owned port does not settle original minimum-Python/default-port resource matrix.",
+    "UI identity snapshots preserve relevant selected business fields and actual no-write/write behavior; no claim of independent full-column DB invariant for every identity matrix.",
+    "DEF reachability dispositions are limited static/runtime observations, not absolute unreachability or execution-passed declarations."
+  ]
+}

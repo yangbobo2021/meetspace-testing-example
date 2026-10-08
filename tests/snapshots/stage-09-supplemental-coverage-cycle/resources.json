@@ -1,0 +1,73 @@
+{
+  "discovery_complete": true,
+  "discovery_basis": "README、交接文档、app/server.py 全部导入及服务实现、web 全部资产/API、原有测试、已确认需求与现有空资源台账；本次真实启动/身份/数据重置/浏览器资源探测。",
+  "decisions": [
+    {
+      "id": "local-runtime",
+      "kind": "local",
+      "description": "Python 标准库、Asia/Shanghai 时区、SQLite 和真实 HTTP 启动可用。",
+      "verification": {
+        "status": "passed",
+        "evidence": "evidence/resources/20261008T132247Z/local-runtime.json"
+      },
+      "reuse_condition": "复用前检查源码与需求哈希、运行时和浏览器版本；每轮重建隔离数据并复验健康和身份。"
+    },
+    {
+      "id": "synthetic-identities",
+      "kind": "local",
+      "description": "四个公开合成账号真实登录及当前身份可用；不需要真实凭据。",
+      "verification": {
+        "status": "passed",
+        "evidence": "evidence/resources/20261008T132247Z/synthetic-identities.json"
+      },
+      "reuse_condition": "复用前检查源码与需求哈希、运行时和浏览器版本；每轮重建隔离数据并复验健康和身份。",
+      "credential_ref": "README.md#示例账号",
+      "credential_reusable": true
+    },
+    {
+      "id": "browser-targets",
+      "kind": "local",
+      "description": "Chromium 桌面 1280×900 与窄屏触控模拟 390×844；不代表真实手机或跨浏览器验收。",
+      "verification": {
+        "status": "passed",
+        "evidence": "evidence/resources/20261008T132247Z/browser-targets.json"
+      },
+      "reuse_condition": "复用前检查源码与需求哈希、运行时和浏览器版本；每轮重建隔离数据并复验健康和身份。"
+    },
+    {
+      "id": "isolated-data",
+      "kind": "local",
+      "description": "新文件初始化；同文件重启保留记录；重置使用另一个新文件并重建进程和浏览器上下文。",
+      "verification": {
+        "status": "passed",
+        "evidence": "evidence/resources/20261008T132247Z/isolated-data.json"
+      },
+      "reuse_condition": "复用前检查源码与需求哈希、运行时和浏览器版本；每轮重建隔离数据并复验健康和身份。"
+    },
+    {
+      "id": "service-inventory",
+      "kind": "local",
+      "description": "未发现第三方业务服务；通知直接写本地 SQLite，页面资产本地提供，API 同源。无需第三方 Mock 或真实服务凭据。",
+      "verification": {
+        "status": "passed",
+        "evidence": "evidence/resources/20261008T132247Z/service-inventory.json"
+      },
+      "reuse_condition": "复用前检查源码与需求哈希、运行时和浏览器版本；每轮重建隔离数据并复验健康和身份。"
+    },
+    {
+      "id": "existing-test-command",
+      "kind": "local",
+      "description": "现有 unittest 命令可执行；三个冒烟测试通过仅证明有限路径。",
+      "verification": {
+        "status": "passed",
+        "evidence": "evidence/resources/20261008T132247Z/existing-test-command.json"
+      },
+      "reuse_condition": "复用前检查源码与需求哈希、运行时和浏览器版本；每轮重建隔离数据并复验健康和身份。"
+    }
+  ],
+  "limitations": [
+    "资源预检不替代 159 个场景的执行和独立证据审阅。",
+    "精确双时钟、并发屏障、SQL/提交故障与熵注入为后续场景执行 harness；本次未验证，不得据本次资源通过结论宣称这些能力已就绪。"
+  ],
+  "verified_at": "20261008T132247Z"
+}

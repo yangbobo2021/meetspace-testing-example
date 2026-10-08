@@ -1,0 +1,71 @@
+{
+  "stage": "white-box-design-only",
+  "status": "independently_reviewed_design_ready",
+  "implementation_revision": "5a0fd19fa6691c2b25be1ac2356e3b0c55766c43",
+  "requirements_sha256": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+  "counts": {
+    "requirements": 96,
+    "black_box_scenarios": 96,
+    "white_box_scenarios": 63,
+    "total_scenarios": 159,
+    "original_methods": 105,
+    "new_white_box_methods": 63,
+    "total_methods": 168,
+    "material_targets": 63,
+    "requirements_with_white_box_links": 96,
+    "reused_original_method_links": 7
+  },
+  "basis": [
+    "固定代码静态阅读，以需求为正确性来源",
+    "原黑盒96场景/105方法保持不变，新增白盒材料路径矩阵；非单元测试模拟覆盖率",
+    "Analyst草稿阶段white_box_complete保持false；独立审阅通过后由协调者设为true，Analyst无自审批权"
+  ],
+  "execution_status": "not_started",
+  "resources_status": "not_verified",
+  "resource_assumptions": [
+    "隔离真实SQLite/HTTP服务与浏览器后续可操作",
+    "双时钟、真实并发屏障、透明SQL/提交故障适配器需后续构建并验证",
+    "UI网络释放只用于前端交互，不证明真实服务通过",
+    "没有第三方集成从代码出现；后续资源发现仍需独立验证"
+  ],
+  "suspected_implementation_risks": [
+    {
+      "target": "WBT-ui-load-token-races",
+      "detail": "api内401可先于loadPage的token陈旧检查清state.user；旧请求401应作为当前最新状态保护的风险探针，未执行未确认缺陷。"
+    },
+    {
+      "target": "WBT-booking-open-hours",
+      "detail": "isoformat timespec=seconds产生截断，但当前代码仍需以原datetime微秒判定；保留端点/截断交互探针，不认定通过。"
+    },
+    {
+      "target": "WBT-ui-submit-button-matrix",
+      "detail": "booking crypto.randomUUID在try外；所需浏览器能力/环境失败可能影响按钮finally，按真实可用浏览器范围验证，不扩展未确认兼容承诺。"
+    },
+    {
+      "target": "WBT-idempotency-absolute-precision",
+      "detail": "existing K的fingerprint使用seconds格式，后续微秒粒度守卫在replay返回之后，可能把绝对微秒变化误判同内容；保留拒绝预期，未执行未确认缺陷。"
+    }
+  ],
+  "created_at": "2026-10-08T11:57:06.220375+00:00",
+  "repair_history": [
+    {
+      "source": "review-history/white-box-round-01/white_box_review.json",
+      "gap_ids": [
+        "WBG-01",
+        "WBG-02",
+        "WBG-04"
+      ],
+      "changes": [
+        "密码随机输入因果/独立scrypt复算/全部出口检查与三原方法的必做直接关联",
+        "首次和后续会话有效熵/完整出口与三原方法必做直接关联",
+        "固定合法对齐T*，服务时钟±1秒孤立六精确日期边界，直接关联原AI-reservation-creation-4全部矩阵"
+      ],
+      "analyst_verdict": "修订已完成，充分性留待独立Reviewer，不自行通过"
+    }
+  ],
+  "independent_review_status": "passed",
+  "independent_review_reference": "/root/white_box_reviewer independent round 03",
+  "review_rounds": 3,
+  "app_acceptance": "not_established",
+  "source_references_reviewed": 175
+}

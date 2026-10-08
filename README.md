@@ -73,7 +73,9 @@ python3 -m unittest discover -s tests -v
 
 随后对既有冒烟、API、运行时、UI及竞态测试重跑测量：后端行覆盖 **98.96%**、分支 **100%**；前端行覆盖 **99.44%**、分支 **93.22%**。覆盖率不能替代行为断言与证据审阅；审计提出8组补测路径及5处防御逻辑分析项，详见 [覆盖率审计档案](tests/snapshots/stage-07-coverage-audit/README.md) 与 [DR-008](specs/decisions/008-code-coverage-audit.md)，首轮验收失败结论保持。
 
-用户随后同意更新正式设计：新增 **8 条白盒场景**、细化 **2 条已有场景**及其方法；当前 **96 条黑盒 + 71 条白盒 = 167 条场景**，共 **176 个方法**。设计及独立审阅见 [阶段08档案](tests/snapshots/stage-08-coverage-scenarios/README.md) 与 [DR-009](specs/decisions/009-coverage-supplement-scenarios.md)。本轮不执行补测，旧运行保留原定义与结论，覆盖率提升尚未测量。
+用户随后同意更新正式设计：新增 **8 条白盒场景**、细化 **2 条已有场景**及其方法；当前 **96 条黑盒 + 71 条白盒 = 167 条场景**，共 **176 个方法**。设计及独立审阅见 [阶段08档案](tests/snapshots/stage-08-coverage-scenarios/README.md) 与 [DR-009](specs/decisions/009-coverage-supplement-scenarios.md)。该设计阶段未执行补测，旧运行保留原定义与结论。
+
+后续补测已执行并独立审阅：**10条场景中8通过、2失败**，178个矩阵项116通过、62失败；另3个原冒烟复验通过。两个失败分别为未支持HTTP方法返回501 HTML、自身降权后数据重试未刷新身份。相同业务源码下联合既有测试与本轮命中，后端行384/384、分支124/124均为**100%**；前端行180/181为**99.44%**、分支172/177为**97.17%**、函数86/86为**100%**。剩余5个防御出口仍保留在分母，独立复查未提出新的正式场景建议，总场景数仍167；其他157条场景没有在本轮重新验收。计数收敛不表示缺陷消除或发布通过，详见 [阶段09档案](tests/snapshots/stage-09-supplemental-coverage-cycle/README.md) 与 [DR-010](specs/decisions/010-supplemental-coverage-cycle.md)。
 
 ## GitHub 阶段对比
 
@@ -88,6 +90,7 @@ python3 -m unittest discover -s tests -v
 - `stage-06-acceptance-run` 保存[首轮验收公开档案](tests/snapshots/stage-06-acceptance-run/README.md)：完整工作流真实执行和独立审阅；139 通过、9 失败、11 未证明，验收 incomplete，应用代码保持不变。
 - `stage-07-coverage-audit` 保存[代码覆盖率审计档案](tests/snapshots/stage-07-coverage-audit/README.md)：既有测试重跑计数、逐位置未覆盖映射、补测建议与测量范围；不修改应用或升级验收结论。
 - `stage-08-coverage-scenarios` 保存[覆盖率驱动的设计更新档案](tests/snapshots/stage-08-coverage-scenarios/README.md)：新增8白盒、细化2旧场景，正式台账167场景/176方法，五处防御逻辑按可达性处置；本轮不执行补测。
+- `stage-09-supplemental-coverage-cycle` 保存[补测执行与覆盖率循环档案](tests/snapshots/stage-09-supplemental-coverage-cycle/README.md)：固定新run、178矩阵项、8场景通过/2失败、累计及仅本轮计数、独立剩余路径审查；无新增场景建议，发布验收未通过。
 - 后续修复和复测分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：

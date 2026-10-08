@@ -8,6 +8,7 @@
 首轮完整验收正式审阅为139通过、9失败、11未证明，结果incomplete，见 [DR-007](decisions/007-first-release-acceptance.md)。
 既有测试代码覆盖率审计及补测建议见 [DR-008](decisions/008-code-coverage-audit.md)，不改变首轮验收结论。
 覆盖率驱动的正式设计更新见 [DR-009](decisions/009-coverage-supplement-scenarios.md)：新增8条白盒并细化2条，总计167条场景；本轮不执行补测。
+后续补测与覆盖率循环见 [DR-010](decisions/010-supplemental-coverage-cycle.md)：10场景执行8通过、2失败；累计后端行与分支100%、前端分支97.17%，独立复查无新增场景建议。
 验证章节保留需求阶段占位；黑白盒场景、执行与审阅台账存放于 `tests/delivery-acceptance/`，公开阶段归档在 `tests/snapshots/`。
 规约正文集中在 `packages/`；旧的 `docs/requirements.md` 仅保留迁移入口与旧 ID 对照。
 
@@ -39,6 +40,7 @@ meta.md       结构、语法与引用规范
 | [DR-007](decisions/007-first-release-acceptance.md) | 007-first-release-acceptance.md | 首轮完整验收、独立证据结论与公开阶段归档 |
 | [DR-008](decisions/008-code-coverage-audit.md) | 008-code-coverage-audit.md | 既有测试覆盖率、未命中分支与补测建议 |
 | [DR-009](decisions/009-coverage-supplement-scenarios.md) | 009-coverage-supplement-scenarios.md | 根据覆盖率更新正式场景及独立设计审阅 |
+| [DR-010](decisions/010-supplemental-coverage-cycle.md) | 010-supplemental-coverage-cycle.md | 补测执行、累计覆盖率、剩余路径及循环收敛审查 |
 
 ## 规约包
 

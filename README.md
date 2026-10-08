@@ -77,6 +77,7 @@ python3 -m unittest discover -s tests -v
 - `v1.0.0-rc.1` 保留最初的本地候选版本。
 - `stage-01-implemented` 标记首次公开交接的当前实现，包括公开仓库启动说明；业务代码与原候选版本相同，完整发布验收尚未执行。
 - `stage-02-requirements` 标记逆向需求整理阶段，按 `specs/` 规范组织候选条目；本阶段未启动测试 Skill 或执行应用测试。
+- `stage-03-black-box-scenarios` 保存[黑盒设计公开档案](tests/snapshots/stage-03-black-box-scenarios/README.md)：96 个场景、102 个方法，三轮独立审阅后 92 条需求充分、4 条有缺口，设计门禁 blocked；未执行应用测试。
 - 后续补测、修复和验收完成时分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：
@@ -93,6 +94,7 @@ git diff stage-01-implemented..HEAD
 app/server.py           HTTP API、权限、预约业务及 SQLite
 web/                    中文响应式操作界面
 tests/test_smoke.py      原有少量冒烟测试
+tests/snapshots/         不可变的各阶段测试设计档案
 specs/map.md            需求入口与规约索引
 specs/meta.md           沿用自行车项目的存储与语法规范
 specs/packages/         按业务意图拆分的需求条目

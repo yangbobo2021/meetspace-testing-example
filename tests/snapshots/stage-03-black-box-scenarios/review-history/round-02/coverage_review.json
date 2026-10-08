@@ -1,0 +1,3456 @@
+{
+  "status": "gaps",
+  "basis": "本轮独立复审：重新读取96条确认需求、96条black-box场景及全部98个关联AI方法，核对九包正文与requirements逐字一致；逐需求重新挑战操作模式、用户状态、正常/异常/边界/转换及可逃逸实现。上轮记录仅作为反例索引，不沿用Analyst修复结论。依赖故障适配器必须透明转发真实SQLite、保留错误实现的中途commit、不替应用补偿，并以真实HTTP和独立持久化观察判定；将其作为可审查的后续测试设计，不要求本轮运行或资源预检通过。--db隔离库快照与既有历史fixture明确测试边界，不把表名当需求。每条保留实质反例及观察信号；剩余缺口明确区分无唯一预期、无生成证据和未覆盖事务/首请求模式。只写coverage_review，不修Analyst台账，不执行应用。充分性仅针对未来真实执行及所需证据全通过后支持约定范围交付，不保证应用已工作或无所有可能缺陷。",
+  "requirements_sha256": "b7bcd3b8291884a82f24fcfbf494409d52a63a92b485de14ab1a8925d468186f",
+  "scenarios_sha256": "3040e0ba596d15ca7f65021459234b39e2f4576de6160d4e28d805703b367676",
+  "methods_sha256": "1adfed1322010a6e7c9e9d173a7ed422855b5801258d11ea3a1d28cd14468cbe",
+  "items": [
+    {
+      "requirement_id": "application-runtime-1",
+      "verdict": "sufficient",
+      "reason": "无依赖环境、两个Python版本、套接字和落盘重启观察共同区分启动成功与契约满足。",
+      "operation_modes": [
+        "默认启动",
+        "监听和默认落盘"
+      ],
+      "user_states": [
+        "首次使用且无第三方包",
+        "本机使用者重启服务"
+      ],
+      "fault_probes": [
+        {
+          "mode": "默认启动",
+          "state": "首次使用且无第三方包",
+          "plausible_fault": "偷偷依赖第三方包或仅支持较新Python",
+          "scenario_ids": [
+            "BB-application-runtime-1"
+          ],
+          "failure_signal": "3.11无第三方环境启动失败，版本和依赖清单留证"
+        },
+        {
+          "mode": "监听和默认落盘",
+          "state": "本机使用者重启服务",
+          "plausible_fault": "监听所有网卡或使用内存库",
+          "scenario_ids": [
+            "BB-application-runtime-1"
+          ],
+          "failure_signal": "监听清单不是127.0.0.1:8766，指定文件未产生或重启后新增室消失"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "application-runtime-2",
+      "verdict": "sufficient",
+      "reason": "单参数及组合参数均观察实际地址和持久数据隔离，可发现参数忽略及默认项被覆盖。",
+      "operation_modes": [
+        "单独覆盖host/port/db",
+        "组合覆盖并重启"
+      ],
+      "user_states": [
+        "启动者仅指定一项",
+        "已有默认库的启动者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "单独覆盖host/port/db",
+          "state": "启动者仅指定一项",
+          "plausible_fault": "指定db时端口也被错误改动",
+          "scenario_ids": [
+            "BB-application-runtime-2"
+          ],
+          "failure_signal": "四组命令的监听地址、端口、文件与未指定默认值不符"
+        },
+        {
+          "mode": "组合覆盖并重启",
+          "state": "已有默认库的启动者",
+          "plausible_fault": "自定义库仍读写默认库",
+          "scenario_ids": [
+            "BB-application-runtime-2"
+          ],
+          "failure_signal": "自定义记录出现在默认库或DEFAULT丢失，重启对应库查不到新增记录"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "application-runtime-3",
+      "verdict": "sufficient",
+      "reason": "两种空库、北京时间凌晨/上午及UTC/上海系统时区逐字段核对，已能暴露UTC取明天和示例归属错误。",
+      "operation_modes": [
+        "空路径和空SQLite初始化",
+        "北京时间日期换日"
+      ],
+      "user_states": [
+        "四个示例身份",
+        "北京时间00:30且UTC前一天的初始化者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "空路径和空SQLite初始化",
+          "state": "四个示例身份",
+          "plausible_fault": "少建账号房间或分错团队角色",
+          "scenario_ids": [
+            "BB-application-runtime-3"
+          ],
+          "failure_signal": "完整表格、四次登录身份及五室三会议逐字段对照失败"
+        },
+        {
+          "mode": "北京时间日期换日",
+          "state": "北京时间00:30且UTC前一天的初始化者",
+          "plausible_fault": "使用UTC日期计算明天",
+          "scenario_ids": [
+            "BB-application-runtime-3"
+          ],
+          "failure_signal": "预期04-11却生成04-10；系统UTC/上海组合明确留证"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "application-runtime-4",
+      "verdict": "sufficient",
+      "reason": "同日和跨日重启、改名取消新增后的完整差异，能识别重播种与日期漂移。",
+      "operation_modes": [
+        "同日重开",
+        "跨日重开"
+      ],
+      "user_states": [
+        "已修改和新增数据的团队",
+        "已有绝对日期的示例会议"
+      ],
+      "fault_probes": [
+        {
+          "mode": "同日重开",
+          "state": "已修改和新增数据的团队",
+          "plausible_fault": "无条件重新播种覆盖修改",
+          "scenario_ids": [
+            "BB-application-runtime-4"
+          ],
+          "failure_signal": "旧ID、改名、新室或取消状态丢失，示例数量增加"
+        },
+        {
+          "mode": "跨日重开",
+          "state": "已有绝对日期的示例会议",
+          "plausible_fault": "每次启动把示例移到明天",
+          "scenario_ids": [
+            "BB-application-runtime-4"
+          ],
+          "failure_signal": "前移两天重启后会议绝对日期改变"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "application-runtime-5",
+      "verdict": "sufficient",
+      "reason": "变更角色、空间、预约取消、混合已读未读通知后两次同库重启，覆盖主要持久集合及读取状态。",
+      "operation_modes": [
+        "保存后重启",
+        "取消及通知持久化"
+      ],
+      "user_states": [
+        "已有团队和角色变更",
+        "同时有有效/取消预约及已读/未读通知"
+      ],
+      "fault_probes": [
+        {
+          "mode": "保存后重启",
+          "state": "已有团队和角色变更",
+          "plausible_fault": "只将角色和房间变更缓存在内存",
+          "scenario_ids": [
+            "BB-application-runtime-5"
+          ],
+          "failure_signal": "重登身份或房间字段回退"
+        },
+        {
+          "mode": "取消及通知持久化",
+          "state": "同时有有效/取消预约及已读/未读通知",
+          "plausible_fault": "恢复时丢取消记录或重置已读位",
+          "scenario_ids": [
+            "BB-application-runtime-5"
+          ],
+          "failure_signal": "两次重启前后集合、取消时间、通知正文及已读位差异"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "application-runtime-6",
+      "verdict": "sufficient",
+      "reason": "需求仅约定数据库可读取时的健康结果，匿名/登录及重启后完整JSON对照足以检出该范围错误。",
+      "operation_modes": [
+        "健康查询"
+      ],
+      "user_states": [
+        "未登录客户端且数据库可读",
+        "已登录且服务已重启"
+      ],
+      "fault_probes": [
+        {
+          "mode": "健康查询",
+          "state": "未登录客户端且数据库可读",
+          "plausible_fault": "给健康接口加登录保护",
+          "scenario_ids": [
+            "BB-application-runtime-6"
+          ],
+          "failure_signal": "匿名请求跳转登录或拒绝"
+        },
+        {
+          "mode": "健康查询",
+          "state": "已登录且服务已重启",
+          "plausible_fault": "返回过期版本或系统本地时区",
+          "scenario_ids": [
+            "BB-application-runtime-6"
+          ],
+          "failure_signal": "JSON不是ok、1.0.0-rc.1、Asia/Shanghai"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "application-runtime-7",
+      "verdict": "sufficient",
+      "reason": "关联依赖异常方法补上409及500真实响应，原错误矩阵与两次相同类别比较可暴露非JSON和栈泄漏；未要求现在执行设施。",
+      "operation_modes": [
+        "认证/格式/业务冲突/存储错误",
+        "完整性和未预期异常"
+      ],
+      "user_states": [
+        "提交合成错误密码或无效写入者",
+        "正常业务请求命中依赖故障的客户端"
+      ],
+      "fault_probes": [
+        {
+          "mode": "认证/格式/业务冲突/存储错误",
+          "state": "提交合成错误密码或无效写入者",
+          "plausible_fault": "回显密码或错误代码不稳定",
+          "scenario_ids": [
+            "BB-application-runtime-7"
+          ],
+          "failure_signal": "重复响应代码不同、JSON解析失败或含密码/栈"
+        },
+        {
+          "mode": "完整性和未预期异常",
+          "state": "正常业务请求命中依赖故障的客户端",
+          "plausible_fault": "仅500返回HTML异常页或未捕获异常",
+          "scenario_ids": [
+            "BB-application-runtime-7"
+          ],
+          "failure_signal": "AI-storage-exception-boundary命中IntegrityError/RuntimeError后实际HTTP非JSON、缺稳定代码或含Traceback/内部栈帧"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "application-runtime-8",
+      "verdict": "sufficient",
+      "reason": "三类依赖异常有明确注入点、预检、命中及真实HTTP分类证据，并保留真实写锁恢复；能检出分类处理错误，不能等同完成真实集成测试。",
+      "operation_modes": [
+        "完整性异常",
+        "存储失败及恢复",
+        "未预期异常"
+      ],
+      "user_states": [
+        "合法新增室/创建预约请求者",
+        "合法写入遭遇写锁或OperationalError者",
+        "写入依赖抛RuntimeError的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "完整性异常",
+          "state": "合法新增室/创建预约请求者",
+          "plausible_fault": "将IntegrityError当普通500",
+          "scenario_ids": [
+            "BB-application-runtime-8"
+          ],
+          "failure_signal": "依赖命中记录为IntegrityError而响应不是409/data_conflict"
+        },
+        {
+          "mode": "存储失败及恢复",
+          "state": "合法写入遭遇写锁或OperationalError者",
+          "plausible_fault": "返回200或错误类别",
+          "scenario_ids": [
+            "BB-application-runtime-8"
+          ],
+          "failure_signal": "实际写锁/依赖异常响应不是503/storage_unavailable，释放后同一合法操作不能保存"
+        },
+        {
+          "mode": "未预期异常",
+          "state": "写入依赖抛RuntimeError的用户",
+          "plausible_fault": "只捕获SQLite异常或误分为503",
+          "scenario_ids": [
+            "BB-application-runtime-8"
+          ],
+          "failure_signal": "真实HTTP不是500/internal_error或正文泄漏栈；两次独立分支应一致"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "application-runtime-9",
+      "verdict": "gap",
+      "reason": "预约创建/取消的部分写与提交失败已具体化且禁止测试器补偿；但泛指业务事务还包括空间、角色和全部已读，本条这些模式仍只有前置锁或无故障用例。",
+      "operation_modes": [
+        "首写前失败及恢复",
+        "预约事务部分写后失败",
+        "其他业务事务中途或提交失败"
+      ],
+      "user_states": [
+        "创建/取消/房间/角色修改者",
+        "创建者/本人取消者/代取消管理员",
+        "管理员改房间/角色及用户全部已读"
+      ],
+      "fault_probes": [
+        {
+          "mode": "首写前失败及恢复",
+          "state": "创建/取消/房间/角色修改者",
+          "plausible_fault": "失败后仍写或重试重复",
+          "scenario_ids": [
+            "BB-application-runtime-9"
+          ],
+          "failure_signal": "释放锁后独立读取与原快照不符，重试记录重复"
+        },
+        {
+          "mode": "预约事务部分写后失败",
+          "state": "创建者/本人取消者/代取消管理员",
+          "plausible_fault": "分别提交预约与通知且失败不回滚",
+          "scenario_ids": [
+            "BB-application-runtime-9"
+          ],
+          "failure_signal": "适配器保留真实中途commit；第二类写前或最终commit前故障后，独立连接/API/重启可见半成品或孤立通知"
+        },
+        {
+          "mode": "其他业务事务中途或提交失败",
+          "state": "管理员改房间/角色及用户全部已读",
+          "plausible_fault": "房间名称先提交，容量设备后失败仍留名称；逐条已读部分提交",
+          "scenario_ids": [
+            "BB-application-runtime-9"
+          ],
+          "failure_signal": "现有适配器限定预约和通知两类写，前置锁会让错误实现首写即失败，不能暴露；需这些入口实际写后故障并观察部分字段/角色/已读位残留"
+        }
+      ],
+      "uncovered_paths": [
+        "application-runtime-9：AI-transaction-midwrite-boundary仅覆盖创建、本人取消、代取消；缺房间新增/多字段修改、角色修改、全部已读等业务写入的写后/提交失败。反例：房间名称单独提交后设备保存失败，或全部已读逐条提交后中断；预约事务完全正确且前置锁无副作用仍可通过当前全部关联场景。"
+      ]
+    },
+    {
+      "requirement_id": "identity-session-1",
+      "verdict": "sufficient",
+      "reason": "格式矩阵区分格式错误与凭证错误，并以归一化有效登录为正向证据；未要求注册额外边界账号。",
+      "operation_modes": [
+        "邮箱密码归一化",
+        "字段类型及长度边界"
+      ],
+      "user_states": [
+        "已知有效账号",
+        "缺失/错误类型/边界凭证"
+      ],
+      "fault_probes": [
+        {
+          "mode": "邮箱密码归一化",
+          "state": "已知有效账号",
+          "plausible_fault": "邮箱大小写或首尾空格不归一",
+          "scenario_ids": [
+            "BB-identity-session-1"
+          ],
+          "failure_signal": "大写带空格邮箱和带空格密码登录失败"
+        },
+        {
+          "mode": "字段类型及长度边界",
+          "state": "缺失/错误类型/边界凭证",
+          "plausible_fault": "将null转字符串或拒绝最大合法长度",
+          "scenario_ids": [
+            "BB-identity-session-1"
+          ],
+          "failure_signal": "无效类型被接收，1/160/256与161/257的格式阶段判断不符"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-2",
+      "verdict": "sufficient",
+      "reason": "四身份真实登录、受保护读取和刷新，能区分假登录及身份串用。",
+      "operation_modes": [
+        "正确凭证登录",
+        "会话后续使用"
+      ],
+      "user_states": [
+        "两团队管理员与成员",
+        "刚登录并刷新页面者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "正确凭证登录",
+          "state": "两团队管理员与成员",
+          "plausible_fault": "始终建立默认管理员会话",
+          "scenario_ids": [
+            "BB-identity-session-2"
+          ],
+          "failure_signal": "返回身份和房间团队与所选账号不符"
+        },
+        {
+          "mode": "会话后续使用",
+          "state": "刚登录并刷新页面者",
+          "plausible_fault": "仅前端保存登录成功状态",
+          "scenario_ids": [
+            "BB-identity-session-2"
+          ],
+          "failure_signal": "刷新后的受保护请求被拒绝"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-3",
+      "verdict": "sufficient",
+      "reason": "未知账号与两团队错密码比较统一文案并探测后续权限，覆盖拒绝及不泄漏账号存在性的公开反馈。",
+      "operation_modes": [
+        "错误凭证拒绝"
+      ],
+      "user_states": [
+        "账号不存在的匿名用户",
+        "已有账号但密码错误"
+      ],
+      "fault_probes": [
+        {
+          "mode": "错误凭证拒绝",
+          "state": "账号不存在的匿名用户",
+          "plausible_fault": "明确返回账号不存在",
+          "scenario_ids": [
+            "BB-identity-session-3"
+          ],
+          "failure_signal": "UI或HTTP不为统一“邮箱或密码不正确”"
+        },
+        {
+          "mode": "错误凭证拒绝",
+          "state": "已有账号但密码错误",
+          "plausible_fault": "仍签发有效会话",
+          "scenario_ids": [
+            "BB-identity-session-3"
+          ],
+          "failure_signal": "当前身份或房间后续请求成功"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-4",
+      "verdict": "sufficient",
+      "reason": "四身份字段对照及原会话角色往返变更能暴露硬编码身份和旧角色缓存。",
+      "operation_modes": [
+        "读取身份",
+        "角色更新后查询"
+      ],
+      "user_states": [
+        "两团队管理员/成员",
+        "保持原会话被提升再降权者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "读取身份",
+          "state": "两团队管理员/成员",
+          "plausible_fault": "团队名称或用户资料取自默认账号",
+          "scenario_ids": [
+            "BB-identity-session-4"
+          ],
+          "failure_signal": "身份全部字段与账号团队对照不符"
+        },
+        {
+          "mode": "角色更新后查询",
+          "state": "保持原会话被提升再降权者",
+          "plausible_fault": "身份返回登录时角色",
+          "scenario_ids": [
+            "BB-identity-session-4"
+          ],
+          "failure_signal": "下一身份响应仍为旧角色"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-5",
+      "verdict": "sufficient",
+      "reason": "以实际入口清单逐会话状态直连服务，并用有效读取验证未写入；不是只检查登录页面。",
+      "operation_modes": [
+        "所有业务读入口",
+        "所有业务写入口"
+      ],
+      "user_states": [
+        "缺Cookie/随机令牌/撤销/到期会话",
+        "缺失或失效会话"
+      ],
+      "fault_probes": [
+        {
+          "mode": "所有业务读入口",
+          "state": "缺Cookie/随机令牌/撤销/到期会话",
+          "plausible_fault": "仅前端跳登录，API继续泄漏列表",
+          "scenario_ids": [
+            "BB-identity-session-5"
+          ],
+          "failure_signal": "入口×状态矩阵出现业务数据而非登录拒绝"
+        },
+        {
+          "mode": "所有业务写入口",
+          "state": "缺失或失效会话",
+          "plausible_fault": "写请求不认证",
+          "scenario_ids": [
+            "BB-identity-session-5"
+          ],
+          "failure_signal": "有效身份复查出现新增或修改，原快照发生变化"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-6",
+      "verdict": "sufficient",
+      "reason": "空闲和持续访问会话均有精确到期前、等号及之后分支，并区分服务时钟。",
+      "operation_modes": [
+        "八小时边界",
+        "绝对有效期"
+      ],
+      "user_states": [
+        "空闲会话",
+        "持续访问会话"
+      ],
+      "fault_probes": [
+        {
+          "mode": "八小时边界",
+          "state": "空闲会话",
+          "plausible_fault": "到期判断使用大于而非大于等于",
+          "scenario_ids": [
+            "BB-identity-session-6"
+          ],
+          "failure_signal": "T+8h仍可读写，或T+7h59m59s已被拒"
+        },
+        {
+          "mode": "绝对有效期",
+          "state": "持续访问会话",
+          "plausible_fault": "每次业务请求滑动续期",
+          "scenario_ids": [
+            "BB-identity-session-6"
+          ],
+          "failure_signal": "频繁访问后T+8h仍有效或到期预约被写入"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-7",
+      "verdict": "sufficient",
+      "reason": "新增A→U后的全管理入口拒绝、本人能力保留与乙A连续管理，已封住管理员权限残留和过度注销反例。",
+      "operation_modes": [
+        "同浏览器换身份",
+        "会话替换与隔离"
+      ],
+      "user_states": [
+        "U切V/B或A切U，另浏览器保持原身份",
+        "持旧会话匿名句柄的甲及仍登录的乙"
+      ],
+      "fault_probes": [
+        {
+          "mode": "同浏览器换身份",
+          "state": "U切V/B或A切U，另浏览器保持原身份",
+          "plausible_fault": "替换用户但沿用旧团队或权限",
+          "scenario_ids": [
+            "BB-identity-session-7"
+          ],
+          "failure_signal": "甲当前身份/团队错误、成员能管理，或本人普通预约不能执行"
+        },
+        {
+          "mode": "会话替换与隔离",
+          "state": "持旧会话匿名句柄的甲及仍登录的乙",
+          "plausible_fault": "只换Cookie不撤销或注销同用户全部会话",
+          "scenario_ids": [
+            "BB-identity-session-7"
+          ],
+          "failure_signal": "甲旧令牌重放成功或乙原U/A读取及管理被注销"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-8",
+      "verdict": "sufficient",
+      "reason": "Cookie移除、旧令牌重放和第二浏览器有效性共同验证真正撤销及作用域。",
+      "operation_modes": [
+        "退出并重放",
+        "退出隔离"
+      ],
+      "user_states": [
+        "当前浏览器已登录",
+        "同账号另一浏览器仍登录"
+      ],
+      "fault_probes": [
+        {
+          "mode": "退出并重放",
+          "state": "当前浏览器已登录",
+          "plausible_fault": "只清浏览器Cookie未撤销服务会话",
+          "scenario_ids": [
+            "BB-identity-session-8"
+          ],
+          "failure_signal": "旧会话重放仍可访问业务"
+        },
+        {
+          "mode": "退出隔离",
+          "state": "同账号另一浏览器仍登录",
+          "plausible_fault": "退出撤销全部同用户会话",
+          "scenario_ids": [
+            "BB-identity-session-8"
+          ],
+          "failure_signal": "乙业务读取被拒绝或甲Cookie未移除"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-9",
+      "verdict": "gap",
+      "reason": "滚动恢复、成功计数、格式排除、IP隔离可测；精确60秒已独立安排但OBS-007尚无决定，因此仍不能判定该边界。",
+      "operation_modes": [
+        "配额及隔离",
+        "滚动恢复",
+        "精确窗口端点"
+      ],
+      "user_states": [
+        "P混合成功失败和Q独立用户",
+        "最早尝试临近60秒的用户",
+        "独立历史下第9次恰60.000秒者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "配额及隔离",
+          "state": "P混合成功失败和Q独立用户",
+          "plausible_fault": "只计失败或所有IP共享配额",
+          "scenario_ids": [
+            "BB-identity-session-9"
+          ],
+          "failure_signal": "P第9次不受限、Q被限或格式错误挤占前8次"
+        },
+        {
+          "mode": "滚动恢复",
+          "state": "最早尝试临近60秒的用户",
+          "plausible_fault": "自然分钟整体重置",
+          "scenario_ids": [
+            "BB-identity-session-9"
+          ],
+          "failure_signal": "59.999提前恢复或60.001恢复多于一个名额"
+        },
+        {
+          "mode": "精确窗口端点",
+          "state": "独立历史下第9次恰60.000秒者",
+          "plausible_fault": "端点包含规则与预期相反",
+          "scenario_ids": [
+            "BB-identity-session-9"
+          ],
+          "failure_signal": "当前方法等待OBS-007决定且明确blocked，不能声称有唯一失败信号；须确定t=0是否仍计数后按接收/限频判定"
+        }
+      ],
+      "uncovered_paths": [
+        "identity-session-9：OBS-007仍awaiting_business_decision；恰60.000秒是否移出t=0请求没有唯一预期，独立边界分支存在但不可判定。"
+      ]
+    },
+    {
+      "requirement_id": "identity-session-10",
+      "verdict": "sufficient",
+      "reason": "补取消、退出、全部已读完整头部矩阵及各自副作用读取，覆盖已知修改入口的保护。",
+      "operation_modes": [
+        "POST/PATCH标记与Origin矩阵",
+        "取消/退出/全部已读保护"
+      ],
+      "user_states": [
+        "登录/创建/房间/角色修改客户端",
+        "持有效会话且伪造头部者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "POST/PATCH标记与Origin矩阵",
+          "state": "登录/创建/房间/角色修改客户端",
+          "plausible_fault": "仅比host或接受错误标记",
+          "scenario_ids": [
+            "BB-identity-session-10"
+          ],
+          "failure_signal": "缺/错标记或异scheme/host/port被允许，合法同源被误拒"
+        },
+        {
+          "mode": "取消/退出/全部已读保护",
+          "state": "持有效会话且伪造头部者",
+          "plausible_fault": "这三个入口跳过保护或拒绝仍执行",
+          "scenario_ids": [
+            "BB-identity-session-10"
+          ],
+          "failure_signal": "拒绝后预约非confirmed、原会话无效/Cookie清除、未读位变化；合法对照分别生效"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-11",
+      "verdict": "sufficient",
+      "reason": "字节上限使用合法对象加空白，明确1字节非对象，避免混淆格式与业务校验。",
+      "operation_modes": [
+        "正文类型及媒体类型",
+        "UTF-8字节上下界"
+      ],
+      "user_states": [
+        "POST/PATCH调用者",
+        "合法大正文及中文正文调用者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "正文类型及媒体类型",
+          "state": "POST/PATCH调用者",
+          "plausible_fault": "允许数组null或text/plain对象",
+          "scenario_ids": [
+            "BB-identity-session-11"
+          ],
+          "failure_signal": "非对象/错误媒体类型被接收或业务状态改变"
+        },
+        {
+          "mode": "UTF-8字节上下界",
+          "state": "合法大正文及中文正文调用者",
+          "plausible_fault": "按字符数计数或拒绝65536等号",
+          "scenario_ids": [
+            "BB-identity-session-11"
+          ],
+          "failure_signal": "65536字节有效请求失败、65537成功，中文字节边界结果错误"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-12",
+      "verdict": "sufficient",
+      "reason": "创建和清除的响应属性、浏览器脚本不可读及路径删除均有具体观察。",
+      "operation_modes": [
+        "建立Cookie",
+        "清除Cookie"
+      ],
+      "user_states": [
+        "刚登录浏览器",
+        "退出浏览器"
+      ],
+      "fault_probes": [
+        {
+          "mode": "建立Cookie",
+          "state": "刚登录浏览器",
+          "plausible_fault": "漏HttpOnly或Path仅子路径",
+          "scenario_ids": [
+            "BB-identity-session-12"
+          ],
+          "failure_signal": "响应属性不是Path=/、HttpOnly、SameSite=Lax，document.cookie可见会话键"
+        },
+        {
+          "mode": "清除Cookie",
+          "state": "退出浏览器",
+          "plausible_fault": "清除使用不同路径或漏必要属性",
+          "scenario_ids": [
+            "BB-identity-session-12"
+          ],
+          "failure_signal": "退出响应属性不符或原路径Cookie仍留存"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "identity-session-13",
+      "verdict": "gap",
+      "reason": "只读快照及可识别格式复算比公开登录更强，可暴露明显明文/错误派生；但确定性且样本不同的盐仍能通过全部比较，生成证据未定义。",
+      "operation_modes": [
+        "认证与持久凭据观察",
+        "随机盐生成"
+      ],
+      "user_states": [
+        "两实例四个同密码账号",
+        "不同账号及不同初始化的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "认证与持久凭据观察",
+          "state": "两实例四个同密码账号",
+          "plausible_fault": "存明文/可逆编码或派生参数错误",
+          "scenario_ids": [
+            "BB-identity-session-13"
+          ],
+          "failure_signal": "快照内存检查发现公开密码或可逆值，独立算法复算不匹配，错误密码却匹配"
+        },
+        {
+          "mode": "随机盐生成",
+          "state": "不同账号及不同初始化的用户",
+          "plausible_fault": "以账号ID加初始化时间生成可预测盐",
+          "scenario_ids": [
+            "BB-identity-session-13"
+          ],
+          "failure_signal": "盐和派生值仍各不同，正确密码复算匹配；现有方法没有随机源审计证据，无法产生该反例的失败信号"
+        }
+      ],
+      "uncovered_paths": [
+        "identity-session-13：缺随机盐生成的可审计方法；按账号ID和初始化时间确定性生成盐可满足不同盐与独立派生复算。算法格式未知时也没有后备证明路径，不能仅凭外观/登录判定。"
+      ]
+    },
+    {
+      "requirement_id": "identity-session-14",
+      "verdict": "gap",
+      "reason": "快照与令牌在内存比较可发现原值持久化，明确格式时可复算摘要；仍无随机生成及完整持久化范围证据。",
+      "operation_modes": [
+        "会话关联和生命周期",
+        "持久化摘要观察",
+        "随机生成及持久化范围"
+      ],
+      "user_states": [
+        "同用户/不同用户多个会话",
+        "刚创建新会话的用户",
+        "多个新会话且样本均不同的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "会话关联和生命周期",
+          "state": "同用户/不同用户多个会话",
+          "plausible_fault": "令牌直接复用、关联错用户或撤销其他会话",
+          "scenario_ids": [
+            "BB-identity-session-14"
+          ],
+          "failure_signal": "相等性或当前身份错误，独立会话被注销、到期重放成功"
+        },
+        {
+          "mode": "持久化摘要观察",
+          "state": "刚创建新会话的用户",
+          "plausible_fault": "直接保存原令牌或可逆编码",
+          "scenario_ids": [
+            "BB-identity-session-14"
+          ],
+          "failure_signal": "只读一致快照出现原值/可逆值或明确摘要复算失败，用户到期不符"
+        },
+        {
+          "mode": "随机生成及持久化范围",
+          "state": "多个新会话且样本均不同的用户",
+          "plausible_fault": "令牌由时间加计数器生成，数据库只保存其正确摘要",
+          "scenario_ids": [
+            "BB-identity-session-14"
+          ],
+          "failure_signal": "原值检查与摘要复算、生命周期均通过；方法仍要求未定义的审计级生成证据，不能检出可预测令牌或未覆盖位置的原值副本"
+        }
+      ],
+      "uncovered_paths": [
+        "identity-session-14：缺随机令牌生成及完整持久化范围的可审计方法；确定性递增/时间令牌配正确摘要可通过当前所有具体检查，多次不同不证明随机。"
+      ]
+    },
+    {
+      "requirement_id": "interface-experience-1",
+      "verdict": "sufficient",
+      "reason": "角色导航与身份切换、直接管理地址检查覆盖主要可见入口边界。",
+      "operation_modes": [
+        "工作空间导航",
+        "切换身份"
+      ],
+      "user_states": [
+        "成员/本队及异队管理员",
+        "先管理员后成员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "工作空间导航",
+          "state": "成员/本队及异队管理员",
+          "plausible_fault": "普通成员看到管理入口或缺业务入口",
+          "scenario_ids": [
+            "BB-interface-experience-1"
+          ],
+          "failure_signal": "三个入口无法打开相应内容或成员残留空间管理"
+        },
+        {
+          "mode": "切换身份",
+          "state": "先管理员后成员",
+          "plausible_fault": "沿用前账号导航",
+          "scenario_ids": [
+            "BB-interface-experience-1"
+          ],
+          "failure_signal": "切换刷新后仍有管理员入口或内容"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-2",
+      "verdict": "sufficient",
+      "reason": "逐示例选择、网络计数和最后一次主动登录身份能区分填表与自动认证。",
+      "operation_modes": [
+        "选择示例账号",
+        "主动登录"
+      ],
+      "user_states": [
+        "尚未登录且反复切换选择者",
+        "已连续选择多个账号者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "选择示例账号",
+          "state": "尚未登录且反复切换选择者",
+          "plausible_fault": "选择时自动登录",
+          "scenario_ids": [
+            "BB-interface-experience-2"
+          ],
+          "failure_signal": "点击登录前出现登录请求或有效会话"
+        },
+        {
+          "mode": "主动登录",
+          "state": "已连续选择多个账号者",
+          "plausible_fault": "填入错误密码或仍登录前一个选择",
+          "scenario_ids": [
+            "BB-interface-experience-2"
+          ],
+          "failure_signal": "输入不是所选资料，主动登录后身份不是最后选择"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-3",
+      "verdict": "sufficient",
+      "reason": "三种乱序组合、日期及跨页切换均有时间线，新增最新失败后旧成功保持错误与明确重载验证。",
+      "operation_modes": [
+        "等待和旧成功晚到",
+        "旧失败晚到",
+        "新失败后旧成功"
+      ],
+      "user_states": [
+        "快速切日期/页面且最新成功用户",
+        "最新请求已成功者",
+        "D+1失败而D旧成功随后释放者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "等待和旧成功晚到",
+          "state": "快速切日期/页面且最新成功用户",
+          "plausible_fault": "缺加载提示或旧响应覆盖当前页",
+          "scenario_ids": [
+            "BB-interface-experience-3"
+          ],
+          "failure_signal": "等待无提示或新页最终出现旧日主题"
+        },
+        {
+          "mode": "旧失败晚到",
+          "state": "最新请求已成功者",
+          "plausible_fault": "旧失败抹去新成功页",
+          "scenario_ids": [
+            "BB-interface-experience-3"
+          ],
+          "failure_signal": "释放旧失败后变为错误"
+        },
+        {
+          "mode": "新失败后旧成功",
+          "state": "D+1失败而D旧成功随后释放者",
+          "plausible_fault": "成功才更新代次，旧成功清除最新错误",
+          "scenario_ids": [
+            "BB-interface-experience-3"
+          ],
+          "failure_signal": "选中日期改变、出现D内容或错误/重载入口被清；明确重载D+1后才应成功"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-4",
+      "verdict": "sufficient",
+      "reason": "断网、500、并行部分失败与真实空集合对照，以及恢复重试，能区分错误被伪装成空列表。",
+      "operation_modes": [
+        "加载失败",
+        "恢复重载"
+      ],
+      "user_states": [
+        "断网/500/部分数据失败的用户",
+        "网络恢复或真正无记录的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "加载失败",
+          "state": "断网/500/部分数据失败的用户",
+          "plausible_fault": "失败吞掉后展示空列表",
+          "scenario_ids": [
+            "BB-interface-experience-4"
+          ],
+          "failure_signal": "缺错误或重载入口，失败显示成功空态"
+        },
+        {
+          "mode": "恢复重载",
+          "state": "网络恢复或真正无记录的用户",
+          "plausible_fault": "重载按钮无效或真实空列表被当错误",
+          "scenario_ids": [
+            "BB-interface-experience-4"
+          ],
+          "failure_signal": "重载未显示已知记录，正常空日期显示错误"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-5",
+      "verdict": "sufficient",
+      "reason": "连续打开不同房间并逐字段核对与输入，能检出静态占位和缓存错室。",
+      "operation_modes": [
+        "打开预约表单",
+        "查看规则并填表"
+      ],
+      "user_states": [
+        "选择两间不同房间的成员",
+        "准备新预约者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "打开预约表单",
+          "state": "选择两间不同房间的成员",
+          "plausible_fault": "复用第一次房间名称位置容量",
+          "scenario_ids": [
+            "BB-interface-experience-5"
+          ],
+          "failure_signal": "第二弹窗与当前所选室字段不符"
+        },
+        {
+          "mode": "查看规则并填表",
+          "state": "准备新预约者",
+          "plausible_fault": "少日期/人数等输入或展示错误时间限制",
+          "scenario_ids": [
+            "BB-interface-experience-5"
+          ],
+          "failure_signal": "五输入缺失不可用，展示规则与确认范围矛盾"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-6",
+      "verdict": "sufficient",
+      "reason": "时点×日期×时区矩阵挑战换日、对齐和关门截断；不凭未定义默认时长增加要求。",
+      "operation_modes": [
+        "当天默认时间",
+        "日期回退",
+        "跨浏览器时区"
+      ],
+      "user_states": [
+        "开门前/整点/非整刻/临近关门者",
+        "选昨天/当天无开放时段/选未来者",
+        "相同绝对时刻的上海和洛杉矶浏览器"
+      ],
+      "fault_probes": [
+        {
+          "mode": "当天默认时间",
+          "state": "开门前/整点/非整刻/临近关门者",
+          "plausible_fault": "向下取整给过去时间或结束越过20点",
+          "scenario_ids": [
+            "BB-interface-experience-6"
+          ],
+          "failure_signal": "默认不是15分钟对齐的开放未来时段，结束晚于20点"
+        },
+        {
+          "mode": "日期回退",
+          "state": "选昨天/当天无开放时段/选未来者",
+          "plausible_fault": "总选今天或晚间产生非法当日段",
+          "scenario_ids": [
+            "BB-interface-experience-6"
+          ],
+          "failure_signal": "过去日期或无时段不改明天，未来日被错误覆盖"
+        },
+        {
+          "mode": "跨浏览器时区",
+          "state": "相同绝对时刻的上海和洛杉矶浏览器",
+          "plausible_fault": "按浏览器本地日期选默认",
+          "scenario_ids": [
+            "BB-interface-experience-6"
+          ],
+          "failure_signal": "相同绝对时刻得到不同北京时间日期"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-7",
+      "verdict": "sufficient",
+      "reason": "四操作和成功/业务失败/网络失败都保留请求处理及恢复证据，覆盖重复输入与锁死。",
+      "operation_modes": [
+        "请求处理中",
+        "请求完成及再操作"
+      ],
+      "user_states": [
+        "登录/预约/取消/房间保存者",
+        "成功关闭弹窗/业务失败/断网者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "请求处理中",
+          "state": "登录/预约/取消/房间保存者",
+          "plausible_fault": "按钮未禁用且重复点击重复发请求",
+          "scenario_ids": [
+            "BB-interface-experience-7"
+          ],
+          "failure_signal": "disabled为false或第二次点击/Enter增加请求数"
+        },
+        {
+          "mode": "请求完成及再操作",
+          "state": "成功关闭弹窗/业务失败/断网者",
+          "plausible_fault": "只在成功回调恢复按钮",
+          "scenario_ids": [
+            "BB-interface-experience-7"
+          ],
+          "failure_signal": "失败后按钮永久禁用或重开仍不能提交"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-8",
+      "verdict": "sufficient",
+      "reason": "对应四操作有反馈、读取时间线和对象前后对照，预约编号须与真实结果一致。",
+      "operation_modes": [
+        "成功反馈",
+        "重载列表"
+      ],
+      "user_states": [
+        "预约/取消/房间/角色修改者",
+        "完成业务修改的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "成功反馈",
+          "state": "预约/取消/房间/角色修改者",
+          "plausible_fault": "统一空提示或显示伪预约编号",
+          "scenario_ids": [
+            "BB-interface-experience-8"
+          ],
+          "failure_signal": "无对应成功反馈或提示编号不等于保存编号"
+        },
+        {
+          "mode": "重载列表",
+          "state": "完成业务修改的用户",
+          "plausible_fault": "只Toast成功而列表仍旧",
+          "scenario_ids": [
+            "BB-interface-experience-8"
+          ],
+          "failure_signal": "无后续读取，预约/日程/房间/成员列表仍为旧值"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-9",
+      "verdict": "sufficient",
+      "reason": "两表单分别业务失败和网络失败，逐字段保留及修正重试能检出丢表单和无法恢复。",
+      "operation_modes": [
+        "提交失败",
+        "修正与网络恢复重试"
+      ],
+      "user_states": [
+        "预约冲突或房间重名用户",
+        "仍在原表单的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "提交失败",
+          "state": "预约冲突或房间重名用户",
+          "plausible_fault": "错误显示在别处且清空输入",
+          "scenario_ids": [
+            "BB-interface-experience-9"
+          ],
+          "failure_signal": "表单无内联错误，任一可修改输入改变"
+        },
+        {
+          "mode": "修正与网络恢复重试",
+          "state": "仍在原表单的用户",
+          "plausible_fault": "失败一次后永久锁住或提交旧值",
+          "scenario_ids": [
+            "BB-interface-experience-9"
+          ],
+          "failure_signal": "修正后无法提交或最终保存内容不是重试输入"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-10",
+      "verdict": "sufficient",
+      "reason": "真实撤销/到期响应触发弹窗内提交或读取，再登录，覆盖失效处理和界面恢复。",
+      "operation_modes": [
+        "发现会话失效",
+        "重新登录"
+      ],
+      "user_states": [
+        "各业务弹窗打开的用户",
+        "刚被退出的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "发现会话失效",
+          "state": "各业务弹窗打开的用户",
+          "plausible_fault": "仅背景跳登录而弹窗仍可操作",
+          "scenario_ids": [
+            "BB-interface-experience-10"
+          ],
+          "failure_signal": "未登录响应后弹窗/管理背景仍显示或出现成功提示"
+        },
+        {
+          "mode": "重新登录",
+          "state": "刚被退出的用户",
+          "plausible_fault": "失效状态不能恢复或沿用旧身份",
+          "scenario_ids": [
+            "BB-interface-experience-10"
+          ],
+          "failure_signal": "重登录不能进入当前账号工作空间"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-11",
+      "verdict": "sufficient",
+      "reason": "弹窗×三种手势加内部点击对照，写请求计数与业务快照能证明关闭不提交。",
+      "operation_modes": [
+        "关闭按钮/Escape/遮罩",
+        "内部点击"
+      ],
+      "user_states": [
+        "填有未保存输入的各弹窗用户",
+        "仍要编辑的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "关闭按钮/Escape/遮罩",
+          "state": "填有未保存输入的各弹窗用户",
+          "plausible_fault": "关闭触发表单提交或取消业务",
+          "scenario_ids": [
+            "BB-interface-experience-11"
+          ],
+          "failure_signal": "关闭后写请求增加或业务快照改变"
+        },
+        {
+          "mode": "内部点击",
+          "state": "仍要编辑的用户",
+          "plausible_fault": "把冒泡点击都当遮罩关闭",
+          "scenario_ids": [
+            "BB-interface-experience-11"
+          ],
+          "failure_signal": "点击弹窗内控件即关闭，不能继续填写"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-12",
+      "verdict": "sufficient",
+      "reason": "明确1440×900、390×844、320×740实测视口，每个独立完成五任务并检查长内容及控件边界；能检出宽屏冒充手机与操作遮挡。",
+      "operation_modes": [
+        "桌面五任务",
+        "手机五任务"
+      ],
+      "user_states": [
+        "长中文和多条通知的1440×900用户",
+        "390×844及320×740用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "桌面五任务",
+          "state": "长中文和多条通知的1440×900用户",
+          "plausible_fault": "文本挤出控件或横向遮挡",
+          "scenario_ids": [
+            "BB-interface-experience-12"
+          ],
+          "failure_signal": "innerWidth实值正确时任务无法完成，控件边界/scrollWidth及截图显示遮挡"
+        },
+        {
+          "mode": "手机五任务",
+          "state": "390×844及320×740用户",
+          "plausible_fault": "固定桌面弹窗宽度导致确认按钮在屏外",
+          "scenario_ids": [
+            "BB-interface-experience-12"
+          ],
+          "failure_signal": "两窄屏实际提交/关闭/阅读失败或页面弹窗横向遮挡，独立记录不可用桌面结果代替"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-13",
+      "verdict": "sufficient",
+      "reason": "键盘完成主要表单、可访问树及成功错误播报/语义记录，避免只检查视觉状态或ARIA属性。",
+      "operation_modes": [
+        "键盘主要表单",
+        "辅助技术状态"
+      ],
+      "user_states": [
+        "不使用鼠标者",
+        "使用读屏者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "键盘主要表单",
+          "state": "不使用鼠标者",
+          "plausible_fault": "焦点不可见或主要按钮键盘无法到达",
+          "scenario_ids": [
+            "BB-interface-experience-13"
+          ],
+          "failure_signal": "Tab/Enter轨迹中断、无焦点截图或不能完成操作"
+        },
+        {
+          "mode": "辅助技术状态",
+          "state": "使用读屏者",
+          "plausible_fault": "视觉有标签反馈但可访问名称为空",
+          "scenario_ids": [
+            "BB-interface-experience-13"
+          ],
+          "failure_signal": "控件/弹窗无可访问名称，错误或成功不能被感知"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-14",
+      "verdict": "sufficient",
+      "reason": "通过实际写入在卡片、弹窗、列表、通知等展示面观察DOM和执行标志，兼顾文本保真与脱敏。",
+      "operation_modes": [
+        "业务文本展示",
+        "脱敏日程"
+      ],
+      "user_states": [
+        "有权查看名称位置主题通知者",
+        "其他普通成员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "业务文本展示",
+          "state": "有权查看名称位置主题通知者",
+          "plausible_fault": "将业务值插入innerHTML",
+          "scenario_ids": [
+            "BB-interface-experience-14"
+          ],
+          "failure_signal": "注入img节点或window.__bb改变，或原文被删除"
+        },
+        {
+          "mode": "脱敏日程",
+          "state": "其他普通成员",
+          "plausible_fault": "为显示文本安全而泄漏完整私有主题",
+          "scenario_ids": [
+            "BB-interface-experience-14"
+          ],
+          "failure_signal": "其他成员日程显示原主题而非已预约"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-15",
+      "verdict": "sufficient",
+      "reason": "不同本地时区、日首日末预约及午夜前后多展示面核对，可检出本地格式化与漏时区标识。",
+      "operation_modes": [
+        "四类时间展示",
+        "午夜转换与标识"
+      ],
+      "user_states": [
+        "三个不同时区的浏览器用户",
+        "北京时间换日附近用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "四类时间展示",
+          "state": "三个不同时区的浏览器用户",
+          "plausible_fault": "使用浏览器本地时区格式化",
+          "scenario_ids": [
+            "BB-interface-experience-15"
+          ],
+          "failure_signal": "日期选择/预约/日程/通知显示与北京时间原值不符"
+        },
+        {
+          "mode": "午夜转换与标识",
+          "state": "北京时间换日附近用户",
+          "plausible_fault": "日期跳到前一天或不标UTC+8",
+          "scenario_ids": [
+            "BB-interface-experience-15"
+          ],
+          "failure_signal": "不同浏览器日期含义不一致或缺北京时间UTC+8标示"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "interface-experience-16",
+      "verdict": "sufficient",
+      "reason": "丢掉已提交响应制造真实重试，再逐内容字段变更比较标识，能够区分前端复用和总用同一标识。",
+      "operation_modes": [
+        "不改内容重试",
+        "改变内容重试"
+      ],
+      "user_states": [
+        "原请求已提交但丢失响应者",
+        "主题/日期/人数/起止改变者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "不改内容重试",
+          "state": "原请求已提交但丢失响应者",
+          "plausible_fault": "每次重试产生新请求标识",
+          "scenario_ids": [
+            "BB-interface-experience-16"
+          ],
+          "failure_signal": "标识不同或出现第二预约/通知，返回编号不同"
+        },
+        {
+          "mode": "改变内容重试",
+          "state": "主题/日期/人数/起止改变者",
+          "plausible_fault": "沿用旧请求标识",
+          "scenario_ids": [
+            "BB-interface-experience-16"
+          ],
+          "failure_signal": "任一变更后标识相同，发生内容冲突或错误返回旧预约"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "notification-center-1",
+      "verdict": "sufficient",
+      "reason": "正常收件人和字段检查加实际部分业务写后故障，独立读取和重启能暴露分步提交；测试适配器不允许替应用补偿。",
+      "operation_modes": [
+        "成功及校验失败",
+        "确认通知同事务"
+      ],
+      "user_states": [
+        "U/V预约者和旁观A/B",
+        "创建已发生首类业务写的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "成功及校验失败",
+          "state": "U/V预约者和旁观A/B",
+          "plausible_fault": "广播通知或正文编号错/重复",
+          "scenario_ids": [
+            "BB-notification-center-1"
+          ],
+          "failure_signal": "只有预约人新增一条未读的断言失败，字段不匹配，校验失败仍新增"
+        },
+        {
+          "mode": "确认通知同事务",
+          "state": "创建已发生首类业务写的用户",
+          "plausible_fault": "先提交预约再写通知，或反序提交",
+          "scenario_ids": [
+            "BB-notification-center-1"
+          ],
+          "failure_signal": "AI-transaction-midwrite-boundary第二类写前或commit前故障后仍有预约/占用或孤立通知，重启不恢复基线"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "notification-center-2",
+      "verdict": "sufficient",
+      "reason": "本人/管理员代取消和重复通知增量，加中途失败对原预约与全部通知的观察，可暴露非原子取消。",
+      "operation_modes": [
+        "首次及重复取消",
+        "取消通知同事务"
+      ],
+      "user_states": [
+        "本人或管理员代取消者",
+        "本人/管理员取消已有预约者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "首次及重复取消",
+          "state": "本人或管理员代取消者",
+          "plausible_fault": "发给操作者或每次重放增加通知",
+          "scenario_ids": [
+            "BB-notification-center-2"
+          ],
+          "failure_signal": "所有者未新增一条、管理员收到代取消通知、重复增量非零"
+        },
+        {
+          "mode": "取消通知同事务",
+          "state": "本人/管理员取消已有预约者",
+          "plausible_fault": "保存cancelled后通知失败不撤销",
+          "scenario_ids": [
+            "BB-notification-center-2"
+          ],
+          "failure_signal": "部分写/commit前故障后原状态或取消时间变化、时段释放或孤立取消通知，独立连接及重启均核对"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "notification-center-3",
+      "verdict": "sufficient",
+      "reason": "四身份各有唯一通知并尝试公开参数越权，能发现默认列表、管理员全队可见及任意用户参数泄漏。",
+      "operation_modes": [
+        "本人通知查询",
+        "尝试指定另一用户"
+      ],
+      "user_states": [
+        "U/V/A/B各自身份",
+        "同队成员/管理员及异队管理员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "本人通知查询",
+          "state": "U/V/A/B各自身份",
+          "plausible_fault": "管理员获得全队通知或未按用户过滤",
+          "scenario_ids": [
+            "BB-notification-center-3"
+          ],
+          "failure_signal": "返回ID/唯一主题不属于当前用户"
+        },
+        {
+          "mode": "尝试指定另一用户",
+          "state": "同队成员/管理员及异队管理员",
+          "plausible_fault": "客户端用户参数覆盖会话身份",
+          "scenario_ids": [
+            "BB-notification-center-3"
+          ],
+          "failure_signal": "响应泄漏其他人的通知；拒绝或忽略但仅返回本人为正确"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "notification-center-4",
+      "verdict": "sufficient",
+      "reason": "六数量节点、先标已读再新增混合数据、全部已读保持ID及同秒顺序，封住过滤已读与条数边界反例。",
+      "operation_modes": [
+        "数量和倒序",
+        "已读状态保留",
+        "同秒生成顺序"
+      ],
+      "user_states": [
+        "N=0/1/99/100/101/105的用户",
+        "混合已读未读及随后全部已读者",
+        "同一固定秒生成多条的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "数量和倒序",
+          "state": "N=0/1/99/100/101/105的用户",
+          "plausible_fault": "取最旧100条或少一条",
+          "scenario_ids": [
+            "BB-notification-center-4"
+          ],
+          "failure_signal": "返回ID不是生成顺序倒序前min(N,100)条，字段不完整"
+        },
+        {
+          "mode": "已读状态保留",
+          "state": "混合已读未读及随后全部已读者",
+          "plausible_fault": "只返回未读通知",
+          "scenario_ids": [
+            "BB-notification-center-4"
+          ],
+          "failure_signal": "已读旧ID缺失，全部已读后集合变空/顺序变动"
+        },
+        {
+          "mode": "同秒生成顺序",
+          "state": "同一固定秒生成多条的用户",
+          "plausible_fault": "仅按时间排序导致顺序不定",
+          "scenario_ids": [
+            "BB-notification-center-4"
+          ],
+          "failure_signal": "返回顺序不等于实际操作生成顺序的倒序"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "notification-center-5",
+      "verdict": "sufficient",
+      "reason": "空集合实际HTTP与105条全部ID的前后快照，结合最新100条API和V对照，能产生旧5条未更新的实际失败信号。",
+      "operation_modes": [
+        "空集合及重复操作",
+        "全部105条更新",
+        "用户隔离和新通知"
+      ],
+      "user_states": [
+        "U无通知且V有未读",
+        "U有未载入最旧5条的用户",
+        "U更新后重复并新增、V不操作"
+      ],
+      "fault_probes": [
+        {
+          "mode": "空集合及重复操作",
+          "state": "U无通知且V有未读",
+          "plausible_fault": "空数组更新报错或误改V",
+          "scenario_ids": [
+            "BB-notification-center-5"
+          ],
+          "failure_signal": "两次真实操作不成功、U非空或V未读位变化"
+        },
+        {
+          "mode": "全部105条更新",
+          "state": "U有未载入最旧5条的用户",
+          "plausible_fault": "仅更新最近100条",
+          "scenario_ids": [
+            "BB-notification-center-5"
+          ],
+          "failure_signal": "独立一致快照的旧5个ID仍false，不是全部false→true"
+        },
+        {
+          "mode": "用户隔离和新通知",
+          "state": "U更新后重复并新增、V不操作",
+          "plausible_fault": "全局更新或新通知默认已读",
+          "scenario_ids": [
+            "BB-notification-center-5"
+          ],
+          "failure_signal": "V任一位改变，重复增删记录或新通知非未读；旧105须保持已读"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "notification-center-6",
+      "verdict": "sufficient",
+      "reason": "真实生成105条并形成97已读+3未读对照，已挑战列表大小和历史总数；方法无需模拟响应。",
+      "operation_modes": [
+        "空和全已读",
+        "超过100条",
+        "混合已读未读"
+      ],
+      "user_states": [
+        "无通知/全部已读用户",
+        "105条全未读用户",
+        "97已读和3未读用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "空和全已读",
+          "state": "无通知/全部已读用户",
+          "plausible_fault": "显示数字0徽标",
+          "scenario_ids": [
+            "BB-notification-center-6"
+          ],
+          "failure_signal": "零未读时仍出现数字徽标"
+        },
+        {
+          "mode": "超过100条",
+          "state": "105条全未读用户",
+          "plausible_fault": "按全历史未读数计徽标",
+          "scenario_ids": [
+            "BB-notification-center-6"
+          ],
+          "failure_signal": "返回100条而徽标105或其他数字"
+        },
+        {
+          "mode": "混合已读未读",
+          "state": "97已读和3未读用户",
+          "plausible_fault": "显示总条数或缓存旧值",
+          "scenario_ids": [
+            "BB-notification-center-6"
+          ],
+          "failure_signal": "真实响应独立计数3而徽标不为3"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "notification-center-7",
+      "verdict": "sufficient",
+      "reason": "从空态经确认/取消到已读并改变浏览器时区，验证内容、编号及时间不因已读而丢失。",
+      "operation_modes": [
+        "空通知中心",
+        "读取确认和取消通知"
+      ],
+      "user_states": [
+        "无通知用户",
+        "有未读/已读通知且变更浏览器时区者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "空通知中心",
+          "state": "无通知用户",
+          "plausible_fault": "无数据时一直加载",
+          "scenario_ids": [
+            "BB-notification-center-7"
+          ],
+          "failure_signal": "无明确空状态"
+        },
+        {
+          "mode": "读取确认和取消通知",
+          "state": "有未读/已读通知且变更浏览器时区者",
+          "plausible_fault": "隐藏已读正文或显示错误时间编号",
+          "scenario_ids": [
+            "BB-notification-center-7"
+          ],
+          "failure_signal": "已读后记录消失，正文、北京时间、预约编号与真实通知不符"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-1",
+      "verdict": "sufficient",
+      "reason": "团队×启用×成员/管理员及旧弹窗转换均直连真实写接口，拒绝有占用和通知对照。",
+      "operation_modes": [
+        "新预约资格",
+        "提交前停用"
+      ],
+      "user_states": [
+        "成员及管理员选择同队/异队启用/停用室",
+        "已打开启用室弹窗的成员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "新预约资格",
+          "state": "成员及管理员选择同队/异队启用/停用室",
+          "plausible_fault": "管理员绕过团队或停用限制",
+          "scenario_ids": [
+            "BB-reservation-creation-1"
+          ],
+          "failure_signal": "无资格请求创建预约、日程占用或通知，合法同队启用被拒"
+        },
+        {
+          "mode": "提交前停用",
+          "state": "已打开启用室弹窗的成员",
+          "plausible_fault": "服务信任前端旧启用状态",
+          "scenario_ids": [
+            "BB-reservation-creation-1"
+          ],
+          "failure_signal": "停用之后旧弹窗仍创建成功"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-2",
+      "verdict": "sufficient",
+      "reason": "逐字段类型、空白、上下界并区分资源不存在与格式错误，合法边界有可容纳100人的实际房间。",
+      "operation_modes": [
+        "业务字段归一化",
+        "非法类型与范围",
+        "ID数值和存在性"
+      ],
+      "user_states": [
+        "合法边界输入者",
+        "缺字段/null/布尔/小数/字符串ID等调用者",
+        "请求最大合法但不存在ID者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "业务字段归一化",
+          "state": "合法边界输入者",
+          "plausible_fault": "不trim主题标识或拒绝100字符/100人",
+          "scenario_ids": [
+            "BB-reservation-creation-2"
+          ],
+          "failure_signal": "保存值带首尾空格或合法端点被拒"
+        },
+        {
+          "mode": "非法类型与范围",
+          "state": "缺字段/null/布尔/小数/字符串ID等调用者",
+          "plausible_fault": "将布尔当整数或截断小数",
+          "scenario_ids": [
+            "BB-reservation-creation-2"
+          ],
+          "failure_signal": "任一不合规变异被接受并产生记录"
+        },
+        {
+          "mode": "ID数值和存在性",
+          "state": "请求最大合法但不存在ID者",
+          "plausible_fault": "把2147483647误当格式越界",
+          "scenario_ids": [
+            "BB-reservation-creation-2"
+          ],
+          "failure_signal": "合法大ID得到格式越界而非资源不存在，2147483648却越过格式检查"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-3",
+      "verdict": "sufficient",
+      "reason": "UTC/正负偏移、混合时区和绝对逆序均有独立换算，非法日期与缺时区单独变异。",
+      "operation_modes": [
+        "带时区绝对比较",
+        "时间解析拒绝"
+      ],
+      "user_states": [
+        "同一时段用不同偏移的用户",
+        "无时区/空/非法日期/实际倒序者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "带时区绝对比较",
+          "state": "同一时段用不同偏移的用户",
+          "plausible_fault": "按字符串日期时钟比较",
+          "scenario_ids": [
+            "BB-reservation-creation-3"
+          ],
+          "failure_signal": "等价时段被误拒或混合偏移实际7小时判断错误"
+        },
+        {
+          "mode": "时间解析拒绝",
+          "state": "无时区/空/非法日期/实际倒序者",
+          "plausible_fault": "默认本地时区或自动修正2月30日",
+          "scenario_ids": [
+            "BB-reservation-creation-3"
+          ],
+          "failure_signal": "无效时间创建成功或产生占用"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-4",
+      "verdict": "sufficient",
+      "reason": "固定合法粒度开始点而移动服务时钟隔离规则，严格未来与30天闭边界有独立正反例。",
+      "operation_modes": [
+        "开始相对当前",
+        "三十天界限"
+      ],
+      "user_states": [
+        "开始前1秒/等号/后1秒用户",
+        "边界内/等号/超1秒用户且浏览器偏移"
+      ],
+      "fault_probes": [
+        {
+          "mode": "开始相对当前",
+          "state": "开始前1秒/等号/后1秒用户",
+          "plausible_fault": "开始等号仍允许或仅按日期判断",
+          "scenario_ids": [
+            "BB-reservation-creation-4"
+          ],
+          "failure_signal": "S时刻请求成功，S-1秒请求失败"
+        },
+        {
+          "mode": "三十天界限",
+          "state": "边界内/等号/超1秒用户且浏览器偏移",
+          "plausible_fault": "按日历日期或浏览器时钟判范围",
+          "scenario_ids": [
+            "BB-reservation-creation-4"
+          ],
+          "failure_signal": "30天等号误拒、超1秒成功或改浏览器影响服务结果"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-5",
+      "verdict": "sufficient",
+      "reason": "合法粒度15分钟和8小时端点、零负和8小时15分有可区分结果；不把复合违规误当独立时长证明。",
+      "operation_modes": [
+        "时长端点",
+        "时长非法"
+      ],
+      "user_states": [
+        "合法15分钟/8小时用户",
+        "零/负/8小时15分用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "时长端点",
+          "state": "合法15分钟/8小时用户",
+          "plausible_fault": "严格小于8小时或大于15分钟",
+          "scenario_ids": [
+            "BB-reservation-creation-5"
+          ],
+          "failure_signal": "15分钟或8小时实际创建被拒"
+        },
+        {
+          "mode": "时长非法",
+          "state": "零/负/8小时15分用户",
+          "plausible_fault": "仅检查日期开放而忘记时长",
+          "scenario_ids": [
+            "BB-reservation-creation-5"
+          ],
+          "failure_signal": "无效时长实际创建成功；非粒度秒级样本只作复合拒绝对照"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-6",
+      "verdict": "sufficient",
+      "reason": "开门关门含端点及跨日、时区等价覆盖；跨日与时长约束重叠不改变最终可交付的拒绝保证。",
+      "operation_modes": [
+        "开放端点",
+        "开放外及跨日",
+        "北京时间换算"
+      ],
+      "user_states": [
+        "08点开始/20点结束用户",
+        "开门前/关门后/跨午夜者",
+        "UTC或不同字面日期偏移用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "开放端点",
+          "state": "08点开始/20点结束用户",
+          "plausible_fault": "排除08或20等号",
+          "scenario_ids": [
+            "BB-reservation-creation-6"
+          ],
+          "failure_signal": "08:00–08:15或19:45–20:00被拒"
+        },
+        {
+          "mode": "开放外及跨日",
+          "state": "开门前/关门后/跨午夜者",
+          "plausible_fault": "只检查开始时间或字符串日期",
+          "scenario_ids": [
+            "BB-reservation-creation-6"
+          ],
+          "failure_signal": "07:45–08:00、20:00–20:15、跨日被接受"
+        },
+        {
+          "mode": "北京时间换算",
+          "state": "UTC或不同字面日期偏移用户",
+          "plausible_fault": "按输入字面小时判断开放",
+          "scenario_ids": [
+            "BB-reservation-creation-6"
+          ],
+          "failure_signal": "等价合法北京时间时段被拒或错存"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-7",
+      "verdict": "sufficient",
+      "reason": "起止分别变异分钟/秒/微秒且保持其余规则合法，能暴露只校验一端和截断精度。",
+      "operation_modes": [
+        "合法对齐",
+        "任一端不对齐"
+      ],
+      "user_states": [
+        "0/15/30/45分及显式零微秒用户",
+        "开始或结束的分钟/秒/微秒非零者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "合法对齐",
+          "state": "0/15/30/45分及显式零微秒用户",
+          "plausible_fault": "只允许整点",
+          "scenario_ids": [
+            "BB-reservation-creation-7"
+          ],
+          "failure_signal": "合法15/30/45分被拒"
+        },
+        {
+          "mode": "任一端不对齐",
+          "state": "开始或结束的分钟/秒/微秒非零者",
+          "plausible_fault": "仅校验开始或截断秒微秒",
+          "scenario_ids": [
+            "BB-reservation-creation-7"
+          ],
+          "failure_signal": "任一非法端点创建成功，保存被自动截断"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-8",
+      "verdict": "sufficient",
+      "reason": "人数低于/等于/超过容量和打开后减容，成员/管理员均受当前容量约束。",
+      "operation_modes": [
+        "人数对容量",
+        "容量更新后提交"
+      ],
+      "user_states": [
+        "成员/管理员7、8、9人预约容量8室",
+        "旧弹窗8人且房间已减为4"
+      ],
+      "fault_probes": [
+        {
+          "mode": "人数对容量",
+          "state": "成员/管理员7、8、9人预约容量8室",
+          "plausible_fault": "管理员豁免或使用严格小于容量",
+          "scenario_ids": [
+            "BB-reservation-creation-8"
+          ],
+          "failure_signal": "9人成功或8人误拒"
+        },
+        {
+          "mode": "容量更新后提交",
+          "state": "旧弹窗8人且房间已减为4",
+          "plausible_fault": "使用打开弹窗时缓存容量",
+          "scenario_ids": [
+            "BB-reservation-creation-8"
+          ],
+          "failure_signal": "8人仍成功，修正4人仍拒或失败留占用"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-9",
+      "verdict": "sufficient",
+      "reason": "包含、被包含、交叉、完全相同、双侧相邻及空室并发有最终集合和通知计数；不是只观察冲突提示。",
+      "operation_modes": [
+        "串行区间关系",
+        "取消后复用",
+        "并发竞争"
+      ],
+      "user_states": [
+        "同室重叠或邻接请求者",
+        "原占用已取消者",
+        "两用户重叠/相邻且不同标识"
+      ],
+      "fault_probes": [
+        {
+          "mode": "串行区间关系",
+          "state": "同室重叠或邻接请求者",
+          "plausible_fault": "只比较起点是否相同或把相邻也拒绝",
+          "scenario_ids": [
+            "BB-reservation-creation-9"
+          ],
+          "failure_signal": "正重叠成功、09–10/11–12被拒或不同室被排斥"
+        },
+        {
+          "mode": "取消后复用",
+          "state": "原占用已取消者",
+          "plausible_fault": "取消记录仍参与冲突",
+          "scenario_ids": [
+            "BB-reservation-creation-9"
+          ],
+          "failure_signal": "原时段新预约被拒"
+        },
+        {
+          "mode": "并发竞争",
+          "state": "两用户重叠/相邻且不同标识",
+          "plausible_fault": "先查后写竞态导致双占用",
+          "scenario_ids": [
+            "BB-reservation-creation-9"
+          ],
+          "failure_signal": "重叠两个成功或最终两条占用/通知；相邻不能双成功"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-10",
+      "verdict": "sufficient",
+      "reason": "完整成功字段与四视图一致，加真实SQLite部分写后/commit前注入和独立读取，支持创建原子性设计判定。",
+      "operation_modes": [
+        "合法创建",
+        "原子创建失败"
+      ],
+      "user_states": [
+        "U/A/B经UI及带UTC API提交",
+        "首类业务已写或全部业务已写未提交的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "合法创建",
+          "state": "U/A/B经UI及带UTC API提交",
+          "plausible_fault": "错存所有者团队绝对时刻或仅返回成功",
+          "scenario_ids": [
+            "BB-reservation-creation-10"
+          ],
+          "failure_signal": "返回与本人/团队/日程/通知完整字段不一致或没有一条确认通知"
+        },
+        {
+          "mode": "原子创建失败",
+          "state": "首类业务已写或全部业务已写未提交的用户",
+          "plausible_fault": "先提交预约或通知再失败",
+          "scenario_ids": [
+            "BB-reservation-creation-10"
+          ],
+          "failure_signal": "适配器不拦错误中途commit；故障后独立连接、API及重启见新增预约/占用/通知即失败"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-11",
+      "verdict": "sufficient",
+      "reason": "新K首次并发单独起点及取消后方法已直接关联，顺序/首次竞争/当前状态/资格变化均有真实响应和最终计数断言。",
+      "operation_modes": [
+        "顺序重放与资格变化",
+        "首次同内容竞争",
+        "取消后当前状态"
+      ],
+      "user_states": [
+        "原开始已过/室停用/减容及另一用户",
+        "同一用户双会话且K从未提交",
+        "原预约取消且时段由V复用者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "顺序重放与资格变化",
+          "state": "原开始已过/室停用/减容及另一用户",
+          "plausible_fault": "重复校验原资格或跨用户串用标识",
+          "scenario_ids": [
+            "BB-reservation-creation-11"
+          ],
+          "failure_signal": "重放拒绝、编号不同、无重放标记或新增通知；另一用户误用原记录"
+        },
+        {
+          "mode": "首次同内容竞争",
+          "state": "同一用户双会话且K从未提交",
+          "plausible_fault": "两个请求都插入或第二个仅报冲突",
+          "scenario_ids": [
+            "BB-reservation-creation-11"
+          ],
+          "failure_signal": "两个首次响应未收敛为同ID的新建与重放，最终非唯一预约/通知"
+        },
+        {
+          "mode": "取消后当前状态",
+          "state": "原预约取消且时段由V复用者",
+          "plausible_fault": "缓存第一次confirmed响应或复活旧记录",
+          "scenario_ids": [
+            "BB-reservation-creation-11"
+          ],
+          "failure_signal": "关联AI-reservation-creation-13返回非cancelled/非原ID、缺重放标记、通知增加或影响V"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-12",
+      "verdict": "sufficient",
+      "reason": "逐字段顺序差异、语义等价及首次不同内容竞争，最终胜者字段和后续胜败重放保证比较及不可覆盖。",
+      "operation_modes": [
+        "已有标识比较",
+        "首次不同内容竞争",
+        "用户作用域"
+      ],
+      "user_states": [
+        "单字段改变或等价UTC/空格用户",
+        "同一用户新K双请求且分别合法",
+        "另一用户使用相同标识"
+      ],
+      "fault_probes": [
+        {
+          "mode": "已有标识比较",
+          "state": "单字段改变或等价UTC/空格用户",
+          "plausible_fault": "漏比较人数等字段或比原始字符串",
+          "scenario_ids": [
+            "BB-reservation-creation-12"
+          ],
+          "failure_signal": "差异请求未拒/原值变化，等价请求误拒"
+        },
+        {
+          "mode": "首次不同内容竞争",
+          "state": "同一用户新K双请求且分别合法",
+          "plausible_fault": "竞争时双成功或覆盖先保存内容",
+          "scenario_ids": [
+            "BB-reservation-creation-12"
+          ],
+          "failure_signal": "不是一个唯一胜者、败者不是标识内容冲突、通知多一条，胜者重放或败者再次请求结果不稳定"
+        },
+        {
+          "mode": "用户作用域",
+          "state": "另一用户使用相同标识",
+          "plausible_fault": "标识全局唯一",
+          "scenario_ids": [
+            "BB-reservation-creation-12"
+          ],
+          "failure_signal": "另一用户合法内容被错误关联或拒绝"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-13",
+      "verdict": "sufficient",
+      "reason": "本人/管理员取消后他人占用，再重复和过原开始时刻重放，能暴露复活旧预约及损害新占用。",
+      "operation_modes": [
+        "取消后重放",
+        "已复用时段重放"
+      ],
+      "user_states": [
+        "本人或管理员已取消原预约",
+        "V占用原时段且原开始可已过"
+      ],
+      "fault_probes": [
+        {
+          "mode": "取消后重放",
+          "state": "本人或管理员已取消原预约",
+          "plausible_fault": "复用标识时恢复confirmed",
+          "scenario_ids": [
+            "BB-reservation-creation-13"
+          ],
+          "failure_signal": "返回不是原ID/cancelled或新增通知"
+        },
+        {
+          "mode": "已复用时段重放",
+          "state": "V占用原时段且原开始可已过",
+          "plausible_fault": "重新判冲突或删除V占用",
+          "scenario_ids": [
+            "BB-reservation-creation-13"
+          ],
+          "failure_signal": "重放被拒或V预约/日程改变，原预约恢复占用"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-creation-14",
+      "verdict": "sufficient",
+      "reason": "资料、时间资格、团队/停用、容量、冲突分开提交并比较预约日程通知三集合，具体错误和修正成功均有证据。",
+      "operation_modes": [
+        "校验失败",
+        "修正再提交"
+      ],
+      "user_states": [
+        "主题空/开始过去/室无资格/人数过多/重叠者",
+        "只修正违规项的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "校验失败",
+          "state": "主题空/开始过去/室无资格/人数过多/重叠者",
+          "plausible_fault": "先写预约通知再返回校验错误",
+          "scenario_ids": [
+            "BB-reservation-creation-14"
+          ],
+          "failure_signal": "真实响应缺具体原因或三集合出现增量"
+        },
+        {
+          "mode": "修正再提交",
+          "state": "只修正违规项的用户",
+          "plausible_fault": "失败残留幽灵占用阻断合法预约",
+          "scenario_ids": [
+            "BB-reservation-creation-14"
+          ],
+          "failure_signal": "新标识修正提交仍失败或最终重复记录"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-1",
+      "verdict": "sufficient",
+      "reason": "角色×scope及全部状态集合、两团队和同会话角色转换覆盖隐私与查询边界。",
+      "operation_modes": [
+        "scope查询",
+        "无效与权限转换"
+      ],
+      "user_states": [
+        "成员/管理员及两团队用户",
+        "成员team/无效scope/升降权者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "scope查询",
+          "state": "成员/管理员及两团队用户",
+          "plausible_fault": "默认返回全队或只返回未来",
+          "scenario_ids": [
+            "BB-reservation-management-1"
+          ],
+          "failure_signal": "省略/mine集合含他人或缺历史，admin team漏本队状态/含异队"
+        },
+        {
+          "mode": "无效与权限转换",
+          "state": "成员team/无效scope/升降权者",
+          "plausible_fault": "忽略scope或会话缓存授权",
+          "scenario_ids": [
+            "BB-reservation-management-1"
+          ],
+          "failure_signal": "无效scope允许，成员team成功或角色改变后结果不随之变化"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-2",
+      "verdict": "sufficient",
+      "reason": "有效/取消记录字段逐项对照和房间改名位置后读取，可区分保存历史与当前空间属性。",
+      "operation_modes": [
+        "预约字段读取",
+        "空间资料更新后读取"
+      ],
+      "user_states": [
+        "本人及管理员看有效/取消记录",
+        "拥有既有预约者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "预约字段读取",
+          "state": "本人及管理员看有效/取消记录",
+          "plausible_fault": "漏创建取消时间或错关联所有者",
+          "scenario_ids": [
+            "BB-reservation-management-2"
+          ],
+          "failure_signal": "字段完整性与原保存值对照失败，取消记录无实际时间"
+        },
+        {
+          "mode": "空间资料更新后读取",
+          "state": "拥有既有预约者",
+          "plausible_fault": "展示创建时房间名称位置快照",
+          "scenario_ids": [
+            "BB-reservation-management-2"
+          ],
+          "failure_signal": "预约仍显示旧室名位置或其他历史字段被改"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-3",
+      "verdict": "sufficient",
+      "reason": "服务时钟固定而浏览器跨起止等号，取消优先级逐时点对照，状态机可被明确反驳。",
+      "operation_modes": [
+        "时间分类",
+        "取消优先"
+      ],
+      "user_states": [
+        "未取消且开始前/等号/期间/结束等号/之后",
+        "已取消且跨同样五时点"
+      ],
+      "fault_probes": [
+        {
+          "mode": "时间分类",
+          "state": "未取消且开始前/等号/期间/结束等号/之后",
+          "plausible_fault": "用严格大于判断开始或结束",
+          "scenario_ids": [
+            "BB-reservation-management-3"
+          ],
+          "failure_signal": "10点不是进行中、11点不是已结束或其他时点分类错误"
+        },
+        {
+          "mode": "取消优先",
+          "state": "已取消且跨同样五时点",
+          "plausible_fault": "先按时间分类覆盖cancelled",
+          "scenario_ids": [
+            "BB-reservation-management-3"
+          ],
+          "failure_signal": "任何时点不显示已取消"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-4",
+      "verdict": "sufficient",
+      "reason": "创建顺序故意打乱，分组和排序均列ID，再跨结束和取消触发迁移。",
+      "operation_modes": [
+        "分组排序",
+        "结束或取消转换"
+      ],
+      "user_states": [
+        "未来/进行中/结束/未来取消/过去取消记录用户",
+        "列表已加载后时间跨结束/主动取消者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "分组排序",
+          "state": "未来/进行中/结束/未来取消/过去取消记录用户",
+          "plausible_fault": "按创建ID排序或把进行中排到历史",
+          "scenario_ids": [
+            "BB-reservation-management-4"
+          ],
+          "failure_signal": "组内开始时间非要求升/降序，进行中或取消分组错误"
+        },
+        {
+          "mode": "结束或取消转换",
+          "state": "列表已加载后时间跨结束/主动取消者",
+          "plausible_fault": "只初次分组不迁移",
+          "scenario_ids": [
+            "BB-reservation-management-4"
+          ],
+          "failure_signal": "刷新后已结束/已取消仍在即将进行"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-5",
+      "verdict": "sufficient",
+      "reason": "本人、同队管理员、他人成员及异队管理员，加入即时升降权与失败状态对照，可检出主要越权。",
+      "operation_modes": [
+        "取消权限",
+        "当前角色变更"
+      ],
+      "user_states": [
+        "本人/同队管理员/同队其他成员/异队管理员",
+        "V刚提升或降权者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "取消权限",
+          "state": "本人/同队管理员/同队其他成员/异队管理员",
+          "plausible_fault": "管理员无团队隔离或所有成员可取消",
+          "scenario_ids": [
+            "BB-reservation-management-5"
+          ],
+          "failure_signal": "V/B取消成功或拒绝后状态日程通知变化，U/A合法被拒"
+        },
+        {
+          "mode": "当前角色变更",
+          "state": "V刚提升或降权者",
+          "plausible_fault": "按登录时角色允许取消",
+          "scenario_ids": [
+            "BB-reservation-management-5"
+          ],
+          "failure_signal": "升权后仍拒、降权后仍成功"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-6",
+      "verdict": "sufficient",
+      "reason": "本人及管理员使用服务时钟五节点，浏览器错时不能改变结果，覆盖严格开始边界。",
+      "operation_modes": [
+        "首次取消时间窗",
+        "服务时钟判定"
+      ],
+      "user_states": [
+        "开始前1秒/开始等号/进行/结束/之后者",
+        "浏览器昨天或明天用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "首次取消时间窗",
+          "state": "开始前1秒/开始等号/进行/结束/之后者",
+          "plausible_fault": "开始等号仍能取消或管理员豁免",
+          "scenario_ids": [
+            "BB-reservation-management-6"
+          ],
+          "failure_signal": "U/A在10点及之后取消成功、生成通知或释放占用"
+        },
+        {
+          "mode": "服务时钟判定",
+          "state": "浏览器昨天或明天用户",
+          "plausible_fault": "采信客户端当前时刻",
+          "scenario_ids": [
+            "BB-reservation-management-6"
+          ],
+          "failure_signal": "同一服务时点因浏览器不同改变取消结果"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-7",
+      "verdict": "sufficient",
+      "reason": "正常取消保留和再订，结合本人/代取消部分写后及提交前故障和重启，能检出原子取消缺陷。",
+      "operation_modes": [
+        "合法取消及再预约",
+        "原子取消失败"
+      ],
+      "user_states": [
+        "本人/管理员代取消及V复用者",
+        "首类业务已写的本人/代取消管理员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "合法取消及再预约",
+          "state": "本人/管理员代取消及V复用者",
+          "plausible_fault": "删除历史、错发通知或未释放",
+          "scenario_ids": [
+            "BB-reservation-management-7"
+          ],
+          "failure_signal": "原ID内容丢失、无取消时间、V不能预约或通知收件人错误"
+        },
+        {
+          "mode": "原子取消失败",
+          "state": "首类业务已写的本人/代取消管理员",
+          "plausible_fault": "先提交cancelled再写通知失败",
+          "scenario_ids": [
+            "BB-reservation-management-7"
+          ],
+          "failure_signal": "独立读取/重启观察原状态不为confirmed、取消时间改变、占用释放或新通知，适配器不得补偿"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-8",
+      "verdict": "sufficient",
+      "reason": "顺序/并发重复、跨原开始时刻与时段被V复用，验证原取消时间和其他占用不受影响。",
+      "operation_modes": [
+        "重复取消",
+        "并发及他人复用"
+      ],
+      "user_states": [
+        "U/A及已过原开始时刻者",
+        "双取消或V占用已释放时段"
+      ],
+      "fault_probes": [
+        {
+          "mode": "重复取消",
+          "state": "U/A及已过原开始时刻者",
+          "plausible_fault": "再次修改取消时间或按开始资格拒绝",
+          "scenario_ids": [
+            "BB-reservation-management-8"
+          ],
+          "failure_signal": "重复请求不成功、时间改变或通知增加"
+        },
+        {
+          "mode": "并发及他人复用",
+          "state": "双取消或V占用已释放时段",
+          "plausible_fault": "重复释放误删V预约或双通知",
+          "scenario_ids": [
+            "BB-reservation-management-8"
+          ],
+          "failure_signal": "最终通知多一条、V占用丢失或首次取消时间被覆盖"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-9",
+      "verdict": "sufficient",
+      "reason": "不存在与异队真实ID对照并由B复读，能发现枚举泄漏及错误取消。",
+      "operation_modes": [
+        "不可见预约取消"
+      ],
+      "user_states": [
+        "本队成员/管理员指向不存在ID",
+        "本队成员/管理员指向B真实预约"
+      ],
+      "fault_probes": [
+        {
+          "mode": "不可见预约取消",
+          "state": "本队成员/管理员指向不存在ID",
+          "plausible_fault": "返回成功或暴露错误内容",
+          "scenario_ids": [
+            "BB-reservation-management-9"
+          ],
+          "failure_signal": "不为预约不存在"
+        },
+        {
+          "mode": "不可见预约取消",
+          "state": "本队成员/管理员指向B真实预约",
+          "plausible_fault": "先返回异队资料再拒或错误修改",
+          "scenario_ids": [
+            "BB-reservation-management-9"
+          ],
+          "failure_signal": "错误含B私有主题/所有者/时段，B记录或通知发生变化"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "reservation-management-10",
+      "verdict": "sufficient",
+      "reason": "状态×可访问角色卡片检查及先放弃再确认，覆盖入口资格、确认内容和取消意图。",
+      "operation_modes": [
+        "入口可见性",
+        "取消确认"
+      ],
+      "user_states": [
+        "有权未来/开始/结束/取消记录查看者",
+        "打开确认弹窗的本人/管理员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "入口可见性",
+          "state": "有权未来/开始/结束/取消记录查看者",
+          "plausible_fault": "始终显示取消按钮",
+          "scenario_ids": [
+            "BB-reservation-management-10"
+          ],
+          "failure_signal": "开始、结束、已取消卡片仍有入口或有权未来缺入口"
+        },
+        {
+          "mode": "取消确认",
+          "state": "打开确认弹窗的本人/管理员",
+          "plausible_fault": "点入口立即取消或显示错卡片内容",
+          "scenario_ids": [
+            "BB-reservation-management-10"
+          ],
+          "failure_signal": "放弃仍有写请求或原状态改变，主题时段室名不符，确认后未取消"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-1",
+      "verdict": "sufficient",
+      "reason": "两团队启用/停用、重名且按编号核对，成员和管理员直读可识别团队泄漏与漏停用资料。",
+      "operation_modes": [
+        "房间资料读取",
+        "团队隔离"
+      ],
+      "user_states": [
+        "成员/本队及异队管理员",
+        "尝试指定异队的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "房间资料读取",
+          "state": "成员/本队及异队管理员",
+          "plausible_fault": "统一只返回启用室或漏字段",
+          "scenario_ids": [
+            "BB-room-discovery-1"
+          ],
+          "failure_signal": "本团队停用室缺失，编号名称位置容量设备启用字段不完整"
+        },
+        {
+          "mode": "团队隔离",
+          "state": "尝试指定异队的用户",
+          "plausible_fault": "用客户端参数取代当前团队",
+          "scenario_ids": [
+            "BB-room-discovery-1"
+          ],
+          "failure_signal": "返回异队ID或同名导致集合混淆"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-2",
+      "verdict": "sufficient",
+      "reason": "显式空串按已提供但不可解析处理，与完全省略参数区分，符合正文未指定才默认的划分；无需改写基线。",
+      "operation_modes": [
+        "显式或省略查询日期",
+        "不可解析显式日期"
+      ],
+      "user_states": [
+        "北京时间午夜前后且浏览器UTC用户",
+        "空串/not-a-date/2月30日用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "显式或省略查询日期",
+          "state": "北京时间午夜前后且浏览器UTC用户",
+          "plausible_fault": "按UTC取默认日",
+          "scenario_ids": [
+            "BB-room-discovery-2"
+          ],
+          "failure_signal": "显式/省略响应记录不是对应北京时间自然日"
+        },
+        {
+          "mode": "不可解析显式日期",
+          "state": "空串/not-a-date/2月30日用户",
+          "plausible_fault": "把空串或解析失败静默回退今天",
+          "scenario_ids": [
+            "BB-room-discovery-2"
+          ],
+          "failure_signal": "显式date=得到成功当前日记录而非拒绝，原始请求对照可区别参数省略"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-3",
+      "verdict": "sufficient",
+      "reason": "已定义停服隔离库fixture、元数据映射和完整性检查作为已有数据库读取输入；查询契约未限定只由当前API创建，因此无需批准跨日新建即可检验相交语义。",
+      "operation_modes": [
+        "公开可达日程",
+        "既有跨日输入",
+        "恰午夜接触"
+      ],
+      "user_states": [
+        "两日同室多场含取消且逆序创建者",
+        "通过--db读取H1至H6历史记录者",
+        "结束恰D零点或开始恰次日零点的记录"
+      ],
+      "fault_probes": [
+        {
+          "mode": "公开可达日程",
+          "state": "两日同室多场含取消且逆序创建者",
+          "plausible_fault": "含取消、错日或按创建ID排序",
+          "scenario_ids": [
+            "BB-room-discovery-3"
+          ],
+          "failure_signal": "返回集合不符，取消后仍存在或开始顺序错误"
+        },
+        {
+          "mode": "既有跨日输入",
+          "state": "通过--db读取H1至H6历史记录者",
+          "plausible_fault": "仅按start日期筛选",
+          "scenario_ids": [
+            "BB-room-discovery-3"
+          ],
+          "failure_signal": "D查询漏H1/H5或误含H2/H4/H6；三日独立半开相交公式与实际ID比较"
+        },
+        {
+          "mode": "恰午夜接触",
+          "state": "结束恰D零点或开始恰次日零点的记录",
+          "plausible_fault": "把相邻日端点当占用",
+          "scenario_ids": [
+            "BB-room-discovery-3"
+          ],
+          "failure_signal": "H2/H4错误出现在D，关联实际HTTP及fixture固定时段证据"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-4",
+      "verdict": "sufficient",
+      "reason": "本人/管理员/其他成员的API与UI和同会话升降权均检查，不能以界面遮挡替代隐私保护。",
+      "operation_modes": [
+        "主题权限",
+        "角色转换"
+      ],
+      "user_states": [
+        "本人/管理员/同队其他成员",
+        "V原会话提升再降权"
+      ],
+      "fault_probes": [
+        {
+          "mode": "主题权限",
+          "state": "本人/管理员/同队其他成员",
+          "plausible_fault": "仅前端脱敏而API泄漏",
+          "scenario_ids": [
+            "BB-room-discovery-4"
+          ],
+          "failure_signal": "V响应出现私有主题或U/A只能见已预约"
+        },
+        {
+          "mode": "角色转换",
+          "state": "V原会话提升再降权",
+          "plausible_fault": "缓存真实主题或旧权限",
+          "scenario_ids": [
+            "BB-room-discovery-4"
+          ],
+          "failure_signal": "降权后API/UI仍有真实主题，升权后无法看真实主题"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-5",
+      "verdict": "sufficient",
+      "reason": "容量等号两侧、各设备、组合和清除对照原集合，已挑战遗漏AND条件和停用过滤。",
+      "operation_modes": [
+        "容量和设备筛选",
+        "清除筛选和停用"
+      ],
+      "user_states": [
+        "无条件/单条件/组合条件用户",
+        "已筛到部分/零匹配的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "容量和设备筛选",
+          "state": "无条件/单条件/组合条件用户",
+          "plausible_fault": "容量用大于而非不少于或条件OR",
+          "scenario_ids": [
+            "BB-room-discovery-5"
+          ],
+          "failure_signal": "4/8/12等号房间漏出，组合显示不满足全部条件的室"
+        },
+        {
+          "mode": "清除筛选和停用",
+          "state": "已筛到部分/零匹配的用户",
+          "plausible_fault": "过滤列表累积不恢复或停用大室出现",
+          "scenario_ids": [
+            "BB-room-discovery-5"
+          ],
+          "failure_signal": "清除后原启用集合不恢复或出现停用ID"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-6",
+      "verdict": "sufficient",
+      "reason": "三身份跨两日期展开/收起，字段对应真实响应与主题权限，有可见缓存错日反例。",
+      "operation_modes": [
+        "展开日程",
+        "切日及重开"
+      ],
+      "user_states": [
+        "本人/管理员/其他成员",
+        "已展开后切D+1的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "展开日程",
+          "state": "本人/管理员/其他成员",
+          "plausible_fault": "时段或预约人错配，主题未脱敏",
+          "scenario_ids": [
+            "BB-room-discovery-6"
+          ],
+          "failure_signal": "展开卡片时段预约人与真实记录不符或成员看到私有主题"
+        },
+        {
+          "mode": "切日及重开",
+          "state": "已展开后切D+1的用户",
+          "plausible_fault": "仍使用旧日程缓存",
+          "scenario_ids": [
+            "BB-room-discovery-6"
+          ],
+          "failure_signal": "D+1显示D主题/时段，收起重开不更新"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-7",
+      "verdict": "sufficient",
+      "reason": "48区间独立真值、开闭端点、相邻和取消保留邻场及空日，足以检出常见绘制偏移。",
+      "operation_modes": [
+        "十五分钟占用绘制",
+        "取消与空日"
+      ],
+      "user_states": [
+        "首格/末格/相邻预约查看者",
+        "取消中间预约或切无预约日期者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "十五分钟占用绘制",
+          "state": "首格/末格/相邻预约查看者",
+          "plausible_fault": "把结束格也标占或错移一格",
+          "scenario_ids": [
+            "BB-room-discovery-7"
+          ],
+          "failure_signal": "08:00/19:45端点及邻接的48格真值表不符"
+        },
+        {
+          "mode": "取消与空日",
+          "state": "取消中间预约或切无预约日期者",
+          "plausible_fault": "清掉邻场或沿用旧占用",
+          "scenario_ids": [
+            "BB-room-discovery-7"
+          ],
+          "failure_signal": "10:30–10:45被清、已取消格仍占或空日仍占"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-8",
+      "verdict": "sufficient",
+      "reason": "原始团队集合含后来停用室预约、取消和他人记录，筛选至无匹配仍核计数，跨日跨队验证来源。",
+      "operation_modes": [
+        "原始集合统计",
+        "筛选与切日期"
+      ],
+      "user_states": [
+        "U含本人/他人/取消/停用室有效预约",
+        "过滤至零后清除、D+1及另一团队用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "原始集合统计",
+          "state": "U含本人/他人/取消/停用室有效预约",
+          "plausible_fault": "将停用室有效预约排除或取消计入",
+          "scenario_ids": [
+            "BB-room-discovery-8"
+          ],
+          "failure_signal": "D指标不是4/3/2，停用室预约被漏计或他人计入我的"
+        },
+        {
+          "mode": "筛选与切日期",
+          "state": "过滤至零后清除、D+1及另一团队用户",
+          "plausible_fault": "统计取过滤列表或缓存前日期团队",
+          "scenario_ids": [
+            "BB-room-discovery-8"
+          ],
+          "failure_signal": "筛选改变总数，切日/换队仍用D数字"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "room-discovery-9",
+      "verdict": "sufficient",
+      "reason": "非空→零匹配→调整恢复是完整转换，既查提示也查筛选仍可用。",
+      "operation_modes": [
+        "无匹配状态",
+        "调整恢复"
+      ],
+      "user_states": [
+        "已选择无匹配容量/设备者",
+        "处于零结果的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "无匹配状态",
+          "state": "已选择无匹配容量/设备者",
+          "plausible_fault": "显示加载错误或隐藏筛选",
+          "scenario_ids": [
+            "BB-room-discovery-9"
+          ],
+          "failure_signal": "无明确无匹配提示，调整入口不可用"
+        },
+        {
+          "mode": "调整恢复",
+          "state": "处于零结果的用户",
+          "plausible_fault": "过滤空数组无法恢复",
+          "scenario_ids": [
+            "BB-room-discovery-9"
+          ],
+          "failure_signal": "降低人数/清设备后仍无房间或需重新登录"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-1",
+      "verdict": "sufficient",
+      "reason": "新增/编辑直连权限矩阵和降权、跨队对象验证，能检出只隐藏入口。",
+      "operation_modes": [
+        "新增编辑授权",
+        "团队和降权边界"
+      ],
+      "user_states": [
+        "本队管理员和普通成员",
+        "异队管理员/刚降权旧会话"
+      ],
+      "fault_probes": [
+        {
+          "mode": "新增编辑授权",
+          "state": "本队管理员和普通成员",
+          "plausible_fault": "仅UI限制管理接口",
+          "scenario_ids": [
+            "BB-space-administration-1"
+          ],
+          "failure_signal": "U/V直接新增或编辑成功，A合法请求被拒"
+        },
+        {
+          "mode": "团队和降权边界",
+          "state": "异队管理员/刚降权旧会话",
+          "plausible_fault": "管理员跨队编辑或缓存旧权限",
+          "scenario_ids": [
+            "BB-space-administration-1"
+          ],
+          "failure_signal": "B或降权者修改成功，原资料变化"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-2",
+      "verdict": "sufficient",
+      "reason": "两个团队同名及一队多次新建，编号和完整规范化返回及集合增量能证明新建归属。",
+      "operation_modes": [
+        "合法新建",
+        "连续新建"
+      ],
+      "user_states": [
+        "A/B分别新建同名室",
+        "已有空间的管理员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "合法新建",
+          "state": "A/B分别新建同名室",
+          "plausible_fault": "全局名称唯一或使用默认团队",
+          "scenario_ids": [
+            "BB-space-administration-2"
+          ],
+          "failure_signal": "B同名失败，房间归属错误或跨队可见"
+        },
+        {
+          "mode": "连续新建",
+          "state": "已有空间的管理员",
+          "plausible_fault": "复用编号覆盖旧室或漏返回字段",
+          "scenario_ids": [
+            "BB-space-administration-2"
+          ],
+          "failure_signal": "三个新编号不独立，原室消失或返回资料不完整"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-3",
+      "verdict": "sufficient",
+      "reason": "逐字段与整体修改，空间和既有预约后续读取再重登，检出忽略字段、旧缓存与部分丢失。",
+      "operation_modes": [
+        "逐字段保存",
+        "组合更新后重读"
+      ],
+      "user_states": [
+        "有既有预约的管理员",
+        "退出重新登录者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "逐字段保存",
+          "state": "有既有预约的管理员",
+          "plausible_fault": "只保存名称忽略启用设备等",
+          "scenario_ids": [
+            "BB-space-administration-3"
+          ],
+          "failure_signal": "任一步后返回字段与修改值不符，未改字段丢失"
+        },
+        {
+          "mode": "组合更新后重读",
+          "state": "退出重新登录者",
+          "plausible_fault": "修改只在前端缓存",
+          "scenario_ids": [
+            "BB-space-administration-3"
+          ],
+          "failure_signal": "重登空间/预约读取仍旧室名位置或其他字段回退"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-4",
+      "verdict": "sufficient",
+      "reason": "trim、停用重名、自身原名、跨团队同名和并发新建共同检验唯一性作用域及非破坏性。",
+      "operation_modes": [
+        "名称冲突与自名",
+        "跨团队与并发唯一性"
+      ],
+      "user_states": [
+        "同队已有启用/停用室管理员",
+        "两团队或本队双管理员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "名称冲突与自名",
+          "state": "同队已有启用/停用室管理员",
+          "plausible_fault": "只检查启用室或把自己也当冲突",
+          "scenario_ids": [
+            "BB-space-administration-4"
+          ],
+          "failure_signal": "重名保存成功并改变原室，保存自身原名被拒"
+        },
+        {
+          "mode": "跨团队与并发唯一性",
+          "state": "两团队或本队双管理员",
+          "plausible_fault": "全局唯一或先查后建产生重复",
+          "scenario_ids": [
+            "BB-space-administration-4"
+          ],
+          "failure_signal": "异队同名被拒，本队并发最终存在两个R3"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-5",
+      "verdict": "sufficient",
+      "reason": "新增编辑字段边界、去空格、错误类型、布尔默认与保存前后对照，能检出主要格式及部分保存错误。",
+      "operation_modes": [
+        "字段长度与容量",
+        "启用类型和默认"
+      ],
+      "user_states": [
+        "新增/编辑合法端点和越界用户",
+        "新增省略启用及显式布尔/非法值用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "字段长度与容量",
+          "state": "新增/编辑合法端点和越界用户",
+          "plausible_fault": "未trim、按字节限中文或bool当整数",
+          "scenario_ids": [
+            "BB-space-administration-5"
+          ],
+          "failure_signal": "1/40/80/100端点误拒，超界/布尔容量允许或保存值错误"
+        },
+        {
+          "mode": "启用类型和默认",
+          "state": "新增省略启用及显式布尔/非法值用户",
+          "plausible_fault": "省略默认false或接受字符串false",
+          "scenario_ids": [
+            "BB-space-administration-5"
+          ],
+          "failure_signal": "新增缺启用不是true，非法类型被保存；失败前后原资料改变"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-6",
+      "verdict": "sufficient",
+      "reason": "新增与编辑完整重复设备矩阵并独立读回，创建非法项无半成品，已封住仅PATCH校验反例。",
+      "operation_modes": [
+        "新增设备列表",
+        "编辑设备列表"
+      ],
+      "user_states": [
+        "管理员提交空/合法/重复/非法设备的新室",
+        "已有室管理员提交同样矩阵"
+      ],
+      "fault_probes": [
+        {
+          "mode": "新增设备列表",
+          "state": "管理员提交空/合法/重复/非法设备的新室",
+          "plausible_fault": "POST跳过规则或保存重复",
+          "scenario_ids": [
+            "BB-space-administration-6"
+          ],
+          "failure_signal": "有效新建读回集合有重复、合法空集被拒，非法设备产生新房间"
+        },
+        {
+          "mode": "编辑设备列表",
+          "state": "已有室管理员提交同样矩阵",
+          "plausible_fault": "非法项部分保存或非列表被转换接收",
+          "scenario_ids": [
+            "BB-space-administration-6"
+          ],
+          "failure_signal": "非法PATCH后原设备改变，支持项/空列表不接受或重复未去除"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-7",
+      "verdict": "sufficient",
+      "reason": "停用后资料/预约/日程保留与成员旧弹窗和管理员直连拒绝，区分软停用和删除。",
+      "operation_modes": [
+        "停用保留",
+        "停用拒新"
+      ],
+      "user_states": [
+        "已有未来有效及取消历史的房间所有团队",
+        "成员旧弹窗和管理员新请求"
+      ],
+      "fault_probes": [
+        {
+          "mode": "停用保留",
+          "state": "已有未来有效及取消历史的房间所有团队",
+          "plausible_fault": "停用就删除预约或释放旧占用",
+          "scenario_ids": [
+            "BB-space-administration-7"
+          ],
+          "failure_signal": "房间/原记录丢失或原有效预约从日程消失"
+        },
+        {
+          "mode": "停用拒新",
+          "state": "成员旧弹窗和管理员新请求",
+          "plausible_fault": "只从列表隐藏但API允许预约",
+          "scenario_ids": [
+            "BB-space-administration-7"
+          ],
+          "failure_signal": "停用后新预约成功或产生通知"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-8",
+      "verdict": "sufficient",
+      "reason": "改名位置、减容、清设备、停用逐步对历史字段，重启用后的新预约5/4人对照区分旧记录与新资格。",
+      "operation_modes": [
+        "资料变更保持历史",
+        "变化后新资格"
+      ],
+      "user_states": [
+        "有效6人预约及取消历史的团队",
+        "容量4且重新启用的预约者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "资料变更保持历史",
+          "state": "有效6人预约及取消历史的团队",
+          "plausible_fault": "减容自动取消或截断人数",
+          "scenario_ids": [
+            "BB-space-administration-8"
+          ],
+          "failure_signal": "原ID起止人数状态变化或取消记录复活"
+        },
+        {
+          "mode": "变化后新资格",
+          "state": "容量4且重新启用的预约者",
+          "plausible_fault": "为保旧预约而继续按旧容量验证新预约",
+          "scenario_ids": [
+            "BB-space-administration-8"
+          ],
+          "failure_signal": "5人新预约成功或4人误拒；既有6人预约被改"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-9",
+      "verdict": "sufficient",
+      "reason": "真实异队室和不存在ID的相同语义错误，并由所有团队复查，能发现越权修改和存在性泄漏。",
+      "operation_modes": [
+        "不存在目标修改",
+        "异队目标修改"
+      ],
+      "user_states": [
+        "管理员指向不存在ID",
+        "管理员指向B房间"
+      ],
+      "fault_probes": [
+        {
+          "mode": "不存在目标修改",
+          "state": "管理员指向不存在ID",
+          "plausible_fault": "误当新增创建房间",
+          "scenario_ids": [
+            "BB-space-administration-9"
+          ],
+          "failure_signal": "返回不是会议室不存在或产生房间"
+        },
+        {
+          "mode": "异队目标修改",
+          "state": "管理员指向B房间",
+          "plausible_fault": "改房间归属或泄漏完整资料",
+          "scenario_ids": [
+            "BB-space-administration-9"
+          ],
+          "failure_signal": "错误泄漏B字段，B空间及预约前后发生变化"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "space-administration-10",
+      "verdict": "sufficient",
+      "reason": "停用拒绝→启用允许的空闲合法请求与旧占用/减容对照，能检出启用无效及放宽所有规则。",
+      "operation_modes": [
+        "重新启用",
+        "恢复后限制保持"
+      ],
+      "user_states": [
+        "停用后恢复且有空闲时段的用户",
+        "旧6人占用且现容量4的用户"
+      ],
+      "fault_probes": [
+        {
+          "mode": "重新启用",
+          "state": "停用后恢复且有空闲时段的用户",
+          "plausible_fault": "只改显示标记不恢复服务资格",
+          "scenario_ids": [
+            "BB-space-administration-10"
+          ],
+          "failure_signal": "启用后4人合法空闲请求仍被拒"
+        },
+        {
+          "mode": "恢复后限制保持",
+          "state": "旧6人占用且现容量4的用户",
+          "plausible_fault": "启用清空旧占用或恢复旧容量",
+          "scenario_ids": [
+            "BB-space-administration-10"
+          ],
+          "failure_signal": "重叠请求或5人新请求成功，旧记录丢失"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "team-administration-1",
+      "verdict": "sufficient",
+      "reason": "两团队成员全字段、普通成员拒绝及降权会话和参数越权，覆盖读取范围和当前角色。",
+      "operation_modes": [
+        "管理员列表",
+        "权限拒绝与转换"
+      ],
+      "user_states": [
+        "两团队管理员",
+        "普通成员/刚降权旧会话"
+      ],
+      "fault_probes": [
+        {
+          "mode": "管理员列表",
+          "state": "两团队管理员",
+          "plausible_fault": "返回全系统用户或缺邮箱角色",
+          "scenario_ids": [
+            "BB-team-administration-1"
+          ],
+          "failure_signal": "返回集合含异队或编号邮箱姓名角色不符"
+        },
+        {
+          "mode": "权限拒绝与转换",
+          "state": "普通成员/刚降权旧会话",
+          "plausible_fault": "只限制UI或缓存管理员身份",
+          "scenario_ids": [
+            "BB-team-administration-1"
+          ],
+          "failure_signal": "直接请求仍得到成员列表"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "team-administration-2",
+      "verdict": "sufficient",
+      "reason": "普通成员改自己/他人/管理员及异队管理员、合法同队提升降回，前后身份读取可检出静默越权。",
+      "operation_modes": [
+        "成员越权修改",
+        "管理员范围与合法操作"
+      ],
+      "user_states": [
+        "U改自己/V/A",
+        "B改U或A改V"
+      ],
+      "fault_probes": [
+        {
+          "mode": "成员越权修改",
+          "state": "U改自己/V/A",
+          "plausible_fault": "只禁止改他人却允许自升权",
+          "scenario_ids": [
+            "BB-team-administration-2"
+          ],
+          "failure_signal": "请求后任一角色改变"
+        },
+        {
+          "mode": "管理员范围与合法操作",
+          "state": "B改U或A改V",
+          "plausible_fault": "任意管理员可改异队或合法修改被拒",
+          "scenario_ids": [
+            "BB-team-administration-2"
+          ],
+          "failure_signal": "B操作改变U，或A同队提升/降回不生效"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "team-administration-3",
+      "verdict": "sufficient",
+      "reason": "精确枚举、大小写空格、缺失及JSON类型变异均读回原角色；同值合法对照不受唯一管理员约束干扰。",
+      "operation_modes": [
+        "合法角色枚举",
+        "非法角色枚举"
+      ],
+      "user_states": [
+        "非最后管理员目标",
+        "提交大小写/空白/未知/null/其他类型者"
+      ],
+      "fault_probes": [
+        {
+          "mode": "合法角色枚举",
+          "state": "非最后管理员目标",
+          "plausible_fault": "只允许升权或把同值当错误",
+          "scenario_ids": [
+            "BB-team-administration-3"
+          ],
+          "failure_signal": "admin/member和同值保存不能完成"
+        },
+        {
+          "mode": "非法角色枚举",
+          "state": "提交大小写/空白/未知/null/其他类型者",
+          "plausible_fault": "宽松转换未知角色为member",
+          "scenario_ids": [
+            "BB-team-administration-3"
+          ],
+          "failure_signal": "非法值成功改变原角色或造成额外身份变化"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "team-administration-4",
+      "verdict": "sufficient",
+      "reason": "唯一管理员自降、两人合法降一及再次降最后、两类并发，最终管理员数和可用权限均可检验。",
+      "operation_modes": [
+        "顺序最后管理员保护",
+        "并发最后管理员保护"
+      ],
+      "user_states": [
+        "唯一管理员或剩两管理员",
+        "A/V同时降彼此或降自己"
+      ],
+      "fault_probes": [
+        {
+          "mode": "顺序最后管理员保护",
+          "state": "唯一管理员或剩两管理员",
+          "plausible_fault": "全局数管理员或一律拒绝降权",
+          "scenario_ids": [
+            "BB-team-administration-4"
+          ],
+          "failure_signal": "唯一A自降成功，或两管理员降一被拒；B存在影响本队判断"
+        },
+        {
+          "mode": "并发最后管理员保护",
+          "state": "A/V同时降彼此或降自己",
+          "plausible_fault": "先计数后更新导致双降",
+          "scenario_ids": [
+            "BB-team-administration-4"
+          ],
+          "failure_signal": "最终本队管理员为0或无可用管理员入口"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "team-administration-5",
+      "verdict": "gap",
+      "reason": "编辑/角色修改/代取消已增加独立首请求矩阵；原新增空间和team范围仍可能先经过成员/身份读取，不能据措辞“保留矩阵”认定每入口首请求已隔离。",
+      "operation_modes": [
+        "身份和管理读授权",
+        "独立首请求编辑/角色修改/代取消",
+        "独立首请求新增空间与team范围"
+      ],
+      "user_states": [
+        "原会话被提升或降权者",
+        "无任何中间U请求的升降权用户",
+        "角色刚改变且未读身份/成员列表的U"
+      ],
+      "fault_probes": [
+        {
+          "mode": "身份和管理读授权",
+          "state": "原会话被提升或降权者",
+          "plausible_fault": "长期缓存旧角色",
+          "scenario_ids": [
+            "BB-team-administration-5"
+          ],
+          "failure_signal": "当前身份、成员列表/team请求按旧权限返回"
+        },
+        {
+          "mode": "独立首请求编辑/角色修改/代取消",
+          "state": "无任何中间U请求的升降权用户",
+          "plausible_fault": "写入口依赖先读身份刷新",
+          "scenario_ids": [
+            "BB-team-administration-5"
+          ],
+          "failure_signal": "直接首条写请求升权拒绝或降权成功，失败后目标状态变化"
+        },
+        {
+          "mode": "独立首请求新增空间与team范围",
+          "state": "角色刚改变且未读身份/成员列表的U",
+          "plausible_fault": "新增处理读取会话旧角色，成员读取才刷新缓存",
+          "scenario_ids": [
+            "BB-team-administration-5"
+          ],
+          "failure_signal": "当前原步骤先请求成员列表再新增；team矩阵也非每scope独立首请求，错误可通过；需首请求直接新增/team并观察权限错误"
+        }
+      ],
+      "uncovered_paths": [
+        "team-administration-5：新增空间及team范围查询尚未像编辑/角色/代取消那样明确独立首请求分支。反例：新增处理用会话旧角色，成员列表会刷新它；当前先成员读取再新增可通过。需各入口升/降权后无任何中间目标用户请求的独立矩阵。"
+      ]
+    },
+    {
+      "requirement_id": "team-administration-6",
+      "verdict": "sufficient",
+      "reason": "不存在与异队真实成员错误对照及B身份/成员复查，能检出误改及越权信息泄漏。",
+      "operation_modes": [
+        "不存在成员",
+        "异队成员"
+      ],
+      "user_states": [
+        "管理员提交不存在ID",
+        "A指向真实B成员"
+      ],
+      "fault_probes": [
+        {
+          "mode": "不存在成员",
+          "state": "管理员提交不存在ID",
+          "plausible_fault": "错误落到默认成员并修改",
+          "scenario_ids": [
+            "BB-team-administration-6"
+          ],
+          "failure_signal": "返回不是成员不存在或本队角色改变"
+        },
+        {
+          "mode": "异队成员",
+          "state": "A指向真实B成员",
+          "plausible_fault": "跨团队写入角色或泄漏成员资料",
+          "scenario_ids": [
+            "BB-team-administration-6"
+          ],
+          "failure_signal": "错误含B私有字段或B角色/权限变化"
+        }
+      ],
+      "uncovered_paths": []
+    },
+    {
+      "requirement_id": "team-administration-7",
+      "verdict": "sufficient",
+      "reason": "合法自降后身份请求、导航与服务权限三层证据，唯一管理员拒绝对照避免乐观UI错误降权。",
+      "operation_modes": [
+        "合法自降",
+        "非法自降"
+      ],
+      "user_states": [
+        "团队还有另一管理员的A",
+        "唯一管理员A"
+      ],
+      "fault_probes": [
+        {
+          "mode": "合法自降",
+          "state": "团队还有另一管理员的A",
+          "plausible_fault": "只更新列表不刷新自身权限导航",
+          "scenario_ids": [
+            "BB-team-administration-7"
+          ],
+          "failure_signal": "缺身份重新读取、未回会议室、管理入口残留或旧地址仍可写"
+        },
+        {
+          "mode": "非法自降",
+          "state": "唯一管理员A",
+          "plausible_fault": "请求失败仍把本地身份改member",
+          "scenario_ids": [
+            "BB-team-administration-7"
+          ],
+          "failure_signal": "拒绝后管理入口消失或不能继续合法管理"
+        }
+      ],
+      "uncovered_paths": []
+    }
+  ]
+}

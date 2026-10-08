@@ -26,6 +26,7 @@ meta.md       结构、语法与引用规范
 | [DR-000](decisions/000-spec-structure-format.md) | 000-spec-structure-format.md | 沿用的规约结构与格式 |
 | [DR-001](decisions/001-reverse-engineered-requirements.md) | 001-reverse-engineered-requirements.md | 逆向来源、范围、状态与旧 ID 迁移 |
 | [DR-002](decisions/002-black-box-baseline-confirmation.md) | 002-black-box-baseline-confirmation.md | 用户确认 96 条需求及黑盒设计范围 |
+| [DR-003](decisions/003-black-box-design-review.md) | 003-black-box-design-review.md | 黑盒设计产出、三轮独立审阅及剩余不足 |
 
 ## 规约包
 

@@ -9,9 +9,12 @@
 需要 Python 3.11+，使用标准库，无需安装依赖、申请云服务或配置真实邮件账号。macOS、Linux 和安装了 Python 的 Windows 可运行。
 
 ```sh
-cd /Users/boboyang/work/sublang.ai/meeting-room-booking
+git clone https://github.com/yangbobo2021/meetspace-testing-example.git
+cd meetspace-testing-example
 python3 -m app.server
 ```
+
+已有本地检出时，直接在项目根目录运行 `python3 -m app.server` 即可。
 
 打开 <http://127.0.0.1:8766>。第一次启动自动创建 SQLite 数据库、示例团队、会议室、账号及明天的三场会议。时间统一使用 **Asia/Shanghai（UTC+8）**，不取决于浏览器或服务器所在时区。
 
@@ -66,6 +69,22 @@ python3 -m unittest discover -s tests -v
 4. 根据事实输出通过、失败、未覆盖和受阻项。测试流程不修改应用代码；发现缺陷后在开发流程中修复，再对新修订复测。
 
 完整验收还没有执行，本仓库没有伪造全量通过报告。测试 Skill 需要 Node.js 和 Playbook；它们不是应用运行依赖。
+
+## GitHub 阶段对比
+
+公共仓库：<https://github.com/yangbobo2021/meetspace-testing-example>。
+
+- `v1.0.0-rc.1` 保留最初的本地候选版本。
+- `stage-01-implemented` 标记首次公开交接的当前实现，包括公开仓库启动说明；业务代码与原候选版本相同，完整发布验收尚未执行。
+- 后续补测、修复和验收完成时分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
+
+例如，查看当前实现到后续版本的变化：
+
+```sh
+git diff stage-01-implemented..HEAD
+```
+
+测试流程生成的资产仍先放在用户指定的测试目录；阶段结束后，可将适合公开的场景与结果快照整理进仓库，记录测试对应的应用修订。运行数据库、会话数据和真实服务凭据不进入公开提交。
 
 ## 结构
 

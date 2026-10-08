@@ -3,7 +3,7 @@
 ## 状态
 
 已记录的设计阶段历史产出；当时设计门禁 blocked，流程结论 incomplete，应用验收未开展。
-identity-session-9 的未决定端点随后由 [DR-004](004-login-window-endpoint.md) 关闭；其他缺口的续轮修补与审阅不覆盖本历史记录。
+identity-session-9 的未决定端点随后由 [DR-004](004-login-window-endpoint.md) 关闭；其他缺口的续轮修补与审阅见 [DR-005](005-black-box-design-ready.md)，不覆盖本历史记录。
 
 ## 背景
 

@@ -63,8 +63,8 @@ python3 -m unittest discover -s tests -v
 
 ## 接手做发布验收
 
-1. 阅读 [需求规约地图](specs/map.md) 和 [版本交接](docs/release-handoff.md)。用户已确认 `stage-02-requirements`（`12d503a`）全部 96 条需求作为黑盒场景设计基线，见 [DR-002](specs/decisions/002-black-box-baseline-confirmation.md)。
-2. 用户已选择 `tests` 目录；由 `app-delivery-acceptance` Skill 在 `tests/delivery-acceptance/` 保存需求快照、设计和独立审阅场景。当前授权限于黑盒场景设计。
+1. 阅读 [需求规约地图](specs/map.md) 和 [版本交接](docs/release-handoff.md)。用户已确认 `stage-02-requirements`（`12d503a`）全部 96 条需求作为黑盒场景设计基线，见 [DR-002](specs/decisions/002-black-box-baseline-confirmation.md)。登录窗口精确六十秒端点随后按 [DR-004](specs/decisions/004-login-window-endpoint.md) 补充。
+2. 用户已选择 `tests` 目录；由 `app-delivery-acceptance` Skill 在 `tests/delivery-acceptance/` 保存需求快照、设计和独立审阅场景。当前授权限于黑盒场景设计；现有 96 个场景、105 个方法，全部 96 条需求经独立审阅判定充分，设计门禁 `black_box_ready`，见 [DR-005](specs/decisions/005-black-box-design-ready.md)。
 3. 固定 Git 修订和数据库初始状态，执行实际界面、API 和必要的实现检查，保存证据。
 4. 根据事实输出通过、失败、未覆盖和受阻项。测试流程不修改应用代码；发现缺陷后在开发流程中修复，再对新修订复测。
 
@@ -78,6 +78,7 @@ python3 -m unittest discover -s tests -v
 - `stage-01-implemented` 标记首次公开交接的当前实现，包括公开仓库启动说明；业务代码与原候选版本相同，完整发布验收尚未执行。
 - `stage-02-requirements` 标记逆向需求整理阶段，按 `specs/` 规范组织候选条目；本阶段未启动测试 Skill 或执行应用测试。
 - `stage-03-black-box-scenarios` 保存[黑盒设计公开档案](tests/snapshots/stage-03-black-box-scenarios/README.md)：96 个场景、102 个方法，三轮独立审阅后 92 条需求充分、4 条有缺口，设计门禁 blocked；未执行应用测试。
+- `stage-04-black-box-ready` 保存[修订后设计公开档案](tests/snapshots/stage-04-black-box-ready/README.md)：按用户决定补充需求端点，96 个场景、105 个方法，全部 96 条需求充分，独立审阅与确定性设计门禁通过；未执行应用测试。
 - 后续补测、修复和验收完成时分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：

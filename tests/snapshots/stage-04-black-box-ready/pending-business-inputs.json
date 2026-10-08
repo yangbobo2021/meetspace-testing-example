@@ -1,0 +1,100 @@
+{
+  "status": "design_inputs_resolved_execution_not_started",
+  "basis": "需求保持已确认快照；DR-004解决业务端点，其他记录为后续执行设施和证据条件，不能据计划宣称实际验证成功。",
+  "items": [
+    {
+      "id": "OBS-001",
+      "requirement_ids": [
+        "identity-session-13"
+      ],
+      "gap": "公开身份/登录/错误响应可查泄漏，但不能证明随机盐、密码派生及不可恢复存储。",
+      "needed": "后续单独授权存储安全验证并定义可审计证据边界；不得以登录成功替代存储证明。",
+      "status": "design_sufficient_execution_pending",
+      "resolution": "随机盐因果计划加AI-password-persistence-scope覆盖初始化全过程全部持久化出口及可恢复副本；不明格式或观察缺失仍是后续执行受阻条件，未宣称证据已取得。",
+      "design_review_status": "sufficient",
+      "execution_status": "not_started"
+    },
+    {
+      "id": "OBS-002",
+      "requirement_ids": [
+        "identity-session-14"
+      ],
+      "gap": "外部会话隔离和到期行为不能证明随机性强度、仅存摘要及持久化字段范围。",
+      "needed": "后续单独授权存储安全验证或提供已定义的外部可审计存储证据；不假定私有表结构。",
+      "status": "design_sufficient_execution_pending",
+      "resolution": "首次熵/存储计划加AI-subsequent-session-entropy覆盖后续登录及切换；有效熵可来自预先种子，避免规定每次必须读取OS。设施完整性尚待执行验证。",
+      "design_review_status": "sufficient",
+      "execution_status": "not_started"
+    },
+    {
+      "id": "OBS-003",
+      "requirement_ids": [
+        "application-runtime-8"
+      ],
+      "gap": "当前只有外部锁定数据库的存储失败触发计划；底层完整性冲突与未预期异常缺少已定义的可重复外部触发。",
+      "needed": "提供/授权明确外部故障设施并证明实际触发对应类别；不能伪造API响应或把普通业务冲突冒充底层完整性异常。",
+      "status": "design_sufficient_execution_pending",
+      "resolution": "AI-storage-exception-boundary定义三类可重复依赖异常及真实HTTP观察；保留真实写锁分支。",
+      "design_review_status": "sufficient",
+      "execution_status": "not_started"
+    },
+    {
+      "id": "OBS-004",
+      "requirement_ids": [
+        "application-runtime-9",
+        "reservation-creation-10",
+        "reservation-management-7",
+        "notification-center-1",
+        "notification-center-2"
+      ],
+      "gap": "写锁前置拒绝可验证失败无副作用，却不能触发已有部分写入后的事务中途失败；预约与通知的原子性充分性仍缺。",
+      "needed": "后续定义不修改应用内部实现的确定性外部故障/观察设施或授权单独白盒验证；成功态一致不证明失败回滚。",
+      "status": "design_sufficient_execution_pending",
+      "resolution": "AI-transaction-midwrite-boundary明确首类业务实际写成功后、第二类写前故障与commit前故障，不由适配器补偿。 本轮新增AI-new-room-write-failure-boundary，覆盖启用/停用新室的首写后、适用间隙、提交失败和同名重试。",
+      "design_review_status": "sufficient",
+      "execution_status": "not_started"
+    },
+    {
+      "id": "OBS-005",
+      "requirement_ids": [
+        "notification-center-5"
+      ],
+      "gap": "通知列表仅返回最新100条，全部已读后最旧5条已读位无法通过已确认UI/API读回。",
+      "needed": "确认允许的只读外部证据来源；不虚构分页、导出、删除接口或自行改变公开查询需求。",
+      "status": "design_sufficient_execution_pending",
+      "resolution": "AI-notification-center-5明确运维SQLite一致快照中全部105条及最旧5条的已读位观察，并有空集合分支。",
+      "design_review_status": "sufficient",
+      "execution_status": "not_started"
+    },
+    {
+      "id": "OBS-006",
+      "requirement_ids": [
+        "room-discovery-3"
+      ],
+      "gap": "合法创建禁止跨北京时间日期，日程相交规则若包含历史跨午夜记录则缺少已确认的外部构造入口。",
+      "needed": "确认日程历史输入范围及可复现输入来源；保留现有合法可达状态覆盖，不静默删去相交边界。",
+      "status": "design_sufficient_execution_pending",
+      "resolution": "AI-room-discovery-3明确已有数据库读取fixture来源、H1–H6跨午夜范围和三日日程相交预期；不更改新建规则。",
+      "design_review_status": "sufficient",
+      "execution_status": "not_started"
+    },
+    {
+      "id": "OBS-007",
+      "requirement_ids": [
+        "identity-session-9"
+      ],
+      "status": "resolved_by_confirmed_DR_004",
+      "gap": "t=60.000秒是否仍计入t=0尝试，确认文本未明确窗口端点。",
+      "needed": "确认窗口端点：移出并释放名额，或仍计入并限频。已向用户发起明确问题，不以实现行为代替决定。",
+      "decision": "t=60.000秒时t=0尝试移出窗口，释放一个名额；窗口(t−60秒,t]。",
+      "resolution": "已按specs/decisions/004-login-window-endpoint.md及当前requirements.json固定唯一预期，无需重新询问；三精确时点使用独立历史。",
+      "options": [
+        "t=0记录在t=60.000移出，释放一个名额",
+        "t=0记录在t=60.000仍计入，继续限频"
+      ],
+      "design_review_status": "sufficient",
+      "execution_status": "not_started"
+    }
+  ],
+  "current_review": "coverage_review.json: passed; all96 requirements sufficient"
+}

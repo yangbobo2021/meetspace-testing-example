@@ -6,6 +6,8 @@
 用户对“恰好 60.000 秒时，第 0 秒的尝试已移出窗口、释放一个名额”的建议回答“按建议”。
 本记录仅补充 [DR-002](002-black-box-baseline-confirmation.md) 所确认基线的 identity-session-9 端点，并更新 [DR-003](003-black-box-design-review.md) 中该项未决定状态。
 
+本基线后续场景设计全部通过独立审阅和设计门禁，结果见 [DR-005](005-black-box-design-ready.md)。
+
 ## 背景
 
 - 上一轮黑盒设计保留全部 96 条需求，最终独立审阅剩四条设计缺口。

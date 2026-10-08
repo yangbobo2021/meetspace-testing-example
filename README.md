@@ -63,7 +63,7 @@ python3 -m unittest discover -s tests -v
 
 ## 接手做发布验收
 
-1. 阅读 [业务规则](docs/requirements.md) 和 [版本交接](docs/release-handoff.md)，审阅并确认需求基线。这些规则是示例作者提出的候选规则，目前尚未得到用户逐项确认。
+1. 阅读 [需求规约地图](specs/map.md) 和 [版本交接](docs/release-handoff.md)，审阅并确认需求基线。这些条目是对实现和原有规则逆向整理的候选需求，目前尚未得到用户逐项确认。
 2. 用户选择测试资产目录，再由 `app-delivery-acceptance` Skill 导出需求快照、设计和独立审阅场景。
 3. 固定 Git 修订和数据库初始状态，执行实际界面、API 和必要的实现检查，保存证据。
 4. 根据事实输出通过、失败、未覆盖和受阻项。测试流程不修改应用代码；发现缺陷后在开发流程中修复，再对新修订复测。
@@ -76,6 +76,7 @@ python3 -m unittest discover -s tests -v
 
 - `v1.0.0-rc.1` 保留最初的本地候选版本。
 - `stage-01-implemented` 标记首次公开交接的当前实现，包括公开仓库启动说明；业务代码与原候选版本相同，完整发布验收尚未执行。
+- `stage-02-requirements` 标记逆向需求整理阶段，按 `specs/` 规范组织候选条目；本阶段未启动测试 Skill 或执行应用测试。
 - 后续补测、修复和验收完成时分别提交真实产出，添加新的阶段标签，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：
@@ -92,7 +93,11 @@ git diff stage-01-implemented..HEAD
 app/server.py           HTTP API、权限、预约业务及 SQLite
 web/                    中文响应式操作界面
 tests/test_smoke.py      原有少量冒烟测试
-docs/requirements.md    带稳定 ID 的候选业务规则
+specs/map.md            需求入口与规约索引
+specs/meta.md           沿用自行车项目的存储与语法规范
+specs/packages/         按业务意图拆分的候选需求条目
+specs/decisions/        结构决策、逆向来源与边界
+docs/requirements.md    旧需求 ID 到新条目的映射
 docs/release-handoff.md  版本边界、资源和接手验收说明
 data/                   本机运行数据（不进 Git）
 ```

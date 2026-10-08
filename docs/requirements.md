@@ -1,47 +1,39 @@
-# 1.0.0-rc.1 候选业务规则
+# 需求入口与旧 ID 对照
 
-状态：**由示例作者拟定，供用户审阅确认；尚不是用户已确认的测试需求快照。** 规则描述拟交付行为，并不证明实现已经通过验收。后续用户确认或修订时保留条目 ID，新增需求分配新 ID。
+当前需求正文已迁移到 [specs/map.md](../specs/map.md)。
+按自行车示例的规范，需求集中存放在 `specs/packages/`，使用 GEARS 条目和稳定的 `<pack>-<N>` ID。
+当前状态为从实现逆向整理的候选需求，尚待业务确认，未开展新的测试或验收。
 
-交付范围：一个本机浏览器应用，两个示例团队、管理员与成员两类角色、持久化预约及站内通知。统一使用 Asia/Shanghai。所有账号与数据都是合成数据。
+原粗粒度规则可在 GitHub 的 [stage-01-implemented 版本](https://github.com/yangbobo2021/meetspace-testing-example/blob/stage-01-implemented/docs/requirements.md) 查阅。
+旧 ID 已公开，保持原事项关联；本文件仅维护到新条目的映射，不再保存第二份业务正文。
 
-## 身份和访问
+## 旧 ID 映射
 
-- **AUTH-01**：用户用邮箱和密码登录后进入所属团队；邮箱匹配不区分大小写，错误邮箱或密码应被拒绝。
-- **AUTH-02**：未登录或会话过期时，会议室、预约、成员及通知数据不可访问；登录有效期为八小时。
-- **AUTH-03**：退出后当前会话立即失效，再次访问受保护的数据需要重新登录。
-- **AUTH-04**：来自其他站点的修改请求应被拒绝；同一来源 IP 在一分钟内超过八次登录尝试应被临时限制。
-
-## 查看与预约
-
-- **ROOM-01**：用户只能查看所属团队的会议室，按北京时间的所选日期查看有效预约占用；取消预约不继续占用时段。
-- **ROOM-02**：成员可按最小参会人数与指定设备同时筛选可预约会议室；停用会议室不出现在成员可预约列表中。
-- **ROOM-03**：同团队成员可看到其他人的占用时段与姓名，但他人的会议主题仅显示“已预约”；本人和团队管理员可查看实际主题。
-- **BOOK-01**：成员可为本团队开放预约的会议室提交非空主题、参会人数、开始与结束时间；成功后可在自己的预约列表看到正确的会议记录。
-- **BOOK-02**：预约开始时间必须晚于服务端当前时间，且不晚于当前时间加三十天；时长为十五分钟至八小时，含边界。
-- **BOOK-03**：开始和结束时刻均须对齐十五分钟，秒与微秒须为零；开始与结束须位于同一个北京时间日期的 08:00–20:00 内，含开放时间边界。
-- **BOOK-04**：参会人数须为整数，至少一人，且不超过会议室容量；主题去除首尾空格后长度为一至一百字符。
-- **BOOK-05**：同一会议室的有效预约不能重叠，包括同时提交的预约；前一场结束时间等于后一场开始时间时允许预约。冲突应明确拒绝，并且不生成新的预约或确认通知。
-- **BOOK-06**：重复提交同一用户的相同请求标识与相同内容，应返回原预约，不创建重复预约或通知；同一标识用于不同内容应拒绝。取消后再重试原标识返回原已取消预约，不自动恢复预约。
-- **BOOK-07**：成员只能查询和取消自己的预约；团队管理员可查询和取消本团队成员的预约；任何角色均不可查询或修改另一团队的预约。
-- **BOOK-08**：未开始的有效预约可取消；取消后保留历史记录、释放时段并生成取消通知。重复取消同一预约不重复生成通知，已经开始的有效预约不能取消。
-- **BOOK-09**：界面区分即将进行、进行中、已结束与已取消预约，所有显示日期和时间按北京时间计算；用户可查看历史记录。
-
-## 管理
-
-- **ADMIN-01**：只有本团队管理员可以添加和编辑会议室；名称为一至四十字符、位置为一至八十字符、容量为一至一百的整数，同一团队会议室名称唯一。
-- **ADMIN-02**：会议室设备只能从显示屏、白板、视频会议、电话会议中选择；设备可为空。停用会议室阻止新预约，保留已有预约，重新启用后允许新预约。
-- **ADMIN-03**：修改会议室名称、位置、容量和设备仅改变当前会议室资料；已生成预约保持人数和时间，容量降低不自动取消原预约。预约列表展示会议室当前名称与位置。
-- **ADMIN-04**：只有本团队管理员可以查看本团队成员资料及修改管理员／成员角色；普通成员或另一团队的管理员不能执行此操作。
-- **ADMIN-05**：团队至少保留一位管理员；角色改变应在该成员下一次服务端请求时生效，无需注销其现有登录会话。
-
-## 通知与运行
-
-- **NOTICE-01**：预约创建成功及首次取消均在同一事务中生成预约所属成员的站内通知；其他成员和管理员不能查看该成员的通知。
-- **NOTICE-02**：用户可查看自己最近的一百条通知并将自己的通知全部标为已读，不能改变其他用户的已读状态。
-- **RUN-01**：使用同一个数据库文件重启服务后，团队、成员角色、会议室、预约及通知记录应保留，不能重新填入重复种子数据。
-- **RUN-02**：界面提供明确的成功或错误反馈，提交期间禁用重复提交按钮；请求失败时允许重试，不能把失败显示为成功。
-- **RUN-03**：登录、筛选、创建及取消预约、通知阅读应能在桌面和手机宽度下完成；输入有标签，弹窗可用键盘关闭，业务文本作为文本展示。
-
-## 本版不包含
-
-真实邮件或短信、企业 SSO、注册与找回密码、邀请新成员、定期重复预约、支付、跨时区团队配置、公网部署、高可用、备份恢复、资源预订计费。不能将站内通知结果当作真实邮件服务验证，也不能将本机通过当作公网运行就绪。
+| 旧 ID | 对应规约条目 |
+| --- | --- |
+| AUTH-01 | [identity-session-1](../specs/packages/identity-session.md#identity-session-1)、[identity-session-2](../specs/packages/identity-session.md#identity-session-2)、[identity-session-3](../specs/packages/identity-session.md#identity-session-3) |
+| AUTH-02 | [identity-session-5](../specs/packages/identity-session.md#identity-session-5)、[identity-session-6](../specs/packages/identity-session.md#identity-session-6) |
+| AUTH-03 | [identity-session-8](../specs/packages/identity-session.md#identity-session-8) |
+| AUTH-04 | [identity-session-9](../specs/packages/identity-session.md#identity-session-9)、[identity-session-10](../specs/packages/identity-session.md#identity-session-10) |
+| ROOM-01 | [room-discovery-1](../specs/packages/room-discovery.md#room-discovery-1)、[room-discovery-2](../specs/packages/room-discovery.md#room-discovery-2)、[room-discovery-3](../specs/packages/room-discovery.md#room-discovery-3) |
+| ROOM-02 | [room-discovery-5](../specs/packages/room-discovery.md#room-discovery-5)、[room-discovery-9](../specs/packages/room-discovery.md#room-discovery-9) |
+| ROOM-03 | [room-discovery-4](../specs/packages/room-discovery.md#room-discovery-4)、[room-discovery-6](../specs/packages/room-discovery.md#room-discovery-6) |
+| BOOK-01 | [reservation-creation-1](../specs/packages/reservation-creation.md#reservation-creation-1)、[reservation-creation-2](../specs/packages/reservation-creation.md#reservation-creation-2)、[reservation-creation-10](../specs/packages/reservation-creation.md#reservation-creation-10)、[reservation-management-1](../specs/packages/reservation-management.md#reservation-management-1)、[reservation-management-2](../specs/packages/reservation-management.md#reservation-management-2) |
+| BOOK-02 | [reservation-creation-4](../specs/packages/reservation-creation.md#reservation-creation-4)、[reservation-creation-5](../specs/packages/reservation-creation.md#reservation-creation-5) |
+| BOOK-03 | [reservation-creation-3](../specs/packages/reservation-creation.md#reservation-creation-3)、[reservation-creation-6](../specs/packages/reservation-creation.md#reservation-creation-6)、[reservation-creation-7](../specs/packages/reservation-creation.md#reservation-creation-7) |
+| BOOK-04 | [reservation-creation-2](../specs/packages/reservation-creation.md#reservation-creation-2)、[reservation-creation-8](../specs/packages/reservation-creation.md#reservation-creation-8) |
+| BOOK-05 | [reservation-creation-9](../specs/packages/reservation-creation.md#reservation-creation-9)、[reservation-creation-14](../specs/packages/reservation-creation.md#reservation-creation-14) |
+| BOOK-06 | [reservation-creation-11](../specs/packages/reservation-creation.md#reservation-creation-11)、[reservation-creation-12](../specs/packages/reservation-creation.md#reservation-creation-12)、[reservation-creation-13](../specs/packages/reservation-creation.md#reservation-creation-13)、[interface-experience-16](../specs/packages/interface-experience.md#interface-experience-16) |
+| BOOK-07 | [reservation-management-1](../specs/packages/reservation-management.md#reservation-management-1)、[reservation-management-5](../specs/packages/reservation-management.md#reservation-management-5)、[reservation-management-9](../specs/packages/reservation-management.md#reservation-management-9) |
+| BOOK-08 | [reservation-management-6](../specs/packages/reservation-management.md#reservation-management-6)、[reservation-management-7](../specs/packages/reservation-management.md#reservation-management-7)、[reservation-management-8](../specs/packages/reservation-management.md#reservation-management-8) |
+| BOOK-09 | [reservation-management-3](../specs/packages/reservation-management.md#reservation-management-3)、[reservation-management-4](../specs/packages/reservation-management.md#reservation-management-4)、[interface-experience-15](../specs/packages/interface-experience.md#interface-experience-15) |
+| ADMIN-01 | [space-administration-1](../specs/packages/space-administration.md#space-administration-1)、[space-administration-2](../specs/packages/space-administration.md#space-administration-2)、[space-administration-3](../specs/packages/space-administration.md#space-administration-3)、[space-administration-4](../specs/packages/space-administration.md#space-administration-4)、[space-administration-5](../specs/packages/space-administration.md#space-administration-5)、[space-administration-9](../specs/packages/space-administration.md#space-administration-9) |
+| ADMIN-02 | [space-administration-6](../specs/packages/space-administration.md#space-administration-6)、[space-administration-7](../specs/packages/space-administration.md#space-administration-7)、[space-administration-10](../specs/packages/space-administration.md#space-administration-10) |
+| ADMIN-03 | [space-administration-3](../specs/packages/space-administration.md#space-administration-3)、[space-administration-8](../specs/packages/space-administration.md#space-administration-8)、[reservation-management-2](../specs/packages/reservation-management.md#reservation-management-2) |
+| ADMIN-04 | [team-administration-1](../specs/packages/team-administration.md#team-administration-1)、[team-administration-2](../specs/packages/team-administration.md#team-administration-2)、[team-administration-3](../specs/packages/team-administration.md#team-administration-3)、[team-administration-6](../specs/packages/team-administration.md#team-administration-6) |
+| ADMIN-05 | [team-administration-4](../specs/packages/team-administration.md#team-administration-4)、[team-administration-5](../specs/packages/team-administration.md#team-administration-5)、[team-administration-7](../specs/packages/team-administration.md#team-administration-7) |
+| NOTICE-01 | [notification-center-1](../specs/packages/notification-center.md#notification-center-1)、[notification-center-2](../specs/packages/notification-center.md#notification-center-2)、[notification-center-3](../specs/packages/notification-center.md#notification-center-3) |
+| NOTICE-02 | [notification-center-4](../specs/packages/notification-center.md#notification-center-4)、[notification-center-5](../specs/packages/notification-center.md#notification-center-5)、[notification-center-6](../specs/packages/notification-center.md#notification-center-6) |
+| RUN-01 | [application-runtime-4](../specs/packages/application-runtime.md#application-runtime-4)、[application-runtime-5](../specs/packages/application-runtime.md#application-runtime-5) |
+| RUN-02 | [interface-experience-4](../specs/packages/interface-experience.md#interface-experience-4)、[interface-experience-7](../specs/packages/interface-experience.md#interface-experience-7)、[interface-experience-8](../specs/packages/interface-experience.md#interface-experience-8)、[interface-experience-9](../specs/packages/interface-experience.md#interface-experience-9) |
+| RUN-03 | [interface-experience-11](../specs/packages/interface-experience.md#interface-experience-11)、[interface-experience-12](../specs/packages/interface-experience.md#interface-experience-12)、[interface-experience-13](../specs/packages/interface-experience.md#interface-experience-13)、[interface-experience-14](../specs/packages/interface-experience.md#interface-experience-14) |

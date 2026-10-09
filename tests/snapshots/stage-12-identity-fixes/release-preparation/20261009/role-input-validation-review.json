@@ -1,0 +1,40 @@
+{
+  "status": "recommended_local_input_robustness_fix",
+  "scope": "当前708c9c0静态审查；未修改或执行产品。不是新增业务需求，不改既有400断言。",
+  "source_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "source_sha256": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+  "requirements": [
+    "team-administration-2",
+    "team-administration-3",
+    "team-administration-4",
+    "team-administration-6"
+  ],
+  "source_location": "app/server.py:383–387 / Handler.api PATCH members branch",
+  "existing_behavior": "self.admin(user)后role=data.get(role)，直接使用set membership。JSON数组/对象为不可hash的list/dict，触发TypeError而进入通用500 JSON；事务回滚，角色未改变。其他非法可hash值进入既有AppError400。此结论为静态代码机制与root本轮实测说明，不冒充本Reviewer新执行。",
+  "proposed_guard": "if not isinstance(role, str) or role not in {\"admin\", \"member\"}:\n    raise AppError(400, \"角色无效\")",
+  "placement": "保持self.admin(user)之后、成员查找/last_admin/UPDATE之前，替换现有enum guard单处；不提前到权限校验之前。",
+  "why": "JSON role应是合法enum字符串。先检查str使所有非法JSON类型进入既有可预期客户端错误，维持拒绝与无副作用；无需将缺陷掩盖为测试期望由400放宽到500或任意4xx/5xx。",
+  "compatibility_risks": [
+    {
+      "risk": "低",
+      "detail": "合法admin/member字面字符串行为完全相同；JSON解码不会生成自定义字符串子类；数组/对象由500改400是预期输入稳健性改善。"
+    },
+    {
+      "risk": "权限/查找优先级",
+      "detail": "保留self.admin先行，普通成员仍403；有效role+不存在/跨团队仍404；合法最后管理员自降仍409，不因该输入guard改变业务授权/事务次序。"
+    },
+    {
+      "risk": "enum规范化",
+      "detail": "不添加strip/lower或接受别名；Admin、 admin、member 等仍按原契约400。缺失/null/数字/bool和空字符串仍400。"
+    }
+  ],
+  "regression_scope": [
+    "管理员提交[]、{}、[admin]、{role:admin}各精确400与稳定JSON（既有默认code invalid_request）且独立前后角色/会话/预约/通知不变",
+    "已有非法hashable enum矩阵缺失/null/数字/bool/空串/别名/大小写空格保持400；不可用>=400替代",
+    "合法member↔admin真实保存与下一请求权限、最后管理员409、普通成员403、跨团队/不存在404对照保持既有预期",
+    "只针对实际受影响的role输入分支及引用其方法的场景重测；不能把其他未执行要求直接扩散标失败，也不能因无DB变化就判400方法passed"
+  ],
+  "formal_result_boundary": "本轮相关场景已有严格400实测未满足和自动拒绝改断言记录，保持真实结果。新修订经产品修复后重测才可改变新run结论；不回写旧run。",
+  "formal_verdict": null,
+  "release_approved": false
+}

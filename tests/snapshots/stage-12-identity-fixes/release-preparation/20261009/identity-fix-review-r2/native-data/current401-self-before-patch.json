@@ -1,0 +1,810 @@
+{
+  "name": "current401-self-before-patch",
+  "scope": "independent developer regression, not formal 167 acceptance",
+  "status": "passed",
+  "fixture_source_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "c3347cfe766836d5bc5c776ee9ed03ea01c648847a76c12d19eaba8b830a7798",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721"
+  },
+  "checks": [
+    {
+      "assertion": "目标真实401位于指定阶段",
+      "passed": true,
+      "actual": [
+        {
+          "method": "PATCH",
+          "path": "/api/members/1",
+          "status": 401,
+          "monotonic_seconds": 1714691.969952125
+        }
+      ]
+    },
+    {
+      "assertion": "角色commit或拒绝状态符合故障时点",
+      "passed": true,
+      "actual": {
+        "before": {
+          "roles": [
+            [
+              1,
+              1,
+              "admin"
+            ],
+            [
+              2,
+              1,
+              "member"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        },
+        "after": {
+          "roles": [
+            [
+              1,
+              1,
+              "admin"
+            ],
+            [
+              2,
+              1,
+              "member"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        },
+        "expected_role": "admin"
+      }
+    },
+    {
+      "assertion": "仅目标角色可能提交且其他业务记录不变",
+      "passed": true,
+      "actual": {
+        "expected": {
+          "roles": [
+            [
+              1,
+              1,
+              "admin"
+            ],
+            [
+              2,
+              1,
+              "member"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        },
+        "actual": {
+          "roles": [
+            [
+              1,
+              1,
+              "admin"
+            ],
+            [
+              2,
+              1,
+              "member"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        }
+      }
+    },
+    {
+      "assertion": "清user回登录且catch无旧workspace加载",
+      "passed": true,
+      "actual": {
+        "UI": {
+          "user": null,
+          "page": "manage",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "",
+          "login": true,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "登录已过期，请重新登录",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\nGOOD IDEAS NEED A PLACE\n给好想法\n一个空间。\n\n少一点日程往返，多一点专注协作。\n在这里，为下一场讨论找到合适的地方。\n\n空间连接彼此，想法由此发生。\nMeetSpace · 团队空间预约\nWELCOME TO MEETSPACE\n欢迎回来\n\n登录你的团队，开始一场有准备的会议。\n\n工作邮箱\n密码\n登录工作空间\n↗\n\n示例账号 · 点击填入，再登录\n统一密码：MeetSpace!2026\n\n林可 · 管理员\n陈悦 · 成员\n周言 · 成员\n许宁 · 另一团队\n本地示例工作空间 · 数据保存在本机\n所有会议时间均使用北京时间（UTC+8）",
+          "retry": false
+        },
+        "events": [
+          {
+            "event": "real_session_revocation",
+            "user_id": 1,
+            "expires": 1902042000.0,
+            "server_time": 1902013200.0,
+            "old_session": {
+              "exists": false,
+              "usable": false,
+              "new_cookie_remained_separate": true
+            },
+            "cookie_values_recorded": false,
+            "monotonic_seconds": 1714691.956447333
+          },
+          {
+            "event": "request",
+            "method": "PATCH",
+            "path": "/api/members/1",
+            "monotonic_seconds": 1714691.966024166
+          }
+        ]
+      }
+    },
+    {
+      "assertion": "旧失效管理员会话真实拒绝",
+      "passed": true,
+      "actual": {
+        "status": 401,
+        "body": {
+          "error": "登录已过期，请重新登录",
+          "code": "unauthenticated"
+        }
+      }
+    },
+    {
+      "assertion": "重新登录身份导航数据符合实际角色",
+      "passed": true,
+      "actual": {
+        "user": {
+          "id": 1,
+          "team_id": 1,
+          "email": "admin@meetspace.test",
+          "name": "林可",
+          "role": "admin",
+          "team_name": "见山设计"
+        },
+        "page": "spaces",
+        "scope": "mine",
+        "date": "2030-04-10",
+        "loading": false,
+        "loadError": "",
+        "login": false,
+        "manage": true,
+        "openDialogs": 0,
+        "toast": "登录已过期，请重新登录",
+        "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\nYOUR SPACE, YOUR IDEAS\n找到你的下一场好会议\n\n选一个合适的空间，让讨论自然发生。\n\n04 / 10\n星期三\nROOM FOR WHAT’S NEXT\n从一个想法，\n到一场值得期待的讨论。\n\n小组碰头、远程协作、项目共创。\n为不同的会议，找到刚刚好的空间。\n\n可预约会议室\n\n4间\n\n▦\n\n所选日期预约\n\n0场\n\n◷\n\n我的当日会议\n\n0场\n\n▤\n为下一场会议选个空间\n\n查看当天日程，再选择你的预约时段。\n\n所有容量\n4 人及以上\n6 人及以上\n8 人及以上\n12 人及以上\n所有设备\n显示屏\n白板\n视频会议\n电话会议\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+        "retry": false
+      }
+    },
+    {
+      "assertion": "当前真实401反馈仍可见且精确绑定过期提示",
+      "passed": true,
+      "actual": {
+        "user": null,
+        "page": "manage",
+        "scope": "mine",
+        "date": "2030-04-10",
+        "loading": false,
+        "loadError": "",
+        "login": true,
+        "manage": false,
+        "openDialogs": 0,
+        "toast": "登录已过期，请重新登录",
+        "text": "m\nMeetSpace\nROOM FOR IDEAS\nGOOD IDEAS NEED A PLACE\n给好想法\n一个空间。\n\n少一点日程往返，多一点专注协作。\n在这里，为下一场讨论找到合适的地方。\n\n空间连接彼此，想法由此发生。\nMeetSpace · 团队空间预约\nWELCOME TO MEETSPACE\n欢迎回来\n\n登录你的团队，开始一场有准备的会议。\n\n工作邮箱\n密码\n登录工作空间\n↗\n\n示例账号 · 点击填入，再登录\n统一密码：MeetSpace!2026\n\n林可 · 管理员\n陈悦 · 成员\n周言 · 成员\n许宁 · 另一团队\n本地示例工作空间 · 数据保存在本机\n所有会议时间均使用北京时间（UTC+8）",
+        "retry": false
+      }
+    }
+  ],
+  "events": [
+    {
+      "event": "second_admin_real_patch",
+      "status": 200,
+      "roles": [
+        [
+          1,
+          "admin"
+        ],
+        [
+          2,
+          "member"
+        ],
+        [
+          3,
+          "admin"
+        ],
+        [
+          4,
+          "admin"
+        ]
+      ],
+      "monotonic_seconds": 1714691.349889958
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/",
+      "monotonic_seconds": 1714691.44269825
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/style.css",
+      "monotonic_seconds": 1714691.453083875
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/app.js",
+      "monotonic_seconds": 1714691.4533675
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1714691.476116333
+    },
+    {
+      "event": "request",
+      "method": "POST",
+      "path": "/api/login",
+      "monotonic_seconds": 1714691.704920708
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1714691.755066041
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1714691.759155375
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1714691.759866208
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1714691.760192
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1714691.877056166
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1714691.87724325
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1714691.877471791
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/members",
+      "monotonic_seconds": 1714691.877614708
+    },
+    {
+      "event": "real_session_revocation",
+      "user_id": 1,
+      "expires": 1902042000.0,
+      "server_time": 1902013200.0,
+      "old_session": {
+        "exists": false,
+        "usable": false,
+        "new_cookie_remained_separate": true
+      },
+      "cookie_values_recorded": false,
+      "monotonic_seconds": 1714691.956447333
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/1",
+      "monotonic_seconds": 1714691.966024166
+    },
+    {
+      "event": "request",
+      "method": "POST",
+      "path": "/api/login",
+      "monotonic_seconds": 1714692.102481083
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1714692.159337541
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1714692.162827291
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1714692.163672833
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1714692.164968708
+    }
+  ],
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "monotonic_seconds": 1714691.445890583
+    },
+    {
+      "method": "GET",
+      "path": "/style.css",
+      "status": 200,
+      "monotonic_seconds": 1714691.457275375
+    },
+    {
+      "method": "GET",
+      "path": "/app.js",
+      "status": 200,
+      "monotonic_seconds": 1714691.457727583
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 401,
+      "monotonic_seconds": 1714691.489306916
+    },
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "monotonic_seconds": 1714691.75456825
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1714691.757374541
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1714691.818649625
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1714691.819394083
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1714691.820093875
+    },
+    {
+      "method": "GET",
+      "path": "/api/members",
+      "status": 200,
+      "monotonic_seconds": 1714691.88293025
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1714691.883156541
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1714691.883903958
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1714691.884196041
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/1",
+      "status": 401,
+      "monotonic_seconds": 1714691.969952125
+    },
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "monotonic_seconds": 1714692.158692708
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1714692.162146666
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1714692.169547
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1714692.169974458
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1714692.17027
+    }
+  ],
+  "screenshots": [
+    "ui-identity/current401-self-before-patch-expired-login.png",
+    "ui-identity/current401-self-before-patch-recovered.png"
+  ]
+}

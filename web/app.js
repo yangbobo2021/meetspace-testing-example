@@ -2,7 +2,7 @@
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const app = $('#app');
-const state = { user: null, page: 'spaces', date: dateString(), capacity: '', equipment: '', rooms: [], bookings: [], notifications: [], members: [], scope: 'mine', bookingDraft: null, editingRoom: null, cancelId: null, loading: false, loadError: '', loadToken: 0, identityGeneration: 0, identityPending: false };
+const state = { user: null, page: 'spaces', date: dateString(), capacity: '', equipment: '', rooms: [], bookings: [], notifications: [], members: [], scope: 'mine', bookingDraft: null, editingRoom: null, cancelId: null, loading: false, loadError: '', loadToken: 0, identityGeneration: 0, identityPending: false, roleRefreshToken: 0 };
 const equipmentOptions = ['显示屏', '白板', '视频会议', '电话会议'];
 const icons = { spaces: '▦', bookings: '▤', inbox: '◷', manage: '⚙' };
 const pageNames = { spaces: '会议室', bookings: '我的预约', inbox: '通知中心', manage: '空间管理' };
@@ -23,7 +23,8 @@ async function api(path, method = 'GET', data) {
   let result;
   try { result = await response.json(); } catch { throw new Error('服务返回异常，请稍后重试'); }
   if (!response.ok) {
-    if (response.status === 401 && path !== '/login' && identityGeneration === state.identityGeneration) {
+    const identityInvalidated = response.status === 401 && path !== '/login' && identityGeneration === state.identityGeneration;
+    if (identityInvalidated) {
       state.identityGeneration++;
       state.user = null;
       state.identityPending = false;
@@ -32,6 +33,7 @@ async function api(path, method = 'GET', data) {
     }
     const error = new Error(result.error || '请求失败，请稍后重试');
     error.status = response.status;
+    error.identityInvalidated = identityInvalidated;
     throw error;
   }
   return result;
@@ -256,18 +258,28 @@ $('#confirm-cancel').addEventListener('click', async event => {
 });
 
 async function changeRole(event) {
+  const identityGeneration = state.identityGeneration;
+  let roleRefreshToken = state.roleRefreshToken;
   const select = event.currentTarget; select.disabled = true;
   try {
     await api(`/members/${select.dataset.member}`, 'PATCH', { role: select.value });
+    if (identityGeneration !== state.identityGeneration) return;
+    roleRefreshToken = ++state.roleRefreshToken;
+    state.loadToken++; state.loading = false;
     state.identityPending = true;
     if (Number(select.dataset.member) === state.user.id && select.value === 'member') {
       state.user = { ...state.user, role: 'member' }; state.page = 'spaces'; state.scope = 'mine';
     }
-    state.user = (await api('/session')).user;
+    const session = await api('/session');
+    if (identityGeneration !== state.identityGeneration || roleRefreshToken !== state.roleRefreshToken) return;
+    state.user = session.user;
     state.identityPending = false;
     if (state.user.role !== 'admin') { state.page = 'spaces'; state.scope = 'mine'; }
-    await loadPage(); toast('成员角色已更新');
+    await loadPage();
+    if (identityGeneration === state.identityGeneration && roleRefreshToken === state.roleRefreshToken) toast('成员角色已更新');
   } catch (error) {
+    if (identityGeneration !== state.identityGeneration && !(error.identityInvalidated && !state.user)) return;
+    if (roleRefreshToken !== state.roleRefreshToken && !error.identityInvalidated) return;
     toast(error.message);
     if (state.user) {
       if (state.identityPending) { state.loadError = error.message; renderShell(); }

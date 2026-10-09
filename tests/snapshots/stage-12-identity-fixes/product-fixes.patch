@@ -1,0 +1,119 @@
+diff --git a/app/server.py b/app/server.py
+index 35ddd2c..feff764 100644
+--- a/app/server.py
++++ b/app/server.py
+@@ -383,7 +383,7 @@ class Handler(BaseHTTPRequestHandler):
+         if method == "PATCH" and match:
+             self.admin(user)
+             role = data.get("role")
+-            if role not in {"admin", "member"}:
++            if not isinstance(role, str) or role not in {"admin", "member"}:
+                 raise AppError(400, "角色无效")
+             member = db.execute("SELECT * FROM users WHERE id=? AND team_id=?", (int(match[1]), user["team_id"])).fetchone()
+             if not member:
+diff --git a/tests/test_regressions.py b/tests/test_regressions.py
+index f837619..9b5136b 100644
+--- a/tests/test_regressions.py
++++ b/tests/test_regressions.py
+@@ -1,5 +1,6 @@
+ """Real HTTP regression checks for defects found by acceptance scenarios."""
+ import json
++import sqlite3
+ import unittest
+ from datetime import datetime, timedelta
+ from urllib.request import Request
+@@ -61,3 +62,32 @@ class ReleaseRegressionTests(unittest.TestCase):
+                 self.assertEqual(response.headers.get_content_type(), "application/json")
+                 self.assertEqual(json.loads(response.read())["code"], "method_not_allowed")
+         self.assertEqual(self.request("/api/bookings")[1], before)
++
++    def test_invalid_role_types_reject_without_writes_and_preserve_permissions(self):
++        self.login("admin")
++
++        def snapshot():
++            with sqlite3.connect(self.temp.name + "/smoke.sqlite") as db:
++                return {name: db.execute(f"SELECT * FROM {name} ORDER BY rowid").fetchall()
++                        for name in ("teams", "users", "sessions", "rooms", "bookings", "notifications")}
++
++        before = snapshot()
++        for role in ([], {}, ["admin"], {"role": "admin"}, None, 0, True, "", "Admin", " admin", "member "):
++            with self.subTest(role=role):
++                status, body = self.request("/api/members/3", "PATCH", {"role": role})
++                self.assertEqual((status, body["code"]), (400, "invalid_request"))
++                self.assertEqual(snapshot(), before)
++        self.assertEqual(self.request("/api/members/3", "PATCH", {})[0], 400)
++        self.assertEqual(snapshot(), before)
++        self.assertEqual(self.request("/api/members/1", "PATCH", {"role": "member"})[0], 409)
++        for member in (4, 999):
++            self.assertEqual(self.request(f"/api/members/{member}", "PATCH", {"role": "admin"})[0], 404)
++        self.assertEqual(snapshot(), before)
++        for role in ("admin", "member"):
++            self.assertEqual(self.request("/api/members/3", "PATCH", {"role": role})[0], 200)
++            members = self.request("/api/members")[1]["members"]
++            self.assertEqual(next(m["role"] for m in members if m["id"] == 3), role)
++        self.login("alice")
++        before = snapshot()
++        self.assertEqual(self.request("/api/members/3", "PATCH", {"role": []})[0], 403)
++        self.assertEqual(snapshot(), before)
+diff --git a/web/app.js b/web/app.js
+index 7a32081..1fcd6a8 100644
+--- a/web/app.js
++++ b/web/app.js
+@@ -2,7 +2,7 @@
+ 
+ const $ = (selector, root = document) => root.querySelector(selector);
+ const app = $('#app');
+-const state = { user: null, page: 'spaces', date: dateString(), capacity: '', equipment: '', rooms: [], bookings: [], notifications: [], members: [], scope: 'mine', bookingDraft: null, editingRoom: null, cancelId: null, loading: false, loadError: '', loadToken: 0, identityGeneration: 0, identityPending: false };
++const state = { user: null, page: 'spaces', date: dateString(), capacity: '', equipment: '', rooms: [], bookings: [], notifications: [], members: [], scope: 'mine', bookingDraft: null, editingRoom: null, cancelId: null, loading: false, loadError: '', loadToken: 0, identityGeneration: 0, identityPending: false, roleRefreshToken: 0 };
+ const equipmentOptions = ['显示屏', '白板', '视频会议', '电话会议'];
+ const icons = { spaces: '▦', bookings: '▤', inbox: '◷', manage: '⚙' };
+ const pageNames = { spaces: '会议室', bookings: '我的预约', inbox: '通知中心', manage: '空间管理' };
+@@ -23,7 +23,8 @@ async function api(path, method = 'GET', data) {
+   let result;
+   try { result = await response.json(); } catch { throw new Error('服务返回异常，请稍后重试'); }
+   if (!response.ok) {
+-    if (response.status === 401 && path !== '/login' && identityGeneration === state.identityGeneration) {
++    const identityInvalidated = response.status === 401 && path !== '/login' && identityGeneration === state.identityGeneration;
++    if (identityInvalidated) {
+       state.identityGeneration++;
+       state.user = null;
+       state.identityPending = false;
+@@ -32,6 +33,7 @@ async function api(path, method = 'GET', data) {
+     }
+     const error = new Error(result.error || '请求失败，请稍后重试');
+     error.status = response.status;
++    error.identityInvalidated = identityInvalidated;
+     throw error;
+   }
+   return result;
+@@ -256,18 +258,28 @@ $('#confirm-cancel').addEventListener('click', async event => {
+ });
+ 
+ async function changeRole(event) {
++  const identityGeneration = state.identityGeneration;
++  let roleRefreshToken = state.roleRefreshToken;
+   const select = event.currentTarget; select.disabled = true;
+   try {
+     await api(`/members/${select.dataset.member}`, 'PATCH', { role: select.value });
++    if (identityGeneration !== state.identityGeneration) return;
++    roleRefreshToken = ++state.roleRefreshToken;
++    state.loadToken++; state.loading = false;
+     state.identityPending = true;
+     if (Number(select.dataset.member) === state.user.id && select.value === 'member') {
+       state.user = { ...state.user, role: 'member' }; state.page = 'spaces'; state.scope = 'mine';
+     }
+-    state.user = (await api('/session')).user;
++    const session = await api('/session');
++    if (identityGeneration !== state.identityGeneration || roleRefreshToken !== state.roleRefreshToken) return;
++    state.user = session.user;
+     state.identityPending = false;
+     if (state.user.role !== 'admin') { state.page = 'spaces'; state.scope = 'mine'; }
+-    await loadPage(); toast('成员角色已更新');
++    await loadPage();
++    if (identityGeneration === state.identityGeneration && roleRefreshToken === state.roleRefreshToken) toast('成员角色已更新');
+   } catch (error) {
++    if (identityGeneration !== state.identityGeneration && !(error.identityInvalidated && !state.user)) return;
++    if (roleRefreshToken !== state.roleRefreshToken && !error.identityInvalidated) return;
+     toast(error.message);
+     if (state.user) {
+       if (state.identityPending) { state.loadError = error.message; renderShell(); }

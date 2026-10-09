@@ -4,6 +4,7 @@
 
 已执行并归档，承接 [DR-011](011-release-defect-fixes.md)，不批准发布。
 `stage-11-failed-acceptance` 保存708c9c0的完整执行、正式独立审阅和全新覆盖率。
+后续开发修复按 [DR-013](013-identity-continuation-fix.md) 记录，本阶段失败结论保持。
 
 ## 背景
 

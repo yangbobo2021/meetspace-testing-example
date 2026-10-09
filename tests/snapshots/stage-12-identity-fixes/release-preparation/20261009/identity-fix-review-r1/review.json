@@ -1,0 +1,88 @@
+{
+  "status": "needs_fix",
+  "scope": "第一开发修复dirty source独立review，非167正式接受；结果固定r1 JS dcc...，随后root已改r2不回写此历史",
+  "base_revision": "2a43bbd87897f0cd815b7762ea45137db64ebf70",
+  "source_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "dcc1488e74676faacc68344513f2941615226df8bb689c93681b1e89e7feccd5",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead",
+    "tests/test_regressions.py": "f1089a462666894a654e295eda4cead5e60710fa2ca76145d0e518958500f6ae"
+  },
+  "formal_verdict": null,
+  "release_approved": false,
+  "passed_development_checks": {
+    "http_tests": 8,
+    "http_log": "independent-http.log",
+    "original_native_items": 11,
+    "original_native_assertions": 42,
+    "native_summary": "independent-native-results.json",
+    "additional_cross_pending_native_retry": 1,
+    "additional_summary": "independent-native-results-pending-recovery.json"
+  },
+  "confirmed_failed_native_items": [
+    {
+      "name": "same-identity-late-patch-503",
+      "status": "failed",
+      "evidence": "late-patch-data/same-identity-late-patch-503.json"
+    },
+    {
+      "name": "same-identity-late-patch-network",
+      "status": "failed",
+      "evidence": "late-patch-data/same-identity-late-patch-network.json"
+    },
+    {
+      "name": "same-identity-late-patch-real403",
+      "status": "failed",
+      "evidence": "late-patch-data/same-identity-late-patch-real403.json"
+    }
+  ],
+  "finding": {
+    "id": "IDENTITY-FIX-R1-OLD-PATCH-ERROR",
+    "priority": "P2",
+    "location": "web/app.js:260,288 / changeRole initial null token and conditional catch guard",
+    "reason": "在较新角色已真实提交member、followup/session503留下新identityPending/error后，旧PATCH从未成功令局部roleRefreshToken仍null，故catch短路放行，旧503/network/真实403覆盖新loadError与toast。generation2不变，当前refresh1不变，先前动作始于0。",
+    "scope_limit": "角色仍member、后台members403、业务SQL不变，原生retry还可恢复；这里证明过时错误污染新恢复状态，不宣称权限绕过。",
+    "native_sequences": "第一Alice角色请求原生select pre-backend hold；Bob已由真实API成为第二管理员，原生self降member真实提交后身份读503；放行旧503/network或真实member权限403，比较最新恢复状态。",
+    "counterfactual": "原4竞态、3current401及正常更新/重试全部通过的r1仍失败此序列，因此只检查成功回调不充分。",
+    "recommended_minimal_change": "局部roleRefreshToken初始保存state.roleRefreshToken；catch始终比较并保留error.identityInvalidated例外。真实PATCH成功不检查起始token，而赋++新的刷新token，避免按click先后丢有效晚提交。"
+  },
+  "backend_input_review": "enum guard先isinstance str再set membership，保持授权先行、合法enum不变，非法类型400 JSON与全表不变、last_admin409、目标404和member403优先由8HTTP独立通过。",
+  "test_review": "新增regression是真实HTTP+独立SQLite全表不变量+合法更新/权限对照；保持精确400，未放宽被拒绝断言。",
+  "harness_provenance_note": "native runner在最初11项后追加仅单例交叉pending原生恢复入口，原Env/三份动作函数文件不变。初始11记录仍保留，额外项独立输出文件/日志；不冒称初始runner在执行时已记录追加版SHA。",
+  "legacy_fixture": "未执行，仍待新固定fix revision及下一轮正式方法审阅。",
+  "evidence_sha256": {
+    "source-manifest.json": "75016b34c2ed8c438c4941afdf1d3e8498864cd7ad8d215b991d9e0ed5e24e48",
+    "independent-native-results.json": "df652f8d22ebd494629026dffb3280bf9f52fdafaea13b7828b1858139531682",
+    "independent-native.log": "ac8b0d08b408567a916662f6e26542405e51c8962e98ecc82b454e09662033b6",
+    "independent-late-patch.log": "5976f28b3ecfdcb889710a5febc8e0d9aec945458bfdea11fce90ed2b51122c8",
+    "reviewed.patch": "7a1a5e2a1179ade0e4a2a3e2cc7afb83dbea75c3f9240c6a3239bd2d6901f02c",
+    "independent-native-results-pending-recovery.json": "535bed277924902d4e89926a4cb107b6d6792c928efcd20330c4fd199db1faaf",
+    "independent-late-patch-results.json": "9313a5ef5d6a90994936867fc00421f5e6510530718480bd2567e1de4b8a6371",
+    "independent-pending-recovery.log": "17208a7a9f710f9ce3ca848011add7e02eace812525ee8d72937090f130606b6",
+    "independent-http.log": "999c1df66e40fd66d24673ec9f82c9064b736fc2ed098bea0dc1ef2bd7244a5d",
+    "native-data/cross-self-logout-login-other.json": "1aea05de5f44c73c56ebfe72c4d5a77e7959e93b6cff07988fb2f633bc0eba76",
+    "native-data/current401-self-after-commit.json": "b6e4107763b8e7a634d840f1a0c09a6584d11874bc2558160a95e7da574489c9",
+    "native-data/cross-other-logout-login-bob.json": "d733c7f0f395594ca743a08b8655c447b95c041e808f5c628b0c65f620071b86",
+    "native-data/normal-self-demotion.json": "c32cc74299dac16305c12933a535135e8bf7a8b08be75927654fd03e20e45890",
+    "native-data/current401-other-after-commit.json": "4187484b3cb52dc64b82b9f2b5abbfc74f1c030ae058c8465ff1bcd30083e4ad",
+    "native-data/self-demotion-network-native-retry.json": "865ebba39a1bdfc91ccd0b512bc5e879f9ae8dbfd1c3d6f021c7c495f7e61426",
+    "native-data/current401-self-before-patch.json": "68c01a02355b6541da226d92f4d0aedd783aefeb582759a8b0bebb8660466bdf",
+    "native-data/same-identity-late-admin200.json": "e360ae3e712793ce3f21af559a317939f3fd1337e678e96d2ba25d3ea6534016",
+    "native-data/self-demotion503-native-retry.json": "e26ca3276afad92ac2c53463ffc7a707796ae332959dc67738448a3082deac81",
+    "native-data/pending-load-new-role-commit503-and-native-retry.json": "db66c331f070f9a5fb005e6b7cc90fcaa7549df74a62f199d5d2ea2c2c1a29ad",
+    "native-data/normal-other-role-update.json": "439fd5315052bb240cc1e1ab4f3e52624b35fd7cbb806fafdd766d35717db829",
+    "native-data/pending-load-new-role-commit503.json": "395b3be0828dde5e576b3c32ec59b69f6e284c6479eb5176a341e2a3607467a7",
+    "harnesses/late_patch_error.py": "6f16bf3c4e23d9a3777ef957d53b1a60212749dd1e67830f76f93fcf672895fb",
+    "harnesses/isolated_env.py": "4b57045c33821d3df097309ff270ec9e07e7d90ac7bff30a865db693ac548539",
+    "harnesses/same_identity.py": "07633861fa2c77ba90a5c85601921cec347f5ee379809ab57b03c9ef9d24f6a5",
+    "harnesses/run_independent_native.py": "bb6b2beb3932b006c178d6943e574f05836baeb4ce8b5385af5c5328b164d381",
+    "harnesses/cross_identity.py": "0cecda65d9ab11ee5f27390a4aecfb995cf87c78940943b07391a4906f4f4ac8",
+    "harnesses/pending_cross_role.py": "077ef3e0960f10394c6a35c4006f57adacabcfb4dcf775d50122fb9fbdbd3acd",
+    "late-patch-data/same-identity-late-patch-503.json": "16b9c4d667a5d3d864d817e2d1ee24361069141a8f986e9664d8da04a0ea49d3",
+    "late-patch-data/same-identity-late-patch-network.json": "04afeba3775b08b3560adfcb8fc8005f15e9415db2e06a4c1eb91091264f3ade",
+    "late-patch-data/same-identity-late-patch-real403.json": "82cc3632f77aad3005cf573790d759776ae038d8f3046846c00871e61cd84161"
+  }
+}

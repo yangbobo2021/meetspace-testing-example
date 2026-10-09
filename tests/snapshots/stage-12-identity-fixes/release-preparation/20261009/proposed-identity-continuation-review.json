@@ -1,0 +1,65 @@
+{
+  "status": "statically_ready_for_development_regression",
+  "scope": "只读拟议方案静态审查，target产品未改，不宣称已执行修复",
+  "source_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "source_sha256": {
+    "app/server.py": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322"
+  },
+  "proposal_sha256": {
+    "app.js": "dcc1488e74676faacc68344513f2941615226df8bb689c93681b1e89e7feccd5",
+    "proposed.patch": "df9ef9b3a012b07a6571029482f2639e7e1f849b0553adb9a521d7e0445bdf58"
+  },
+  "formal_verdict": null,
+  "release_approved": false,
+  "accepted_changes": [
+    "捕获开始identityGeneration；PATCH成功后先守卫再改identityPending/self-demotion状态",
+    "将session200放局部，身份epoch守卫后才赋state.user，覆盖已确认logout/newlogin迟到成功",
+    "loadPage完成后再守卫success toast，抑制旧操作跨身份提示",
+    "api Error标记identityInvalidated，保留当前真实401反馈且不污染已登录新身份；需实际当代401回归",
+    "新增roleRefreshToken按成功PATCH后身份查询发起顺序递增，session成功应用与后续非401catch/末尾toast绑定；静态覆盖已确认同身份直接changeRole重排失败，不按click先后丢掉晚提交的成功动作。",
+    "有效PATCH成功后立即loadToken++ / loading=false，使所有更早loadPage的pending身份赋值、catch以及finally共同失效；新角色查询失败时留下新identityPending及可操作错误重试，覆盖第4已确认交叉污染。"
+  ],
+  "findings": [
+    {
+      "id": "PROPOSED-001",
+      "priority": "P1",
+      "status": "confirmed_product_failure_addressed_statically_by_roleRefreshToken",
+      "issue": "同身份并发角色更新未受identityGeneration守卫保护，旧admin /session200仍可覆盖新member",
+      "native_sequence": [
+        "当前admin在manage先将Alice提升admin（确保允许后续自降）",
+        "首个真实changeRole PATCH200后其真实/session admin200已取得但hold响应，页面其他select仍可操作",
+        "当前admin自身选择member，第二次PATCH成功、后续session member200与loadPage完成",
+        "释放首个admin200；identityGeneration始终相同，拟议guard仍允许state.user=old_admin"
+      ],
+      "source_reason": "changeRole仅禁用当前select，identityPending没有立即render，两个处理器可同时进行；所有新增成功guard只比identityGeneration，没有角色请求先后/操作序号",
+      "recommendation": "在开发阶段用原生DOM与真实业务commit/response hold验证；若复现，用角色动作序号或统一身份刷新序号/取消互斥策略防止旧角色结果覆盖较新结果，并保留PATCH成功后的真实恢复能力。不能把loadPage token当作赋值前的守卫。",
+      "evidence": "reviewer-same-identity-role-race/same-identity-role-race.json"
+    },
+    {
+      "id": "PROPOSED-002",
+      "priority": "P1",
+      "status": "confirmed_product_failure_addressed_statically_by_loadToken_invalidation",
+      "issue": "loadPage pending身份读未绑定roleRefreshToken，较早pending admin/session200可能跨较新role成功提交/session503后误恢复",
+      "native_sequence": [
+        "other-role第一次成功、其direct/session真实admin200 hold，当前manage原生select仍在且identityPending=true",
+        "原生self select触发第二PATCH，仅传输层hold发出；原生nav触发loadPage pending/session，捕获真实当前admin200并hold",
+        "释放self PATCH真正member提交；其direct/session503留下最新identityPending并renderShell，不增加loadToken",
+        "释放较早pending admin200：其loadToken仍相同且user存在，现方案loadPage不检查角色刷新序号"
+      ],
+      "recommendation": "开发实测此native反例；pending loadPage身份读取也绑定开始roleRefreshToken，或每次成功角色提交使旧身份读取失效。需连同finally/loading/error恢复核对，不允许忽略过时query却永久loading。",
+      "evidence": "reviewer-pending-role-commit-race/pending-load-role-commit-race.json",
+      "resolution": "当前方案成功PATCH后loadToken++使旧loadPage token守卫失效；loading=false避免丢弃旧finally后悬挂旧loading。直接role查询仍按其刷新序号应用。"
+    }
+  ],
+  "required_regressions": [
+    "迟到PATCH与迟到首轮/session200分别覆盖logout/newlogin，保持真实currentidentity/backend/sql一致",
+    "同身份两次角色动作响应重排（本finding）",
+    "当前真实401反馈可见；旧503/network/401失败不污染新身份或新操作",
+    "当前成功普通nonself admin与self-demotion及session失败原生重试仍能结束并显示正确DOM",
+    "loadPage途中身份更换后旧success toast不可出现",
+    "第4个pending旧load/session跨新role提交503交叉例，以及旧200/503/network返回均不能动新pending/loading/error；真正retry可完成。"
+  ],
+  "additional_material_static_findings": [],
+  "review_limits": "本轮只读审查新版拟议JS与原始源四失败证据；未运行拟议源，也未修改target。未发现新的实质可达缺口。需要执行已有四例、迟到PATCH/错误/当前401和正常成功/503/原生重试对照，而非为覆盖率添加helper路径。"
+}

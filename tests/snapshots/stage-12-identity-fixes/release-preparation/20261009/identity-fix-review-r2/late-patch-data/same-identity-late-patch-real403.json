@@ -1,0 +1,874 @@
+{
+  "name": "same-identity-late-patch-real403",
+  "source_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "c3347cfe766836d5bc5c776ee9ed03ea01c648847a76c12d19eaba8b830a7798",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead"
+  },
+  "status": "passed",
+  "scope": "developer diagnostic, not formal ledger",
+  "fixture_source_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "c3347cfe766836d5bc5c776ee9ed03ea01c648847a76c12d19eaba8b830a7798",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721"
+  },
+  "checks": [
+    {
+      "assertion": "较新角色真实提交后当前身份查询故障与pending成立",
+      "passed": true,
+      "actual": {
+        "UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "page": "spaces",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "最新自身降权身份查询不可用",
+          "login": false,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "最新自身降权身份查询不可用",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队成员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\n最新自身降权身份查询不可用\n重新加载\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": true,
+          "identityPending": true,
+          "roleRefreshToken": 1,
+          "identityGeneration": 2
+        },
+        "roles": [
+          [
+            1,
+            "member"
+          ],
+          [
+            2,
+            "member"
+          ],
+          [
+            3,
+            "admin"
+          ],
+          [
+            4,
+            "admin"
+          ]
+        ],
+        "backend_identity": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "timezone": "Asia/Shanghai",
+          "version": "1.0.0-rc.1"
+        }
+      }
+    },
+    {
+      "assertion": "同身份旧PATCH失败不得覆盖较新pending的错误与反馈",
+      "passed": true,
+      "actual": {
+        "before": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "page": "spaces",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "最新自身降权身份查询不可用",
+          "login": false,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "最新自身降权身份查询不可用",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队成员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\n最新自身降权身份查询不可用\n重新加载\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": true,
+          "identityPending": true,
+          "roleRefreshToken": 1,
+          "identityGeneration": 2
+        },
+        "after": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "page": "spaces",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "最新自身降权身份查询不可用",
+          "login": false,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "最新自身降权身份查询不可用",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队成员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\n最新自身降权身份查询不可用\n重新加载\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": true,
+          "identityPending": true,
+          "roleRefreshToken": 1,
+          "identityGeneration": 2
+        },
+        "old_failure": {
+          "status": 403,
+          "body": {
+            "error": "仅管理员可以执行此操作",
+            "code": "forbidden"
+          },
+          "source": "actual_role_permission_response"
+        }
+      }
+    },
+    {
+      "assertion": "晚失败后真实member及403授权与业务不变",
+      "passed": true,
+      "actual": {
+        "identity": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "timezone": "Asia/Shanghai",
+          "version": "1.0.0-rc.1"
+        },
+        "members_status": 403,
+        "before": {
+          "roles": [
+            [
+              1,
+              1,
+              "member"
+            ],
+            [
+              2,
+              1,
+              "member"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        },
+        "after": {
+          "roles": [
+            [
+              1,
+              1,
+              "member"
+            ],
+            [
+              2,
+              1,
+              "member"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        }
+      }
+    },
+    {
+      "assertion": "原生重试仍可读取真实member并完成恢复",
+      "passed": true,
+      "actual": {
+        "UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "page": "spaces",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "",
+          "login": false,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "最新自身降权身份查询不可用",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队成员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\nYOUR SPACE, YOUR IDEAS\n找到你的下一场好会议\n\n选一个合适的空间，让讨论自然发生。\n\n04 / 10\n星期三\nROOM FOR WHAT’S NEXT\n从一个想法，\n到一场值得期待的讨论。\n\n小组碰头、远程协作、项目共创。\n为不同的会议，找到刚刚好的空间。\n\n可预约会议室\n\n4间\n\n▦\n\n所选日期预约\n\n0场\n\n◷\n\n我的当日会议\n\n0场\n\n▤\n为下一场会议选个空间\n\n查看当天日程，再选择你的预约时段。\n\n所有容量\n4 人及以上\n6 人及以上\n8 人及以上\n12 人及以上\n所有设备\n显示屏\n白板\n视频会议\n电话会议\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": false,
+          "identityPending": false,
+          "roleRefreshToken": 1,
+          "identityGeneration": 2
+        },
+        "snapshot": {
+          "roles": [
+            [
+              1,
+              1,
+              "member"
+            ],
+            [
+              2,
+              1,
+              "member"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "event": "second_admin_real_patch",
+      "status": 200,
+      "roles": [
+        [
+          1,
+          "admin"
+        ],
+        [
+          2,
+          "member"
+        ],
+        [
+          3,
+          "admin"
+        ],
+        [
+          4,
+          "admin"
+        ]
+      ],
+      "monotonic_seconds": 1714687.366899708
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/",
+      "monotonic_seconds": 1714687.467588666
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/style.css",
+      "monotonic_seconds": 1714687.478853416
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/app.js",
+      "monotonic_seconds": 1714687.479099166
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1714687.5097295
+    },
+    {
+      "event": "request",
+      "method": "POST",
+      "path": "/api/login",
+      "monotonic_seconds": 1714687.942482625
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1714688.034721458
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1714688.041843833
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1714688.042981375
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1714688.044566916
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1714688.242592375
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1714688.244328666
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1714688.245282166
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/members",
+      "monotonic_seconds": 1714688.245772958
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "monotonic_seconds": 1714688.273334875
+    },
+    {
+      "event": "old_patch_native_request_held",
+      "payload": {
+        "role": "admin"
+      },
+      "UI": {
+        "user": {
+          "id": 1,
+          "team_id": 1,
+          "email": "admin@meetspace.test",
+          "name": "林可",
+          "role": "admin",
+          "team_name": "见山设计"
+        },
+        "page": "manage",
+        "scope": "mine",
+        "date": "2030-04-10",
+        "loading": false,
+        "loadError": "",
+        "login": false,
+        "manage": true,
+        "openDialogs": 0,
+        "toast": "",
+        "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+        "retry": false,
+        "identityPending": false,
+        "roleRefreshToken": 0,
+        "identityGeneration": 2
+      },
+      "roles": [
+        [
+          1,
+          "admin"
+        ],
+        [
+          2,
+          "member"
+        ],
+        [
+          3,
+          "admin"
+        ],
+        [
+          4,
+          "admin"
+        ]
+      ],
+      "monotonic_seconds": 1714688.302438291
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/1",
+      "monotonic_seconds": 1714688.30990975
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1714688.315531458
+    },
+    {
+      "event": "new_role_commit_before_session503",
+      "roles": [
+        [
+          1,
+          "member"
+        ],
+        [
+          2,
+          "member"
+        ],
+        [
+          3,
+          "admin"
+        ],
+        [
+          4,
+          "admin"
+        ]
+      ],
+      "UI": {
+        "user": {
+          "id": 1,
+          "team_id": 1,
+          "email": "admin@meetspace.test",
+          "name": "林可",
+          "role": "member",
+          "team_name": "见山设计"
+        },
+        "page": "spaces",
+        "scope": "mine",
+        "date": "2030-04-10",
+        "loading": false,
+        "loadError": "",
+        "login": false,
+        "manage": true,
+        "openDialogs": 0,
+        "toast": "",
+        "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+        "retry": false,
+        "identityPending": true,
+        "roleRefreshToken": 1,
+        "identityGeneration": 2
+      },
+      "monotonic_seconds": 1714688.327140291
+    },
+    {
+      "event": "old_patch_failure_released",
+      "mode": "real403",
+      "actual": {
+        "status": 403,
+        "body": {
+          "error": "仅管理员可以执行此操作",
+          "code": "forbidden"
+        },
+        "source": "actual_role_permission_response"
+      },
+      "monotonic_seconds": 1714688.444226416
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1714688.904429041
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1714688.921875583
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1714688.922406416
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1714688.923315416
+    }
+  ],
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "monotonic_seconds": 1714687.470908083
+    },
+    {
+      "method": "GET",
+      "path": "/style.css",
+      "status": 200,
+      "monotonic_seconds": 1714687.483723708
+    },
+    {
+      "method": "GET",
+      "path": "/app.js",
+      "status": 200,
+      "monotonic_seconds": 1714687.484735541
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 401,
+      "monotonic_seconds": 1714687.535062125
+    },
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "monotonic_seconds": 1714688.03239275
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1714688.040014666
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1714688.138646625
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1714688.13943
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1714688.139807833
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1714688.246391416
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1714688.246648291
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1714688.246822708
+    },
+    {
+      "method": "GET",
+      "path": "/api/members",
+      "status": 200,
+      "monotonic_seconds": 1714688.247310125
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/1",
+      "status": 200,
+      "monotonic_seconds": 1714688.314778375
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 503,
+      "monotonic_seconds": 1714688.333389125
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "status": 403,
+      "monotonic_seconds": 1714688.446353708
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1714688.921395875
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1714688.929026291
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1714688.929693833
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1714688.930543125
+    }
+  ],
+  "screenshots": [
+    "ui-identity/same-identity-late-patch-real403-late-patch-failure.png"
+  ]
+}

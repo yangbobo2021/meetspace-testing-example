@@ -383,7 +383,7 @@ class Handler(BaseHTTPRequestHandler):
         if method == "PATCH" and match:
             self.admin(user)
             role = data.get("role")
-            if role not in {"admin", "member"}:
+            if not isinstance(role, str) or role not in {"admin", "member"}:
                 raise AppError(400, "角色无效")
             member = db.execute("SELECT * FROM users WHERE id=? AND team_id=?", (int(match[1]), user["team_id"])).fetchone()
             if not member:

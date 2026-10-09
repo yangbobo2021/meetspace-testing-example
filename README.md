@@ -60,6 +60,7 @@ python3 -m unittest discover -s tests -v
 现有三项测试通过真实 HTTP 服务验证：基础登录与退出、成员预约与取消及通知、管理员添加和停用会议室。测试使用临时数据库，不污染页面示例数据。
 
 最初三项测试主要覆盖正常路径。阶段10新增四项真实HTTP回归，验证空日期、保留微秒的幂等重放、完整通知时间及未支持方法的JSON拒绝；合计七项开发回归通过。这些开发回归不能替代167条场景的完整发布验收。
+阶段12再增加非法角色类型、持久数据不变及权限优先级的真实HTTP回归，当前合计8项。
 
 ## 接手做发布验收
 
@@ -81,6 +82,8 @@ python3 -m unittest discover -s tests -v
 
 708c9c0的完整167场景复验已完成：正式独立审阅 **160通过、6失败、1未证明**，流程incomplete，仍不批准发布。四个原生迟到响应反例暴露角色/身份刷新竞态，后台新身份正确而UI恢复旧账号或admin菜单。新计数后端行389/389、分支126/126均100%；前端行197/198为99.49%、分支187/192为97.39%。高覆盖没有抵消状态组合缺陷，详见 [阶段11档案](tests/snapshots/stage-11-failed-acceptance/README.md) 与 [DR-012](specs/decisions/012-fixed-release-acceptance.md)。下一过程单独修复再完整复验。
 
+角色刷新竞态及非法角色类型处理在阶段12继续修复。独立审查在r1另发现3种旧PATCH错误污染，原始失败保留；最终r2 **75矩阵、245断言及8HTTP通过**，独立Reviewer **19原生、66断言及8HTTP通过**。源码、开发过程及证据见 [阶段12档案](tests/snapshots/stage-12-identity-fixes/README.md) 与 [DR-013](specs/decisions/013-identity-continuation-fix.md)。这些结果尚不替代修复提交后的完整167条验收和新覆盖率。
+
 ## GitHub 阶段对比
 
 公共仓库：<https://github.com/yangbobo2021/meetspace-testing-example>。
@@ -97,6 +100,7 @@ python3 -m unittest discover -s tests -v
 - `stage-09-supplemental-coverage-cycle` 保存[补测执行与覆盖率循环档案](tests/snapshots/stage-09-supplemental-coverage-cycle/README.md)：固定新run、178矩阵项、8场景通过/2失败、累计及仅本轮计数、独立剩余路径审查；无新增场景建议，发布验收未通过。
 - `stage-10-fixes` 保存[六类缺陷修复与开发回归档案](tests/snapshots/stage-10-fixes/README.md)：业务修复、七项HTTP回归、22项前端竞态、13项身份矩阵及独立兼容复核；尚未完成修复后的全部167条正式验收。
 - `stage-11-failed-acceptance` 保存[修复后完整验收档案](tests/snapshots/stage-11-failed-acceptance/README.md)：167条记录、160通过/6失败/1未证明的独立结论、新源码计数与角色刷新竞态；发布验收未通过。
+- `stage-12-identity-fixes` 保存[角色异步续段修复档案](tests/snapshots/stage-12-identity-fixes/README.md)：r1追加反例、r2修复及75矩阵/8HTTP、独立19原生/8HTTP，下一步完整重新验收。
 - 完整复验及独立发布判断分别提交真实产出，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：

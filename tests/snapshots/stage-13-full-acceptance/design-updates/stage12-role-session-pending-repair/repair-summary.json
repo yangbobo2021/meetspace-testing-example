@@ -1,0 +1,87 @@
+{
+  "revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "repair": {
+    "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+    "status": "addressed_in_design_pending_independent_review",
+    "requirement_ids": [
+      "team-administration-7",
+      "interface-experience-8"
+    ],
+    "scenario_ids": [
+      "BB-team-administration-7",
+      "BB-interface-experience-8",
+      "WB-ui-role-demotion-reload",
+      "WB-ui-self-demotion-session-failure"
+    ],
+    "method_id": "AI-WB-ui-role-demotion-reload",
+    "matrix_check_keys": [
+      "old-changeRole-session-200-after-new-self-session-503-pending",
+      "old-changeRole-session-503-after-new-self-session-503-pending",
+      "old-changeRole-session-network-after-new-self-session-503-pending",
+      "old-changeRole-session-200-after-new-self-session-network-pending",
+      "old-changeRole-session-503-after-new-self-session-network-pending",
+      "old-changeRole-session-network-after-new-self-session-network-pending"
+    ],
+    "basis": "2种新身份查询故障×3种旧角色身份响应；先固定当前pending=true、后台member，再释放真正旧changeRole.session，观察错误实现可见的身份/菜单/pending/错误/toast及额外加载；恢复后真实session重新确认。",
+    "counterfactual": "若旧刷新序守卫仅在!identityPending时生效，旧admin200会恢复admin或清pending，旧错误会替换最新错误；新增释放前/后断言可识别。此为设计反事实分析，未执行变异或产品。",
+    "source_refs": [
+      "web/app.js / changeRole session后刷新序守卫",
+      "web/app.js / changeRole catch旧刷新非401守卫",
+      "web/app.js / changeRole user/pending及loadPage/toast续段"
+    ],
+    "independent_review_preserved": true,
+    "execution_status": "not_executed"
+  },
+  "before_sha256": {
+    "scenarios.json": "369ab26fdfead6851dd053943f7b1951ae3dbfb95c5e1e15efac16364fd4521a",
+    "methods.json": "eed1d4c99af0c96247509cfd8243223814315745d2a9285427cf7f98e75b36e6",
+    "design-assessment.json": "def76087265d9ab102a453cba451ecad5b0b5025467f2e9d18f2fcc9614235c7",
+    "white-box-map.json": "d10682792f874b8f2abb426e02cbf2d32f43d4dcb24174538cd33eb19245ddfb",
+    "white-box-context.json": "eb9b7c91b8772b8928549e646f69f4fa898a2db3a95e4ef099fbf32e90936a3b",
+    "white-box-design-summary.json": "692471bc59a08eaa8f328a4e482a7e9a67f2d91277f8d144dd95a575cd03acd9",
+    "coverage_review.json": "dca1b30db79e4eaa575857b0d810a304c71667d08ffd2aa5458ba09d0b16ca5a",
+    "white_box_review.json": "0f464f86fe5af33f2bb04a6ca8dfa5dc0a23f0202220781c8988cd11a7d27bca",
+    "scenario-gate.json": "58c562789ba7a94fced598ab51857998a75b209f9802f6b9ff2596be7fac2f05",
+    "requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "resources.json": "63a9b58f3205511ae3a7dab0b9a9aee83eca069abce4eeeadb91a9c59d6e427b"
+  },
+  "after_sha256": {
+    "scenarios.json": "0e1269ff9ab19ec91ed9db7a1c13e2466eb9721033a89d9167ce77f22c931267",
+    "methods.json": "1da0836a60fa78f247484b15f38f320c0178edbcf2ffe41d29f7119bc154ad39",
+    "design-assessment.json": "ef767e028fa5a83d967f9c1dacf700e55895d276b31204b4f8523b908b344a93",
+    "white-box-map.json": "92c3866531ff37da1851178fa6b1f93567d7cbec56d5ba85c1bf7eff3399afbc",
+    "white-box-context.json": "5c58899f3b9859c3cfae579c69a4983e1357cfa264ade9bfa96a60e2df8aae9d",
+    "white-box-design-summary.json": "f86542fec81cefe51c74ccd7f5a53369bdcb970c2e799475f41871e8564bda86",
+    "coverage_review.json": "dca1b30db79e4eaa575857b0d810a304c71667d08ffd2aa5458ba09d0b16ca5a",
+    "white_box_review.json": "0f464f86fe5af33f2bb04a6ca8dfa5dc0a23f0202220781c8988cd11a7d27bca",
+    "scenario-gate.json": "58c562789ba7a94fced598ab51857998a75b209f9802f6b9ff2596be7fac2f05",
+    "requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "resources.json": "63a9b58f3205511ae3a7dab0b9a9aee83eca069abce4eeeadb91a9c59d6e427b"
+  },
+  "counts": {
+    "requirements": 96,
+    "black_box_scenarios": 96,
+    "white_box_scenarios": 71,
+    "total_scenarios": 167,
+    "methods": 176,
+    "material_targets": 71
+  },
+  "matrix_checks": 40,
+  "protected_records": [
+    "requirements.json",
+    "coverage_review.json",
+    "white_box_review.json",
+    "resources.json"
+  ],
+  "stable_ids_and_requirement_links_preserved": true,
+  "independent_review": "not_performed",
+  "execution": "not_performed",
+  "validation": {
+    "author_structure": "passed",
+    "gate_status": "blocked",
+    "gate_exit_code": 2,
+    "gate_reason": "独立审阅仍保留94充分/2gap；修复后的定义待独立复审。",
+    "spex_lint": "spex lint: no problems found",
+    "application_executed": false
+  }
+}

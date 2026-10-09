@@ -1,0 +1,1458 @@
+{
+  "name": "old-changeRole-session-503-after-new-self-session-network-pending",
+  "source_revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "source_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "c3347cfe766836d5bc5c776ee9ed03ea01c648847a76c12d19eaba8b830a7798",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead"
+  },
+  "design_binding": {
+    "source_revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+    "design_review": "tests/delivery-acceptance/review-history/stage12-independent-20261009-r2/review-summary.json",
+    "design_review_sha256": "74d607b2bf35ca2eac769c62dbe0686f9dbdb8283f8350e434c1b3d6b265293c",
+    "design_status": "passed_content_review; structural flag synchronization separately owned by parent",
+    "formal_method_id": "AI-WB-ui-role-demotion-reload",
+    "related_method_id": "AI-WB-ui-self-demotion-session-failure",
+    "methods_sha256": "1da0836a60fa78f247484b15f38f320c0178edbcf2ffe41d29f7119bc154ad39",
+    "matrix_checks": [
+      {
+        "key": "old-changeRole-session-200-after-new-self-session-503-pending",
+        "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+        "parameters": {
+          "new_session_failure": "503",
+          "old_session_outcome": "200"
+        },
+        "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+        "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+        "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 S_new返回带唯一新错误标识的受控503 JSON。S_old释放原始真实admin200，禁止重新fetch改成当前member响应。",
+        "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+        "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+        "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+        "execution_status": "not_executed_for_this_design",
+        "source_case_ref": null,
+        "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+      },
+      {
+        "key": "old-changeRole-session-503-after-new-self-session-503-pending",
+        "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+        "parameters": {
+          "new_session_failure": "503",
+          "old_session_outcome": "503"
+        },
+        "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+        "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+        "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 S_new返回带唯一新错误标识的受控503 JSON。S_old交付带可区分旧错误标识的受控503 JSON。",
+        "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+        "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+        "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+        "execution_status": "not_executed_for_this_design",
+        "source_case_ref": null,
+        "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+      },
+      {
+        "key": "old-changeRole-session-network-after-new-self-session-503-pending",
+        "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+        "parameters": {
+          "new_session_failure": "503",
+          "old_session_outcome": "network"
+        },
+        "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+        "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+        "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 S_new返回带唯一新错误标识的受控503 JSON。仅S_old网络abort；不改其他请求。",
+        "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+        "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+        "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+        "execution_status": "not_executed_for_this_design",
+        "source_case_ref": null,
+        "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+      },
+      {
+        "key": "old-changeRole-session-200-after-new-self-session-network-pending",
+        "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+        "parameters": {
+          "new_session_failure": "network",
+          "old_session_outcome": "200"
+        },
+        "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+        "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+        "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 仅S_new执行网络abort；捕获浏览器实际错误文本为本项最新错误基线，不硬编码跨浏览器错误字面值。S_old释放原始真实admin200，禁止重新fetch改成当前member响应。",
+        "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+        "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+        "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+        "execution_status": "not_executed_for_this_design",
+        "source_case_ref": null,
+        "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+      },
+      {
+        "key": "old-changeRole-session-503-after-new-self-session-network-pending",
+        "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+        "parameters": {
+          "new_session_failure": "network",
+          "old_session_outcome": "503"
+        },
+        "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+        "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+        "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 仅S_new执行网络abort；捕获浏览器实际错误文本为本项最新错误基线，不硬编码跨浏览器错误字面值。S_old交付带可区分旧错误标识的受控503 JSON。",
+        "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+        "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+        "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+        "execution_status": "not_executed_for_this_design",
+        "source_case_ref": null,
+        "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+      },
+      {
+        "key": "old-changeRole-session-network-after-new-self-session-network-pending",
+        "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+        "parameters": {
+          "new_session_failure": "network",
+          "old_session_outcome": "network"
+        },
+        "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+        "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+        "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 仅S_new执行网络abort；捕获浏览器实际错误文本为本项最新错误基线，不硬编码跨浏览器错误字面值。仅S_old网络abort；不改其他请求。",
+        "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+        "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+        "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+        "execution_status": "not_executed_for_this_design",
+        "source_case_ref": null,
+        "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+      }
+    ],
+    "execution_role": "coverage_collector_only",
+    "formal_execution_status_not_inferred": true
+  },
+  "scope": "transparent Istanbul collector variant; original pure source and instrumented SHA verified; no formal result",
+  "status": "passed",
+  "browser": "143.0.7499.4",
+  "fixture_source_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "c3347cfe766836d5bc5c776ee9ed03ea01c648847a76c12d19eaba8b830a7798",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "instrumented_web/app.js": "9c83f6d569428fb4248955720c4eed996cdf97af2266cec2f76c901c61520d30"
+  },
+  "checks": [
+    {
+      "assertion": "旧他人角色PATCH实际已提交，扣留的是changeRole首轮真实admin session200",
+      "passed": true,
+      "actual": {
+        "UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin",
+            "team_name": "见山设计"
+          },
+          "page": "manage",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "",
+          "login": false,
+          "manage": true,
+          "openDialogs": 0,
+          "toast": "",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": false,
+          "identityGeneration": 2,
+          "loadToken": 3,
+          "roleRefreshToken": 1,
+          "identityPending": true
+        },
+        "roles": [
+          [
+            1,
+            "admin"
+          ],
+          [
+            2,
+            "admin"
+          ],
+          [
+            3,
+            "admin"
+          ],
+          [
+            4,
+            "admin"
+          ]
+        ],
+        "actual_old_response_source": "first session directly after successful native role PATCH; no navigation/loadPage trigger"
+      }
+    },
+    {
+      "assertion": "较新自降真实commit及当前故障形成member/pending/最新错误，无管理入口",
+      "passed": true,
+      "actual": {
+        "before_release_UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "page": "spaces",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "Failed to fetch",
+          "login": false,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "Failed to fetch",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队成员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\nFailed to fetch\n重新加载\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": true,
+          "identityGeneration": 2,
+          "loadToken": 4,
+          "roleRefreshToken": 2,
+          "identityPending": true
+        },
+        "server_identity": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "timezone": "Asia/Shanghai",
+          "version": "1.0.0-rc.1"
+        },
+        "members_status": 403,
+        "roles": [
+          [
+            1,
+            "member"
+          ],
+          [
+            2,
+            "admin"
+          ],
+          [
+            3,
+            "admin"
+          ],
+          [
+            4,
+            "admin"
+          ]
+        ],
+        "snapshot": {
+          "roles": [
+            [
+              1,
+              1,
+              "member"
+            ],
+            [
+              2,
+              1,
+              "admin"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        },
+        "new_fault": "network"
+      }
+    },
+    {
+      "assertion": "释放真正旧role session不能覆盖新pending身份/菜单/错误/toast或再发业务请求",
+      "passed": true,
+      "actual": {
+        "before": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "page": "spaces",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "Failed to fetch",
+          "login": false,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "Failed to fetch",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队成员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\nFailed to fetch\n重新加载\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": true,
+          "identityGeneration": 2,
+          "loadToken": 4,
+          "roleRefreshToken": 2,
+          "identityPending": true
+        },
+        "after": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "page": "spaces",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "Failed to fetch",
+          "login": false,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "Failed to fetch",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队成员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\nFailed to fetch\n重新加载\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": true,
+          "identityGeneration": 2,
+          "loadToken": 4,
+          "roleRefreshToken": 2,
+          "identityPending": true
+        },
+        "browser_requests_after_release": [],
+        "events_after_release": [
+          {
+            "event": "actual_old_changeRole_session_released_after_new_pending",
+            "mode": "503",
+            "current_role_refresh_token": 2,
+            "old_role_refresh_token": 1,
+            "old_actual_200_user": {
+              "id": 1,
+              "team_id": 1,
+              "email": "admin@meetspace.test",
+              "name": "林可",
+              "role": "admin",
+              "team_name": "见山设计"
+            },
+            "new_fault": "network",
+            "no_old_loadPage_session_held": true,
+            "monotonic_seconds": 1717795.633867166
+          }
+        ],
+        "actual_latest_session": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "timezone": "Asia/Shanghai",
+          "version": "1.0.0-rc.1"
+        },
+        "members_status": 403,
+        "business_before": {
+          "roles": [
+            [
+              1,
+              1,
+              "member"
+            ],
+            [
+              2,
+              1,
+              "admin"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        },
+        "business_after": {
+          "roles": [
+            [
+              1,
+              1,
+              "member"
+            ],
+            [
+              2,
+              1,
+              "admin"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        }
+      }
+    },
+    {
+      "assertion": "原生retry确实重新读当前session及业务，清pending/错误且member无管理权限",
+      "passed": true,
+      "actual": {
+        "UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "page": "spaces",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "",
+          "login": false,
+          "manage": false,
+          "openDialogs": 0,
+          "toast": "Failed to fetch",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队成员\n退出\n工作空间 / 会议室\n北京时间 UTC+8\n见山设计\n退出\nYOUR SPACE, YOUR IDEAS\n找到你的下一场好会议\n\n选一个合适的空间，让讨论自然发生。\n\n04 / 10\n星期三\nROOM FOR WHAT’S NEXT\n从一个想法，\n到一场值得期待的讨论。\n\n小组碰头、远程协作、项目共创。\n为不同的会议，找到刚刚好的空间。\n\n可预约会议室\n\n4间\n\n▦\n\n所选日期预约\n\n0场\n\n◷\n\n我的当日会议\n\n0场\n\n▤\n为下一场会议选个空间\n\n查看当天日程，再选择你的预约时段。\n\n所有容量\n4 人及以上\n6 人及以上\n8 人及以上\n12 人及以上\n所有设备\n显示屏\n白板\n视频会议\n电话会议\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": false,
+          "identityGeneration": 2,
+          "loadToken": 5,
+          "roleRefreshToken": 2,
+          "identityPending": false
+        },
+        "actual_session": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "member",
+            "team_name": "见山设计"
+          },
+          "timezone": "Asia/Shanghai",
+          "version": "1.0.0-rc.1"
+        },
+        "members_status": 403,
+        "recovery": [
+          {
+            "event": "recovery_session_actual_response",
+            "status": 200,
+            "body": {
+              "user": {
+                "id": 1,
+                "team_id": 1,
+                "email": "admin@meetspace.test",
+                "name": "林可",
+                "role": "member",
+                "team_name": "见山设计"
+              },
+              "timezone": "Asia/Shanghai",
+              "version": "1.0.0-rc.1"
+            },
+            "monotonic_seconds": 1717796.140696
+          }
+        ],
+        "browser_requests": [
+          {
+            "event": "request",
+            "method": "GET",
+            "path": "/api/session",
+            "monotonic_seconds": 1717796.132853458
+          },
+          {
+            "event": "request",
+            "method": "GET",
+            "path": "/api/rooms?date=2030-04-10",
+            "monotonic_seconds": 1717796.147898583
+          },
+          {
+            "event": "request",
+            "method": "GET",
+            "path": "/api/bookings?scope=mine",
+            "monotonic_seconds": 1717796.150359833
+          },
+          {
+            "event": "request",
+            "method": "GET",
+            "path": "/api/notifications",
+            "monotonic_seconds": 1717796.152750541
+          }
+        ],
+        "before": {
+          "roles": [
+            [
+              1,
+              1,
+              "member"
+            ],
+            [
+              2,
+              1,
+              "admin"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        },
+        "after": {
+          "roles": [
+            [
+              1,
+              1,
+              "member"
+            ],
+            [
+              2,
+              1,
+              "admin"
+            ],
+            [
+              3,
+              1,
+              "admin"
+            ],
+            [
+              4,
+              2,
+              "admin"
+            ]
+          ],
+          "rooms": [
+            [
+              1,
+              1,
+              "云杉",
+              "3F · 东侧",
+              8,
+              "[\"显示屏\", \"白板\", \"视频会议\"]",
+              1
+            ],
+            [
+              2,
+              1,
+              "白桦",
+              "3F · 西侧",
+              4,
+              "[\"显示屏\", \"白板\"]",
+              1
+            ],
+            [
+              3,
+              1,
+              "银杏",
+              "2F · 开放区",
+              12,
+              "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              1
+            ],
+            [
+              4,
+              1,
+              "青松",
+              "2F · 北侧",
+              6,
+              "[\"白板\", \"电话会议\"]",
+              1
+            ],
+            [
+              5,
+              2,
+              "海风",
+              "1F · 靠窗",
+              6,
+              "[\"白板\"]",
+              1
+            ]
+          ],
+          "bookings": [
+            [
+              1,
+              1,
+              2,
+              "品牌方向讨论",
+              "2030-04-11T02:00:00+00:00",
+              "2030-04-11T03:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              2,
+              3,
+              3,
+              "产品周会",
+              "2030-04-11T06:00:00+00:00",
+              "2030-04-11T07:00:00+00:00",
+              "confirmed"
+            ],
+            [
+              3,
+              2,
+              1,
+              "设计评审",
+              "2030-04-11T03:00:00+00:00",
+              "2030-04-11T04:00:00+00:00",
+              "confirmed"
+            ]
+          ],
+          "notifications": []
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "event": "second_admin_real_patch",
+      "status": 200,
+      "roles": [
+        [
+          1,
+          "admin"
+        ],
+        [
+          2,
+          "member"
+        ],
+        [
+          3,
+          "admin"
+        ],
+        [
+          4,
+          "admin"
+        ]
+      ],
+      "monotonic_seconds": 1717794.597547041
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/",
+      "monotonic_seconds": 1717794.72756025
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/style.css",
+      "monotonic_seconds": 1717794.744348666
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/app.js",
+      "monotonic_seconds": 1717794.745882333
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1717794.772100208
+    },
+    {
+      "event": "request",
+      "method": "POST",
+      "path": "/api/login",
+      "monotonic_seconds": 1717795.111933916
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1717795.168282458
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1717795.181155916
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1717795.182439083
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1717795.183225
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1717795.348550416
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1717795.3491215
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1717795.349575375
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/members",
+      "monotonic_seconds": 1717795.350268541
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "monotonic_seconds": 1717795.380043791
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1717795.388137916
+    },
+    {
+      "event": "old_changeRole_session_actual_admin200_held",
+      "actual_status": 200,
+      "body": {
+        "user": {
+          "id": 1,
+          "team_id": 1,
+          "email": "admin@meetspace.test",
+          "name": "林可",
+          "role": "admin",
+          "team_name": "见山设计"
+        },
+        "timezone": "Asia/Shanghai",
+        "version": "1.0.0-rc.1"
+      },
+      "roles": [
+        [
+          1,
+          "admin"
+        ],
+        [
+          2,
+          "admin"
+        ],
+        [
+          3,
+          "admin"
+        ],
+        [
+          4,
+          "admin"
+        ]
+      ],
+      "UI": {
+        "user": {
+          "id": 1,
+          "team_id": 1,
+          "email": "admin@meetspace.test",
+          "name": "林可",
+          "role": "admin",
+          "team_name": "见山设计"
+        },
+        "page": "manage",
+        "scope": "mine",
+        "date": "2030-04-10",
+        "loading": false,
+        "loadError": "",
+        "login": false,
+        "manage": true,
+        "openDialogs": 0,
+        "toast": "",
+        "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+        "retry": false,
+        "identityGeneration": 2,
+        "loadToken": 3,
+        "roleRefreshToken": 1,
+        "identityPending": true
+      },
+      "not_loadPage_response": true,
+      "monotonic_seconds": 1717795.436052958
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/1",
+      "monotonic_seconds": 1717795.466855375
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1717795.479048625
+    },
+    {
+      "event": "new_self_changeRole_session_front_dependency_fault",
+      "mode": "network",
+      "roles": [
+        [
+          1,
+          "member"
+        ],
+        [
+          2,
+          "admin"
+        ],
+        [
+          3,
+          "admin"
+        ],
+        [
+          4,
+          "admin"
+        ]
+      ],
+      "UI": {
+        "user": {
+          "id": 1,
+          "team_id": 1,
+          "email": "admin@meetspace.test",
+          "name": "林可",
+          "role": "member",
+          "team_name": "见山设计"
+        },
+        "page": "spaces",
+        "scope": "mine",
+        "date": "2030-04-10",
+        "loading": false,
+        "loadError": "",
+        "login": false,
+        "manage": true,
+        "openDialogs": 0,
+        "toast": "",
+        "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+        "retry": false,
+        "identityGeneration": 2,
+        "loadToken": 4,
+        "roleRefreshToken": 2,
+        "identityPending": true
+      },
+      "monotonic_seconds": 1717795.495150708
+    },
+    {
+      "event": "actual_old_changeRole_session_released_after_new_pending",
+      "mode": "503",
+      "current_role_refresh_token": 2,
+      "old_role_refresh_token": 1,
+      "old_actual_200_user": {
+        "id": 1,
+        "team_id": 1,
+        "email": "admin@meetspace.test",
+        "name": "林可",
+        "role": "admin",
+        "team_name": "见山设计"
+      },
+      "new_fault": "network",
+      "no_old_loadPage_session_held": true,
+      "monotonic_seconds": 1717795.633867166
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1717796.132853458
+    },
+    {
+      "event": "recovery_session_actual_response",
+      "status": 200,
+      "body": {
+        "user": {
+          "id": 1,
+          "team_id": 1,
+          "email": "admin@meetspace.test",
+          "name": "林可",
+          "role": "member",
+          "team_name": "见山设计"
+        },
+        "timezone": "Asia/Shanghai",
+        "version": "1.0.0-rc.1"
+      },
+      "monotonic_seconds": 1717796.140696
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1717796.147898583
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1717796.150359833
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1717796.152750541
+    }
+  ],
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "monotonic_seconds": 1717794.736738166
+    },
+    {
+      "method": "GET",
+      "path": "/style.css",
+      "status": 200,
+      "monotonic_seconds": 1717794.7472655
+    },
+    {
+      "method": "GET",
+      "path": "/app.js",
+      "status": 200,
+      "monotonic_seconds": 1717794.750266333
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 401,
+      "monotonic_seconds": 1717794.787425916
+    },
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "monotonic_seconds": 1717795.16677725
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1717795.173360333
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1717795.251979708
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1717795.252799333
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1717795.253484791
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1717795.351048833
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1717795.353924541
+    },
+    {
+      "method": "GET",
+      "path": "/api/members",
+      "status": 200,
+      "monotonic_seconds": 1717795.354689916
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1717795.355939333
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "status": 200,
+      "monotonic_seconds": 1717795.387679791
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/1",
+      "status": 200,
+      "monotonic_seconds": 1717795.477488083
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 503,
+      "monotonic_seconds": 1717795.632787916
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1717796.146814208
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1717796.159570291
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1717796.1623995
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1717796.163594708
+    }
+  ],
+  "screenshots": [
+    "ui-identity/old-changeRole-session-503-after-new-self-session-network-pending-new-pending-before-old-role-session-release.png",
+    "ui-identity/old-changeRole-session-503-after-new-self-session-network-pending-old-role-session-released-still-latest-pending.png",
+    "ui-identity/old-changeRole-session-503-after-new-self-session-network-pending-native-retry-complete.png"
+  ],
+  "final_business_snapshot": {
+    "roles": [
+      [
+        1,
+        1,
+        "member"
+      ],
+      [
+        2,
+        1,
+        "admin"
+      ],
+      [
+        3,
+        1,
+        "admin"
+      ],
+      [
+        4,
+        2,
+        "admin"
+      ]
+    ],
+    "rooms": [
+      [
+        1,
+        1,
+        "云杉",
+        "3F · 东侧",
+        8,
+        "[\"显示屏\", \"白板\", \"视频会议\"]",
+        1
+      ],
+      [
+        2,
+        1,
+        "白桦",
+        "3F · 西侧",
+        4,
+        "[\"显示屏\", \"白板\"]",
+        1
+      ],
+      [
+        3,
+        1,
+        "银杏",
+        "2F · 开放区",
+        12,
+        "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+        1
+      ],
+      [
+        4,
+        1,
+        "青松",
+        "2F · 北侧",
+        6,
+        "[\"白板\", \"电话会议\"]",
+        1
+      ],
+      [
+        5,
+        2,
+        "海风",
+        "1F · 靠窗",
+        6,
+        "[\"白板\"]",
+        1
+      ]
+    ],
+    "bookings": [
+      [
+        1,
+        1,
+        2,
+        "品牌方向讨论",
+        "2030-04-11T02:00:00+00:00",
+        "2030-04-11T03:00:00+00:00",
+        "confirmed"
+      ],
+      [
+        2,
+        3,
+        3,
+        "产品周会",
+        "2030-04-11T06:00:00+00:00",
+        "2030-04-11T07:00:00+00:00",
+        "confirmed"
+      ],
+      [
+        3,
+        2,
+        1,
+        "设计评审",
+        "2030-04-11T03:00:00+00:00",
+        "2030-04-11T04:00:00+00:00",
+        "confirmed"
+      ]
+    ],
+    "notifications": []
+  }
+}

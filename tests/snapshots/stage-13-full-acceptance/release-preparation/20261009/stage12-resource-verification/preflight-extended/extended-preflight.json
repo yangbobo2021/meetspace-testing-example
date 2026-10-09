@@ -1,0 +1,136 @@
+{
+  "exit_code": 0,
+  "stderr": "",
+  "assertions": {
+    "all_target_processes_exit_zero": true,
+    "fork_inherited_mmap_secret_before_clear_detected": true,
+    "hex_plaintext_detected": true,
+    "base64_plaintext_detected": true,
+    "known_reversible_sample_detected": true,
+    "random_device_read_controlled": true,
+    "rename_and_unlink_observed": true,
+    "uncovered_empty": true
+  },
+  "events": [
+    {
+      "kind": "exec",
+      "pid": 7
+    },
+    {
+      "kind": "getrandom",
+      "pid": 7,
+      "bytes": 8,
+      "source": "real_linux_getrandom_syscall",
+      "controlled_return": true
+    },
+    {
+      "kind": "getrandom",
+      "pid": 7,
+      "bytes": 24,
+      "source": "real_linux_getrandom_syscall",
+      "controlled_return": true
+    },
+    {
+      "kind": "file_shared_mapping",
+      "pid": 7,
+      "address_alias": 1,
+      "path": "/tmp/probe-before",
+      "bytes": 4096
+    },
+    {
+      "kind": "child_process_or_thread",
+      "pid": 8,
+      "parent_group": 7,
+      "child_group": 8,
+      "inherited_shared_mappings": 1
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/probe-before",
+      "bytes": 4096,
+      "leak": true
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/probe-before",
+      "bytes": 4096,
+      "leak": false
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/probe-before",
+      "bytes": 4096,
+      "leak": false
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/probe-before",
+      "bytes": 4096,
+      "leak": false
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 7,
+      "syscall": 38,
+      "result": 0
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 7,
+      "syscall": 35,
+      "result": 0
+    },
+    {
+      "kind": "write",
+      "path": "/tmp/hex",
+      "bytes": 28,
+      "leak": true
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 7,
+      "syscall": 35,
+      "result": 0
+    },
+    {
+      "kind": "write",
+      "path": "/tmp/base64",
+      "bytes": 20,
+      "leak": true
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 7,
+      "syscall": 35,
+      "result": 0
+    },
+    {
+      "kind": "write",
+      "path": "/tmp/reversible",
+      "bytes": 14,
+      "leak": true
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 7,
+      "syscall": 35,
+      "result": 0
+    },
+    {
+      "kind": "random_device_read",
+      "pid": 7,
+      "bytes": 32,
+      "source": "/dev/urandom",
+      "controlled_return": true
+    },
+    {
+      "kind": "write",
+      "path": "pipe:[6949]",
+      "bytes": 3,
+      "leak": false
+    }
+  ],
+  "uncovered": [],
+  "formal_verdict": null,
+  "interpretation": "已知可逆XOR样本验证写出口被观察，并非任意加密内容可由字符串扫描判明；产品所有存储字段必须逐项解释，未知密文仍缺证。"
+}

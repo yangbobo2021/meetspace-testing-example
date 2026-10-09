@@ -1,0 +1,96 @@
+{
+  "status": "prepared_for_next_fixed_revision_method_review",
+  "scope": "只读方法/需求及stage10历史证据审查；准备新固定修订的synthetic旧记录fixture，当前未执行",
+  "reviewer_kind": "independent_preparation_reviewer",
+  "formal_verdict": null,
+  "release_approved": false,
+  "requirements": [
+    "application-runtime-4",
+    "reservation-creation-7",
+    "reservation-creation-11",
+    "reservation-creation-12"
+  ],
+  "method_ids": [
+    "AI-WB-idempotency-absolute-precision",
+    "AI-WB-idempotency-priority",
+    "AI-reservation-creation-7"
+  ],
+  "current_method_exact_obligation": "另外独立核对旧合法零微秒请求与当前算法的规范化序列一致。使用固定修订的旧版应用在隔离库通过真实请求建立合法预约，停服后由当前修订同库重放，应返回原ID及当前状态且不新增通知；旧源码仅作迁移fixture，不以旧运行passed作证。",
+  "approval_rejection_handling": "本轮compiled Tester执行旧应用建库被自动审批拒绝，保持原分支unproven；不重新发起被拒绝动作，不由root绕过固定修订约束。本文仅提出另一个清晰命名且待下一轮方法审阅的固定新源测试设计。",
+  "required_formal_method_change": "下一轮Analyst/Reviewer应明文将新执行分支定义为“synthetic历史canonical表示兼容”，绑定独立fixtures规范与已提交历史来源，只运行新固定修订；不能在不修订方法的情况下用它冒充原要求中旧app真实HTTP建库。历史stage10结果仅为来源/oracle，不升级当前固定revision正式passed。",
+  "historical_evidence": {
+    "committed_reference": "tests/snapshots/stage-10-fixes/reviewer-legacy-replay.json",
+    "old_revision": "87b578b",
+    "old_source_sha256": "d108a24c318d51607d22a9bedfab77e8e9911a04c7df535a5882698d1e3963e4",
+    "then_current_source_sha256": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "historical_checks": 5,
+    "scope": "development-only independent old database compatibility; not full acceptance",
+    "known_old_canonical_seconds": [
+      4,
+      "旧库重放兼容",
+      "2026-10-11T02:00:00+00:00",
+      "2026-10-11T03:00:00+00:00",
+      2
+    ],
+    "independent_sha256": "af2fc7db282738d398bc75ba4620c8c4f9870d8c1a58ad38eb03dfda4d70fa2c",
+    "matches_committed_historic_row_hash": true,
+    "provenance_limit": "原JSON未记录创建请求日期；根据已知harness标题/room/人数和历史固定日期2026-10-11可独立计算完全匹配摘要，故仅证明该canonical字符串与记录摘要相等，不能伪称旧应用新执行或补造其原始HTTP日志。"
+  },
+  "fixture_origin": {
+    "type": "synthetic SQL fixture prepared by independent harness before target starts",
+    "schema": "独立字面旧/现共有六表结构；用当前固定源AST只读取SCHEMA并在内存对比字段/索引形状，不执行旧源或借产品业务函数算hash",
+    "old_digest_oracle": "独立UTC seconds canonical JSON数组+[room,title.strip,start_seconds,end_seconds,attendees] SHA256；historical-started fixture有已提交已知摘要双校验，未来fixture同旧格式独立计算",
+    "credential_and_session": "公开合成密码独立scrypt；本地内存生成旧格式Cookie，fixture持久仅SHA256/user2/T+8h。它是合成已有session记录，不声称由旧app新login产生；真实当前/session200与/rooms200证明读取兼容。Cookie原文不出报告",
+    "initial_state": "一个既有团队/成员/room4、booking4及一条原通知；既有团队使正常Store.seed不重复初始化。开启WAL。只读全表行集合在内存逐请求比较，报告仅计数/整体摘要，避免保存凭据行"
+  },
+  "matrices": [
+    {
+      "name": "historic-started",
+      "date": "2026-10-11",
+      "clock": "2030-04-10T01:00:00Z",
+      "status": "confirmed",
+      "purpose": "已知真实历史秒摘要+已开始/超当前预约资格重放，不重新判资格"
+    },
+    {
+      "name": "future-confirmed",
+      "date": "2030-04-11",
+      "clock": "2030-04-10T01:00:00Z",
+      "status": "confirmed",
+      "purpose": "未来合法零微秒旧格式表示重放与新key正负微秒400粒度控制及正常零微秒新建"
+    },
+    {
+      "name": "future-cancelled",
+      "date": "2030-04-11",
+      "clock": "2030-04-10T01:00:00Z",
+      "status": "cancelled",
+      "purpose": "返回原cancelled状态，不恢复占用/不新增预约通知"
+    }
+  ],
+  "mandatory_assertions": [
+    "每项新隔离DB，目标源app/web的revision与逐文件SHA匹配新已提交manifest，源码无未提交改动；复制同一新固定源后校验副本SHA，仅导入这一源",
+    "datetime.now与time.time同时真实依赖适配到T并记录验证值；不替换create_booking/date_time/password/login/SQL/事务",
+    "启动前后全表记录完全相同，原摘要/原ID/原状态及原通知保留，既有Cookie无需login真实/session身份200并protected业务200",
+    "每状态四种等价：原payload、title首尾空格、UTC+08→Z/+00、显式.000000；均确切201/id4/原状态/replayed true，逐项全表不变",
+    "每状态独立start±1µs和end±1µs，已有K精确409/idempotency_conflict且无booking/replayed成功，逐项全表不变",
+    "future-confirmed相同非零µs四项改为全新K，保留400 invalid_interval精确断言，不用409或任意>=400替代，逐项全表不变",
+    "正常新K两端显式零µs在不冲突14–15时段真实新建201/id5/replayed false，仅新增1booking+1notice且所有原行保持；其真实重放不再新增"
+  ],
+  "clock_adapter_review": "Prepared harness以新源模块datetime/time依赖适配器控制时间，不改磁盘源码。它未执行，正式资源gate仍须审阅这种时钟适配是否符合固定代码约束；若否决，只能blocked并改为已认可的OS libfaketime依赖方式，不能绕过。",
+  "harness": {
+    "path": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/legacy_fixture_current_only.py",
+    "sha256": "b10205f10adfe35f264b68b32e1592815b6f1688cb22a999e67c06b8d34cf0ac",
+    "syntax_parse_only": true,
+    "executed": false,
+    "execution_gate": "必须--execute、显式非708c9c0的新revision、HEAD相等、app/web工作树无改动、source manifest逐文件SHA匹配；当前无执行参数/无运行",
+    "old_application_access": "不使用git show提取旧代码、不导入旧app、不启动旧服务；只有已提交历史结果作静态oracle"
+  },
+  "input_sha256": {
+    "tests/delivery-acceptance/requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "tests/delivery-acceptance/methods.json": "129f697c44414c42b45c64fff3f9a30993d2ce1bfcac3f692a52f98285299a7c",
+    "tests/delivery-acceptance/scenarios.json": "5eb05ba8def88bde123de25c4fd8b0bf5d2472d6ca9c6c1500b4f965f3702327",
+    "tests/snapshots/stage-10-fixes/reviewer-legacy-replay.json": "7e5f7515f65e24b94f1b31eaa742a634df6e20c4ca146511e277dcfca723415c",
+    "tests/snapshots/stage-10-fixes/reviewer_legacy_replay.py": "99bb9e4610e31cf04569926359c3bf06b88112539cc986e13e2f90a250a7bac8",
+    "tests/snapshots/stage-10-fixes/manifest.json": "7272e17e2233324e3c781cd7cc4f68c5c6b5f3e9137a399395b3fd4a73669e33"
+  },
+  "next_step": "新修复revision提交后由下一轮独立Analyst/Reviewer确认方法/资源，再让Tester执行并按新实际HTTP/SQL证据判定；当前本轮旧app分支unproven不变。"
+}

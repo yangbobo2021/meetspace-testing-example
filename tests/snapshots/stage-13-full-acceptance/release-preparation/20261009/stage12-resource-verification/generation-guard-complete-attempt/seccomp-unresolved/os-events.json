@@ -1,0 +1,140 @@
+{
+  "adapter": "ptrace_syscall_linux_aarch64",
+  "tape_alias": "real_os",
+  "root_pid": 13,
+  "events": [
+    {
+      "kind": "exec",
+      "pid": 13
+    },
+    {
+      "kind": "file_shared_mapping",
+      "pid": 13,
+      "address_alias": 1,
+      "path": "/tmp/seccomp-probe.bin",
+      "bytes": 4096,
+      "generation": 1
+    },
+    {
+      "kind": "getrandom",
+      "pid": 13,
+      "bytes": 8,
+      "source": "real_linux_getrandom_syscall",
+      "controlled_return": false
+    },
+    {
+      "kind": "child_process_or_thread",
+      "pid": 14,
+      "parent_group": 13,
+      "child_group": 13,
+      "inherited_shared_mappings": 1
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/seccomp-probe.bin",
+      "bytes": 4096,
+      "generation": 1,
+      "leak": true
+    },
+    {
+      "kind": "child_process_or_thread",
+      "pid": 15,
+      "parent_group": 13,
+      "child_group": 13,
+      "inherited_shared_mappings": 1
+    },
+    {
+      "kind": "mapping_exit_scan_deferred_pending_full_unmap",
+      "pid": 15,
+      "group": 13,
+      "path": "/tmp/seccomp-probe.bin",
+      "bytes": 4096,
+      "generation": 1,
+      "syscall": 93,
+      "errno": 14,
+      "reason": "[Errno 14] read -1/4096",
+      "pending_unmapping_candidates": [
+        {
+          "pid": 14,
+          "number": 215,
+          "has_unmapping": true
+        }
+      ],
+      "pending_full_unmap_pid": 14
+    },
+    {
+      "kind": "mapping_exit_scan_deferred_pending_full_unmap",
+      "pid": 13,
+      "group": 13,
+      "path": "/tmp/seccomp-probe.bin",
+      "bytes": 4096,
+      "generation": 1,
+      "syscall": 94,
+      "errno": 14,
+      "reason": "[Errno 14] read -1/4096",
+      "pending_unmapping_candidates": [
+        {
+          "pid": 14,
+          "number": 215,
+          "has_unmapping": true
+        }
+      ],
+      "pending_full_unmap_pid": 14
+    }
+  ],
+  "counters": {
+    "syscall_221": 1,
+    "syscall_214": 3,
+    "syscall_222": 10,
+    "syscall_48": 1,
+    "syscall_56": 3,
+    "syscall_80": 2,
+    "syscall_57": 2,
+    "syscall_63": 1,
+    "syscall_215": 4,
+    "syscall_226": 7,
+    "syscall_96": 1,
+    "syscall_99": 3,
+    "syscall_293": 3,
+    "syscall_261": 1,
+    "syscall_46": 1,
+    "syscall_134": 1,
+    "syscall_135": 8,
+    "syscall_278": 1,
+    "syscall_435": 2,
+    "syscall_167": 1,
+    "syscall_277": 1,
+    "syscall_29": 1,
+    "scanned_shared_mappings": 1,
+    "leaks": 1,
+    "syscall_98": 1,
+    "syscall_233": 1,
+    "syscall_93": 1,
+    "deferred_mapping_exit_scans": 2,
+    "syscall_94": 1
+  },
+  "uncovered": [
+    "mapping_unreadable_before_flush_or_exit",
+    "pending_full_unmap_unresolved_after_deferred_exit_scan"
+  ],
+  "exits": {
+    "15": {
+      "exit_code": 0,
+      "signal": null
+    },
+    "14": {
+      "exit_code": 0,
+      "signal": null
+    },
+    "13": {
+      "exit_code": 0,
+      "signal": null
+    }
+  },
+  "formal_verdict": null,
+  "limitations": [
+    "syscall trace and payload scanning require independent outlet/schema review",
+    "session expiration time adaptation and restart need outer matrix harness",
+    "does not claim encrypted/unknown storage harmless without field inspection"
+  ]
+}

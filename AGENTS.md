@@ -17,3 +17,5 @@
 - 新验收资源准备在tests/delivery-acceptance/release-preparation/20261009；已有uv Python3.11与Docker --network none隔离默认8766/不同loopback，不操作用户demo；harness可按正式需求修复写死的旧失败UI形态，须保留旧副本及独立理由。
 - `specs/meta.md` 与 `specs/decisions/000-spec-structure-format.md` 沿用自行车项目的原文件，未经人类授权不修改。
 - 修改完成后运行 `npx @sublang/spex lint`；结构检查通过不代表业务需求已确认或应用已验收。
+
+- stage-13-full-acceptance按DR-014：5247b360完整167执行/独立审阅通过，五门禁通过；身份重要矩阵40、176稳定方法，后端行/分支100%、前端99.52%/97.64%，当前覆盖率无新必要建议；发布审阅另行提交，不修改历史失败。

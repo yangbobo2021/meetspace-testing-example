@@ -1,0 +1,1 @@
+r2 preserves r1 harness/evidence; 34 native matrix items include original27+3 Reviewer stale PATCH errors+3 current PATCH errors+1 valid late-commit across new pending control. Native applied source only, fresh output only, no formal ledger write.

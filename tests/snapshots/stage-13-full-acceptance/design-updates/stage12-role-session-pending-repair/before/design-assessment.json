@@ -1,0 +1,3842 @@
+{
+  "status": "author_assessed_complete_pending_independent_review",
+  "role": "Analyst",
+  "assessed_at": "2026-10-09T01:13:54.141064+00:00",
+  "implementation_revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "requirements_sha256": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+  "counts": {
+    "requirements": 96,
+    "black_box_scenarios": 96,
+    "white_box_scenarios": 71,
+    "total_scenarios": 167,
+    "methods": 176,
+    "material_targets": 71
+  },
+  "black_box_complete": true,
+  "white_box_complete": false,
+  "author_design_complete": true,
+  "basis": [
+    "确认96需求（DR-002及DR-004）与原96黑盒/71白盒稳定ID逐项对照。",
+    "检查当前app/server.py全部入口、事务、SQLite查询与验证顺序；web/app.js身份/加载/角色续段及HTML/CSS交互；与708c9c0差异仅角色类型守卫及身份续段修复、对应回归。",
+    "原有需求级模式/用户状态和边界/异常矩阵保留；将34原生身份矩阵分配至原方法，不复用开发通过。",
+    "历史兼容按DR-012/013明确改为独立synthetic旧格式SQL，真实历史输出只作oracle来源；只执行当前HEAD。",
+    "全部71目标改用符号+固定源码SHA绑定，5个防御出口仍保留分母。",
+    "Analyst判断设计已覆盖当前重要路径；独立审阅待进行，不写coverage_review.json，不认定发布。"
+  ],
+  "code_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "c3347cfe766836d5bc5c776ee9ed03ea01c648847a76c12d19eaba8b830a7798",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead",
+    "tests/test_regressions.py": "f1089a462666894a654e295eda4cead5e60710fa2ca76145d0e518958500f6ae"
+  },
+  "items": [
+    {
+      "requirement_id": "application-runtime-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "干净标准库环境默认启动、监听地址和同库重启排除隐含依赖与临时存储。",
+      "operation_modes": [
+        "默认命令启动",
+        "默认路径持久化"
+      ],
+      "user_states": [
+        "Python 3.11及较新版本且有上海时区资料",
+        "首次启动后已创建房间的管理员"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-1"
+      ],
+      "white_box_scenario_ids": [
+        "WB-runtime-entry",
+        "WB-health-static-dispatch"
+      ],
+      "method_ids": [
+        "AI-WB-health-static-dispatch",
+        "AI-WB-runtime-entry",
+        "AI-application-runtime-1"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-1.expected",
+        "scenarios.json#WB-runtime-entry.expected",
+        "scenarios.json#WB-health-static-dispatch.expected"
+      ],
+      "material_target_ids": [
+        "WBT-runtime-entry",
+        "WBT-health-static-dispatch"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-1"
+    },
+    {
+      "requirement_id": "application-runtime-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "host/port/db单独和组合覆盖，未选项默认值及两库记录隔离。",
+      "operation_modes": [
+        "仅指定host、port或db",
+        "三参数组合及重启"
+      ],
+      "user_states": [
+        "有默认库记录的使用者",
+        "默认库与自定义库分别有不同记录"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-2"
+      ],
+      "white_box_scenario_ids": [
+        "WB-runtime-entry",
+        "WB-runtime-sigint-persistence"
+      ],
+      "method_ids": [
+        "AI-WB-runtime-entry",
+        "AI-WB-runtime-sigint-persistence",
+        "AI-application-runtime-2"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-2.expected",
+        "scenarios.json#WB-runtime-entry.expected",
+        "scenarios.json#WB-runtime-sigint-persistence.expected"
+      ],
+      "material_target_ids": [
+        "WBT-runtime-entry",
+        "WBT-runtime-sigint-persistence"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-2"
+    },
+    {
+      "requirement_id": "application-runtime-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "空文件/空库、UTC与北京日期不同的初始化，四身份五室三会议完整资料。",
+      "operation_modes": [
+        "首次初始化不存在文件及无团队空库",
+        "北京时间明天计算"
+      ],
+      "user_states": [
+        "四个示例身份",
+        "凌晨00:30与09:00、系统UTC/上海"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-seed-empty-existing",
+        "WB-seed-failure-retry"
+      ],
+      "method_ids": [
+        "AI-WB-seed-empty-existing",
+        "AI-WB-seed-failure-retry",
+        "AI-application-runtime-3"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-3.expected",
+        "scenarios.json#WB-seed-empty-existing.expected",
+        "scenarios.json#WB-seed-failure-retry.expected"
+      ],
+      "material_target_ids": [
+        "WBT-seed-empty-existing",
+        "WBT-seed-failure-retry"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-3"
+    },
+    {
+      "requirement_id": "application-runtime-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "已有团队、业务已修改/取消/新增、同日与跨日重启不补种不移动日期。 synthetic历史格式只执行当前源，旧K精度冲突与新K粒度拒绝分开，不执行旧app。",
+      "operation_modes": [
+        "已有团队同日重启",
+        "跨日重启"
+      ],
+      "user_states": [
+        "已改名、新建和取消资料的使用者",
+        "原示例日期已经过去"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-4"
+      ],
+      "white_box_scenario_ids": [
+        "WB-seed-empty-existing",
+        "WB-seed-failure-retry",
+        "WB-runtime-sigint-persistence"
+      ],
+      "method_ids": [
+        "AI-WB-runtime-sigint-persistence",
+        "AI-WB-seed-empty-existing",
+        "AI-WB-seed-failure-retry",
+        "AI-application-runtime-4"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-4.expected",
+        "scenarios.json#WB-seed-empty-existing.expected",
+        "scenarios.json#WB-seed-failure-retry.expected",
+        "scenarios.json#WB-runtime-sigint-persistence.expected"
+      ],
+      "material_target_ids": [
+        "WBT-seed-empty-existing",
+        "WBT-seed-failure-retry",
+        "WBT-runtime-sigint-persistence"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-4"
+    },
+    {
+      "requirement_id": "application-runtime-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "角色、室、预约、取消、通知及已读位两次重启逐字段对账。",
+      "operation_modes": [
+        "保存后同库重启",
+        "再次重启"
+      ],
+      "user_states": [
+        "已改角色、房间并创建/取消预约的用户",
+        "同时有已读及未读通知的用户"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-persistence-restart",
+        "WB-runtime-sigint-persistence"
+      ],
+      "method_ids": [
+        "AI-WB-persistence-restart",
+        "AI-WB-runtime-sigint-persistence",
+        "AI-application-runtime-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-5.expected",
+        "scenarios.json#WB-persistence-restart.expected",
+        "scenarios.json#WB-runtime-sigint-persistence.expected"
+      ],
+      "material_target_ids": [
+        "WBT-persistence-restart",
+        "WBT-runtime-sigint-persistence"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-5"
+    },
+    {
+      "requirement_id": "application-runtime-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "匿名和已登录的正常可读数据库健康查询；存储异常由错误分类场景补充。",
+      "operation_modes": [
+        "匿名查询及重启后查询",
+        "登录查询"
+      ],
+      "user_states": [
+        "数据库可读取且无会话",
+        "数据库可读取且已有会话"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-health-static-dispatch"
+      ],
+      "method_ids": [
+        "AI-WB-health-static-dispatch",
+        "AI-application-runtime-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-6.expected",
+        "scenarios.json#WB-health-static-dispatch.expected"
+      ],
+      "material_target_ids": [
+        "WBT-health-static-dispatch"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-6"
+    },
+    {
+      "requirement_id": "application-runtime-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "凭据/输入/冲突及三类依赖异常JSON与敏感信息检查；白盒补继承HTTP错误入口。",
+      "operation_modes": [
+        "格式、认证、业务冲突错误",
+        "存储及未预期异常"
+      ],
+      "user_states": [
+        "匿名或已登录请求者",
+        "已登录且目标写实际命中故障"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-health-static-dispatch",
+        "WB-json-envelope",
+        "WB-errors-and-response",
+        "WB-response-transport-disconnect",
+        "WB-http-unsupported-methods"
+      ],
+      "method_ids": [
+        "AI-WB-errors-and-response",
+        "AI-WB-health-static-dispatch",
+        "AI-WB-http-unsupported-methods",
+        "AI-WB-json-envelope",
+        "AI-WB-response-transport-disconnect",
+        "AI-application-runtime-7",
+        "AI-storage-exception-boundary"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-7.expected",
+        "scenarios.json#WB-health-static-dispatch.expected",
+        "scenarios.json#WB-json-envelope.expected",
+        "scenarios.json#WB-errors-and-response.expected",
+        "scenarios.json#WB-response-transport-disconnect.expected",
+        "scenarios.json#WB-http-unsupported-methods.expected"
+      ],
+      "material_target_ids": [
+        "WBT-health-static-dispatch",
+        "WBT-json-envelope",
+        "WBT-errors-and-response",
+        "WBT-response-transport-disconnect",
+        "WBT-http-unsupported-methods"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-7"
+    },
+    {
+      "requirement_id": "application-runtime-8",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "完整性、存储操作和未预期异常分别触发、恢复及JSON类别核对，不用前置业务拒绝代替。",
+      "operation_modes": [
+        "完整性、操作失败、未预期异常分类",
+        "外部锁解除后重试"
+      ],
+      "user_states": [
+        "合法创建房间或预约的用户",
+        "正常业务被真实存储锁阻塞"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-8"
+      ],
+      "white_box_scenario_ids": [
+        "WB-errors-and-response",
+        "WB-transaction-failure-matrix",
+        "WB-room-name-unique-concurrency"
+      ],
+      "method_ids": [
+        "AI-WB-errors-and-response",
+        "AI-WB-room-name-unique-concurrency",
+        "AI-WB-transaction-failure-matrix",
+        "AI-application-runtime-8",
+        "AI-storage-exception-boundary"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-8.expected",
+        "scenarios.json#WB-errors-and-response.expected",
+        "scenarios.json#WB-transaction-failure-matrix.expected",
+        "scenarios.json#WB-room-name-unique-concurrency.expected"
+      ],
+      "material_target_ids": [
+        "WBT-errors-and-response",
+        "WBT-transaction-failure-matrix",
+        "WBT-room-name-unique-concurrency"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-8"
+    },
+    {
+      "requirement_id": "application-runtime-9",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "新增/编辑室、角色、全部已读、预约和取消部分写后/写间隙/提交失败回滚；白盒补登录退出及种子事务。",
+      "operation_modes": [
+        "预约创建、本人及管理员取消的中途/提交失败",
+        "新增启用及停用室、编辑五字段的写后/间隙/提交失败",
+        "角色升降及全部已读的写后/提交失败"
+      ],
+      "user_states": [
+        "部分预约或通知已真实写入",
+        "有原房间和既有预约的两队用户",
+        "有另一管理员、105条未读和他人通知"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-9"
+      ],
+      "white_box_scenario_ids": [
+        "WB-request-origin",
+        "WB-json-envelope",
+        "WB-transaction-failure-matrix",
+        "WB-logout-revocation",
+        "WB-booking-conflict-serialization",
+        "WB-notifications-mark-all",
+        "WB-room-name-unique-concurrency",
+        "WB-seed-failure-retry",
+        "WB-response-transport-disconnect",
+        "WB-booking-response-loss-replay"
+      ],
+      "method_ids": [
+        "AI-WB-booking-conflict-serialization",
+        "AI-WB-booking-response-loss-replay",
+        "AI-WB-json-envelope",
+        "AI-WB-logout-revocation",
+        "AI-WB-notifications-mark-all",
+        "AI-WB-request-origin",
+        "AI-WB-response-transport-disconnect",
+        "AI-WB-room-name-unique-concurrency",
+        "AI-WB-seed-failure-retry",
+        "AI-WB-transaction-failure-matrix",
+        "AI-application-runtime-9",
+        "AI-new-room-write-failure-boundary",
+        "AI-other-writes-failure-boundary",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-9.expected",
+        "scenarios.json#WB-request-origin.expected",
+        "scenarios.json#WB-json-envelope.expected",
+        "scenarios.json#WB-transaction-failure-matrix.expected",
+        "scenarios.json#WB-logout-revocation.expected",
+        "scenarios.json#WB-booking-conflict-serialization.expected",
+        "scenarios.json#WB-notifications-mark-all.expected",
+        "scenarios.json#WB-room-name-unique-concurrency.expected",
+        "scenarios.json#WB-seed-failure-retry.expected",
+        "scenarios.json#WB-response-transport-disconnect.expected",
+        "scenarios.json#WB-booking-response-loss-replay.expected"
+      ],
+      "material_target_ids": [
+        "WBT-request-origin",
+        "WBT-json-envelope",
+        "WBT-transaction-failure-matrix",
+        "WBT-logout-revocation",
+        "WBT-booking-conflict-serialization",
+        "WBT-notifications-mark-all",
+        "WBT-room-name-unique-concurrency",
+        "WBT-seed-failure-retry",
+        "WBT-response-transport-disconnect",
+        "WBT-booking-response-loss-replay"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/application-runtime-9"
+    },
+    {
+      "requirement_id": "identity-session-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "类型、去空格后长度两端及越界、邮箱大小写，格式有效但凭据错与格式错误分开。",
+      "operation_modes": [
+        "邮箱大小写及两字段去首尾空格",
+        "必填、字符串类型及长度边界"
+      ],
+      "user_states": [
+        "有效示例账号",
+        "缺字段、null、非字符串、空白及边界长度请求者"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-1"
+      ],
+      "white_box_scenario_ids": [
+        "WB-password-derivation",
+        "WB-login-window-lock",
+        "WB-login-format-boundaries"
+      ],
+      "method_ids": [
+        "AI-WB-login-format-boundaries",
+        "AI-WB-login-window-lock",
+        "AI-WB-password-derivation",
+        "AI-identity-session-1",
+        "AI-identity-session-13",
+        "AI-password-persistence-scope",
+        "AI-salt-entropy-dependence"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-1.expected",
+        "scenarios.json#WB-password-derivation.expected",
+        "scenarios.json#WB-login-window-lock.expected",
+        "scenarios.json#WB-login-format-boundaries.expected"
+      ],
+      "material_target_ids": [
+        "WBT-password-derivation",
+        "WBT-login-window-lock",
+        "WBT-login-format-boundaries"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-1"
+    },
+    {
+      "requirement_id": "identity-session-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "四个正确身份登录、受保护读取及刷新；错误凭据和会话失效由相邻需求场景补充。",
+      "operation_modes": [
+        "正确密码首次登录",
+        "后续受保护读取及刷新"
+      ],
+      "user_states": [
+        "两团队管理员及两名成员",
+        "已成功登录的用户"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-2"
+      ],
+      "white_box_scenario_ids": [
+        "WB-password-derivation",
+        "WB-session-expiry",
+        "WB-login-switch-and-cookies",
+        "WB-ui-login-navigation"
+      ],
+      "method_ids": [
+        "AI-WB-login-switch-and-cookies",
+        "AI-WB-password-derivation",
+        "AI-WB-session-expiry",
+        "AI-WB-ui-login-navigation",
+        "AI-identity-session-13",
+        "AI-identity-session-14",
+        "AI-identity-session-2",
+        "AI-password-persistence-scope",
+        "AI-salt-entropy-dependence",
+        "AI-subsequent-session-entropy",
+        "AI-token-entropy-and-storage-scope"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-2.expected",
+        "scenarios.json#WB-password-derivation.expected",
+        "scenarios.json#WB-session-expiry.expected",
+        "scenarios.json#WB-login-switch-and-cookies.expected",
+        "scenarios.json#WB-ui-login-navigation.expected"
+      ],
+      "material_target_ids": [
+        "WBT-password-derivation",
+        "WBT-session-expiry",
+        "WBT-login-switch-and-cookies",
+        "WBT-ui-login-navigation"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-2"
+    },
+    {
+      "requirement_id": "identity-session-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "未知账号与错密统一反馈，匿名及已有成员/管理员会话下不错误切换身份。",
+      "operation_modes": [
+        "不存在账号与错误密码",
+        "已登录状态错误登录",
+        "已有会话正确凭据对照"
+      ],
+      "user_states": [
+        "没有Cookie的两个团队请求者",
+        "原会话有效、尝试重新登录或切换身份",
+        "U/A原会话有效且目标为同队另一账号或B"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-password-derivation",
+        "WB-login-window-lock",
+        "WB-login-switch-and-cookies",
+        "WB-ui-api-error-session-transition"
+      ],
+      "method_ids": [
+        "AI-WB-login-switch-and-cookies",
+        "AI-WB-login-window-lock",
+        "AI-WB-password-derivation",
+        "AI-WB-ui-api-error-session-transition",
+        "AI-identity-session-13",
+        "AI-identity-session-14",
+        "AI-identity-session-3",
+        "AI-password-persistence-scope",
+        "AI-salt-entropy-dependence",
+        "AI-subsequent-session-entropy",
+        "AI-token-entropy-and-storage-scope"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-3.expected",
+        "scenarios.json#WB-password-derivation.expected",
+        "scenarios.json#WB-login-window-lock.expected",
+        "scenarios.json#WB-login-switch-and-cookies.expected",
+        "scenarios.json#WB-ui-api-error-session-transition.expected"
+      ],
+      "material_target_ids": [
+        "WBT-password-derivation",
+        "WBT-login-window-lock",
+        "WBT-login-switch-and-cookies",
+        "WBT-ui-api-error-session-transition"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-3"
+    },
+    {
+      "requirement_id": "identity-session-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "四身份完整字段和不重登角色双向变化；不能只检查用户姓名。",
+      "operation_modes": [
+        "身份字段读取",
+        "角色变更后的身份/权限读取"
+      ],
+      "user_states": [
+        "四账号跨两团队的有效会话",
+        "同会话刚升权或降权的成员"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-4",
+        "BB-team-administration-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-session-join",
+        "WB-booking-query-scope-join",
+        "WB-ui-start-session-errors"
+      ],
+      "method_ids": [
+        "AI-WB-booking-query-scope-join",
+        "AI-WB-session-join",
+        "AI-WB-ui-start-session-errors",
+        "AI-identity-session-4",
+        "AI-role-first-request-new-room-team",
+        "AI-team-administration-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-4.expected",
+        "scenarios.json#BB-team-administration-5.expected",
+        "scenarios.json#WB-session-join.expected",
+        "scenarios.json#WB-booking-query-scope-join.expected",
+        "scenarios.json#WB-ui-start-session-errors.expected"
+      ],
+      "material_target_ids": [
+        "WBT-session-join",
+        "WBT-booking-query-scope-join",
+        "WBT-ui-start-session-errors"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-4"
+    },
+    {
+      "requirement_id": "identity-session-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "每个业务入口无Cookie/无效/撤销/到期会话拒绝读写且不留副作用。 阶段12角色/身份刷新矩阵覆盖旧PATCH/session/load续段、最新pending、当前401、当前错误反馈和有效晚成功，逐项位于关联方法matrix_checks。",
+      "operation_modes": [
+        "工作空间读接口直接访问",
+        "工作空间写接口重放",
+        "current401",
+        "earlier-current401"
+      ],
+      "user_states": [
+        "无Cookie、随机值、已退出或已到期会话",
+        "无效会话携带其他维度合法请求",
+        "同身份新角色提交已完成",
+        "新身份有效而旧角色响应待返回",
+        "较新身份确认失败且pending",
+        "当前真实会话失效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-health-static-dispatch",
+        "WB-session-join",
+        "WB-route-authorizations",
+        "WB-ui-mark-read-session-expiry",
+        "WB-ui-role-update-session-expiry",
+        "WB-http-unsupported-methods"
+      ],
+      "method_ids": [
+        "AI-WB-health-static-dispatch",
+        "AI-WB-http-unsupported-methods",
+        "AI-WB-route-authorizations",
+        "AI-WB-session-join",
+        "AI-WB-ui-mark-read-session-expiry",
+        "AI-WB-ui-role-update-session-expiry",
+        "AI-identity-session-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-5.expected",
+        "scenarios.json#WB-health-static-dispatch.expected",
+        "scenarios.json#WB-session-join.expected",
+        "scenarios.json#WB-route-authorizations.expected",
+        "scenarios.json#WB-ui-mark-read-session-expiry.expected",
+        "scenarios.json#WB-ui-role-update-session-expiry.expected",
+        "scenarios.json#WB-http-unsupported-methods.expected"
+      ],
+      "material_target_ids": [
+        "WBT-health-static-dispatch",
+        "WBT-session-join",
+        "WBT-route-authorizations",
+        "WBT-ui-mark-read-session-expiry",
+        "WBT-ui-role-update-session-expiry",
+        "WBT-http-unsupported-methods"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-5"
+    },
+    {
+      "requirement_id": "identity-session-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "8小时前、等号、之后与活跃/闲置会话对照，读写不续期。",
+      "operation_modes": [
+        "空闲会话八小时边界",
+        "活跃会话八小时边界"
+      ],
+      "user_states": [
+        "建立后未访问的会话",
+        "1h、4h、7h59m访问过的会话"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-session-expiry"
+      ],
+      "method_ids": [
+        "AI-WB-session-expiry",
+        "AI-identity-session-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-6.expected",
+        "scenarios.json#WB-session-expiry.expected"
+      ],
+      "material_target_ids": [
+        "WBT-session-expiry"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-6"
+    },
+    {
+      "requirement_id": "identity-session-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "同队/跨队/管理员成员切换首业务请求、旧会话撤销及另一浏览器保留。",
+      "operation_modes": [
+        "成员同队/跨队切换及管理员转成员",
+        "切换后直接业务首请求"
+      ],
+      "user_states": [
+        "甲旧会话且乙有同账号独立会话",
+        "甲U→V、U→B、B→U、A→U、U→A，尚未读取当前身份"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-login-switch-and-cookies",
+        "WB-ui-login-navigation"
+      ],
+      "method_ids": [
+        "AI-WB-login-switch-and-cookies",
+        "AI-WB-ui-login-navigation",
+        "AI-identity-session-14",
+        "AI-identity-session-7",
+        "AI-subsequent-session-entropy",
+        "AI-token-entropy-and-storage-scope"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-7.expected",
+        "scenarios.json#WB-login-switch-and-cookies.expected",
+        "scenarios.json#WB-ui-login-navigation.expected"
+      ],
+      "material_target_ids": [
+        "WBT-login-switch-and-cookies",
+        "WBT-ui-login-navigation"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-7"
+    },
+    {
+      "requirement_id": "identity-session-8",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "真实退出撤销当前会话及Cookie，刷新/重放拒绝，独立会话仍可用。",
+      "operation_modes": [
+        "点击退出并刷新/重放",
+        "Cookie清除及会话隔离"
+      ],
+      "user_states": [
+        "当前浏览器有有效U会话",
+        "另一浏览器同U仍有效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-8"
+      ],
+      "white_box_scenario_ids": [
+        "WB-logout-revocation",
+        "WB-ui-logout-races"
+      ],
+      "method_ids": [
+        "AI-WB-logout-revocation",
+        "AI-WB-ui-logout-races",
+        "AI-identity-session-8"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-8.expected",
+        "scenarios.json#WB-logout-revocation.expected",
+        "scenarios.json#WB-ui-logout-races.expected"
+      ],
+      "material_target_ids": [
+        "WBT-logout-revocation",
+        "WBT-ui-logout-races"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-8"
+    },
+    {
+      "requirement_id": "identity-session-9",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "成功失败都计数、格式错不计、不同IP隔离、错开时间滚动及59.999/60/60.001端点。",
+      "operation_modes": [
+        "八次额度与格式排除",
+        "滚动窗口59.999/60.000/60.001及自然分钟跨界",
+        "来源IP隔离"
+      ],
+      "user_states": [
+        "同实际IP换账号、成功/错误混合及全成功/全失败",
+        "历史0/5/10/15/20/25/30/35秒",
+        "P满额而Q无历史"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-9"
+      ],
+      "white_box_scenario_ids": [
+        "WB-login-window-lock",
+        "WB-login-format-boundaries"
+      ],
+      "method_ids": [
+        "AI-WB-login-format-boundaries",
+        "AI-WB-login-window-lock",
+        "AI-identity-session-9"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-9.expected",
+        "scenarios.json#WB-login-window-lock.expected",
+        "scenarios.json#WB-login-format-boundaries.expected"
+      ],
+      "material_target_ids": [
+        "WBT-login-window-lock",
+        "WBT-login-format-boundaries"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-9"
+    },
+    {
+      "requirement_id": "identity-session-10",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "八个POST/PATCH入口标记及Origin scheme/host/port矩阵，无Origin不额外拒绝。",
+      "operation_modes": [
+        "头部保护拒绝矩阵",
+        "正确标记同源及无Origin对照"
+      ],
+      "user_states": [
+        "登录/退出/预约/取消/已读/新增编辑室/角色的合法业务起点",
+        "每入口有权限且输入合法"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-10"
+      ],
+      "white_box_scenario_ids": [
+        "WB-request-origin"
+      ],
+      "method_ids": [
+        "AI-WB-request-origin",
+        "AI-identity-session-10"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-10.expected",
+        "scenarios.json#WB-request-origin.expected"
+      ],
+      "material_target_ids": [
+        "WBT-request-origin"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-10"
+    },
+    {
+      "requirement_id": "identity-session-11",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "八入口媒体类型/对象类型/损坏字节/0与1字节/65536与65537边界；空对象成功或业务拒绝分开。",
+      "operation_modes": [
+        "媒体类型与JSON形状",
+        "0/1/2/65536/65537字节及中文",
+        "空对象作为合法无参数业务正文"
+      ],
+      "user_states": [
+        "八个写入口的独立合法会话/业务起点",
+        "边界请求正文由合法对象及JSON空白构成",
+        "有效会话退出、本人未开始预约取消、有未读通知全部已读"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-11"
+      ],
+      "white_box_scenario_ids": [
+        "WB-json-envelope"
+      ],
+      "method_ids": [
+        "AI-WB-json-envelope",
+        "AI-identity-session-11"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-11.expected",
+        "scenarios.json#WB-json-envelope.expected"
+      ],
+      "material_target_ids": [
+        "WBT-json-envelope"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-11"
+    },
+    {
+      "requirement_id": "identity-session-12",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "首次登录、同队跨队角色切换及退出均核对Cookie属性和脚本不可读。",
+      "operation_modes": [
+        "首次登录建立与主动退出清除",
+        "成功切换时建立/清除Cookie"
+      ],
+      "user_states": [
+        "新浏览器及根/子路径业务访问者",
+        "已有会话、同浏览器换账号"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-12"
+      ],
+      "white_box_scenario_ids": [
+        "WB-login-switch-and-cookies",
+        "WB-logout-revocation"
+      ],
+      "method_ids": [
+        "AI-WB-login-switch-and-cookies",
+        "AI-WB-logout-revocation",
+        "AI-identity-session-12",
+        "AI-identity-session-14",
+        "AI-subsequent-session-entropy",
+        "AI-token-entropy-and-storage-scope"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-12.expected",
+        "scenarios.json#WB-login-switch-and-cookies.expected",
+        "scenarios.json#WB-logout-revocation.expected"
+      ],
+      "material_target_ids": [
+        "WBT-login-switch-and-cookies",
+        "WBT-logout-revocation"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-12"
+    },
+    {
+      "requirement_id": "identity-session-13",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "独立派生复算、有效熵输入因果与全部持久化出口，未知格式或漏出口不算通过。",
+      "operation_modes": [
+        "首次初始化的派生与认证",
+        "有效熵因果及同带重放",
+        "初始化、认证、重启的完整持久化出口"
+      ],
+      "user_states": [
+        "两个空库中四个同密码账号",
+        "同一初始化前快照，仅改变有效种子/熵带",
+        "主凭据正确但存在日志/备份/临时/删除文件/子进程"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-13"
+      ],
+      "white_box_scenario_ids": [
+        "WB-password-derivation"
+      ],
+      "method_ids": [
+        "AI-WB-password-derivation",
+        "AI-identity-session-13",
+        "AI-password-persistence-scope",
+        "AI-salt-entropy-dependence"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-13.expected",
+        "scenarios.json#WB-password-derivation.expected"
+      ],
+      "material_target_ids": [
+        "WBT-password-derivation"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-13"
+    },
+    {
+      "requirement_id": "identity-session-14",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "首次及后续登录/切换、撤销/到期与独立会话；摘要/用户/期限及全部持久化出口核对。",
+      "operation_modes": [
+        "首次建立并持久化",
+        "后续登录、退出重登及A转U/U转B",
+        "完整出口检查"
+      ],
+      "user_states": [
+        "同用户双浏览器及不同用户",
+        "已登录一次、多次及原浏览器有效",
+        "首次/后续生成、切换、退出及到期状态"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-14"
+      ],
+      "white_box_scenario_ids": [
+        "WB-login-switch-and-cookies"
+      ],
+      "method_ids": [
+        "AI-WB-login-switch-and-cookies",
+        "AI-identity-session-14",
+        "AI-subsequent-session-entropy",
+        "AI-token-entropy-and-storage-scope"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-14.expected",
+        "scenarios.json#WB-login-switch-and-cookies.expected"
+      ],
+      "material_target_ids": [
+        "WBT-login-switch-and-cookies"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/identity-session-14"
+    },
+    {
+      "requirement_id": "interface-experience-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "成员/管理员/异队登录及切换后的导航与管理入口权限一致。",
+      "operation_modes": [
+        "导航显示与点击",
+        "身份切换后刷新导航"
+      ],
+      "user_states": [
+        "成员、本队管理员及异队管理员",
+        "先管理员后成员的浏览器"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-1"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-login-navigation"
+      ],
+      "method_ids": [
+        "AI-WB-ui-login-navigation",
+        "AI-interface-experience-1"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-1.expected",
+        "scenarios.json#WB-ui-login-navigation.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-login-navigation"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-1"
+    },
+    {
+      "requirement_id": "interface-experience-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "四个示例选择仅填字段，无请求；点击登录才使用最后所选账号。",
+      "operation_modes": [
+        "逐示例选择填入",
+        "连续换选后手动提交"
+      ],
+      "user_states": [
+        "已退出且无Cookie的用户",
+        "已先后选择不同示例的用户"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-2"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-login-navigation"
+      ],
+      "method_ids": [
+        "AI-WB-ui-login-navigation",
+        "AI-interface-experience-2"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-2.expected",
+        "scenarios.json#WB-ui-login-navigation.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-login-navigation"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-2"
+    },
+    {
+      "requirement_id": "interface-experience-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "旧成功/错误先后返回×新成功/失败×日期/页面切换，并观察等待中不闪回。 阶段12角色/身份刷新矩阵覆盖旧PATCH/session/load续段、最新pending、当前401、当前错误反馈和有效晚成功，逐项位于关联方法matrix_checks。",
+      "operation_modes": [
+        "旧响应晚于新成功或新失败",
+        "旧响应早于新响应返回",
+        "主动取消旧请求后的最新请求完成",
+        "pending-cross",
+        "stale-toast"
+      ],
+      "user_states": [
+        "已切日期/页面且最新请求已结束",
+        "最新日期/页面请求仍在等待",
+        "O被客户端取消、N仍在等待",
+        "同身份新角色提交已完成",
+        "新身份有效而旧角色响应待返回",
+        "较新身份确认失败且pending",
+        "当前真实会话失效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-load-parallel-error",
+        "WB-ui-load-token-races",
+        "WB-ui-logout-races",
+        "WB-ui-date-filter-empty-recovery"
+      ],
+      "method_ids": [
+        "AI-WB-ui-date-filter-empty-recovery",
+        "AI-WB-ui-load-parallel-error",
+        "AI-WB-ui-load-token-races",
+        "AI-WB-ui-logout-races",
+        "AI-interface-experience-3"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-3.expected",
+        "scenarios.json#WB-ui-load-parallel-error.expected",
+        "scenarios.json#WB-ui-load-token-races.expected",
+        "scenarios.json#WB-ui-logout-races.expected",
+        "scenarios.json#WB-ui-date-filter-empty-recovery.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-load-parallel-error",
+        "WBT-ui-load-token-races",
+        "WBT-ui-logout-races",
+        "WBT-ui-date-filter-empty-recovery"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-3"
+    },
+    {
+      "requirement_id": "interface-experience-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "每条数据读取失败可重试，恢复显示真实资料；正常空集与错误不混淆。 阶段12角色/身份刷新矩阵覆盖旧PATCH/session/load续段、最新pending、当前401、当前错误反馈和有效晚成功，逐项位于关联方法matrix_checks。",
+      "operation_modes": [
+        "加载故障显示",
+        "重载恢复及真实空集合",
+        "pending-cross",
+        "stale-toast"
+      ],
+      "user_states": [
+        "已有真实记录、断网/500/并行部分失败",
+        "故障已解除或所选日确实无记录",
+        "同身份新角色提交已完成",
+        "新身份有效而旧角色响应待返回",
+        "较新身份确认失败且pending",
+        "当前真实会话失效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-4"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-start-session-errors",
+        "WB-ui-load-parallel-error",
+        "WB-ui-load-token-races"
+      ],
+      "method_ids": [
+        "AI-WB-ui-load-parallel-error",
+        "AI-WB-ui-load-token-races",
+        "AI-WB-ui-start-session-errors",
+        "AI-interface-experience-4"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-4.expected",
+        "scenarios.json#WB-ui-start-session-errors.expected",
+        "scenarios.json#WB-ui-load-parallel-error.expected",
+        "scenarios.json#WB-ui-load-token-races.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-start-session-errors",
+        "WBT-ui-load-parallel-error",
+        "WBT-ui-load-token-races"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-4"
+    },
+    {
+      "requirement_id": "interface-experience-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "不同房间依次开弹窗，资料、五输入与确认时间规则齐全且不沿用旧室。",
+      "operation_modes": [
+        "不同房间打开/关闭再打开",
+        "时间规则展示与输入"
+      ],
+      "user_states": [
+        "有两间不同位置容量启用室的成员",
+        "准备合法预约的用户"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-default-times"
+      ],
+      "method_ids": [
+        "AI-WB-ui-default-times",
+        "AI-interface-experience-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-5.expected",
+        "scenarios.json#WB-ui-default-times.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-default-times"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-5"
+    },
+    {
+      "requirement_id": "interface-experience-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "北京时间07:50至23:59关键点×过去/今天/未来及浏览器时区，默认对齐与20点上界。",
+      "operation_modes": [
+        "默认时间计算",
+        "默认日期回退与时区"
+      ],
+      "user_states": [
+        "07:50、09:00/09:07、19:44/19:45/19:59/20:00/23:59",
+        "今天、昨天、未来日，上海/洛杉矶同绝对时刻"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-default-times"
+      ],
+      "method_ids": [
+        "AI-WB-ui-default-times",
+        "AI-interface-experience-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-6.expected",
+        "scenarios.json#WB-ui-default-times.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-default-times"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-6"
+    },
+    {
+      "requirement_id": "interface-experience-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "登录、预约、取消及新增/编辑室等待、成功、业务/网络失败和重试按钮恢复。",
+      "operation_modes": [
+        "请求处理中重复提交",
+        "成功/业务失败/网络失败后恢复"
+      ],
+      "user_states": [
+        "登录、预约、取消、新增/编辑房间表单正在等待",
+        "表单仍存在或成功关闭后重开"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-notification-render",
+        "WB-ui-submit-button-matrix"
+      ],
+      "method_ids": [
+        "AI-WB-ui-notification-render",
+        "AI-WB-ui-submit-button-matrix",
+        "AI-interface-experience-7"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-7.expected",
+        "scenarios.json#WB-ui-notification-render.expected",
+        "scenarios.json#WB-ui-submit-button-matrix.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-notification-render",
+        "WBT-ui-submit-button-matrix"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-7"
+    },
+    {
+      "requirement_id": "interface-experience-8",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "预约编号、取消、新增/编辑室、角色保存的反馈和真实重载；成功写后加载错不能假成功空表。 阶段12角色/身份刷新矩阵覆盖旧PATCH/session/load续段、最新pending、当前401、当前错误反馈和有效晚成功，逐项位于关联方法matrix_checks。",
+      "operation_modes": [
+        "预约/取消成功反馈",
+        "新增/编辑房间及角色修改反馈",
+        "cross-session200",
+        "same-session200",
+        "cross-phase",
+        "same-late-patch",
+        "same-error",
+        "normal-nonself",
+        "normal-self",
+        "current-patch-error",
+        "demotion",
+        "late-patch-error",
+        "late-success-pending"
+      ],
+      "user_states": [
+        "本人创建或有权取消预约",
+        "管理员合法保存",
+        "同身份新角色提交已完成",
+        "新身份有效而旧角色响应待返回",
+        "较新身份确认失败且pending",
+        "当前真实会话失效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-8"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-submit-button-matrix",
+        "WB-ui-role-demotion-reload",
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "method_ids": [
+        "AI-WB-ui-role-demotion-reload",
+        "AI-WB-ui-self-demotion-session-failure",
+        "AI-WB-ui-submit-button-matrix",
+        "AI-interface-experience-8"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-8.expected",
+        "scenarios.json#WB-ui-submit-button-matrix.expected",
+        "scenarios.json#WB-ui-role-demotion-reload.expected",
+        "scenarios.json#WB-ui-self-demotion-session-failure.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-submit-button-matrix",
+        "WBT-ui-role-demotion-reload",
+        "WBT-ui-self-demotion-session-failure"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-8"
+    },
+    {
+      "requirement_id": "interface-experience-9",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "预约及新增/编辑室业务拒绝/断网后逐字段保留，修正和不改内容重试。",
+      "operation_modes": [
+        "业务拒绝后修正",
+        "网络失败后原内容重试"
+      ],
+      "user_states": [
+        "已完整填写且遇时间冲突/房间重名",
+        "预约及新增/编辑房间用户"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-9"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-api-error-session-transition",
+        "WB-ui-booking-draft-key",
+        "WB-ui-submit-button-matrix",
+        "WB-ui-room-edit-draft"
+      ],
+      "method_ids": [
+        "AI-WB-ui-api-error-session-transition",
+        "AI-WB-ui-booking-draft-key",
+        "AI-WB-ui-room-edit-draft",
+        "AI-WB-ui-submit-button-matrix",
+        "AI-interface-experience-9"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-9.expected",
+        "scenarios.json#WB-ui-api-error-session-transition.expected",
+        "scenarios.json#WB-ui-booking-draft-key.expected",
+        "scenarios.json#WB-ui-submit-button-matrix.expected",
+        "scenarios.json#WB-ui-room-edit-draft.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-api-error-session-transition",
+        "WBT-ui-booking-draft-key",
+        "WBT-ui-submit-button-matrix",
+        "WBT-ui-room-edit-draft"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-9"
+    },
+    {
+      "requirement_id": "interface-experience-10",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "各业务弹窗遇当前会话真实失效关闭并回登录，重登恢复；白盒区分旧世代401。 阶段12角色/身份刷新矩阵覆盖旧PATCH/session/load续段、最新pending、当前401、当前错误反馈和有效晚成功，逐项位于关联方法matrix_checks。",
+      "operation_modes": [
+        "弹窗提交或后台读取遇失效",
+        "失效后重新登录",
+        "pending-cross",
+        "stale-toast",
+        "current401",
+        "earlier-current401"
+      ],
+      "user_states": [
+        "业务弹窗打开，当前会话已撤销或满八小时",
+        "旧弹窗有未提交内容",
+        "同身份新角色提交已完成",
+        "新身份有效而旧角色响应待返回",
+        "较新身份确认失败且pending",
+        "当前真实会话失效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-10"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-start-session-errors",
+        "WB-ui-api-error-session-transition",
+        "WB-ui-load-token-races",
+        "WB-ui-logout-races",
+        "WB-ui-mark-read-session-expiry",
+        "WB-ui-role-update-session-expiry"
+      ],
+      "method_ids": [
+        "AI-WB-ui-api-error-session-transition",
+        "AI-WB-ui-load-token-races",
+        "AI-WB-ui-logout-races",
+        "AI-WB-ui-mark-read-session-expiry",
+        "AI-WB-ui-role-update-session-expiry",
+        "AI-WB-ui-start-session-errors",
+        "AI-interface-experience-10"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-10.expected",
+        "scenarios.json#WB-ui-start-session-errors.expected",
+        "scenarios.json#WB-ui-api-error-session-transition.expected",
+        "scenarios.json#WB-ui-load-token-races.expected",
+        "scenarios.json#WB-ui-logout-races.expected",
+        "scenarios.json#WB-ui-mark-read-session-expiry.expected",
+        "scenarios.json#WB-ui-role-update-session-expiry.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-start-session-errors",
+        "WBT-ui-api-error-session-transition",
+        "WBT-ui-load-token-races",
+        "WBT-ui-logout-races",
+        "WBT-ui-mark-read-session-expiry",
+        "WBT-ui-role-update-session-expiry"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-10"
+    },
+    {
+      "requirement_id": "interface-experience-11",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "三弹窗关闭键/Escape/四侧外部/内部点击，所有关闭无业务写。",
+      "operation_modes": [
+        "关闭按钮/Escape/外部区域",
+        "内部点击与重新打开"
+      ],
+      "user_states": [
+        "各种弹窗有未提交业务输入",
+        "弹窗打开且内容可交互"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-11"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-dialog-close-no-write"
+      ],
+      "method_ids": [
+        "AI-WB-ui-dialog-close-no-write",
+        "AI-interface-experience-11"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-11.expected",
+        "scenarios.json#WB-ui-dialog-close-no-write.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-dialog-close-no-write"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-11"
+    },
+    {
+      "requirement_id": "interface-experience-12",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "1440×900、390×844、320×740完整任务及长文本，CSS各断点由白盒细化。",
+      "operation_modes": [
+        "桌面完整五任务",
+        "手机完整五任务"
+      ],
+      "user_states": [
+        "1440×900，长中文与多条记录",
+        "390×844及320×740，独立浏览器上下文"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-12"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-responsive-breakpoints"
+      ],
+      "method_ids": [
+        "AI-WB-ui-responsive-breakpoints",
+        "AI-interface-experience-12"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-12.expected",
+        "scenarios.json#WB-ui-responsive-breakpoints.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-responsive-breakpoints"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-12"
+    },
+    {
+      "requirement_id": "interface-experience-13",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "键盘完整流程、名称/焦点/弹窗标题及成功错误反馈的可访问性。",
+      "operation_modes": [
+        "键盘导航及表单提交",
+        "错误及成功反馈"
+      ],
+      "user_states": [
+        "禁用鼠标的登录/预约/取消/管理用户",
+        "辅助技术用户经历拒绝后修正"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-13"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-text-escaping",
+        "WB-ui-accessibility-focus"
+      ],
+      "method_ids": [
+        "AI-WB-ui-accessibility-focus",
+        "AI-WB-ui-text-escaping",
+        "AI-interface-experience-13"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-13.expected",
+        "scenarios.json#WB-ui-text-escaping.expected",
+        "scenarios.json#WB-ui-accessibility-focus.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-text-escaping",
+        "WBT-ui-accessibility-focus"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-13"
+    },
+    {
+      "requirement_id": "interface-experience-14",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "名称位置主题通知等真实业务载荷以文本展示，DOM未生成可执行标记且脱敏不被绕过。",
+      "operation_modes": [
+        "文本保存后跨页面展示",
+        "他人日程主题展示"
+      ],
+      "user_states": [
+        "有权用户查看房间名称位置、主题及创建/取消通知",
+        "无权看真实主题的同队成员"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-14"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-text-escaping"
+      ],
+      "method_ids": [
+        "AI-WB-ui-text-escaping",
+        "AI-interface-experience-14"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-14.expected",
+        "scenarios.json#WB-ui-text-escaping.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-text-escaping"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-14"
+    },
+    {
+      "requirement_id": "interface-experience-15",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "所有日期时段日程通知在多浏览器时区及北京午夜仍同义并标明UTC+8。",
+      "operation_modes": [
+        "四类日期时间展示",
+        "北京时间午夜转换"
+      ],
+      "user_states": [
+        "不同本地时区的三个浏览器",
+        "同绝对时刻在午夜前后刷新"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-15"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-timezone-format"
+      ],
+      "method_ids": [
+        "AI-WB-ui-timezone-format",
+        "AI-interface-experience-15"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-15.expected",
+        "scenarios.json#WB-ui-timezone-format.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-timezone-format"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-15"
+    },
+    {
+      "requirement_id": "interface-experience-16",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "同弹窗相同规范化内容复用标识、各输入改变换标识，实际响应丢失后仅一单一通知。",
+      "operation_modes": [
+        "成功丢响应后原内容重试",
+        "五字段分别改变后再提交"
+      ],
+      "user_states": [
+        "原弹窗仍开、服务端已保存但客户端未知",
+        "首请求失败且弹窗可修改"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-16"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-booking-draft-key"
+      ],
+      "method_ids": [
+        "AI-WB-ui-booking-draft-key",
+        "AI-interface-experience-16",
+        "AI-reservation-creation-11",
+        "AI-reservation-creation-12"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-16.expected",
+        "scenarios.json#WB-ui-booking-draft-key.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-booking-draft-key"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/interface-experience-16"
+    },
+    {
+      "requirement_id": "notification-center-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "真实创建成功一条owner未读通知、完整时段字段，失败与部分写回滚无通知。",
+      "operation_modes": [
+        "成功创建与校验失败",
+        "写成功后的异常及重试"
+      ],
+      "user_states": [
+        "U/V及跨队/管理员合法创建者",
+        "预约或通知已有部分真实写入"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-9",
+        "BB-notification-center-1",
+        "BB-reservation-creation-10"
+      ],
+      "white_box_scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-booking-insert-notify",
+        "WB-booking-response-loss-replay"
+      ],
+      "method_ids": [
+        "AI-WB-booking-insert-notify",
+        "AI-WB-booking-response-loss-replay",
+        "AI-WB-transaction-failure-matrix",
+        "AI-application-runtime-9",
+        "AI-new-room-write-failure-boundary",
+        "AI-notification-center-1",
+        "AI-other-writes-failure-boundary",
+        "AI-reservation-creation-10",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-9.expected",
+        "scenarios.json#BB-notification-center-1.expected",
+        "scenarios.json#BB-reservation-creation-10.expected",
+        "scenarios.json#WB-transaction-failure-matrix.expected",
+        "scenarios.json#WB-booking-insert-notify.expected",
+        "scenarios.json#WB-booking-response-loss-replay.expected"
+      ],
+      "material_target_ids": [
+        "WBT-transaction-failure-matrix",
+        "WBT-booking-insert-notify",
+        "WBT-booking-response-loss-replay"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/notification-center-1"
+    },
+    {
+      "requirement_id": "notification-center-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "本人/管理员代取消一条owner通知，重复及并发不多发，部分写失败回滚。",
+      "operation_modes": [
+        "本人/管理员首次及重复取消",
+        "取消写间隙/提交失败"
+      ],
+      "user_states": [
+        "两场U未来预约，各角色已有通知基线",
+        "状态或通知已经部分写入"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-application-runtime-9",
+        "BB-notification-center-2",
+        "BB-reservation-management-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-cancel-atomic-idempotent"
+      ],
+      "method_ids": [
+        "AI-WB-cancel-atomic-idempotent",
+        "AI-WB-transaction-failure-matrix",
+        "AI-application-runtime-9",
+        "AI-new-room-write-failure-boundary",
+        "AI-notification-center-2",
+        "AI-other-writes-failure-boundary",
+        "AI-reservation-management-7",
+        "AI-reservation-management-8",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-application-runtime-9.expected",
+        "scenarios.json#BB-notification-center-2.expected",
+        "scenarios.json#BB-reservation-management-7.expected",
+        "scenarios.json#WB-transaction-failure-matrix.expected",
+        "scenarios.json#WB-cancel-atomic-idempotent.expected"
+      ],
+      "material_target_ids": [
+        "WBT-transaction-failure-matrix",
+        "WBT-cancel-atomic-idempotent"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/notification-center-2"
+    },
+    {
+      "requirement_id": "notification-center-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "四身份及伪造用户选择均只读自己，管理员无额外私信权限。",
+      "operation_modes": [
+        "本人通知读取",
+        "指定他人目标尝试"
+      ],
+      "user_states": [
+        "U/V/A/B各有独特通知",
+        "管理员或成员使用实际接口可传的用户参数"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-notification-center-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-notifications-select-limit"
+      ],
+      "method_ids": [
+        "AI-WB-notifications-select-limit",
+        "AI-notification-center-3"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-notification-center-3.expected",
+        "scenarios.json#WB-notifications-select-limit.expected"
+      ],
+      "material_target_ids": [
+        "WBT-notifications-select-limit"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/notification-center-3"
+    },
+    {
+      "requirement_id": "notification-center-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "0/1/99/100/101/105条、混合已读与同秒生成，完整字段及生成倒序最近100。",
+      "operation_modes": [
+        "最近100截断与完整字段",
+        "同秒顺序及已读转换"
+      ],
+      "user_states": [
+        "N=0/1/99/100/101/105",
+        "部分先读后新增、再全部已读"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-notification-center-4"
+      ],
+      "white_box_scenario_ids": [
+        "WB-notifications-select-limit"
+      ],
+      "method_ids": [
+        "AI-WB-notifications-select-limit",
+        "AI-notification-center-4"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-notification-center-4.expected",
+        "scenarios.json#WB-notifications-select-limit.expected"
+      ],
+      "material_target_ids": [
+        "WBT-notifications-select-limit"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/notification-center-4"
+    },
+    {
+      "requirement_id": "notification-center-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "空集/105条含列表外5条/重复标记/新增未读与其他用户隔离，故障回滚。",
+      "operation_modes": [
+        "空集合及重复全部已读",
+        "超列表范围全读及新增"
+      ],
+      "user_states": [
+        "U无通知而V有未读",
+        "U105条未读、V另有未读"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-notification-center-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-notifications-mark-all",
+        "WB-ui-notification-render",
+        "WB-ui-mark-read-session-expiry"
+      ],
+      "method_ids": [
+        "AI-WB-notifications-mark-all",
+        "AI-WB-ui-mark-read-session-expiry",
+        "AI-WB-ui-notification-render",
+        "AI-notification-center-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-notification-center-5.expected",
+        "scenarios.json#WB-notifications-mark-all.expected",
+        "scenarios.json#WB-ui-notification-render.expected",
+        "scenarios.json#WB-ui-mark-read-session-expiry.expected"
+      ],
+      "material_target_ids": [
+        "WBT-notifications-mark-all",
+        "WBT-ui-notification-render",
+        "WBT-ui-mark-read-session-expiry"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/notification-center-5"
+    },
+    {
+      "requirement_id": "notification-center-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "0、105条只显示100、新增3条和全已读转零；与真实返回列表计数对应。",
+      "operation_modes": [
+        "无通知与全部已读",
+        "全未读截断及混合已读"
+      ],
+      "user_states": [
+        "当前加载未读数为0",
+        "105历史未读或97已读加3未读"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-notification-center-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-notification-render"
+      ],
+      "method_ids": [
+        "AI-WB-ui-notification-render",
+        "AI-notification-center-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-notification-center-6.expected",
+        "scenarios.json#WB-ui-notification-render.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-notification-render"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/notification-center-6"
+    },
+    {
+      "requirement_id": "notification-center-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "空/创建/取消/已读状态的正文时间和编号及浏览器时区不变。",
+      "operation_modes": [
+        "空到两类通知展示",
+        "已读后及异时区阅读"
+      ],
+      "user_states": [
+        "原无通知用户创建并取消",
+        "两条通知已经全部已读"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-notification-center-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-notification-render"
+      ],
+      "method_ids": [
+        "AI-WB-ui-notification-render",
+        "AI-notification-center-7"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-notification-center-7.expected",
+        "scenarios.json#WB-ui-notification-render.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-notification-render"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/notification-center-7"
+    },
+    {
+      "requirement_id": "reservation-creation-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "成员/管理员×同队异队×启停状态，旧弹窗提交前停用重新判资格。",
+      "operation_modes": [
+        "直接提交四类室",
+        "打开后停用再提交"
+      ],
+      "user_states": [
+        "成员/管理员面对同队异队、启用停用室",
+        "已有启用室旧弹窗的U"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-1",
+        "BB-space-administration-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-eligibility-capacity"
+      ],
+      "method_ids": [
+        "AI-WB-room-eligibility-capacity",
+        "AI-reservation-creation-1",
+        "AI-space-administration-7"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-1.expected",
+        "scenarios.json#BB-space-administration-7.expected",
+        "scenarios.json#WB-room-eligibility-capacity.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-eligibility-capacity"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-1"
+    },
+    {
+      "requirement_id": "reservation-creation-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "必填类型、整数排除布尔小数、字符串trim和长度、编号及人数两端与越界。",
+      "operation_modes": [
+        "必填类型拒绝",
+        "长度和整数范围及归一化"
+      ],
+      "user_states": [
+        "缺失/null/布尔/小数/数组等变异请求",
+        "1/100/101字符，人数1/100/101，ID1/2147483647/越界"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-2"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-fields-guards"
+      ],
+      "method_ids": [
+        "AI-WB-booking-fields-guards",
+        "AI-reservation-creation-2"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-2.expected",
+        "scenarios.json#WB-booking-fields-guards.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-fields-guards"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-2"
+    },
+    {
+      "requirement_id": "reservation-creation-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "起止各自类型/解析/时区失败及等价绝对时刻、混合偏移，不按字符串排序。",
+      "operation_modes": [
+        "等价及混合时区绝对比较",
+        "解析与时区校验"
+      ],
+      "user_states": [
+        "带+08、Z、-07的未来时段",
+        "缺时区、空、损坏时间及2月30日"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-datetime-parse-normalize",
+        "WB-idempotency-absolute-precision"
+      ],
+      "method_ids": [
+        "AI-WB-datetime-parse-normalize",
+        "AI-WB-idempotency-absolute-precision",
+        "AI-reservation-creation-3"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-3.expected",
+        "scenarios.json#WB-datetime-parse-normalize.expected",
+        "scenarios.json#WB-idempotency-absolute-precision.expected"
+      ],
+      "material_target_ids": [
+        "WBT-datetime-parse-normalize",
+        "WBT-idempotency-absolute-precision"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-3"
+    },
+    {
+      "requirement_id": "reservation-creation-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "固定合法开始只移动服务时间验证未来严格下界及30天含上界，不与粒度错误混淆。",
+      "operation_modes": [
+        "晚于当前时刻",
+        "三十天上界"
+      ],
+      "user_states": [
+        "服务时钟为S-1s、S、S+1s",
+        "服务时钟S-30天及前后1秒"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-4"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-horizon"
+      ],
+      "method_ids": [
+        "AI-WB-booking-horizon",
+        "AI-reservation-creation-4"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-4.expected",
+        "scenarios.json#WB-booking-horizon.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-horizon"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-4"
+    },
+    {
+      "requirement_id": "reservation-creation-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "零/负/不足/15分钟/8小时/超长，正控制与同时违规项分开记录。",
+      "operation_modes": [
+        "合法时长端点",
+        "零/负/超过8小时"
+      ],
+      "user_states": [
+        "15分钟或8小时、未来开放空闲室",
+        "独立无冲突起点"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-duration"
+      ],
+      "method_ids": [
+        "AI-WB-booking-duration",
+        "AI-reservation-creation-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-5.expected",
+        "scenarios.json#WB-booking-duration.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-duration"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-5"
+    },
+    {
+      "requirement_id": "reservation-creation-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "北京同日08/20端点、开门前/关门后/跨日及不同偏移的等价表示。",
+      "operation_modes": [
+        "同日开放范围端点",
+        "北京时间日期解释"
+      ],
+      "user_states": [
+        "08:00起或20:00止、外侧15分钟",
+        "跨北京时间午夜或字符串异日但北京时间同日"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-open-hours"
+      ],
+      "method_ids": [
+        "AI-WB-booking-open-hours",
+        "AI-reservation-creation-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-6.expected",
+        "scenarios.json#WB-booking-open-hours.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-open-hours"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-6"
+    },
+    {
+      "requirement_id": "reservation-creation-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "两端分钟0/15/30/45与非对齐、秒及微秒各自非零、显式零微秒。 synthetic历史格式只执行当前源，旧K精度冲突与新K粒度拒绝分开，不执行旧app。",
+      "operation_modes": [
+        "四个合法刻度与显式零微秒",
+        "起止单端及双端非零精度"
+      ],
+      "user_states": [
+        "两端合法且时长/资格合格",
+        "分钟01/14/16/59、秒01/59、微秒1/999999"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-open-hours"
+      ],
+      "method_ids": [
+        "AI-WB-booking-open-hours",
+        "AI-reservation-creation-7"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-7.expected",
+        "scenarios.json#WB-booking-open-hours.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-open-hours"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-7"
+    },
+    {
+      "requirement_id": "reservation-creation-8",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "人数=当前容量及+1，降容后的旧表单和成员/管理员不能绕过。",
+      "operation_modes": [
+        "人数对当前容量边界",
+        "资料变更后再提交"
+      ],
+      "user_states": [
+        "容量8时U/A人数7/8/9",
+        "旧弹窗容量8实际已降4，或重新启用"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-8",
+        "BB-space-administration-8"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-eligibility-capacity"
+      ],
+      "method_ids": [
+        "AI-WB-room-eligibility-capacity",
+        "AI-reservation-creation-8",
+        "AI-reservation-management-2",
+        "AI-space-administration-8"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-8.expected",
+        "scenarios.json#BB-space-administration-8.expected",
+        "scenarios.json#WB-room-eligibility-capacity.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-eligibility-capacity"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-8"
+    },
+    {
+      "requirement_id": "reservation-creation-9",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "全部重叠形状、左右相邻、异室/取消及同时重叠和同时相邻真实竞争。",
+      "operation_modes": [
+        "区间关系与相邻",
+        "取消及异室对照",
+        "首次并发重叠及相邻"
+      ],
+      "user_states": [
+        "同室已有10–11有效预约",
+        "原预约已取消或另一室空闲",
+        "独立U/V会话、不同标识、空室"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-9"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-conflict-serialization"
+      ],
+      "method_ids": [
+        "AI-WB-booking-conflict-serialization",
+        "AI-reservation-creation-9"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-9.expected",
+        "scenarios.json#WB-booking-conflict-serialization.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-conflict-serialization"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-9"
+    },
+    {
+      "requirement_id": "reservation-creation-10",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "UI/API成功完整业务字段、列表日程和单通知一致；写间隙/提交失败均原子。",
+      "operation_modes": [
+        "合法UI与API保存",
+        "预约/通知部分写入及提交失败"
+      ],
+      "user_states": [
+        "U/A/B各自本队空闲室",
+        "已实际执行一类业务写"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-notification-center-1",
+        "BB-reservation-creation-10"
+      ],
+      "white_box_scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-booking-insert-notify",
+        "WB-idempotency-user-concurrency"
+      ],
+      "method_ids": [
+        "AI-WB-booking-insert-notify",
+        "AI-WB-idempotency-user-concurrency",
+        "AI-WB-transaction-failure-matrix",
+        "AI-application-runtime-9",
+        "AI-notification-center-1",
+        "AI-reservation-creation-10",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-notification-center-1.expected",
+        "scenarios.json#BB-reservation-creation-10.expected",
+        "scenarios.json#WB-transaction-failure-matrix.expected",
+        "scenarios.json#WB-booking-insert-notify.expected",
+        "scenarios.json#WB-idempotency-user-concurrency.expected"
+      ],
+      "material_target_ids": [
+        "WBT-transaction-failure-matrix",
+        "WBT-booking-insert-notify",
+        "WBT-idempotency-user-concurrency"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-10"
+    },
+    {
+      "requirement_id": "reservation-creation-11",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "顺序/并发同key、已过时段/停用/减容/已取消及不同用户key作用域。 synthetic历史格式只执行当前源，旧K精度冲突与新K粒度拒绝分开，不执行旧app。",
+      "operation_modes": [
+        "顺序及首次并发相同内容",
+        "资格变化后重放",
+        "标识的用户作用域"
+      ],
+      "user_states": [
+        "同用户双会话，K从未用或已成功",
+        "原开始已过、室停用/减容、预约已取消",
+        "另一用户在空闲不同时间使用同K"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-16",
+        "BB-reservation-creation-11"
+      ],
+      "white_box_scenario_ids": [
+        "WB-idempotency-priority",
+        "WB-idempotency-user-concurrency",
+        "WB-ui-booking-draft-key",
+        "WB-idempotency-absolute-precision",
+        "WB-booking-response-loss-replay"
+      ],
+      "method_ids": [
+        "AI-WB-booking-response-loss-replay",
+        "AI-WB-idempotency-absolute-precision",
+        "AI-WB-idempotency-priority",
+        "AI-WB-idempotency-user-concurrency",
+        "AI-WB-ui-booking-draft-key",
+        "AI-interface-experience-16",
+        "AI-reservation-creation-11",
+        "AI-reservation-creation-12",
+        "AI-reservation-creation-13"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-16.expected",
+        "scenarios.json#BB-reservation-creation-11.expected",
+        "scenarios.json#WB-idempotency-priority.expected",
+        "scenarios.json#WB-idempotency-user-concurrency.expected",
+        "scenarios.json#WB-ui-booking-draft-key.expected",
+        "scenarios.json#WB-idempotency-absolute-precision.expected",
+        "scenarios.json#WB-booking-response-loss-replay.expected"
+      ],
+      "material_target_ids": [
+        "WBT-idempotency-priority",
+        "WBT-idempotency-user-concurrency",
+        "WBT-ui-booking-draft-key",
+        "WBT-idempotency-absolute-precision",
+        "WBT-booking-response-loss-replay"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-11"
+    },
+    {
+      "requirement_id": "reservation-creation-12",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "五维单改冲突、trim和等价时区不冲突、首次异内容竞争；白盒补微秒精度。 synthetic历史格式只执行当前源，旧K精度冲突与新K粒度拒绝分开，不执行旧app。",
+      "operation_modes": [
+        "已有标识不同字段及语义等价",
+        "首次不同内容竞争",
+        "前端内容修改触发新标识"
+      ],
+      "user_states": [
+        "同用户已有预约，分别改室/主题/起止/人数",
+        "同用户双会话、尚无K记录",
+        "同弹窗修改五字段"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-interface-experience-16",
+        "BB-reservation-creation-12"
+      ],
+      "white_box_scenario_ids": [
+        "WB-datetime-parse-normalize",
+        "WB-idempotency-priority",
+        "WB-idempotency-user-concurrency",
+        "WB-ui-booking-draft-key",
+        "WB-idempotency-absolute-precision",
+        "WB-booking-response-loss-replay"
+      ],
+      "method_ids": [
+        "AI-WB-booking-response-loss-replay",
+        "AI-WB-datetime-parse-normalize",
+        "AI-WB-idempotency-absolute-precision",
+        "AI-WB-idempotency-priority",
+        "AI-WB-idempotency-user-concurrency",
+        "AI-WB-ui-booking-draft-key",
+        "AI-interface-experience-16",
+        "AI-reservation-creation-11",
+        "AI-reservation-creation-12"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-interface-experience-16.expected",
+        "scenarios.json#BB-reservation-creation-12.expected",
+        "scenarios.json#WB-datetime-parse-normalize.expected",
+        "scenarios.json#WB-idempotency-priority.expected",
+        "scenarios.json#WB-idempotency-user-concurrency.expected",
+        "scenarios.json#WB-ui-booking-draft-key.expected",
+        "scenarios.json#WB-idempotency-absolute-precision.expected",
+        "scenarios.json#WB-booking-response-loss-replay.expected"
+      ],
+      "material_target_ids": [
+        "WBT-datetime-parse-normalize",
+        "WBT-idempotency-priority",
+        "WBT-idempotency-user-concurrency",
+        "WBT-ui-booking-draft-key",
+        "WBT-idempotency-absolute-precision",
+        "WBT-booking-response-loss-replay"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-12"
+    },
+    {
+      "requirement_id": "reservation-creation-13",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "取消后重放、原时段被别人重订及开始后仍返回原取消状态无复活。",
+      "operation_modes": [
+        "取消后重放",
+        "原开始经过后重放"
+      ],
+      "user_states": [
+        "本人或管理员已取消，V已占原时段",
+        "原取消记录已成为过去时段"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-13"
+      ],
+      "white_box_scenario_ids": [
+        "WB-idempotency-priority"
+      ],
+      "method_ids": [
+        "AI-WB-idempotency-priority",
+        "AI-reservation-creation-13"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-13.expected",
+        "scenarios.json#WB-idempotency-priority.expected"
+      ],
+      "material_target_ids": [
+        "WBT-idempotency-priority"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-13"
+    },
+    {
+      "requirement_id": "reservation-creation-14",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "资料/资格/容量/冲突各失败无预约占用通知，修正后能成功。",
+      "operation_modes": [
+        "资料/资格/容量/冲突失败",
+        "并发失败及修正后新请求"
+      ],
+      "user_states": [
+        "主题空、过去、停用/跨队、超容或已重叠",
+        "一个竞争者失败或单项已修正"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-9",
+        "BB-reservation-creation-14"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-fields-guards",
+        "WB-booking-horizon",
+        "WB-booking-duration",
+        "WB-booking-open-hours",
+        "WB-booking-conflict-serialization"
+      ],
+      "method_ids": [
+        "AI-WB-booking-conflict-serialization",
+        "AI-WB-booking-duration",
+        "AI-WB-booking-fields-guards",
+        "AI-WB-booking-horizon",
+        "AI-WB-booking-open-hours",
+        "AI-reservation-creation-14",
+        "AI-reservation-creation-4",
+        "AI-reservation-creation-9"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-9.expected",
+        "scenarios.json#BB-reservation-creation-14.expected",
+        "scenarios.json#WB-booking-fields-guards.expected",
+        "scenarios.json#WB-booking-horizon.expected",
+        "scenarios.json#WB-booking-duration.expected",
+        "scenarios.json#WB-booking-open-hours.expected",
+        "scenarios.json#WB-booking-conflict-serialization.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-fields-guards",
+        "WBT-booking-horizon",
+        "WBT-booking-duration",
+        "WBT-booking-open-hours",
+        "WBT-booking-conflict-serialization"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-creation-14"
+    },
+    {
+      "requirement_id": "reservation-management-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "省略/mine/team/非法范围×各角色/团队及同会话升降权，完整所有状态集合。",
+      "operation_modes": [
+        "默认/mine与管理员team查询",
+        "拒绝无效scope与成员team"
+      ],
+      "user_states": [
+        "两团队多用户且有未来/进行/结束/取消记录",
+        "普通成员、无效范围及升降权原会话"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-1"
+      ],
+      "white_box_scenario_ids": [
+        "WB-route-authorizations",
+        "WB-booking-query-scope-join"
+      ],
+      "method_ids": [
+        "AI-WB-booking-query-scope-join",
+        "AI-WB-route-authorizations",
+        "AI-reservation-management-1"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-1.expected",
+        "scenarios.json#WB-route-authorizations.expected",
+        "scenarios.json#WB-booking-query-scope-join.expected"
+      ],
+      "material_target_ids": [
+        "WBT-route-authorizations",
+        "WBT-booking-query-scope-join"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-1"
+    },
+    {
+      "requirement_id": "reservation-management-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "未取消及取消字段、当前室名位置与历史业务字段分别核对。",
+      "operation_modes": [
+        "预约详情字段读取",
+        "房间更名换位置后读取"
+      ],
+      "user_states": [
+        "所有者及有权管理员，有效/取消两状态",
+        "已有预约历史保留"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-2"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-query-scope-join"
+      ],
+      "method_ids": [
+        "AI-WB-booking-query-scope-join",
+        "AI-reservation-management-2"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-2.expected",
+        "scenarios.json#WB-booking-query-scope-join.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-query-scope-join"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-2"
+    },
+    {
+      "requirement_id": "reservation-management-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "浏览器start/end前、等号、后×confirmed/cancelled，取消优先且独立于服务时钟。",
+      "operation_modes": [
+        "有效预约时间分类",
+        "取消优先及浏览器钟"
+      ],
+      "user_states": [
+        "09:59:59、10:00、10:59:59、11:00、11:00:01",
+        "已取消且服务时间不随浏览器变化"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-booking-status-sort"
+      ],
+      "method_ids": [
+        "AI-WB-ui-booking-status-sort",
+        "AI-reservation-management-3"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-3.expected",
+        "scenarios.json#WB-ui-booking-status-sort.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-booking-status-sort"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-3"
+    },
+    {
+      "requirement_id": "reservation-management-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "混乱创建顺序、进行中/已结束/取消分组排序，跨结束和取消后移组。",
+      "operation_modes": [
+        "分组及组内排序",
+        "结束及取消转移"
+      ],
+      "user_states": [
+        "多起点乱序创建、进行中与取消记录混合",
+        "浏览器跨结束边界或刚取消未来预约"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-4"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-booking-status-sort"
+      ],
+      "method_ids": [
+        "AI-WB-ui-booking-status-sort",
+        "AI-reservation-management-4"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-4.expected",
+        "scenarios.json#WB-ui-booking-status-sort.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-booking-status-sort"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-4"
+    },
+    {
+      "requirement_id": "reservation-management-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "本人/管理员/其他成员/异队及同会话提升降权，拒绝无状态与通知副作用。",
+      "operation_modes": [
+        "本人和管理员授权取消",
+        "角色转换后取消"
+      ],
+      "user_states": [
+        "独立未开始U预约，U/A/V/B请求",
+        "V刚提升后又降回且目标不是本人"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "method_ids": [
+        "AI-WB-cancel-authorization-and-clock",
+        "AI-reservation-management-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-5.expected",
+        "scenarios.json#WB-cancel-authorization-and-clock.expected"
+      ],
+      "material_target_ids": [
+        "WBT-cancel-authorization-and-clock"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-5"
+    },
+    {
+      "requirement_id": "reservation-management-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "本人及管理员在开始前/等号/进行中/结束后取消，以服务时钟为准。",
+      "operation_modes": [
+        "首次取消开始边界",
+        "进行中/结束首次取消"
+      ],
+      "user_states": [
+        "U/A服务时钟09:59:59与10:00",
+        "服务10:30/11:00/11:00:01，浏览器昨天/明天"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "method_ids": [
+        "AI-WB-cancel-authorization-and-clock",
+        "AI-reservation-management-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-6.expected",
+        "scenarios.json#WB-cancel-authorization-and-clock.expected"
+      ],
+      "material_target_ids": [
+        "WBT-cancel-authorization-and-clock"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-6"
+    },
+    {
+      "requirement_id": "reservation-management-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "本人/代取消原字段保留、取消时间与owner通知原子，释放后他人可订。",
+      "operation_modes": [
+        "本人/管理员首次成功取消",
+        "取消中途失败及提交失败",
+        "取消后再次创建原请求"
+      ],
+      "user_states": [
+        "尚未开始confirmed预约，V随后预约该时段",
+        "原状态/通知已发生部分写",
+        "原记录cancelled且V已占用"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-13",
+        "BB-reservation-management-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-cancel-atomic-idempotent"
+      ],
+      "method_ids": [
+        "AI-WB-cancel-atomic-idempotent",
+        "AI-WB-transaction-failure-matrix",
+        "AI-application-runtime-9",
+        "AI-reservation-creation-13",
+        "AI-reservation-management-7",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-13.expected",
+        "scenarios.json#BB-reservation-management-7.expected",
+        "scenarios.json#WB-transaction-failure-matrix.expected",
+        "scenarios.json#WB-cancel-atomic-idempotent.expected"
+      ],
+      "material_target_ids": [
+        "WBT-transaction-failure-matrix",
+        "WBT-cancel-atomic-idempotent"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-7"
+    },
+    {
+      "requirement_id": "reservation-management-8",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "开始前后重复及并发取消不改首时间不多通知，不释放后来别人预约。",
+      "operation_modes": [
+        "有权重复取消",
+        "并发首次与原开始后重试"
+      ],
+      "user_states": [
+        "U/A，原取消时间已记录且V再占用",
+        "未来有效预约并发取消或已取消预约已到原开始"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-notification-center-2",
+        "BB-reservation-management-8"
+      ],
+      "white_box_scenario_ids": [
+        "WB-cancel-atomic-idempotent"
+      ],
+      "method_ids": [
+        "AI-WB-cancel-atomic-idempotent",
+        "AI-application-runtime-9",
+        "AI-notification-center-2",
+        "AI-reservation-management-7",
+        "AI-reservation-management-8",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-notification-center-2.expected",
+        "scenarios.json#BB-reservation-management-8.expected",
+        "scenarios.json#WB-cancel-atomic-idempotent.expected"
+      ],
+      "material_target_ids": [
+        "WBT-cancel-atomic-idempotent"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-8"
+    },
+    {
+      "requirement_id": "reservation-management-9",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "不存在与异队目标均不存在反馈无泄露、原记录未变。",
+      "operation_modes": [
+        "不存在与异队目标拒绝",
+        "拒绝后原预约读取"
+      ],
+      "user_states": [
+        "U/A访问B真实ID和不存在ID",
+        "B仍持有有效未来预约"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-9"
+      ],
+      "white_box_scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "method_ids": [
+        "AI-WB-cancel-authorization-and-clock",
+        "AI-reservation-management-9"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-9.expected",
+        "scenarios.json#WB-cancel-authorization-and-clock.expected"
+      ],
+      "material_target_ids": [
+        "WBT-cancel-authorization-and-clock"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-9"
+    },
+    {
+      "requirement_id": "reservation-management-10",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "未来/进行中/结束/取消各卡片入口和确认资料，放弃无写入、确认才取消。",
+      "operation_modes": [
+        "取消入口资格",
+        "确认与放弃"
+      ],
+      "user_states": [
+        "有权/无权用户、未来/开始/结束/取消记录",
+        "有权未来预约且已打开确认弹窗"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-10"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-booking-status-sort",
+        "WB-ui-dialog-close-no-write"
+      ],
+      "method_ids": [
+        "AI-WB-ui-booking-status-sort",
+        "AI-WB-ui-dialog-close-no-write",
+        "AI-reservation-management-10"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-10.expected",
+        "scenarios.json#WB-ui-booking-status-sort.expected",
+        "scenarios.json#WB-ui-dialog-close-no-write.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-booking-status-sort",
+        "WBT-ui-dialog-close-no-write"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/reservation-management-10"
+    },
+    {
+      "requirement_id": "room-discovery-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "成员/管理员/异队资料完整且团队隔离，读取包含停用室不等于可预约列表。",
+      "operation_modes": [
+        "完整房间读取",
+        "跨团队查询隔离"
+      ],
+      "user_states": [
+        "本队成员、管理员、异队管理员，各有启用/停用室",
+        "两队房间可同名且请求尝试指定另一团队"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-1"
+      ],
+      "white_box_scenario_ids": [
+        "WB-rooms-team-deserialization"
+      ],
+      "method_ids": [
+        "AI-WB-rooms-team-deserialization",
+        "AI-room-discovery-1"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-1.expected",
+        "scenarios.json#WB-rooms-team-deserialization.expected"
+      ],
+      "material_target_ids": [
+        "WBT-rooms-team-deserialization"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-1"
+    },
+    {
+      "requirement_id": "room-discovery-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "显式日期、省略、空串、无效日期与北京午夜，空串不能回落今天。",
+      "operation_modes": [
+        "显式与默认日期",
+        "非法日期及显式空字符串"
+      ],
+      "user_states": [
+        "相邻日各有预约，服务上海23:59/00:01，浏览器UTC",
+        "date=、not-a-date、2030-02-30"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-2"
+      ],
+      "white_box_scenario_ids": [
+        "WB-day-range-intersection",
+        "WB-ui-timezone-format",
+        "WB-ui-date-filter-empty-recovery"
+      ],
+      "method_ids": [
+        "AI-WB-day-range-intersection",
+        "AI-WB-ui-date-filter-empty-recovery",
+        "AI-WB-ui-timezone-format",
+        "AI-room-discovery-2"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-2.expected",
+        "scenarios.json#WB-day-range-intersection.expected",
+        "scenarios.json#WB-ui-timezone-format.expected",
+        "scenarios.json#WB-ui-date-filter-empty-recovery.expected"
+      ],
+      "material_target_ids": [
+        "WBT-day-range-intersection",
+        "WBT-ui-timezone-format",
+        "WBT-ui-date-filter-empty-recovery"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-2"
+    },
+    {
+      "requirement_id": "room-discovery-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "开始/结束贴日边界与跨午夜历史fixture、取消过滤及开始升序；不放宽创建规则。",
+      "operation_modes": [
+        "普通同日日程排序/取消",
+        "历史跨午夜相交及端点"
+      ],
+      "user_states": [
+        "公开API已有乱序创建且部分取消",
+        "H1/H3/H5跨界、H2/H4恰好边界、H6取消"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-day-range-intersection"
+      ],
+      "method_ids": [
+        "AI-WB-day-range-intersection",
+        "AI-room-discovery-3"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-3.expected",
+        "scenarios.json#WB-day-range-intersection.expected"
+      ],
+      "material_target_ids": [
+        "WBT-day-range-intersection"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-3"
+    },
+    {
+      "requirement_id": "room-discovery-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "本人/管理员/同队他人及角色变化的API与UI主题处理，跨队不可见。",
+      "operation_modes": [
+        "按访问者主题脱敏",
+        "角色改变后重新读取"
+      ],
+      "user_states": [
+        "U本人、A管理员及V普通同队成员",
+        "V升管理员再降回，保持同会话"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-4",
+        "BB-room-discovery-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-agenda-title-redaction"
+      ],
+      "method_ids": [
+        "AI-WB-agenda-title-redaction",
+        "AI-room-discovery-4",
+        "AI-room-discovery-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-4.expected",
+        "scenarios.json#BB-room-discovery-6.expected",
+        "scenarios.json#WB-agenda-title-redaction.expected"
+      ],
+      "material_target_ids": [
+        "WBT-agenda-title-redaction"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-4"
+    },
+    {
+      "requirement_id": "room-discovery-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "所有真实容量选项及设备AND组合、相等边界/停用/清除/零匹配恢复。",
+      "operation_modes": [
+        "容量及设备交集筛选",
+        "无条件与逐条件清除",
+        "真实6人选项的控件值与筛选更新"
+      ],
+      "user_states": [
+        "界面提供4/6/8/12选项，四设备与启用/停用房间混合",
+        "之前筛选非空或零匹配的用户",
+        "成员选6人；本队启用室分别容量4、6、8，另有停用室"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "method_ids": [
+        "AI-WB-ui-filters-statistics",
+        "AI-room-discovery-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-5.expected",
+        "scenarios.json#WB-ui-filters-statistics.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-filters-statistics"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-5"
+    },
+    {
+      "requirement_id": "room-discovery-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "各身份展开日程时段owner主题、切日后再展开不复用旧内容。",
+      "operation_modes": [
+        "展开所选日日程",
+        "切日期及反复展开"
+      ],
+      "user_states": [
+        "本人、管理员、同队其他成员",
+        "D与D+1同室有不同预约"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-agenda-title-redaction",
+        "WB-ui-room-timeline-agenda"
+      ],
+      "method_ids": [
+        "AI-WB-agenda-title-redaction",
+        "AI-WB-ui-room-timeline-agenda",
+        "AI-room-discovery-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-6.expected",
+        "scenarios.json#WB-agenda-title-redaction.expected",
+        "scenarios.json#WB-ui-room-timeline-agenda.expected"
+      ],
+      "material_target_ids": [
+        "WBT-agenda-title-redaction",
+        "WBT-ui-room-timeline-agenda"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-6"
+    },
+    {
+      "requirement_id": "room-discovery-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "48格逐格比对08与20端点/相邻/取消/空日，不只数总格数。",
+      "operation_modes": [
+        "首尾及相邻格占用",
+        "取消及空日切换"
+      ],
+      "user_states": [
+        "08:00首格、19:45末格、10:00/10:30相邻预约",
+        "取消10:00–10:30但10:30–10:45仍有效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-room-timeline-agenda"
+      ],
+      "method_ids": [
+        "AI-WB-ui-room-timeline-agenda",
+        "AI-room-discovery-7"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-7.expected",
+        "scenarios.json#WB-ui-room-timeline-agenda.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-room-timeline-agenda"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-7"
+    },
+    {
+      "requirement_id": "room-discovery-8",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "三统计基于原列表，筛选至零也不变；停用原预约、跨日相交与本人开始日分开。",
+      "operation_modes": [
+        "三指标原始列表计数及筛选",
+        "切换日期",
+        "已有跨午夜区间计数"
+      ],
+      "user_states": [
+        "5室1停用、D三有效一取消，U两场，另一团队有记录",
+        "D+1只有U一场且无种子会议干扰",
+        "U有前日开始延续D的未取消历史预约"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-8"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "method_ids": [
+        "AI-WB-ui-filters-statistics",
+        "AI-room-discovery-8"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-8.expected",
+        "scenarios.json#WB-ui-filters-statistics.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-filters-statistics"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-8"
+    },
+    {
+      "requirement_id": "room-discovery-9",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "筛选无匹配仍保留控件并能调整恢复，不把空态当加载失败。",
+      "operation_modes": [
+        "筛选到零",
+        "零结果后恢复"
+      ],
+      "user_states": [
+        "本队有启用室但当前条件无匹配",
+        "用户降低人数或清除设备"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-room-discovery-9"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "method_ids": [
+        "AI-WB-ui-filters-statistics",
+        "AI-room-discovery-9"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-room-discovery-9.expected",
+        "scenarios.json#WB-ui-filters-statistics.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-filters-statistics"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/room-discovery-9"
+    },
+    {
+      "requirement_id": "space-administration-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "UI及直接新增/编辑权限，成员/异队/刚降权拒绝且资料不变。",
+      "operation_modes": [
+        "新增及编辑授权",
+        "跨队及降权编辑"
+      ],
+      "user_states": [
+        "U/V成员与A本队管理员",
+        "B异队管理员或刚降权旧会话"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-space-administration-1"
+      ],
+      "white_box_scenario_ids": [
+        "WB-route-authorizations"
+      ],
+      "method_ids": [
+        "AI-WB-route-authorizations",
+        "AI-space-administration-1"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-space-administration-1.expected",
+        "scenarios.json#WB-route-authorizations.expected"
+      ],
+      "material_target_ids": [
+        "WBT-route-authorizations"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-1"
+    },
+    {
+      "requirement_id": "space-administration-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "两团队同名新增、各自独立ID及完整规范化资料，不覆盖旧空间。",
+      "operation_modes": [
+        "本队多个合法新增",
+        "跨团队同名新增"
+      ],
+      "user_states": [
+        "本队管理员及随后查询的成员",
+        "A/B分别创建同名"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-space-administration-2"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-write-and-return",
+        "WB-room-text-capacity-active",
+        "WB-ui-room-edit-draft"
+      ],
+      "method_ids": [
+        "AI-WB-room-text-capacity-active",
+        "AI-WB-room-write-and-return",
+        "AI-WB-ui-room-edit-draft",
+        "AI-space-administration-2"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-space-administration-2.expected",
+        "scenarios.json#WB-room-write-and-return.expected",
+        "scenarios.json#WB-room-text-capacity-active.expected",
+        "scenarios.json#WB-ui-room-edit-draft.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-write-and-return",
+        "WBT-room-text-capacity-active",
+        "WBT-ui-room-edit-draft"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-2"
+    },
+    {
+      "requirement_id": "space-administration-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "五字段逐项及合并更新，重登和既有预约查询读取当前名称位置。",
+      "operation_modes": [
+        "单字段与多字段合法编辑",
+        "重新登录及既有预约读取"
+      ],
+      "user_states": [
+        "管理员操作已有预约的会议室",
+        "房间已更名/换位置/容量设备启用已更新"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-2",
+        "BB-space-administration-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-booking-query-scope-join",
+        "WB-room-write-and-return",
+        "WB-room-text-capacity-active",
+        "WB-ui-room-edit-draft"
+      ],
+      "method_ids": [
+        "AI-WB-booking-query-scope-join",
+        "AI-WB-room-text-capacity-active",
+        "AI-WB-room-write-and-return",
+        "AI-WB-ui-room-edit-draft",
+        "AI-reservation-management-2",
+        "AI-space-administration-3"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-2.expected",
+        "scenarios.json#BB-space-administration-3.expected",
+        "scenarios.json#WB-booking-query-scope-join.expected",
+        "scenarios.json#WB-room-write-and-return.expected",
+        "scenarios.json#WB-room-text-capacity-active.expected",
+        "scenarios.json#WB-ui-room-edit-draft.expected"
+      ],
+      "material_target_ids": [
+        "WBT-booking-query-scope-join",
+        "WBT-room-write-and-return",
+        "WBT-room-text-capacity-active",
+        "WBT-ui-room-edit-draft"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-3"
+    },
+    {
+      "requirement_id": "space-administration-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "trim同名/停用同名/自己原名/异队同名及新增新增、编辑编辑、新增编辑竞争。",
+      "operation_modes": [
+        "顺序名称冲突与自身保名",
+        "两个并发新增",
+        "并发编辑及新增对编辑",
+        "竞争失败编辑的原子保持及重启"
+      ],
+      "user_states": [
+        "同队R1/R2停用、B跨队同名",
+        "两管理员同队且新名称不存在",
+        "两个现有不同房间改同一新名称，或一新增一改名",
+        "E/E或C/E中败者同时提交名称和其他合法资料"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-space-administration-4"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-name-unique-concurrency"
+      ],
+      "method_ids": [
+        "AI-WB-room-name-unique-concurrency",
+        "AI-space-administration-4"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-space-administration-4.expected",
+        "scenarios.json#WB-room-name-unique-concurrency.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-name-unique-concurrency"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-4"
+    },
+    {
+      "requirement_id": "space-administration-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "新增编辑分别验证类型/trim长度/整数与布尔，新增缺省active及失败无部分保存。",
+      "operation_modes": [
+        "名称位置与容量类型边界",
+        "启用布尔及新增省略默认"
+      ],
+      "user_states": [
+        "两操作的缺失/null/非字符串、长度0/1/上限/超限、容量0/1/100/101",
+        "新增或编辑true/false/null/字符串/数字/数组/对象"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-space-administration-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-text-capacity-active"
+      ],
+      "method_ids": [
+        "AI-WB-room-text-capacity-active",
+        "AI-space-administration-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-space-administration-5.expected",
+        "scenarios.json#WB-room-text-capacity-active.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-text-capacity-active"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-5"
+    },
+    {
+      "requirement_id": "space-administration-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "新增编辑空集、四设备、重复、未知及混合类型；整体拒绝而非部分保存。",
+      "operation_modes": [
+        "合法空集/各单项/全四项/重复项",
+        "非列表和非法列表成员"
+      ],
+      "user_states": [
+        "新增唯一名或编辑已有设备室",
+        "两操作的未知或合法+未知、null、含数字/对象/bool"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-space-administration-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-equipment-set"
+      ],
+      "method_ids": [
+        "AI-WB-room-equipment-set",
+        "AI-space-administration-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-space-administration-6.expected",
+        "scenarios.json#WB-room-equipment-set.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-equipment-set"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-6"
+    },
+    {
+      "requirement_id": "space-administration-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "停用保留房间预约占用，旧弹窗及直接请求不能创建。",
+      "operation_modes": [
+        "启用到停用并读取",
+        "停用后新建及旧弹窗提交"
+      ],
+      "user_states": [
+        "房间已有有效及历史取消预约",
+        "U旧弹窗和A直连API"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-creation-1",
+        "BB-space-administration-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-rooms-team-deserialization",
+        "WB-room-eligibility-capacity",
+        "WB-room-state-existing-bookings",
+        "WB-ui-room-timeline-agenda"
+      ],
+      "method_ids": [
+        "AI-WB-room-eligibility-capacity",
+        "AI-WB-room-state-existing-bookings",
+        "AI-WB-rooms-team-deserialization",
+        "AI-WB-ui-room-timeline-agenda",
+        "AI-reservation-creation-1",
+        "AI-space-administration-7"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-creation-1.expected",
+        "scenarios.json#BB-space-administration-7.expected",
+        "scenarios.json#WB-rooms-team-deserialization.expected",
+        "scenarios.json#WB-room-eligibility-capacity.expected",
+        "scenarios.json#WB-room-state-existing-bookings.expected",
+        "scenarios.json#WB-ui-room-timeline-agenda.expected"
+      ],
+      "material_target_ids": [
+        "WBT-rooms-team-deserialization",
+        "WBT-room-eligibility-capacity",
+        "WBT-room-state-existing-bookings",
+        "WBT-ui-room-timeline-agenda"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-7"
+    },
+    {
+      "requirement_id": "space-administration-8",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "改名位置/设备/减容/停用不改旧人数时段状态，启用后新单按新容量。",
+      "operation_modes": [
+        "房间变更后旧预约保持",
+        "重新启用后新预约"
+      ],
+      "user_states": [
+        "未来6人预约及已取消历史",
+        "当前容量4且原6人预约保留"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-reservation-management-2",
+        "BB-space-administration-8"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-state-existing-bookings"
+      ],
+      "method_ids": [
+        "AI-WB-room-state-existing-bookings",
+        "AI-reservation-management-2",
+        "AI-space-administration-8"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-reservation-management-2.expected",
+        "scenarios.json#BB-space-administration-8.expected",
+        "scenarios.json#WB-room-state-existing-bookings.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-state-existing-bookings"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-8"
+    },
+    {
+      "requirement_id": "space-administration-9",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "不存在/异队修改同义拒绝，无目标资料泄露或变更。",
+      "operation_modes": [
+        "不存在及异队修改拒绝",
+        "拒绝后跨队读回"
+      ],
+      "user_states": [
+        "A携合法请求指向B室或不存在ID",
+        "B室有独特名称及既有预约"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-space-administration-9"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-write-and-return"
+      ],
+      "method_ids": [
+        "AI-WB-room-write-and-return",
+        "AI-space-administration-9"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-space-administration-9.expected",
+        "scenarios.json#WB-room-write-and-return.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-write-and-return"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-9"
+    },
+    {
+      "requirement_id": "space-administration-10",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "停用→启用恢复资格，但仍遵守原预约冲突和当前容量，不要求重建。",
+      "operation_modes": [
+        "恢复新预约资格",
+        "保留旧约束"
+      ],
+      "user_states": [
+        "停用室当前容量4，重新启用",
+        "旧6人有效预约保留且容量已降4"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-space-administration-10"
+      ],
+      "white_box_scenario_ids": [
+        "WB-room-eligibility-capacity",
+        "WB-room-state-existing-bookings"
+      ],
+      "method_ids": [
+        "AI-WB-room-eligibility-capacity",
+        "AI-WB-room-state-existing-bookings",
+        "AI-space-administration-10"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-space-administration-10.expected",
+        "scenarios.json#WB-room-eligibility-capacity.expected",
+        "scenarios.json#WB-room-state-existing-bookings.expected"
+      ],
+      "material_target_ids": [
+        "WBT-room-eligibility-capacity",
+        "WBT-room-state-existing-bookings"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/space-administration-10"
+    },
+    {
+      "requirement_id": "team-administration-1",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "管理员两队列表完整字段、成员及刚降权拒绝，不接受异队选择泄漏。",
+      "operation_modes": [
+        "本团队成员列表",
+        "普通成员及降权访问"
+      ],
+      "user_states": [
+        "A/B管理员各自团队",
+        "U或刚降权原会话"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-team-administration-1"
+      ],
+      "white_box_scenario_ids": [
+        "WB-route-authorizations",
+        "WB-member-select-role-guards"
+      ],
+      "method_ids": [
+        "AI-WB-member-select-role-guards",
+        "AI-WB-route-authorizations",
+        "AI-team-administration-1"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-team-administration-1.expected",
+        "scenarios.json#WB-route-authorizations.expected",
+        "scenarios.json#WB-member-select-role-guards.expected"
+      ],
+      "material_target_ids": [
+        "WBT-route-authorizations",
+        "WBT-member-select-role-guards"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/team-administration-1"
+    },
+    {
+      "requirement_id": "team-administration-2",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "普通成员改自己/别人/管理员及异队修改全拒；合法本队升降允许。 阶段12角色/身份刷新矩阵覆盖旧PATCH/session/load续段、最新pending、当前401、当前错误反馈和有效晚成功，逐项位于关联方法matrix_checks。",
+      "operation_modes": [
+        "普通成员直接修改",
+        "本队合法与异队修改",
+        "current401",
+        "earlier-current401"
+      ],
+      "user_states": [
+        "U改自己/V为admin或A为member",
+        "A对V升降、B尝试改U",
+        "同身份新角色提交已完成",
+        "新身份有效而旧角色响应待返回",
+        "较新身份确认失败且pending",
+        "当前真实会话失效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-team-administration-2"
+      ],
+      "white_box_scenario_ids": [
+        "WB-route-authorizations",
+        "WB-member-select-role-guards",
+        "WB-ui-role-update-session-expiry"
+      ],
+      "method_ids": [
+        "AI-WB-member-select-role-guards",
+        "AI-WB-route-authorizations",
+        "AI-WB-ui-role-update-session-expiry",
+        "AI-team-administration-2"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-team-administration-2.expected",
+        "scenarios.json#WB-route-authorizations.expected",
+        "scenarios.json#WB-member-select-role-guards.expected",
+        "scenarios.json#WB-ui-role-update-session-expiry.expected"
+      ],
+      "material_target_ids": [
+        "WBT-route-authorizations",
+        "WBT-member-select-role-guards",
+        "WBT-ui-role-update-session-expiry"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/team-administration-2"
+    },
+    {
+      "requirement_id": "team-administration-3",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "精确合法角色、同值与大小写/空格/缺失/null/数值/布尔/数组异常不改变角色。 列表/对象等非字符串精确400；权限先于输入的403与最后管理员409正反控制保持。",
+      "operation_modes": [
+        "合法admin/member及同值",
+        "非法枚举/类型"
+      ],
+      "user_states": [
+        "A操作V且另有保留管理员",
+        "Admin/MEMBER/空白/owner/null/数字/bool/数组/缺字段"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-team-administration-3"
+      ],
+      "white_box_scenario_ids": [
+        "WB-member-select-role-guards"
+      ],
+      "method_ids": [
+        "AI-WB-member-select-role-guards",
+        "AI-team-administration-3"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-team-administration-3.expected",
+        "scenarios.json#WB-member-select-role-guards.expected"
+      ],
+      "material_target_ids": [
+        "WBT-member-select-role-guards"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/team-administration-3"
+    },
+    {
+      "requirement_id": "team-administration-4",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "唯一管理员自降、两管理员顺序及并发自降/互降始终保留至少一名本队管理员。 阶段12角色/身份刷新矩阵覆盖旧PATCH/session/load续段、最新pending、当前401、当前错误反馈和有效晚成功，逐项位于关联方法matrix_checks。",
+      "operation_modes": [
+        "唯一管理员及合法单次降权",
+        "并发互降与并发自降",
+        "cross-session200",
+        "same-session200",
+        "cross-phase",
+        "same-late-patch",
+        "same-error",
+        "normal-nonself",
+        "normal-self",
+        "current-patch-error",
+        "demotion",
+        "late-patch-error",
+        "late-success-pending"
+      ],
+      "user_states": [
+        "本队仅A或A/V两管理员，另一队B独立",
+        "A/V各持有效会话同时发请求",
+        "同身份新角色提交已完成",
+        "新身份有效而旧角色响应待返回",
+        "较新身份确认失败且pending",
+        "当前真实会话失效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-team-administration-4"
+      ],
+      "white_box_scenario_ids": [
+        "WB-last-admin-lock",
+        "WB-ui-role-demotion-reload",
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "method_ids": [
+        "AI-WB-last-admin-lock",
+        "AI-WB-ui-role-demotion-reload",
+        "AI-WB-ui-self-demotion-session-failure",
+        "AI-team-administration-4"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-team-administration-4.expected",
+        "scenarios.json#WB-last-admin-lock.expected",
+        "scenarios.json#WB-ui-role-demotion-reload.expected",
+        "scenarios.json#WB-ui-self-demotion-session-failure.expected"
+      ],
+      "material_target_ids": [
+        "WBT-last-admin-lock",
+        "WBT-ui-role-demotion-reload",
+        "WBT-ui-self-demotion-session-failure"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/team-administration-4"
+    },
+    {
+      "requirement_id": "team-administration-5",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "全部管理入口分别作为升/降后第一条业务请求，不依赖session刷新缓存。",
+      "operation_modes": [
+        "独立管理读写首请求",
+        "身份与列表跟随当前角色"
+      ],
+      "user_states": [
+        "U同一会话刚升权或降权、A仍保留管理员",
+        "U原会话，角色已连续升降"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-identity-session-4",
+        "BB-reservation-management-1",
+        "BB-team-administration-5"
+      ],
+      "white_box_scenario_ids": [
+        "WB-session-join",
+        "WB-last-admin-lock"
+      ],
+      "method_ids": [
+        "AI-WB-last-admin-lock",
+        "AI-WB-session-join",
+        "AI-identity-session-4",
+        "AI-reservation-management-1",
+        "AI-role-first-request-new-room-team",
+        "AI-team-administration-5"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-identity-session-4.expected",
+        "scenarios.json#BB-reservation-management-1.expected",
+        "scenarios.json#BB-team-administration-5.expected",
+        "scenarios.json#WB-session-join.expected",
+        "scenarios.json#WB-last-admin-lock.expected"
+      ],
+      "material_target_ids": [
+        "WBT-session-join",
+        "WBT-last-admin-lock"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/team-administration-5"
+    },
+    {
+      "requirement_id": "team-administration-6",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "不存在/异队成员角色修改拒绝且无泄露无变更。",
+      "operation_modes": [
+        "不存在/异队成员修改",
+        "拒绝后的身份及权限读回"
+      ],
+      "user_states": [
+        "A持合法角色值请求",
+        "B持原有效会话"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-team-administration-6"
+      ],
+      "white_box_scenario_ids": [
+        "WB-member-select-role-guards"
+      ],
+      "method_ids": [
+        "AI-WB-member-select-role-guards",
+        "AI-team-administration-6"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-team-administration-6.expected",
+        "scenarios.json#WB-member-select-role-guards.expected"
+      ],
+      "material_target_ids": [
+        "WBT-member-select-role-guards"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/team-administration-6"
+    },
+    {
+      "requirement_id": "team-administration-7",
+      "assessment": "author_assessed_complete_pending_independent_review",
+      "basis": "成功自降重新读身份撤管理、唯一管理员失败保留；白盒补已提交但身份重读失败/到期和恢复。 阶段12角色/身份刷新矩阵覆盖旧PATCH/session/load续段、最新pending、当前401、当前错误反馈和有效晚成功，逐项位于关联方法matrix_checks。",
+      "operation_modes": [
+        "合法自降成功",
+        "唯一管理员自降失败",
+        "cross-session200",
+        "same-session200",
+        "cross-phase",
+        "same-late-patch",
+        "same-error",
+        "normal-nonself",
+        "normal-self",
+        "current-patch-error",
+        "current401",
+        "earlier-current401",
+        "demotion",
+        "late-patch-error",
+        "late-success-pending"
+      ],
+      "user_states": [
+        "A先提升V后仍在管理页",
+        "团队仅A管理员",
+        "同身份新角色提交已完成",
+        "新身份有效而旧角色响应待返回",
+        "较新身份确认失败且pending",
+        "当前真实会话失效"
+      ],
+      "mode_state_basis": "按当前需求、既有场景/方法重新核对，继承模式清单作为设计输入而非本轮独立批准。",
+      "black_box_scenario_ids": [
+        "BB-team-administration-7"
+      ],
+      "white_box_scenario_ids": [
+        "WB-ui-role-demotion-reload",
+        "WB-ui-role-update-session-expiry",
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "method_ids": [
+        "AI-WB-ui-role-demotion-reload",
+        "AI-WB-ui-role-update-session-expiry",
+        "AI-WB-ui-self-demotion-session-failure",
+        "AI-team-administration-7"
+      ],
+      "expectation_refs": [
+        "scenarios.json#BB-team-administration-7.expected",
+        "scenarios.json#WB-ui-role-demotion-reload.expected",
+        "scenarios.json#WB-ui-role-update-session-expiry.expected",
+        "scenarios.json#WB-ui-self-demotion-session-failure.expected"
+      ],
+      "material_target_ids": [
+        "WBT-ui-role-demotion-reload",
+        "WBT-ui-role-update-session-expiry",
+        "WBT-ui-self-demotion-session-failure"
+      ],
+      "unresolved_design_gaps": [],
+      "independent_review_ref": "coverage_review.json#items/team-administration-7"
+    }
+  ],
+  "changes_ref": "design-updates/stage12-source-reassessment-20261009/changes.json",
+  "independent_review_status": "pending; coverage_review.json and white_box_review.json preserved byte-for-byte",
+  "execution_status": "not_started_for_updated_design",
+  "app_acceptance": "not_established",
+  "resource_status_ref": "resources.json",
+  "limitations": [
+    "设计完整性是Analyst判断，非独立审阅或应用通过。",
+    "黑盒关联方法细化使原作用域审阅哈希过期，Reviewer须重新审阅；旧review/gate保持历史事实。",
+    "34原生矩阵是原方法重要子集，不能替代原方法其他边界；Tester必须新run执行全部167场景。",
+    "时钟/熵/存储故障/并发/浏览器全部目标需执行前验证；不能到达或缺证保留blocked/unproven。",
+    "5防御出口仍在覆盖分母，不能联合不同源码计数。",
+    "完整响应式方法还要求1440×900、320×740及CSS断点；资源预检仅1280×900和390×844，其余视口执行前须验证。"
+  ],
+  "white_box_gate_pending_reason": "当前源码和方法已变化；旧独立审阅不绑定本设计，不能自行批准。"
+}

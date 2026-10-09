@@ -12,6 +12,7 @@
 已知缺陷修复与分过程提交见 [DR-011](decisions/011-release-defect-fixes.md)，完整验收须固定修复后的新修订。
 修复后完整验收160通过、6失败、1未证明，新增角色刷新竞态，见 [DR-012](decisions/012-fixed-release-acceptance.md)。
 角色异步续段与输入稳健性修复、75矩阵及独立复核见 [DR-013](decisions/013-identity-continuation-fix.md)，仍须新修订完整验收。
+当前固定5247b360完整验收167通过、五门禁通过，覆盖率循环闭合，见 [DR-014](decisions/014-complete-fixed-release-acceptance.md)。
 验证章节保留需求阶段占位；黑白盒场景、执行与审阅台账存放于 `tests/delivery-acceptance/`，公开阶段归档在 `tests/snapshots/`。
 规约正文集中在 `packages/`；旧的 `docs/requirements.md` 仅保留迁移入口与旧 ID 对照。
 
@@ -47,6 +48,7 @@ meta.md       结构、语法与引用规范
 | [DR-011](decisions/011-release-defect-fixes.md) | 011-release-defect-fixes.md | 六类已知缺陷修复及单独提交、复验边界 |
 | [DR-012](decisions/012-fixed-release-acceptance.md) | 012-fixed-release-acceptance.md | 修复后完整验收、追加角色竞态与未证明分支 |
 | [DR-013](decisions/013-identity-continuation-fix.md) | 013-identity-continuation-fix.md | 角色异步续段及类型校验修复、迭代开发证据 |
+| [DR-014](decisions/014-complete-fixed-release-acceptance.md) | 014-complete-fixed-release-acceptance.md | 固定修复版本全量验收及覆盖率循环通过 |
 
 ## 规约包
 

@@ -4,6 +4,7 @@
 
 开发修复通过独立审查，承接 [DR-012](012-fixed-release-acceptance.md)。
 `stage-12-identity-fixes` 保存修复与开发证据，不批准完整验收或发布。
+后续完整验收结论见 [DR-014](014-complete-fixed-release-acceptance.md)，本开发档案与反例保持。
 
 ## 背景
 

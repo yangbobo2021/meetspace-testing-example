@@ -1,0 +1,642 @@
+{
+  "revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "/root/independent_review",
+  "scope": "API方法分阶段实质审阅，非167场景最终结论",
+  "results": [
+    {
+      "method_id": "AI-reservation-creation-2",
+      "status": "passed",
+      "reason": "核对类型/缺省/上下界/trim矩阵及补充多错误组合；HTTP实际错误阶段与数据库前后不变量符合。",
+      "evidence": [
+        "evidence/api-r2/booking-fields.json",
+        "evidence/api-review-completion/booking-fields.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-fields-guards",
+      "status": "passed",
+      "reason": "核对类型/缺省/上下界/trim矩阵及补充多错误组合；HTTP实际错误阶段与数据库前后不变量符合。",
+      "evidence": [
+        "evidence/api-r2/booking-fields.json",
+        "evidence/api-review-completion/booking-fields.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-3",
+      "status": "passed",
+      "reason": "核对起止非法类型及偏移时间，UTC规范化、等价重放和拒绝不变量相符。",
+      "evidence": [
+        "evidence/api-r2/datetime.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-datetime-parse-normalize",
+      "status": "passed",
+      "reason": "核对起止非法类型及偏移时间，UTC规范化、等价重放和拒绝不变量相符。",
+      "evidence": [
+        "evidence/api-r2/datetime.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-5",
+      "status": "passed",
+      "reason": "零/负/14:59/15:00/15:01/8h/8h+1s/8h15全部执行，复合违规归因正确。",
+      "evidence": [
+        "evidence/api-r2/duration.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-duration",
+      "status": "passed",
+      "reason": "零/负/14:59/15:00/15:01/8h/8h+1s/8h15全部执行，复合违规归因正确。",
+      "evidence": [
+        "evidence/api-r2/duration.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-7",
+      "status": "passed",
+      "reason": "两端分钟/秒/微秒与同时异常、新K合法对照齐全；synthetic历史fixture另补。",
+      "evidence": [
+        "evidence/api-r2/intervals.json",
+        "evidence/legacy-current"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-6",
+      "status": "passed",
+      "reason": "上海开放端点、秒微秒、跨日与偏移表示真实响应符合。",
+      "evidence": [
+        "evidence/api-r2/hours.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-open-hours",
+      "status": "passed",
+      "reason": "上海开放端点、秒微秒、跨日与偏移表示真实响应符合。",
+      "evidence": [
+        "evidence/api-r2/hours.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-4",
+      "status": "passed",
+      "reason": "固定合法开始，仅移动服务钟六端点并在浏览器前后一天重复，资格判定符合。",
+      "evidence": [
+        "evidence/api-r2/horizon.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-horizon",
+      "status": "passed",
+      "reason": "固定合法开始，仅移动服务钟六端点并在浏览器前后一天重复，资格判定符合。",
+      "evidence": [
+        "evidence/api-r2/horizon.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-9",
+      "status": "passed",
+      "reason": "重叠五型、相邻/异室/取消及屏障并发合法路径真实返回和事务顺序符合。",
+      "evidence": [
+        "evidence/api-r2/conflicts.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-conflict-serialization",
+      "status": "passed",
+      "reason": "重叠五型、相邻/异室/取消及屏障并发合法路径真实返回和事务顺序符合。",
+      "evidence": [
+        "evidence/api-r2/conflicts.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-idempotency-absolute-precision",
+      "status": "passed",
+      "reason": "起止±1微秒、新旧canonical三状态真实响应及状态哈希已核对；旧代码未执行。",
+      "evidence": [
+        "evidence/api-r2/precision.json",
+        "evidence/legacy-current"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-11",
+      "status": "passed",
+      "reason": "五维内容变更及trim/UTC等价、取消/开始/停用降容优先重放与并发收敛实际记录相符。",
+      "evidence": [
+        "evidence/api-r2/idempotency.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-12",
+      "status": "passed",
+      "reason": "五维内容变更及trim/UTC等价、取消/开始/停用降容优先重放与并发收敛实际记录相符。",
+      "evidence": [
+        "evidence/api-r2/idempotency.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-idempotency-priority",
+      "status": "passed",
+      "reason": "五维内容变更及trim/UTC等价、取消/开始/停用降容优先重放与并发收敛实际记录相符。",
+      "evidence": [
+        "evidence/api-r2/idempotency.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-idempotency-user-concurrency",
+      "status": "passed",
+      "reason": "五维内容变更及trim/UTC等价、取消/开始/停用降容优先重放与并发收敛实际记录相符。",
+      "evidence": [
+        "evidence/api-r2/idempotency.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-5",
+      "status": "passed",
+      "reason": "新增/编辑全部字段边界与active布尔类型，失败保持原记录。",
+      "evidence": [
+        "evidence/api-r2/room-values.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-room-text-capacity-active",
+      "status": "passed",
+      "reason": "新增/编辑全部字段边界与active布尔类型，失败保持原记录。",
+      "evidence": [
+        "evidence/api-r2/room-values.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-6",
+      "status": "passed",
+      "reason": "四项设备、空/重复与首中尾非法项均真实执行，保存集合及拒绝快照相符。",
+      "evidence": [
+        "evidence/api-r2/equipment.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-room-equipment-set",
+      "status": "passed",
+      "reason": "四项设备、空/重复与首中尾非法项均真实执行，保存集合及拒绝快照相符。",
+      "evidence": [
+        "evidence/api-r2/equipment.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-1",
+      "status": "passed",
+      "reason": "实际成员UI无管理入口及HTTP读写拒绝、跨队缺失资料隔离符合。",
+      "evidence": [
+        "evidence/api-r2/room-permissions.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-9",
+      "status": "passed",
+      "reason": "实际成员UI无管理入口及HTTP读写拒绝、跨队缺失资料隔离符合。",
+      "evidence": [
+        "evidence/api-r2/room-permissions.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-2",
+      "status": "passed",
+      "reason": "逐字段修改、已有预约保留、启停新预约资格与当前JOIN资料符合；全字段重登UI补证已审。",
+      "evidence": [
+        "evidence/api-r2/room-crud.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-3",
+      "status": "passed",
+      "reason": "逐字段修改、已有预约保留、启停新预约资格与当前JOIN资料符合；全字段重登UI补证已审。",
+      "evidence": [
+        "evidence/api-r2/room-crud.json",
+        "evidence/room-full-update/results.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-8",
+      "status": "passed",
+      "reason": "逐字段修改、已有预约保留、启停新预约资格与当前JOIN资料符合；全字段重登UI补证已审。",
+      "evidence": [
+        "evidence/api-r2/room-crud.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-10",
+      "status": "passed",
+      "reason": "逐字段修改、已有预约保留、启停新预约资格与当前JOIN资料符合；全字段重登UI补证已审。",
+      "evidence": [
+        "evidence/api-r2/room-crud.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-management-2",
+      "status": "passed",
+      "reason": "逐字段修改、已有预约保留、启停新预约资格与当前JOIN资料符合；全字段重登UI补证已审。",
+      "evidence": [
+        "evidence/api-r2/room-crud.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-room-write-and-return",
+      "status": "passed",
+      "reason": "逐字段修改、已有预约保留、启停新预约资格与当前JOIN资料符合；全字段重登UI补证已审。",
+      "evidence": [
+        "evidence/api-r2/room-crud.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-room-state-existing-bookings",
+      "status": "passed",
+      "reason": "逐字段修改、已有预约保留、启停新预约资格与当前JOIN资料符合；全字段重登UI补证已审。",
+      "evidence": [
+        "evidence/api-r2/room-crud.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-4",
+      "status": "passed",
+      "reason": "并发新增/编辑六组及反转先后、重启唯一记录与失败方原全字段相符，原预约通知独立比较。",
+      "evidence": [
+        "evidence/api-r2/room-uniqueness.json",
+        "evidence/api-review-completion/room-uniqueness.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-room-name-unique-concurrency",
+      "status": "passed",
+      "reason": "并发新增/编辑六组及反转先后、重启唯一记录与失败方原全字段相符，原预约通知独立比较。",
+      "evidence": [
+        "evidence/api-r2/room-uniqueness.json",
+        "evidence/api-review-completion/room-uniqueness.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-1",
+      "status": "passed",
+      "reason": "四类室、当前容量及旧弹窗提交资格重新判定符合。",
+      "evidence": [
+        "evidence/api-r2/qualification.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-8",
+      "status": "passed",
+      "reason": "四类室、当前容量及旧弹窗提交资格重新判定符合。",
+      "evidence": [
+        "evidence/api-r2/qualification.json"
+      ]
+    },
+    {
+      "method_id": "AI-space-administration-7",
+      "status": "passed",
+      "reason": "四类室、当前容量及旧弹窗提交资格重新判定符合。",
+      "evidence": [
+        "evidence/api-r2/qualification.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-room-eligibility-capacity",
+      "status": "passed",
+      "reason": "四类室、当前容量及旧弹窗提交资格重新判定符合。",
+      "evidence": [
+        "evidence/api-r2/qualification.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-management-5",
+      "status": "passed",
+      "reason": "首取消权限/服务钟端点/跨队缺失与开始后V403完整组补跑符合；拒绝没有角色/预约/通知变化。",
+      "evidence": [
+        "evidence/api-r2/cancel-permission-clock.json",
+        "evidence/api-cancel-complete-r2/cancel-permission-clock.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-management-6",
+      "status": "passed",
+      "reason": "首取消权限/服务钟端点/跨队缺失与开始后V403完整组补跑符合；拒绝没有角色/预约/通知变化。",
+      "evidence": [
+        "evidence/api-r2/cancel-permission-clock.json",
+        "evidence/api-cancel-complete-r2/cancel-permission-clock.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-management-9",
+      "status": "passed",
+      "reason": "首取消权限/服务钟端点/跨队缺失与开始后V403完整组补跑符合；拒绝没有角色/预约/通知变化。",
+      "evidence": [
+        "evidence/api-r2/cancel-permission-clock.json",
+        "evidence/api-cancel-complete-r2/cancel-permission-clock.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-cancel-authorization-and-clock",
+      "status": "passed",
+      "reason": "首取消权限/服务钟端点/跨队缺失与开始后V403完整组补跑符合；拒绝没有角色/预约/通知变化。",
+      "evidence": [
+        "evidence/api-r2/cancel-permission-clock.json",
+        "evidence/api-cancel-complete-r2/cancel-permission-clock.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-13",
+      "status": "passed",
+      "reason": "本人/管理员取消、占用释放、新单与重复/并发取消保留原时间，通知不重复。",
+      "evidence": [
+        "evidence/api-r2/cancel-replay.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-management-7",
+      "status": "passed",
+      "reason": "本人/管理员取消、占用释放、新单与重复/并发取消保留原时间，通知不重复。",
+      "evidence": [
+        "evidence/api-r2/cancel-replay.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-management-8",
+      "status": "passed",
+      "reason": "本人/管理员取消、占用释放、新单与重复/并发取消保留原时间，通知不重复。",
+      "evidence": [
+        "evidence/api-r2/cancel-replay.json"
+      ]
+    },
+    {
+      "method_id": "AI-notification-center-2",
+      "status": "passed",
+      "reason": "本人/管理员取消、占用释放、新单与重复/并发取消保留原时间，通知不重复。",
+      "evidence": [
+        "evidence/api-r2/cancel-replay.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-cancel-atomic-idempotent",
+      "status": "passed",
+      "reason": "本人/管理员取消、占用释放、新单与重复/并发取消保留原时间，通知不重复。",
+      "evidence": [
+        "evidence/api-r2/cancel-replay.json"
+      ]
+    },
+    {
+      "method_id": "AI-team-administration-1",
+      "status": "passed",
+      "reason": "角色精确字符串及list/dict非法400、管理员和跨队隔离符合。",
+      "evidence": [
+        "evidence/api-r2/members.json"
+      ]
+    },
+    {
+      "method_id": "AI-team-administration-2",
+      "status": "passed",
+      "reason": "角色精确字符串及list/dict非法400、管理员和跨队隔离符合。",
+      "evidence": [
+        "evidence/api-r2/members.json"
+      ]
+    },
+    {
+      "method_id": "AI-team-administration-3",
+      "status": "passed",
+      "reason": "角色精确字符串及list/dict非法400、管理员和跨队隔离符合。",
+      "evidence": [
+        "evidence/api-r2/members.json"
+      ]
+    },
+    {
+      "method_id": "AI-team-administration-6",
+      "status": "passed",
+      "reason": "角色精确字符串及list/dict非法400、管理员和跨队隔离符合。",
+      "evidence": [
+        "evidence/api-r2/members.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-member-select-role-guards",
+      "status": "passed",
+      "reason": "角色精确字符串及list/dict非法400、管理员和跨队隔离符合。",
+      "evidence": [
+        "evidence/api-r2/members.json"
+      ]
+    },
+    {
+      "method_id": "AI-team-administration-4",
+      "status": "passed",
+      "reason": "唯一管理员/双管理员并发互降及自降，保留至少一管理员和新请求权限。",
+      "evidence": [
+        "evidence/api-r2/last-admin.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-last-admin-lock",
+      "status": "passed",
+      "reason": "唯一管理员/双管理员并发互降及自降，保留至少一管理员和新请求权限。",
+      "evidence": [
+        "evidence/api-r2/last-admin.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-management-1",
+      "status": "passed",
+      "reason": "各scope、角色变更后第一业务入口，无中间U请求的时序及权限符合。",
+      "evidence": [
+        "evidence/api-r2/scope-and-first-role.json"
+      ]
+    },
+    {
+      "method_id": "AI-team-administration-5",
+      "status": "passed",
+      "reason": "各scope、角色变更后第一业务入口，无中间U请求的时序及权限符合。",
+      "evidence": [
+        "evidence/api-r2/scope-and-first-role.json"
+      ]
+    },
+    {
+      "method_id": "AI-role-first-request-new-room-team",
+      "status": "passed",
+      "reason": "各scope、角色变更后第一业务入口，无中间U请求的时序及权限符合。",
+      "evidence": [
+        "evidence/api-r2/scope-and-first-role.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-query-scope-join",
+      "status": "passed",
+      "reason": "各scope、角色变更后第一业务入口，无中间U请求的时序及权限符合。",
+      "evidence": [
+        "evidence/api-r2/scope-and-first-role.json"
+      ]
+    },
+    {
+      "method_id": "AI-notification-center-3",
+      "status": "passed",
+      "reason": "0/1/99/100/101/105按ID倒序、全105已读/其他用户不变、徽标100与新增3的真实API/UI一致。",
+      "evidence": [
+        "evidence/api-r2/notifications.json"
+      ]
+    },
+    {
+      "method_id": "AI-notification-center-4",
+      "status": "passed",
+      "reason": "0/1/99/100/101/105按ID倒序、全105已读/其他用户不变、徽标100与新增3的真实API/UI一致。",
+      "evidence": [
+        "evidence/api-r2/notifications.json"
+      ]
+    },
+    {
+      "method_id": "AI-notification-center-5",
+      "status": "passed",
+      "reason": "0/1/99/100/101/105按ID倒序、全105已读/其他用户不变、徽标100与新增3的真实API/UI一致。",
+      "evidence": [
+        "evidence/api-r2/notifications.json"
+      ]
+    },
+    {
+      "method_id": "AI-notification-center-6",
+      "status": "passed",
+      "reason": "0/1/99/100/101/105按ID倒序、全105已读/其他用户不变、徽标100与新增3的真实API/UI一致。",
+      "evidence": [
+        "evidence/api-r2/notifications.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-notifications-select-limit",
+      "status": "passed",
+      "reason": "0/1/99/100/101/105按ID倒序、全105已读/其他用户不变、徽标100与新增3的真实API/UI一致。",
+      "evidence": [
+        "evidence/api-r2/notifications.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-notifications-mark-all",
+      "status": "passed",
+      "reason": "0/1/99/100/101/105按ID倒序、全105已读/其他用户不变、徽标100与新增3的真实API/UI一致。",
+      "evidence": [
+        "evidence/api-r2/notifications.json"
+      ]
+    },
+    {
+      "method_id": "AI-room-discovery-1",
+      "status": "passed",
+      "reason": "三个角色完整字段、缺省日与显式空值拒绝分开核验。",
+      "evidence": [
+        "evidence/api-r2/room-read-dates.json"
+      ]
+    },
+    {
+      "method_id": "AI-room-discovery-2",
+      "status": "passed",
+      "reason": "三个角色完整字段、缺省日与显式空值拒绝分开核验。",
+      "evidence": [
+        "evidence/api-r2/room-read-dates.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-rooms-team-deserialization",
+      "status": "passed",
+      "reason": "三个角色完整字段、缺省日与显式空值拒绝分开核验。",
+      "evidence": [
+        "evidence/api-r2/room-read-dates.json"
+      ]
+    },
+    {
+      "method_id": "AI-room-discovery-4",
+      "status": "passed",
+      "reason": "四身份实际HTTP和展开日程文本对照，角色变化后主题权限更新。",
+      "evidence": [
+        "evidence/api-r2/agenda-privacy.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-agenda-title-redaction",
+      "status": "passed",
+      "reason": "四身份实际HTTP和展开日程文本对照，角色变化后主题权限更新。",
+      "evidence": [
+        "evidence/api-r2/agenda-privacy.json"
+      ]
+    },
+    {
+      "method_id": "AI-room-discovery-3",
+      "status": "passed",
+      "reason": "公开可达基线及历史SQL读取fixture严格半开相交、相邻日与排序符合。",
+      "evidence": [
+        "evidence/api-r2/day-intersection.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-day-range-intersection",
+      "status": "passed",
+      "reason": "公开可达基线及历史SQL读取fixture严格半开相交、相邻日与排序符合。",
+      "evidence": [
+        "evidence/api-r2/day-intersection.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-14",
+      "status": "passed",
+      "reason": "六类实际业务拒绝、无副作用和修正重试通过。",
+      "evidence": [
+        "evidence/api-r2/reject-recover.json"
+      ]
+    },
+    {
+      "method_id": "AI-reservation-creation-10",
+      "status": "passed",
+      "reason": "UI创建U及API创建V、四类读取和未读通知所有者相符；跨平台格式补矩阵独立重算。",
+      "evidence": [
+        "evidence/api-r2/creation-views.json"
+      ]
+    },
+    {
+      "method_id": "AI-notification-center-1",
+      "status": "passed",
+      "reason": "UI创建U及API创建V、四类读取和未读通知所有者相符；跨平台格式补矩阵独立重算。",
+      "evidence": [
+        "evidence/api-r2/creation-views.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-insert-notify",
+      "status": "passed",
+      "reason": "UI创建U及API创建V、四类读取和未读通知所有者相符；跨平台格式补矩阵独立重算。",
+      "evidence": [
+        "evidence/api-r2/creation-views.json",
+        "evidence/notification-macos/results.json",
+        "evidence/notification-linux/results.json",
+        "evidence/ui/204-notifications-render-timezones.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-response-transport-disconnect",
+      "status": "passed",
+      "reason": "成功/AppError×BrokenPipe/ConnectionReset四组真实write边界、commit先后与拒绝不写入、进程/新连接恢复独立核对。",
+      "evidence": [
+        "evidence/api-supplement/api-evidence/WB-response-transport-disconnect.json",
+        "evidence/api-transport.log"
+      ]
+    },
+    {
+      "method_id": "AI-WB-booking-response-loss-replay",
+      "status": "passed",
+      "reason": "17组提交后断开、五维合法异内容/trim和UTC对照、提交前失败已核对：唯一预约通知、同ID重放和无半写成立。",
+      "evidence": [
+        "evidence/api-supplement/api-evidence/WB-booking-response-loss-replay.json",
+        "evidence/api-replay.log"
+      ]
+    },
+    {
+      "method_id": "AI-WB-http-unsupported-methods",
+      "status": "passed",
+      "reason": "独立读取63项原始响应和标准库调用：60继承方法矩阵、两类431各重复、非API委托及HEAD无实体；前后快照相同，恢复200。",
+      "evidence": [
+        "evidence/api-supplement/api-evidence/WB-http-unsupported-methods.json",
+        "evidence/api-unsupported.log",
+        "evidence/api-unsupported-complete-r2/api-evidence/WB-http-unsupported-methods.json"
+      ]
+    }
+  ]
+}

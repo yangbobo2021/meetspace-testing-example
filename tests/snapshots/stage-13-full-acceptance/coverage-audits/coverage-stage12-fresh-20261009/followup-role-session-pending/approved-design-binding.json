@@ -1,0 +1,115 @@
+{
+  "source_revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "design_review": "tests/delivery-acceptance/review-history/stage12-independent-20261009-r2/review-summary.json",
+  "design_review_sha256": "74d607b2bf35ca2eac769c62dbe0686f9dbdb8283f8350e434c1b3d6b265293c",
+  "design_status": "passed_content_review; structural flag synchronization separately owned by parent",
+  "formal_method_id": "AI-WB-ui-role-demotion-reload",
+  "related_method_id": "AI-WB-ui-self-demotion-session-failure",
+  "methods_sha256": "1da0836a60fa78f247484b15f38f320c0178edbcf2ffe41d29f7119bc154ad39",
+  "matrix_checks": [
+    {
+      "key": "old-changeRole-session-200-after-new-self-session-503-pending",
+      "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+      "parameters": {
+        "new_session_failure": "503",
+        "old_session_outcome": "200"
+      },
+      "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+      "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+      "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 S_new返回带唯一新错误标识的受控503 JSON。S_old释放原始真实admin200，禁止重新fetch改成当前member响应。",
+      "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+      "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+      "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+      "execution_status": "not_executed_for_this_design",
+      "source_case_ref": null,
+      "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+    },
+    {
+      "key": "old-changeRole-session-503-after-new-self-session-503-pending",
+      "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+      "parameters": {
+        "new_session_failure": "503",
+        "old_session_outcome": "503"
+      },
+      "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+      "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+      "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 S_new返回带唯一新错误标识的受控503 JSON。S_old交付带可区分旧错误标识的受控503 JSON。",
+      "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+      "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+      "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+      "execution_status": "not_executed_for_this_design",
+      "source_case_ref": null,
+      "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+    },
+    {
+      "key": "old-changeRole-session-network-after-new-self-session-503-pending",
+      "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+      "parameters": {
+        "new_session_failure": "503",
+        "old_session_outcome": "network"
+      },
+      "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+      "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+      "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 S_new返回带唯一新错误标识的受控503 JSON。仅S_old网络abort；不改其他请求。",
+      "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+      "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+      "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+      "execution_status": "not_executed_for_this_design",
+      "source_case_ref": null,
+      "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+    },
+    {
+      "key": "old-changeRole-session-200-after-new-self-session-network-pending",
+      "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+      "parameters": {
+        "new_session_failure": "network",
+        "old_session_outcome": "200"
+      },
+      "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+      "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+      "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 仅S_new执行网络abort；捕获浏览器实际错误文本为本项最新错误基线，不硬编码跨浏览器错误字面值。S_old释放原始真实admin200，禁止重新fetch改成当前member响应。",
+      "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+      "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+      "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+      "execution_status": "not_executed_for_this_design",
+      "source_case_ref": null,
+      "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+    },
+    {
+      "key": "old-changeRole-session-503-after-new-self-session-network-pending",
+      "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+      "parameters": {
+        "new_session_failure": "network",
+        "old_session_outcome": "503"
+      },
+      "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+      "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+      "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 仅S_new执行网络abort；捕获浏览器实际错误文本为本项最新错误基线，不硬编码跨浏览器错误字面值。S_old交付带可区分旧错误标识的受控503 JSON。",
+      "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+      "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+      "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+      "execution_status": "not_executed_for_this_design",
+      "source_case_ref": null,
+      "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+    },
+    {
+      "key": "old-changeRole-session-network-after-new-self-session-network-pending",
+      "operation_mode": "同身份旧changeRole.session在较新自降pending错误后到达",
+      "parameters": {
+        "new_session_failure": "network",
+        "old_session_outcome": "network"
+      },
+      "user_state": "后台A已member；旧角色身份响应仍为admin；最新pending错误尚未恢复",
+      "preconditions": "当前固定HEAD/SHA；每项新隔离库及独立浏览器上下文，A管理员、V本队成员，凭据仅从README公开fixture引用读取。只用原生select/重试；不直接调用changeRole/loadPage，不改state，不替换业务函数。全程不退出或重登，保持同一identityGeneration。第一项角色操作真实把V提升为admin，为随后A合法自降提供第二管理员。",
+      "actions": "原生选择V→admin，真实PATCH提交后，将该changeRole紧接着发起的第一次/session请求标记为S_old；让它实际得到user=A/admin的200，再暂存交付。用请求发起栈/顺序证明S_old属于第一次changeRole，绝不是导航/重试loadPage的身份读取。保持S_old未交付，确认A自身select可用，原生A→member并等待真实PATCH200及独立后台member确认。第二次changeRole的/session标记S_new，向它交付指定新故障；待当前错误面板已形成且user=A/member、spaces/mine、identityPending=true、loading=false、最新loadError与toast已捕获，记录刷新序为新序而S_old持旧序、身份代次仍相同。此时禁止先重试/刷新、禁止释放其他loadPage响应代替。记录DOM/状态及网络基线，再向真正的S_old交付指定旧结果。等待S_old响应已消费及其changeRole续段已完成（只读调试/事件跟踪证明，不靠固定短延迟猜测），在任何恢复操作前比对状态/DOM/网络。随后解除仅S_new的故障，点击实际重新加载按钮，等待新的真实/session及成员页面数据加载结束，独立确认后台身份及权限。 仅S_new执行网络abort；捕获浏览器实际错误文本为本项最新错误基线，不硬编码跨浏览器错误字面值。仅S_old网络abort；不改其他请求。",
+      "expected": "释放S_old后，A仍member、spaces/mine且管理入口不存在；identityPending仍true，loading仍false，roleRefreshToken和identityGeneration不变，loadError及toast文本保持S_new的最新错误，不能换旧错误、清错误或出现旧成功toast。旧200不得写回admin/清pending，旧503/网络不得污染新错误；S_old续段不得新增session或rooms/bookings/notifications/members加载。保持V/admin及A/member、两次真实提交以外无业务写；直连/session为member且/members精确403/forbidden。最后原生重试必须重新/session200读取当前member，清pending/错误后恢复spaces/mine、无管理入口；读取和重试不改变已提交角色。",
+      "evidence_expected": "逐项保存S_old/S_new匿名请求ID、发起栈或等价归属证明、真实PATCH提交与旧admin200获取顺序；新错误已稳定且pending=true的释放前快照，旧响应真实交付及异步续段消费完成证据，释放后DOM/只读state/错误toast对照及网络增量为空，后台session/member403和角色快照，恢复请求与截图。200必须来自原真实响应；503/abort标记为前端依赖故障，不能证明服务真实503；Cookie/密码/会话原值不写证据。无法证明请求归属、原生可操作性或续段已消费则unproven，不把释放其他pending响应或旧开发通过算本项证据。",
+      "finding_id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+      "execution_status": "not_executed_for_this_design",
+      "source_case_ref": null,
+      "implementation_note": "AI-operated check；既有native34脚本不包含本项，Tester应原生操作或在ignored台账内补专用harness，不把原pending_cross视为本项。"
+    }
+  ],
+  "execution_role": "coverage_collector_only",
+  "formal_execution_status_not_inferred": true
+}

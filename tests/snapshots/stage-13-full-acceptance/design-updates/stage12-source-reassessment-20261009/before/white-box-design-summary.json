@@ -1,0 +1,143 @@
+{
+  "stage": "stage10-source-reassessment",
+  "status": "independently_reviewed_design_ready",
+  "implementation_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "counts": {
+    "requirements": 96,
+    "black_box_scenarios": 96,
+    "white_box_scenarios": 71,
+    "total_scenarios": 167,
+    "methods": 176,
+    "material_targets": 71
+  },
+  "added_scenarios": 0,
+  "added_methods": 0,
+  "refined_scenarios": 13,
+  "all_white_box_source_refs_refreshed": true,
+  "changes": [
+    {
+      "scenario_id": "WB-day-range-intersection",
+      "method_id": "AI-WB-day-range-intersection",
+      "target_id": "WBT-day-range-intersection",
+      "change": "refined",
+      "basis": "dispatch保留空查询值；日期参数不存在才取上海当前日，显式空串进入day_range拒绝；严格相交及升序分支保持。"
+    },
+    {
+      "scenario_id": "WB-idempotency-absolute-precision",
+      "method_id": "AI-WB-idempotency-absolute-precision",
+      "target_id": "WBT-idempotency-absolute-precision",
+      "change": "refined",
+      "basis": "fingerprint使用start.isoformat()/end.isoformat()保留微秒；持久化秒精度与内容比较分离；existing-key判断仍早于invalid_interval。"
+    },
+    {
+      "scenario_id": "WB-idempotency-priority",
+      "method_id": "AI-WB-idempotency-priority",
+      "target_id": "WBT-idempotency-priority",
+      "change": "refined",
+      "basis": "规范化字段与完整精度UTC时刻生成指纹；user+key优先返回当前状态或内容冲突，随后才检查新预约日期/粒度/房间资格。"
+    },
+    {
+      "scenario_id": "WB-booking-insert-notify",
+      "method_id": "AI-WB-booking-insert-notify",
+      "target_id": "WBT-booking-insert-notify",
+      "change": "refined",
+      "basis": "booking INSERT→数字字段格式化北京月日与起止小时分钟→notify同事务；read默认0；commit后才201。"
+    },
+    {
+      "scenario_id": "WB-ui-api-error-session-transition",
+      "method_id": "AI-WB-ui-api-error-session-transition",
+      "target_id": "WBT-ui-api-error-session-transition",
+      "change": "refined",
+      "basis": "api记录请求identityGeneration；JSON解析失败、非ok及login401例外；仅当前世代业务401递增世代、清user及identityPending并关闭弹窗，旧世代401只拒绝原请求。"
+    },
+    {
+      "scenario_id": "WB-ui-login-navigation",
+      "method_id": "AI-WB-ui-login-navigation",
+      "target_id": "WBT-ui-login-navigation",
+      "change": "refined",
+      "basis": "示例按钮只填资料；提交登录递增identityGeneration；session成功后清identityPending、重置page/scope/四列表；角色决定导航。"
+    },
+    {
+      "scenario_id": "WB-ui-load-parallel-error",
+      "method_id": "AI-WB-ui-load-parallel-error",
+      "target_id": "WBT-ui-load-parallel-error",
+      "change": "refined",
+      "basis": "loadPage无user返回；pending=false直接并行读取；pending=true先session，当前token且有user才应用身份、清pending，非admin退spaces/mine；之后Promise.all与catch/finally按token守卫。"
+    },
+    {
+      "scenario_id": "WB-ui-load-token-races",
+      "method_id": "AI-WB-ui-load-token-races",
+      "target_id": "WBT-ui-load-token-races",
+      "change": "refined",
+      "basis": "loadToken保护异步数据和身份重读结果；identityGeneration保护api的401副作用；pending session的token不符/无user早返回，finally仅当前token且有user执行。"
+    },
+    {
+      "scenario_id": "WB-ui-role-demotion-reload",
+      "method_id": "AI-WB-ui-role-demotion-reload",
+      "target_id": "WBT-ui-role-demotion-reload",
+      "change": "refined",
+      "basis": "changeRole PATCH成功置pending；自降先采用已提交member并退spaces/mine；session成功清pending；catch按user存在及pending真假分路，未提交失败走旧身份reload。"
+    },
+    {
+      "scenario_id": "WB-ui-self-demotion-session-failure",
+      "method_id": "AI-WB-ui-self-demotion-session-failure",
+      "target_id": "WBT-ui-self-demotion-session-failure",
+      "change": "refined",
+      "basis": "自身PATCH提交后本地角色已member且pending=true；session失败时catch保存loadError而非按旧管理员直接loadPage；原生重试先重读session，成功清pending后加载成员空间。"
+    },
+    {
+      "scenario_id": "WB-ui-role-update-session-expiry",
+      "method_id": "AI-WB-ui-role-update-session-expiry",
+      "target_id": "WBT-ui-role-update-session-expiry",
+      "change": "refined",
+      "basis": "PATCH401或提交后session401经api清user/pending并递增世代；changeRole catch无user时不得reload；已提交与未提交角色状态分别核对。"
+    },
+    {
+      "scenario_id": "WB-ui-logout-races",
+      "method_id": "AI-WB-ui-logout-races",
+      "target_id": "WBT-ui-logout-races",
+      "change": "refined",
+      "basis": "logout成功递增identityGeneration及loadToken，清identityPending/user并关闭dialog；失败仅反馈并恢复按钮，旧身份响应不能重建workspace。"
+    },
+    {
+      "scenario_id": "WB-http-unsupported-methods",
+      "method_id": "AI-WB-http-unsupported-methods",
+      "target_id": "WBT-http-unsupported-methods",
+      "change": "refined",
+      "basis": "标准库方法缺失进入Handler.send_error；API路径501与非501分支均send_json，非API委托基类；已实现方法仍dispatch，HEAD响应不写实体。"
+    }
+  ],
+  "assessment_ref": "design-assessment.json",
+  "review_required": false,
+  "independent_review_reference": "white_box_review.json",
+  "execution_status": "not_started_for_updated_design",
+  "app_acceptance": "not_established",
+  "black_box_complete": true,
+  "white_box_complete": true,
+  "completion_reconciliation_basis": "最新独立审阅已绑定当前修订、96条需求和71个白盒目标；复核场景/方法作用域哈希、完整Analyst资产摘要、源码摘要及逐目标充分结论均匹配，未报告场景遗漏或矛盾。唯一阻塞是白盒完成标记未同步，本次仅同步完成元数据，不改需求、场景条目、方法、源码定位或独立审阅。",
+  "review_binding": {
+    "coverage_review_sha256": "ee5da5c38da656a18f329345bff684a22ae42accf44b3fa455ca43bd851096cc",
+    "white_box_review_sha256": "5ca4301337da844461165c14c231ce035b22f9c78419d76a522355707c10111c",
+    "reviewed_at": "2026-10-08T23:50:53.633842+00:00",
+    "implementation_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+    "scope_hashes": {
+      "requirements_sha256": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+      "scenarios_sha256": "c4524621d699847404bbf363a0e1d39a5127237b8415696920010808fff0e1b4",
+      "methods_sha256": "0c434747d8861c0820476b649bdab2547665af2608728b3f6fc22ad00763cbb8",
+      "white_box_scenarios_sha256": "6a602e480c6dfda336e3d6611f156ce0f8fe3a699f975132d67ec9eecd94858d",
+      "white_box_methods_sha256": "76cd3c5b23a895cf4c7ba08c06c2a55a22bf71a1355440c304107aa7d339d446",
+      "white_box_map_sha256": "95e87d336f2c19cb3ac4d5c0fdac8fdd8d8a64808145599b6d63dacf5cd88424",
+      "context_sha256": "6d99b147220c7fb0429c21fa0b49d35391be9a3aa5dca765a0acf11d310ecc8f"
+    },
+    "scenario_file_sha256_before": "71509007bba5e37a6939b901e946dc300c2cb011f6ad7a6594c3452c5da0ebf7",
+    "scenario_file_sha256_after": "5eb05ba8def88bde123de25c4fd8b0bf5d2472d6ca9c6c1500b4f965f3702327",
+    "scenario_items_sha256_unchanged": "842cbd3adc0cd148c86e8d23236d1f7901fc3793a93e7f81a7adcb50b5c0dd38",
+    "flag_only_change": {
+      "white_box_complete": {
+        "before": false,
+        "after": true
+      }
+    },
+    "historical_blocked_gate": "review-history/stage10-completion-reconciliation-20261008T235455Z/scenario-gate.json"
+  }
+}

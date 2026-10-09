@@ -1,0 +1,6209 @@
+{
+  "prefix": "self-switch",
+  "revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "source_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "web/app.js": "c3347cfe766836d5bc5c776ee9ed03ea01c648847a76c12d19eaba8b830a7798"
+  },
+  "harness_sha256": {
+    "entropy_business_branch.py": "49ade6e6416aeb86e31e2eef892c7711a555b25658fb16a1d2fb54f78e0ba585",
+    "ptrace_os_adapter.py": "fa6dbd6a4fb0f0f176d56afc14b2fcf54276c615979a2ad042d44cb9e4c45791"
+  },
+  "assertions": {
+    "listener_owned_by_child": true,
+    "all_real_identities": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "all_login_digest_identity_expiry": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "all_login_protected_business": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "old_current_session_rejected": true,
+    "independent_browser_valid": true,
+    "target_protected_business_access": true,
+    "independent_scrypt_all_accounts": true,
+    "different_account_salts": true,
+    "session_only_digest_user_expiry_fields": true,
+    "every_actual_token_has_matching_digest": true,
+    "responses_without_password": true,
+    "no_unknown_blob_fields": true,
+    "exact_eight_hour_expiry": true,
+    "real_logout_revokes_session": true,
+    "exact_eight_hour_boundary_rejects": true,
+    "restart_real_authentication": true,
+    "restart_saved_salts_unchanged": true
+  },
+  "formal_verdict": null,
+  "app_pid": 8,
+  "session_field_names": [
+    "token_hash",
+    "user_id",
+    "expires"
+  ],
+  "database_objects": [
+    {
+      "type": "table",
+      "name": "teams"
+    },
+    {
+      "type": "table",
+      "name": "users"
+    },
+    {
+      "type": "index",
+      "name": "sqlite_autoindex_users_1"
+    },
+    {
+      "type": "table",
+      "name": "sessions"
+    },
+    {
+      "type": "index",
+      "name": "sqlite_autoindex_sessions_1"
+    },
+    {
+      "type": "table",
+      "name": "rooms"
+    },
+    {
+      "type": "index",
+      "name": "sqlite_autoindex_rooms_1"
+    },
+    {
+      "type": "table",
+      "name": "bookings"
+    },
+    {
+      "type": "index",
+      "name": "sqlite_autoindex_bookings_1"
+    },
+    {
+      "type": "index",
+      "name": "booking_room_time"
+    },
+    {
+      "type": "table",
+      "name": "notifications"
+    }
+  ],
+  "database_field_inventory": {
+    "teams": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "primary_key": true
+      },
+      {
+        "name": "name",
+        "type": "TEXT",
+        "primary_key": false
+      }
+    ],
+    "users": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "primary_key": true
+      },
+      {
+        "name": "team_id",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "email",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "name",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "role",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "password_hash",
+        "type": "TEXT",
+        "primary_key": false
+      }
+    ],
+    "sessions": [
+      {
+        "name": "token_hash",
+        "type": "TEXT",
+        "primary_key": true
+      },
+      {
+        "name": "user_id",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "expires",
+        "type": "REAL",
+        "primary_key": false
+      }
+    ],
+    "rooms": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "primary_key": true
+      },
+      {
+        "name": "team_id",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "name",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "location",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "capacity",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "equipment",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "active",
+        "type": "INTEGER",
+        "primary_key": false
+      }
+    ],
+    "bookings": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "primary_key": true
+      },
+      {
+        "name": "team_id",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "room_id",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "user_id",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "title",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "start",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "end",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "attendees",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "status",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "cancelled_at",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "idempotency_key",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "request_hash",
+        "type": "TEXT",
+        "primary_key": false
+      }
+    ],
+    "notifications": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "primary_key": true
+      },
+      {
+        "name": "user_id",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "booking_id",
+        "type": "INTEGER",
+        "primary_key": false
+      },
+      {
+        "name": "message",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TEXT",
+        "primary_key": false
+      },
+      {
+        "name": "read",
+        "type": "INTEGER",
+        "primary_key": false
+      }
+    ]
+  },
+  "operations": [
+    {
+      "operation": "GET /api/health",
+      "handle": null,
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "POST /api/login",
+      "handle": "old",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "old",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/rooms",
+      "handle": "old",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "POST /api/login",
+      "handle": "target",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "target",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/rooms",
+      "handle": "target",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "POST /api/login",
+      "handle": "target",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "target",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/rooms",
+      "handle": "target",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "obsolete",
+      "status": 401,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "old",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/rooms",
+      "handle": "target",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "POST /api/login",
+      "handle": "retire",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "retire",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/rooms",
+      "handle": "retire",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "POST /api/logout",
+      "handle": "retire",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "retire",
+      "status": 401,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "target",
+      "status": 401,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/health",
+      "handle": null,
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "POST /api/login",
+      "handle": "restarted",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/session",
+      "handle": "restarted",
+      "status": 200,
+      "response_contains_public_password": false
+    },
+    {
+      "operation": "GET /api/rooms",
+      "handle": "restarted",
+      "status": 200,
+      "response_contains_public_password": false
+    }
+  ],
+  "first_tracer_exit_code": 0,
+  "os_trace_initial": {
+    "adapter": "ptrace_syscall_linux_aarch64",
+    "tape_alias": "E2",
+    "root_pid": 8,
+    "events": [
+      {
+        "kind": "exec",
+        "pid": 8
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "exec",
+        "pid": 8
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "exec",
+        "pid": 8
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "write",
+        "path": "/dev/shm/sem.vXncyq",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.vXncyq",
+        "bytes": 32
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 2,
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.vXncyq",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 2,
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 2496,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 63,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 9,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 10,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 10,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 10,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "random_device_read",
+        "pid": 10,
+        "bytes": 44,
+        "source": "/dev/urandom",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 10,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 10,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 11,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 11,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 11,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 11,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 12,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 12,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 12,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 12,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 13,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 13,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 13,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 13,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 13,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 14,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 14,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 14,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 14,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 15,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 15,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 15,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 15,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 16,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 16,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 16,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 16,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 16,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 17,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 17,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 17,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 17,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 18,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 18,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 18,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 18,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 19,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 19,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 19,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 19,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 20,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 20,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 20,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 20,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 21,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 21,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 21,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 21,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 22,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 22,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 22,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 22,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 22,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 23,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 23,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 23,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 23,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 24,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 24,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 24,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 24,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 25,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 25,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 25,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 25,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 26,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 26,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 26,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 26,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 27,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 27,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 27,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 27,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      }
+    ],
+    "counters": {
+      "syscall_221": 3,
+      "syscall_214": 75,
+      "syscall_222": 211,
+      "syscall_48": 3,
+      "syscall_56": 2474,
+      "syscall_80": 534,
+      "syscall_57": 2367,
+      "syscall_63": 4408,
+      "syscall_215": 126,
+      "syscall_226": 186,
+      "syscall_96": 3,
+      "syscall_99": 22,
+      "syscall_293": 22,
+      "syscall_261": 3,
+      "syscall_278": 9,
+      "syscall_98": 732,
+      "syscall_160": 3,
+      "syscall_92": 1,
+      "syscall_78": 6,
+      "syscall_172": 44,
+      "syscall_79": 754,
+      "syscall_64": 21,
+      "scanned_write_calls": 216,
+      "syscall_37": 1,
+      "syscall_35": 43,
+      "syscall_46": 26,
+      "scanned_shared_mappings": 64,
+      "syscall_62": 190,
+      "syscall_178": 59,
+      "syscall_61": 30,
+      "syscall_25": 536,
+      "syscall_29": 102,
+      "syscall_134": 67,
+      "syscall_135": 79,
+      "syscall_17": 1,
+      "syscall_216": 4,
+      "syscall_20": 1,
+      "syscall_34": 1,
+      "syscall_67": 151,
+      "syscall_175": 40,
+      "syscall_55": 40,
+      "syscall_68": 195,
+      "syscall_198": 3,
+      "syscall_208": 1,
+      "syscall_200": 1,
+      "syscall_204": 20,
+      "syscall_203": 2,
+      "syscall_201": 1,
+      "syscall_73": 22,
+      "syscall_242": 19,
+      "syscall_435": 19,
+      "syscall_207": 19,
+      "syscall_206": 38,
+      "network_send_calls": 38,
+      "syscall_210": 19,
+      "syscall_233": 19,
+      "syscall_93": 19,
+      "syscall_83": 25,
+      "syscall_139": 1,
+      "syscall_94": 1
+    },
+    "uncovered": [],
+    "exits": {
+      "9": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "10": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "11": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "12": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "13": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "14": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "15": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "16": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "17": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "18": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "19": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "20": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "21": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "22": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "23": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "24": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "25": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "26": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "27": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "8": {
+        "exit_code": 0,
+        "signal": null
+      }
+    },
+    "formal_verdict": null,
+    "limitations": [
+      "syscall trace and payload scanning require independent outlet/schema review",
+      "session expiration time adaptation and restart need outer matrix harness",
+      "does not claim encrypted/unknown storage harmless without field inspection"
+    ]
+  },
+  "restart_entropy_source": "real_os",
+  "comparison_scope": "initial_target_before_real_os_restart",
+  "tracer_exit_code": 0,
+  "os_trace": {
+    "adapter": "ptrace_syscall_linux_aarch64",
+    "tape_alias": "E2",
+    "root_pid": 8,
+    "events": [
+      {
+        "kind": "exec",
+        "pid": 8
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "exec",
+        "pid": 8
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "exec",
+        "pid": 8
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "write",
+        "path": "/dev/shm/sem.vXncyq",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.vXncyq",
+        "bytes": 32
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 2,
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.vXncyq",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 2,
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80
+      },
+      {
+        "kind": "getrandom",
+        "pid": 8,
+        "bytes": 2496,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 8,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 63,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 9,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 10,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 10,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 10,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "random_device_read",
+        "pid": 10,
+        "bytes": 44,
+        "source": "/dev/urandom",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 10,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 10,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 11,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 11,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 11,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 11,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 12,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 12,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 12,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 12,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 13,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 13,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 13,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 13,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 13,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 14,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 14,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 14,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 14,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 15,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 15,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 15,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 15,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 16,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 16,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 16,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 16,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 16,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 17,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 17,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 17,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 17,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 18,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 18,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 18,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 18,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 19,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 19,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 19,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 19,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 20,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 20,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 20,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 20,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 21,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 21,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 21,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 21,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 22,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 22,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 22,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": true
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 22,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 22,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 23,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 23,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 23,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 23,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 24,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 24,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 24,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 24,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 25,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 25,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 25,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 25,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 26,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 26,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 26,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 26,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 27,
+        "parent_group": 8,
+        "child_group": 8,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 27,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 27,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 27,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_8",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_8",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 8,
+        "syscall": 35,
+        "result": 0
+      }
+    ],
+    "counters": {
+      "syscall_221": 3,
+      "syscall_214": 75,
+      "syscall_222": 211,
+      "syscall_48": 3,
+      "syscall_56": 2474,
+      "syscall_80": 534,
+      "syscall_57": 2367,
+      "syscall_63": 4408,
+      "syscall_215": 126,
+      "syscall_226": 186,
+      "syscall_96": 3,
+      "syscall_99": 22,
+      "syscall_293": 22,
+      "syscall_261": 3,
+      "syscall_278": 9,
+      "syscall_98": 732,
+      "syscall_160": 3,
+      "syscall_92": 1,
+      "syscall_78": 6,
+      "syscall_172": 44,
+      "syscall_79": 754,
+      "syscall_64": 21,
+      "scanned_write_calls": 216,
+      "syscall_37": 1,
+      "syscall_35": 43,
+      "syscall_46": 26,
+      "scanned_shared_mappings": 64,
+      "syscall_62": 190,
+      "syscall_178": 59,
+      "syscall_61": 30,
+      "syscall_25": 536,
+      "syscall_29": 102,
+      "syscall_134": 67,
+      "syscall_135": 79,
+      "syscall_17": 1,
+      "syscall_216": 4,
+      "syscall_20": 1,
+      "syscall_34": 1,
+      "syscall_67": 151,
+      "syscall_175": 40,
+      "syscall_55": 40,
+      "syscall_68": 195,
+      "syscall_198": 3,
+      "syscall_208": 1,
+      "syscall_200": 1,
+      "syscall_204": 20,
+      "syscall_203": 2,
+      "syscall_201": 1,
+      "syscall_73": 22,
+      "syscall_242": 19,
+      "syscall_435": 19,
+      "syscall_207": 19,
+      "syscall_206": 38,
+      "network_send_calls": 38,
+      "syscall_210": 19,
+      "syscall_233": 19,
+      "syscall_93": 19,
+      "syscall_83": 25,
+      "syscall_139": 1,
+      "syscall_94": 1
+    },
+    "uncovered": [],
+    "exits": {
+      "9": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "10": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "11": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "12": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "13": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "14": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "15": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "16": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "17": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "18": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "19": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "20": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "21": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "22": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "23": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "24": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "25": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "26": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "27": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "8": {
+        "exit_code": 0,
+        "signal": null
+      }
+    },
+    "formal_verdict": null,
+    "limitations": [
+      "syscall trace and payload scanning require independent outlet/schema review",
+      "session expiration time adaptation and restart need outer matrix harness",
+      "does not claim encrypted/unknown storage harmless without field inspection"
+    ]
+  },
+  "os_trace_restart": {
+    "adapter": "ptrace_syscall_linux_aarch64",
+    "tape_alias": "real_os",
+    "root_pid": 29,
+    "events": [
+      {
+        "kind": "exec",
+        "pid": 29
+      },
+      {
+        "kind": "getrandom",
+        "pid": 29,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": false
+      },
+      {
+        "kind": "exec",
+        "pid": 29
+      },
+      {
+        "kind": "getrandom",
+        "pid": 29,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": false
+      },
+      {
+        "kind": "exec",
+        "pid": 29
+      },
+      {
+        "kind": "getrandom",
+        "pid": 29,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": false
+      },
+      {
+        "kind": "getrandom",
+        "pid": 29,
+        "bytes": 8,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": false
+      },
+      {
+        "kind": "write",
+        "path": "/dev/shm/sem.fOdn88",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 29,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.fOdn88",
+        "bytes": 32
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 29,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 29,
+        "address_alias": 2,
+        "path": "/dev/shm/faketime_shm_29",
+        "bytes": 80
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_29",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.fOdn88",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 29,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 29,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 29,
+        "address_alias": 1,
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 29,
+        "address_alias": 2,
+        "path": "/dev/shm/faketime_shm_29",
+        "bytes": 80
+      },
+      {
+        "kind": "getrandom",
+        "pid": 29,
+        "bytes": 2496,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 29,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 29,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 29,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 29,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 29,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 29,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server-restart.log",
+        "bytes": 63,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 30,
+        "parent_group": 29,
+        "child_group": 29,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server-restart.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 31,
+        "parent_group": 29,
+        "child_group": 29,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_29",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 31,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "getrandom",
+        "pid": 31,
+        "bytes": 32,
+        "source": "real_linux_getrandom_syscall",
+        "controlled_return": false
+      },
+      {
+        "kind": "random_device_read",
+        "pid": 31,
+        "bytes": 44,
+        "source": "/dev/urandom",
+        "controlled_return": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 24,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-wal",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite",
+        "bytes": 4096,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 31,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 31,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server-restart.log",
+        "bytes": 70,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 32,
+        "parent_group": 29,
+        "child_group": 29,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_29",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 32,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 32,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 32,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server-restart.log",
+        "bytes": 71,
+        "leak": false
+      },
+      {
+        "kind": "child_process_or_thread",
+        "pid": 33,
+        "parent_group": 29,
+        "child_group": 29,
+        "inherited_shared_mappings": 2
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_29",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "pwrite64",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 1,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping",
+        "pid": 33,
+        "address_alias": 3,
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 33,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/tmp/meetspace-entropy-project/data/meetspace.sqlite-shm",
+        "bytes": 32768,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 33,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "write",
+        "path": "/run/host_virtiofs/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/entropy/self-switch-1/server-restart.log",
+        "bytes": 69,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_29",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/faketime_shm_29",
+        "bytes": 80,
+        "leak": false
+      },
+      {
+        "kind": "file_shared_mapping_scan",
+        "path": "/dev/shm/sem.faketime_sem_29",
+        "bytes": 32,
+        "leak": false
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 29,
+        "syscall": 35,
+        "result": 0
+      },
+      {
+        "kind": "unlink_or_rename",
+        "pid": 29,
+        "syscall": 35,
+        "result": 0
+      }
+    ],
+    "counters": {
+      "syscall_221": 3,
+      "syscall_214": 75,
+      "syscall_222": 185,
+      "syscall_48": 3,
+      "syscall_56": 1861,
+      "syscall_80": 356,
+      "syscall_57": 1739,
+      "syscall_63": 3277,
+      "syscall_215": 98,
+      "syscall_226": 186,
+      "syscall_96": 3,
+      "syscall_99": 7,
+      "syscall_293": 7,
+      "syscall_261": 3,
+      "syscall_278": 6,
+      "syscall_98": 198,
+      "syscall_160": 3,
+      "syscall_92": 1,
+      "syscall_78": 6,
+      "syscall_172": 14,
+      "syscall_79": 604,
+      "syscall_64": 6,
+      "scanned_write_calls": 53,
+      "syscall_37": 1,
+      "syscall_35": 13,
+      "syscall_46": 7,
+      "scanned_shared_mappings": 19,
+      "syscall_62": 190,
+      "syscall_178": 14,
+      "syscall_61": 30,
+      "syscall_25": 145,
+      "syscall_29": 102,
+      "syscall_134": 67,
+      "syscall_135": 19,
+      "syscall_17": 1,
+      "syscall_216": 4,
+      "syscall_20": 1,
+      "syscall_34": 1,
+      "syscall_67": 34,
+      "syscall_175": 10,
+      "syscall_55": 10,
+      "syscall_68": 47,
+      "syscall_198": 3,
+      "syscall_208": 1,
+      "syscall_200": 1,
+      "syscall_204": 5,
+      "syscall_203": 2,
+      "syscall_201": 1,
+      "syscall_73": 5,
+      "syscall_242": 4,
+      "syscall_435": 4,
+      "syscall_207": 4,
+      "syscall_206": 8,
+      "network_send_calls": 8,
+      "syscall_210": 4,
+      "syscall_233": 4,
+      "syscall_93": 4,
+      "syscall_83": 5,
+      "syscall_139": 1,
+      "syscall_94": 1
+    },
+    "uncovered": [],
+    "exits": {
+      "30": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "31": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "32": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "33": {
+        "exit_code": 0,
+        "signal": null
+      },
+      "29": {
+        "exit_code": 0,
+        "signal": null
+      }
+    },
+    "formal_verdict": null,
+    "limitations": [
+      "syscall trace and payload scanning require independent outlet/schema review",
+      "session expiration time adaptation and restart need outer matrix harness",
+      "does not claim encrypted/unknown storage harmless without field inspection"
+    ]
+  }
+}

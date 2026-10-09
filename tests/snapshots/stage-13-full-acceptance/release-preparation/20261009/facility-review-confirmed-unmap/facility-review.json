@@ -1,0 +1,147 @@
+{
+  "status": "needs_mapping_generation_binding",
+  "scope": "Independent ignored observer-facility review of frozen3a491 candidate. Fixed5247 product unchanged; not formal167 execution, resourcegate signature or release approval.",
+  "source_revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "observer_sha256": "3a491cd18a614d9985c1e6601c58c86303269859cd9fc3a5a3ec2ceed3f2dcfa",
+  "formal_verdict": null,
+  "release_approved": false,
+  "reviewed_change": "Only exit/exit_group read failures may be deferred to another exact-key full-range munmap with prior successful complete scan; ret0 resolves, failed/unresolved must remain uncovered.",
+  "preserved_attempts": [
+    "metadata-only-complete-attempt",
+    "confirmed-unmap-complete-attempt",
+    "mapping-lifecycle-diagnostic"
+  ],
+  "original_concurrent_negative_control": {
+    "iterations": 300,
+    "leaks": 300,
+    "uncovered": [
+      "mapping_unreadable_before_flush_or_exit"
+    ],
+    "actual_failure": [
+      {
+        "kind": "mapping_read_failure",
+        "pid": 333,
+        "group": 13,
+        "path": "/tmp/concurrent-probe.bin",
+        "bytes": 4096,
+        "syscall": 93,
+        "errno": 14,
+        "reason": "[Errno 14] read -1/4096",
+        "pending_unmapping_candidates": [
+          {
+            "pid": 332,
+            "number": 215,
+            "has_unmapping": true
+          }
+        ]
+      }
+    ],
+    "interpretation": "真实EFAULT发生于另一线程正在pending munmap；这只证明合成负控存在该并发时序，不能归因原产品seed1未知缺口。"
+  },
+  "deferred_path_actual_control": {
+    "evidence": "confirmed-unmap-complete-attempt/positive-race-0/os-events.json",
+    "deferred": 2,
+    "resolved_with_actual_ret0": 2,
+    "uncovered": [],
+    "leak_scans": 302,
+    "all601_target_exits_zero": true,
+    "initial_first300_attempt_deferred": 0,
+    "interpretation": "首个300次控未命中延期；后续实际命中2次。302是300mapping含额外重复exit扫描，并非产品失败。原控制恰300断言导致工具失败应原样保存，只纠正多次扫描计数解释，不丢负控泄漏强断言。"
+  },
+  "negative_controls": [
+    {
+      "case": "no-correspondence",
+      "uncovered": [
+        "mapping_unreadable_before_flush_or_exit"
+      ],
+      "deferred_count": 0,
+      "resolved_count": 0,
+      "all_target_exits_zero": true,
+      "source_sha256": "91a5fd8eb12800b1915c36b40aa04f6706c2e334f7d8b2d21561c1870bd20b3c"
+    },
+    {
+      "case": "unscanned",
+      "uncovered": [
+        "mapping_unreadable_before_flush_or_exit"
+      ],
+      "deferred_count": 0,
+      "resolved_count": 0,
+      "all_target_exits_zero": true,
+      "source_sha256": "7e027385edcacd4bd88f52d35deb813319adf877ea1d884d9aa381dfa7d0c3af"
+    },
+    {
+      "case": "partial",
+      "uncovered": [
+        "mapping_unreadable_before_flush_or_exit"
+      ],
+      "deferred_count": 0,
+      "resolved_count": 0,
+      "all_target_exits_zero": true,
+      "source_sha256": "544f9d7cf55e9a8325db35ca83afc4b4a0dd771a80d01e2a0c68e9eadde29e07"
+    },
+    {
+      "case": "failed",
+      "uncovered": [
+        "mapping_unreadable_before_flush_or_exit"
+      ],
+      "deferred_count": 0,
+      "resolved_count": 0,
+      "all_target_exits_zero": true,
+      "source_sha256": "454552ae1b5f25b1ecec5da443b96f58e09366e7bf4159eccfa4e790d395bcad"
+    }
+  ],
+  "findings": [
+    {
+      "id": "FACILITY-MAP-REUSE-001",
+      "severity": "must_fix_before_ready",
+      "status": "confirmed_by_static_exact_code_symbolic_counterexample_not_native_OS_escape",
+      "issue": "映射身份仅(owner,address)和length/fd/path；重新mmap同址同文件形成新实体但dict相同。先前旧扫描可能被借给新实体的exit read失败核账。",
+      "evidence": "symbolic-exact-code-counterexamples.json/recreated_same_address_same_metadata",
+      "required_change": "每次成功mmap具有唯一generation；unmapping snapshot/完整扫描标记/candidate必须绑定相同generation。fork复制同代映射metadata但owner必须保持隔离。"
+    },
+    {
+      "id": "FACILITY-MAP-REUSE-002",
+      "severity": "must_fix_before_ready",
+      "status": "confirmed_by_static_exact_code_symbolic_counterexample_not_native_OS_escape",
+      "issue": "旧munmap ret0无条件mappings.pop(key)，同址新映射即便文件不同也会被删除，之后没有登记供exit/msync扫描。",
+      "evidence": "symbolic-exact-code-counterexamples.json/old_munmap_completion_same_metadata_new_incarnation and different_file_new_incarnation",
+      "required_change": "仅当当前表仍为旧generation才删除/拆段；保留同址新代映射，不从旧snapshot恢复覆盖新实体。mremap与MAP_FIXED重叠区间同样应审代次/覆盖。"
+    },
+    {
+      "id": "FACILITY-NEGATIVE-CONTROL-SCOPE-003",
+      "severity": "evidence_scope",
+      "status": "observed",
+      "issue": "failed负控先mprotect不可读，再munmap(p+1)。它从未形成成功扫描后的dependent_exit_scans，不能称已实际证明延期候选的ret!=0核账分支；unresolved当前为静审。",
+      "required_change": "如不能稳定实证则明确保留该证明边界；不得将4个控制通过写成所有新核账出口已原生执行。"
+    },
+    {
+      "id": "FACILITY-CONCURRENT-WRITES-004",
+      "severity": "scope_limit",
+      "status": "existing_observer_boundary_not_new_native_escape_proven",
+      "issue": "完整扫描与munmap真实完成之间其他线程可执行普通共享内存写；该before-flush扫描不能被宣传为任意并发写入完整信息流证明。唯一generation本身不解决同代store时序。",
+      "required_change": "结论限固定产品源码、实际出口与数据库字段用途审查；如需要任意并发I/O完整保证，需稳定暂停同owner其他writer或等价保障并独立负控。当前未观察产品在此窗口写敏感明文，不虚构产品失败。"
+    }
+  ],
+  "verified_conservative_cases": [
+    "crossowner key不匹配不可借用，独立精确AST符号控确认",
+    "partial/no-successful-scan/different mapping metadata不延期，独立符号控确认",
+    "ret failure/unresolved静态分支明确加uncovered，非直接删错误",
+    "泄漏counter不因延期清除，真实负控仍发现300个mapping泄漏"
+  ],
+  "acceptance_conditions": [
+    "作者新冻结修订加入唯一mapping generation及旧ret0不删除新代，保留当前所有尝试和SHA。",
+    "新设施控制应挑战同址同文件/异文件复用、跨owner、unscanned/partial/failure/unresolved，明确原生与符号证据边界。",
+    "最终仅从修正后固定新设施与同5247产品完整fresh31/62+CLI资源执行给准备结论；metadata-only无gap不迁移到最终accepted。",
+    "旧产品seed1缺证仍unknown。最终资源准备通过也不能自动等于167验收/发布通过。"
+  ],
+  "inputs_sha256": {
+    "tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/confirmed-unmap-complete-attempt/attempt-plan.json": "ca267130a894a01a5571aa56901bb01fcec6a59672fdd6b6c41207e8f6f06a1a",
+    "tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/confirmed-unmap-complete-attempt/observer-confirmed-unmap.diff": "4b054e2f20c599365c8cd23659012772ed2c438d0b0ea160155529fba71afcde",
+    "tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/confirmed-unmap-complete-attempt/frozen-harness/ptrace_os_adapter.py": "3a491cd18a614d9985c1e6601c58c86303269859cd9fc3a5a3ec2ceed3f2dcfa",
+    "tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/confirmed-unmap-complete-attempt/munmap_guard_probe.c": "f58adfe4b99d24addcdcde4f67f41be6a948cc8f707f6f9d5cf1cc114551abe4",
+    "tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/confirmed-unmap-complete-attempt/run_munmap_guards.py": "eb057480596ae55541e2779615420f941d110e931401b202e24cc11383aebc10",
+    "tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/confirmed-unmap-complete-attempt/positive-race-0/os-events.json": "d3a3fe5fa607e4ddba07649e4e1b31ccc1d8e4c3306aad6e3e2019ecb7e60134",
+    "tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/metadata-only-complete-attempt/concurrent-mapping-probe/os-events.json": "dadd5b94f85ad3c8660de9d52e8098b9ee3cef56ad9f5a44e5116d38e0d29866",
+    "tests/delivery-acceptance/release-preparation/20261009/facility-review-confirmed-unmap/symbolic-exact-code-counterexamples.json": "afe8f634421e84fd75948cb0abe3d294424813edc7af0f0b6a554b1479e7be92"
+  }
+}

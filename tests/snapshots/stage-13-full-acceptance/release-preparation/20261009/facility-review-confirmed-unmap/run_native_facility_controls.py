@@ -1,0 +1,14 @@
+import hashlib,json,pathlib,subprocess
+r=pathlib.Path.cwd();p=pathlib.Path(__file__).resolve().parent;b=r/'tests/delivery-acceptance/release-preparation/20261009/stage12-resource-verification/generation-guard-complete-attempt'
+image='sha256:6e73bceac9263be174946cc91d68a55cc2996fcc57cba43f33df17af20bad02c';expected='6fe53c9c6f32011eec40240d2822e3b3a89860172b40a7809fe6de6eb78b2c7c';assert hashlib.sha256((b/'frozen-harness/ptrace_os_adapter.py').read_bytes()).hexdigest()==expected
+rows=[]
+for name,c,mode in [('independent-failed','seccomp_munmap_probe.c','failed'),('independent-unresolved','seccomp_munmap_probe.c','unresolved'),('independent-address-reuse','address_reuse_probe.c','')]:
+ out=p/name;out.mkdir();command='gcc -O0 -pthread /reviewed/'+c+' -o /tmp/probe && python -S /reviewed/frozen-harness/ptrace_os_adapter.py --output /output -- /tmp/probe '+mode
+ cmd=['docker','run','--rm','--log-driver=none','--network','none','--read-only','--cap-drop','ALL','--cap-add','SYS_PTRACE','--security-opt','seccomp=unconfined','--tmpfs','/tmp:exec','--mount',f'type=bind,source={b},target=/reviewed,readonly','--mount',f'type=bind,source={out},target=/output','--entrypoint','sh',image,'-c',command]
+ completed=subprocess.run(cmd,capture_output=True,text=True,timeout=180);(out/'container.log').write_text(completed.stdout+completed.stderr);assert completed.returncode==0,(name,completed.stderr)
+ d=json.loads((out/'os-events.json').read_text());assert all(v=={'exit_code':0,'signal':None} for v in d['exits'].values());counters=d['counters'];assert 'mapping_unreadable_before_flush_or_exit'in d['uncovered']
+ if mode=='failed':assert counters.get('deferred_mapping_exit_scans',0)>0 and counters.get('deferred_mapping_exit_scans_resolved',0)==0 and 'pending_full_unmap_failed_after_deferred_exit_scan'in d['uncovered']
+ elif mode=='unresolved':assert counters.get('deferred_mapping_exit_scans',0)>0 and counters.get('deferred_mapping_exit_scans_resolved',0)==0 and 'pending_full_unmap_unresolved_after_deferred_exit_scan'in d['uncovered']
+ else:assert counters.get('old_unmap_new_mapping_retained',0)>0 and len({e['generation'] for e in d['events'] if e['kind']=='file_shared_mapping'})==1000
+ rows.append({'name':name,'container_exit':0,'all_targets_exit_zero':True,'observer_sha256':expected,'image_id':image,'deferred':counters.get('deferred_mapping_exit_scans',0),'resolved':counters.get('deferred_mapping_exit_scans_resolved',0),'retained_new_mappings':counters.get('old_unmap_new_mapping_retained',0),'uncovered':d['uncovered'],'raw_events_sha256':hashlib.sha256((out/'os-events.json').read_bytes()).hexdigest()});print(json.dumps(rows[-1]),flush=True)
+(p/'independent-native-control-results.json').write_text(json.dumps({'scope':'Independent real Linux synthetic facility controls only; no product execution or formal result','formal_verdict':None,'rows':rows},indent=2)+'\n')

@@ -1,0 +1,65 @@
+{
+  "status": "conditionally_ready_pending_formal_method_and_fixture_refinement",
+  "scope": "5247固定新源的准备复核，不代签资源/设计gate，不执行夹具，不判旧分支passed",
+  "source_revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "source_sha256": {
+    "app/server.py": "a17a6d939f65252b41998b28022f254af5a6fc745b7264e130ad069489984f73",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "c3347cfe766836d5bc5c776ee9ed03ea01c648847a76c12d19eaba8b830a7798",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead",
+    "tests/test_regressions.py": "f1089a462666894a654e295eda4cead5e60710fa2ca76145d0e518958500f6ae"
+  },
+  "head_and_7_sources_match": true,
+  "same_bytes_as_development_r2": true,
+  "formal_verdict": null,
+  "release_approved": false,
+  "context_reference": "tests/delivery-acceptance/current-release-context.json",
+  "baseline_at_review": {
+    "requirements.json": 96,
+    "scenarios.json": 167,
+    "methods.json": 176
+  },
+  "legacy_assertion_review": {
+    "schema_columns_indexes_and_foreign_keys_match_current": true,
+    "validation": "只将静态字符串SCHEMA在独立:memory: SQLite对比，没有启动/导入任何应用。",
+    "historical_origin": "已提交stage10/reviewer-legacy-replay.json的固定旧source与真实HTTP历史结果只作来源。af2fc7...已知canonical双校验成立，不能升级当前5247运行passed。",
+    "strong_assertions": [
+      "启动前后全部既有行相同；已有Cookie不登录直接session/受保护业务200",
+      "每状态原payload/trim title/UTC+08到Z/+00/.000000均exact201/id4/原status/replayed true且全部行不变",
+      "已有K起止±1µs精确409 idempotency_conflict，无成功booking且全表不变",
+      "future-confirmed全新K非零µs四项精确400 invalid_interval，全表不变，不用409/>=400替代",
+      "正常全新K合法零µs真实201/id5/replayed false，只有1booking+1notice，原行不变，重放不新增"
+    ],
+    "business_code_not_replaced": "独立synthetic SQL与独立秒canonical oracle，不调用产品hash/create_booking/login造预期；只执行校验SHA后的当前源副本。datetime/time依赖适配仍应由正式资源Reviewer明文审。"
+  },
+  "findings": [
+    {
+      "id": "LEGACY-GATE-001",
+      "status": "recommended_explicit_manifest_revision_binding",
+      "priority": "P2",
+      "issue": "当前gate只拒绝BASE708并比较args.revision与HEAD，读取manifest source_sha256后丢掉其source_revision；按本轮指定current-release-context文件已有SHA防错误源，但建议明确把受审manifest revision绑定到args与HEAD。",
+      "suggested_check": "approved_manifest.source_revision == args.revision == actual_HEAD；缺该字段或不等即拒绝，不改源码、不执行其它修订。",
+      "why": "避免工具一般化误用让另一manifest/旧HEAD被称为新修订；不是本轮已执行旧程序或已发现放行。"
+    },
+    {
+      "id": "LEGACY-FIXTURE-002",
+      "status": "needs_fixture_timestamp_coherence_for_legal_old_record_claim",
+      "priority": "P2",
+      "issue": "future两个case start2030但created_at/原通知硬编码2026。其零微秒canonical表示正确，但旧app合法创建时30天规则不允许该日期关系。",
+      "suggested_change": "仅historic-started用2026创建时间；future-confirmed/cancelled用2030-T之前合理创建时间，取消时间晚于创建/早于start；记录明确合成，取消fixture可同时保留既有创建与取消通知以一致。",
+      "why": "保持旧合法记录的synthetic形状自洽，而非测试能读任意手工不合法行。canonical散列不含created_at，修整不改变独立旧摘要oracle或±µs断言。"
+    }
+  ],
+  "formal_method_gate": "必须下一轮Analyst/Reviewer明文将原“新执行旧app创建”的分支改为synthetic历史canonical记录兼容并独立接受来源/边界；当前不写ledger，也不能忽略曾经拒绝后绕到外层新运行旧app。",
+  "coverage_review": "fresh5247覆盖测量尚待完成，source计数/map/guard矩阵/5defensive出口需随后独立复核，不能凭r2或708高覆盖升级本轮。",
+  "inputs_sha256": {
+    "tests/delivery-acceptance/current-release-context.json": "32490a5f92b5c006b95d5b2f9a3343726491a306388f9a6b10056c1c0cc4f815",
+    "tests/delivery-acceptance/release-preparation/20261009/legacy_fixture_current_only.py": "b10205f10adfe35f264b68b32e1592815b6f1688cb22a999e67c06b8d34cf0ac",
+    "tests/delivery-acceptance/release-preparation/20261009/legacy-fixture-method-review.json": "0ac84892251d61d228b49792a0a060bda66aebd7c370579dcedcf54dcad8031d",
+    "tests/snapshots/stage-10-fixes/reviewer-legacy-replay.json": "7e5f7515f65e24b94f1b31eaa742a634df6e20c4ca146511e277dcfca723415c",
+    "tests/delivery-acceptance/requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "tests/delivery-acceptance/methods.json": "129f697c44414c42b45c64fff3f9a30993d2ce1bfcac3f692a52f98285299a7c"
+  }
+}

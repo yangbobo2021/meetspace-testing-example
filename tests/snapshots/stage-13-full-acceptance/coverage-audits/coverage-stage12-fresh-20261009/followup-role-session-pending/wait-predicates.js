@@ -1,0 +1,2 @@
+const predicate0 = (() => state.user?.role==="member" && state.identityPending && !state.loading && !!state.loadError && document.querySelector("#toast").textContent===state.loadError);
+const predicate1 = (() => state.user?.role==="member" && !state.identityPending && !state.loading && !state.loadError && !!document.querySelector("#filter-date") && !document.querySelector("nav [data-page=manage]"));

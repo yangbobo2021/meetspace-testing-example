@@ -1,0 +1,15 @@
+const p0 = (() => state.user && !state.loading && !state.loadError && !state.identityPending && !!document.querySelector("#filter-date"));
+const p1 = (() => state.user?.role==="member" && !state.loading && !state.identityPending && !state.loadError && !!document.querySelector("#filter-date") && !document.querySelector("nav [data-page=manage]"));
+const p2 = (() => state.user && !state.loading && !state.identityPending && !state.loadError && document.querySelector("#toast").textContent==="成员角色已更新");
+const p3 = (() => state.user?.role==="member" && !state.loading && !state.identityPending && !state.loadError && !!document.querySelector("#filter-date") && !document.querySelector("nav [data-page=manage]"));
+const p4 = (() => document.querySelector("#toast").textContent.length>0);
+const p5 = (() => state.user?.role==="member" && !state.loading && !state.identityPending && !state.loadError && !!document.querySelector("#filter-date"));
+const p6 = (() => document.querySelector("#toast").textContent.length>0 && document.querySelector("#toast").textContent!=="成员角色已更新");
+const p7 = (() => state.user?.role==="member" && state.identityPending && state.loadError==="新角色提交后身份查询503");
+const p8 = (() => state.user?.role==="member" && !state.loading && !state.identityPending && !state.loadError && !!document.querySelector("#filter-date") && !document.querySelector("nav [data-page=manage]"));
+const p9 = (() => state.user?.role === "admin" && !state.loading && !state.identityPending && !state.loadError && !!document.querySelector("[data-member]") && document.querySelector("#toast").textContent === "成员角色已更新");
+const p10 = (() => state.user && !state.loading && !state.identityPending && document.querySelector("#toast").textContent.length>0 && document.querySelector("#toast").textContent!=="成员角色已更新");
+const p11 = ((message) => state.identityPending && !state.loading && state.loadError===message && document.querySelector("#toast").textContent===message);
+const p12 = (() => state.user?.role==="admin" && !state.loading && !state.identityPending && !state.loadError && !!document.querySelector("[data-member]") && document.querySelector("#toast").textContent==="成员角色已更新");
+const p13 = (() => state.user?.role==="member" && !state.loading && !state.identityPending && !state.loadError && !!document.querySelector("#filter-date"));
+const p14 = (() => !state.loading && !state.identityPending && !state.loadError && document.querySelector("#toast").textContent==="成员角色已更新");

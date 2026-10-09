@@ -1,0 +1,6068 @@
+{
+  "method_ids": [
+    "AI-reservation-creation-1",
+    "AI-reservation-creation-8",
+    "AI-space-administration-7",
+    "AI-WB-room-eligibility-capacity"
+  ],
+  "checks": [
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": true
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814455878333,
+        "end_ns": 1717814461041125,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-167"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717814461208500,
+        "end_ns": 1717814464837666,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": false
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814465556375,
+        "end_ns": 1717814468070541,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-168"
+        },
+        "status": 409,
+        "body": {
+          "error": "会议室已停用，请选择其他会议室",
+          "code": "room_inactive"
+        },
+        "start_ns": 1717814468482666,
+        "end_ns": 1717814470611000,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 0
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 0
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": true
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814471941583,
+        "end_ns": 1717814475539375,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 5,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-169"
+        },
+        "status": 404,
+        "body": {
+          "error": "会议室不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1717814475991125,
+        "end_ns": 1717814479765500,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": true
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814481037750,
+        "end_ns": 1717814483132625,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 999,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-170"
+        },
+        "status": 404,
+        "body": {
+          "error": "会议室不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1717814483498333,
+        "end_ns": 1717814485702791,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": true
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814486794875,
+        "end_ns": 1717814489305375,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-171"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717814489463958,
+        "end_ns": 1717814494242375,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": false
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814495430500,
+        "end_ns": 1717814497679958,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-172"
+        },
+        "status": 409,
+        "body": {
+          "error": "会议室已停用，请选择其他会议室",
+          "code": "room_inactive"
+        },
+        "start_ns": 1717814498077500,
+        "end_ns": 1717814500958333,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 0
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 0
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": true
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814502169291,
+        "end_ns": 1717814504273166,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 5,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-173"
+        },
+        "status": 404,
+        "body": {
+          "error": "会议室不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1717814504725083,
+        "end_ns": 1717814508688541,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": true
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814510407250,
+        "end_ns": 1717814513455541,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 999,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-174"
+        },
+        "status": 404,
+        "body": {
+          "error": "会议室不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1717814513907666,
+        "end_ns": 1717814516822916,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": false
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717814812324333,
+        "end_ns": 1717814816175666,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "旧弹窗提交按现状拒绝",
+      "passed": true,
+      "actual": {
+        "body": {
+          "error": "会议室已停用，请选择其他会议室",
+          "code": "room_inactive"
+        },
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 0
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 0
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 2,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-175"
+        },
+        "status": 409,
+        "body": {
+          "error": "会议室已停用，请选择其他会议室",
+          "code": "room_inactive"
+        },
+        "start_ns": 1717815158871083,
+        "end_ns": 1717815166041416,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 0
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 0
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 4,
+          "equipment": [
+            "白板"
+          ],
+          "active": true
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717815566073291,
+        "end_ns": 1717815570927583,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "旧弹窗提交按现状拒绝",
+      "passed": true,
+      "actual": {
+        "body": {
+          "error": "参会人数超过会议室容量",
+          "code": "capacity_exceeded"
+        },
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 4,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "测试层",
+              "capacity": 4,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "修正容量后成功",
+      "passed": true,
+      "actual": {
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "旧弹窗",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 4,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null
+          }
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "user_id": 2,
+            "booking_id": 1,
+            "message": "「旧弹窗」预约成功：云杉 · 04月11日 10:00–11:00。",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "read": 0
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "测试层",
+            "capacity": 4,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "roles": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 8,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-176"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717816192376791,
+        "end_ns": 1717816197557416,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/rooms/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/rooms/1",
+        "method": "PATCH",
+        "input": {
+          "name": "云杉",
+          "location": "测试层",
+          "capacity": 8,
+          "equipment": [
+            "白板"
+          ],
+          "active": false
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1717816197683750,
+        "end_ns": 1717816202715083,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "成员页停用空间不提供入口",
+      "passed": true,
+      "actual": {
+        "text": "▱\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n◫\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗\n▥\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n当天暂无预约 · 绿色为已占用\n\n预约空间\n↗"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 1,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-177"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717817001736375,
+        "end_ns": 1717817006334500,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 7,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-178"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717817007809333,
+        "end_ns": 1717817017019541,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 8,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-179"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717817017761083,
+        "end_ns": 1717817022513958,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 9,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-180"
+        },
+        "status": 400,
+        "body": {
+          "error": "参会人数超过会议室容量",
+          "code": "capacity_exceeded"
+        },
+        "start_ns": 1717817023974625,
+        "end_ns": 1717817026699750,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 1,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-181"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717817028654583,
+        "end_ns": 1717817034138625,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 7,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-182"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717817034755583,
+        "end_ns": 1717817037319791,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 8,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-183"
+        },
+        "status": 201,
+        "body": {
+          "booking": {
+            "id": 1,
+            "status": "confirmed",
+            "replayed": false
+          }
+        },
+        "start_ns": 1717817037872041,
+        "end_ns": 1717817044336541,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "POST /api/bookings status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/bookings",
+        "method": "POST",
+        "input": {
+          "room_id": 1,
+          "title": "合成矩阵会议",
+          "attendees": 9,
+          "start": "2030-04-11T10:00:00+08:00",
+          "end": "2030-04-11T11:00:00+08:00",
+          "idempotency_key": "matrix-184"
+        },
+        "status": 400,
+        "body": {
+          "error": "参会人数超过会议室容量",
+          "code": "capacity_exceeded"
+        },
+        "start_ns": 1717817046014125,
+        "end_ns": 1717817049385208,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "http": [
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": true
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814455878333,
+      "end_ns": 1717814461041125,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-167"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717814461208500,
+      "end_ns": 1717814464837666,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": false
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814465556375,
+      "end_ns": 1717814468070541,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-168"
+      },
+      "status": 409,
+      "body": {
+        "error": "会议室已停用，请选择其他会议室",
+        "code": "room_inactive"
+      },
+      "start_ns": 1717814468482666,
+      "end_ns": 1717814470611000,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": true
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814471941583,
+      "end_ns": 1717814475539375,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 5,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-169"
+      },
+      "status": 404,
+      "body": {
+        "error": "会议室不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1717814475991125,
+      "end_ns": 1717814479765500,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": true
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814481037750,
+      "end_ns": 1717814483132625,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 999,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-170"
+      },
+      "status": 404,
+      "body": {
+        "error": "会议室不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1717814483498333,
+      "end_ns": 1717814485702791,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": true
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814486794875,
+      "end_ns": 1717814489305375,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-171"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717814489463958,
+      "end_ns": 1717814494242375,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": false
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814495430500,
+      "end_ns": 1717814497679958,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-172"
+      },
+      "status": 409,
+      "body": {
+        "error": "会议室已停用，请选择其他会议室",
+        "code": "room_inactive"
+      },
+      "start_ns": 1717814498077500,
+      "end_ns": 1717814500958333,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": true
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814502169291,
+      "end_ns": 1717814504273166,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 5,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-173"
+      },
+      "status": 404,
+      "body": {
+        "error": "会议室不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1717814504725083,
+      "end_ns": 1717814508688541,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": true
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814510407250,
+      "end_ns": 1717814513455541,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 999,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-174"
+      },
+      "status": 404,
+      "body": {
+        "error": "会议室不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1717814513907666,
+      "end_ns": 1717814516822916,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": false
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717814812324333,
+      "end_ns": 1717814816175666,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 2,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-175"
+      },
+      "status": 409,
+      "body": {
+        "error": "会议室已停用，请选择其他会议室",
+        "code": "room_inactive"
+      },
+      "start_ns": 1717815158871083,
+      "end_ns": 1717815166041416,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 4,
+        "equipment": [
+          "白板"
+        ],
+        "active": true
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717815566073291,
+      "end_ns": 1717815570927583,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 8,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-176"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717816192376791,
+      "end_ns": 1717816197557416,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms/1",
+      "method": "PATCH",
+      "input": {
+        "name": "云杉",
+        "location": "测试层",
+        "capacity": 8,
+        "equipment": [
+          "白板"
+        ],
+        "active": false
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1717816197683750,
+      "end_ns": 1717816202715083,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/rooms?date=2030-04-11",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "测试层",
+            "capacity": 8,
+            "equipment": [
+              "白板"
+            ],
+            "active": false,
+            "bookings": [
+              {
+                "id": 1,
+                "user_id": 2,
+                "title": "合成矩阵会议",
+                "start": "2030-04-11T02:00:00+00:00",
+                "end": "2030-04-11T03:00:00+00:00",
+                "owner": "陈悦"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": [
+              "显示屏",
+              "白板"
+            ],
+            "active": true,
+            "bookings": []
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": [
+              "显示屏",
+              "白板",
+              "视频会议",
+              "电话会议"
+            ],
+            "active": true,
+            "bookings": []
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": [
+              "白板",
+              "电话会议"
+            ],
+            "active": true,
+            "bookings": []
+          }
+        ],
+        "date": "2030-04-11"
+      },
+      "start_ns": 1717816202853000,
+      "end_ns": 1717816208841125,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "bookings": [
+          {
+            "id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 8,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "room_name": "云杉",
+            "location": "测试层",
+            "owner": "陈悦"
+          }
+        ]
+      },
+      "start_ns": 1717816208917375,
+      "end_ns": 1717816212691416,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings?scope=team",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "bookings": [
+          {
+            "id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "合成矩阵会议",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 8,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "room_name": "云杉",
+            "location": "测试层",
+            "owner": "陈悦"
+          }
+        ]
+      },
+      "start_ns": 1717816212780625,
+      "end_ns": 1717816215818708,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 1,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-177"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717817001736375,
+      "end_ns": 1717817006334500,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 7,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-178"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717817007809333,
+      "end_ns": 1717817017019541,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 8,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-179"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717817017761083,
+      "end_ns": 1717817022513958,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 9,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-180"
+      },
+      "status": 400,
+      "body": {
+        "error": "参会人数超过会议室容量",
+        "code": "capacity_exceeded"
+      },
+      "start_ns": 1717817023974625,
+      "end_ns": 1717817026699750,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 1,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-181"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717817028654583,
+      "end_ns": 1717817034138625,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 7,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-182"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717817034755583,
+      "end_ns": 1717817037319791,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 8,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-183"
+      },
+      "status": 201,
+      "body": {
+        "booking": {
+          "id": 1,
+          "status": "confirmed",
+          "replayed": false
+        }
+      },
+      "start_ns": 1717817037872041,
+      "end_ns": 1717817044336541,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/bookings",
+      "method": "POST",
+      "input": {
+        "room_id": 1,
+        "title": "合成矩阵会议",
+        "attendees": 9,
+        "start": "2030-04-11T10:00:00+08:00",
+        "end": "2030-04-11T11:00:00+08:00",
+        "idempotency_key": "matrix-184"
+      },
+      "status": 400,
+      "body": {
+        "error": "参会人数超过会议室容量",
+        "code": "capacity_exceeded"
+      },
+      "start_ns": 1717817046014125,
+      "end_ns": 1717817049385208,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    }
+  ],
+  "gap": "",
+  "executed_source_lines": [
+    58,
+    59,
+    63,
+    77,
+    79,
+    83,
+    84,
+    86,
+    90,
+    91,
+    92,
+    94,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    120,
+    173,
+    176,
+    179,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    202,
+    203,
+    204,
+    207,
+    209,
+    210,
+    212,
+    214,
+    215,
+    216,
+    218,
+    219,
+    221,
+    226,
+    227,
+    228,
+    229,
+    232,
+    235,
+    236,
+    238,
+    242,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    255,
+    256,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    275,
+    276,
+    277,
+    278,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    321,
+    322,
+    323,
+    324,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    336,
+    337,
+    338,
+    339,
+    341,
+    342,
+    343,
+    344,
+    346,
+    347,
+    348,
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    372,
+    373,
+    374,
+    375,
+    378,
+    379,
+    380,
+    381,
+    382,
+    383,
+    397,
+    402,
+    403,
+    404,
+    405,
+    406,
+    408,
+    409,
+    410,
+    415,
+    416,
+    417,
+    418,
+    422,
+    426,
+    427,
+    430,
+    431,
+    435,
+    436,
+    437,
+    438,
+    439,
+    441,
+    442,
+    444,
+    447,
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    454,
+    455,
+    459,
+    460,
+    462,
+    464,
+    465,
+    467,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474,
+    475,
+    476,
+    477,
+    479,
+    482,
+    483,
+    484,
+    485,
+    486,
+    487,
+    491
+  ],
+  "sql_trace": [
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814458715625,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814458735166,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814459366250,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814459519791,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=1 WHERE id=1"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814459574291,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814462947250,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814462960916,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814463480750,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-167'"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814463547541,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814463589166,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814463675000,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 2, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 2, '2030-04-10T01:00:00+00:00', 'matrix-167', '5051679d6fa7f56589dbd4410ad63e601d30cb6422e076f9aae659e64aab8ac4')"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814463778375,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (2, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814463810625,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814466882750,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814466893000,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814467339208,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814467433458,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=0 WHERE id=1"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814467465083,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814469619416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814469629541,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814470004333,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-168'"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814470071916,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717814470106583,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814474115583,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814474157750,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814474637666,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814474732083,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=1 WHERE id=1"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814474762750,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814477244291,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814477254375,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814477586291,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-169'"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814479074708,
+      "sql": "SELECT * FROM rooms WHERE id=5 AND team_id=1"
+    },
+    {
+      "connection": 4375796048,
+      "thread": 6193491968,
+      "time_ns": 1717814479130125,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814482194375,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814482205000,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814482492458,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814482564625,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=1 WHERE id=1"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814482607625,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375796304,
+      "thread": 6193491968,
+      "time_ns": 1717814484586750,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796304,
+      "thread": 6193491968,
+      "time_ns": 1717814484597916,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375796304,
+      "thread": 6193491968,
+      "time_ns": 1717814484939666,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-170'"
+    },
+    {
+      "connection": 4375796304,
+      "thread": 6193491968,
+      "time_ns": 1717814484998541,
+      "sql": "SELECT * FROM rooms WHERE id=999 AND team_id=1"
+    },
+    {
+      "connection": 4375796304,
+      "thread": 6193491968,
+      "time_ns": 1717814485023625,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814487939416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814487950583,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814488257791,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814488339875,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=1 WHERE id=1"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814488385458,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814492109958,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814492152833,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814492885708,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-171'"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814493060958,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814493106708,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814493196291,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 1, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 2, '2030-04-10T01:00:00+00:00', 'matrix-171', '5051679d6fa7f56589dbd4410ad63e601d30cb6422e076f9aae659e64aab8ac4')"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814493253500,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (1, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814493281625,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814496618875,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814496631583,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814497019000,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814497097208,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=0 WHERE id=1"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814497121333,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814499576416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814499587958,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814500299375,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-172'"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814500390666,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814500425416,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814503313500,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814503323666,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814503630916,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814503713750,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=1 WHERE id=1"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814503742000,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814506668500,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814506680625,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814507424541,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-173'"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814507547000,
+      "sql": "SELECT * FROM rooms WHERE id=5 AND team_id=1"
+    },
+    {
+      "connection": 4375796560,
+      "thread": 6193491968,
+      "time_ns": 1717814507585083,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717814512038125,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717814512051791,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717814512444208,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717814512578291,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=1 WHERE id=1"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717814512602583,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814515426291,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814515437291,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814516009750,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-174'"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814516085333,
+      "sql": "SELECT * FROM rooms WHERE id=999 AND team_id=1"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6193491968,
+      "time_ns": 1717814516115125,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6193491968,
+      "time_ns": 1717814541488958,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6193491968,
+      "time_ns": 1717814541560083,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6193491968,
+      "time_ns": 1717814542791791,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6210318336,
+      "time_ns": 1717814549949625,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717814550045166,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6210318336,
+      "time_ns": 1717814550123375,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6227144704,
+      "time_ns": 1717814550295083,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6227144704,
+      "time_ns": 1717814550368625,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717814550507625,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6210318336,
+      "time_ns": 1717814551993833,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6210318336,
+      "time_ns": 1717814552238541,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6227144704,
+      "time_ns": 1717814552589208,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6227144704,
+      "time_ns": 1717814552652708,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717814552816500,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717814555168000,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717814555250458,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717814555268541,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717814555282708,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717814555319375,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6193491968,
+      "time_ns": 1717814592800958,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6193491968,
+      "time_ns": 1717814592945250,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6210318336,
+      "time_ns": 1717814593618208,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6210318336,
+      "time_ns": 1717814593661291,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6193491968,
+      "time_ns": 1717814595070250,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6227144704,
+      "time_ns": 1717814595094041,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6227144704,
+      "time_ns": 1717814595111958,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6210318336,
+      "time_ns": 1717814595820916,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6210318336,
+      "time_ns": 1717814595870041,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6193491968,
+      "time_ns": 1717814596369458,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6193491968,
+      "time_ns": 1717814596417708,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6193491968,
+      "time_ns": 1717814596554166,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6193491968,
+      "time_ns": 1717814596773500,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6193491968,
+      "time_ns": 1717814596806333,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6227144704,
+      "time_ns": 1717814597217666,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6227144704,
+      "time_ns": 1717814597488333,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814607206458,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814607237208,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814610305250,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6210318336,
+      "time_ns": 1717814610422166,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6210318336,
+      "time_ns": 1717814610599833,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814612343125,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814612525000,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814612548375,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814612581000,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717814612805375,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6210318336,
+      "time_ns": 1717814612853416,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6210318336,
+      "time_ns": 1717814613900708,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6227144704,
+      "time_ns": 1717814615448541,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6227144704,
+      "time_ns": 1717814615476458,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6227144704,
+      "time_ns": 1717814617628750,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6227144704,
+      "time_ns": 1717814617653458,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6193491968,
+      "time_ns": 1717814814474875,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6193491968,
+      "time_ns": 1717814814491583,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6193491968,
+      "time_ns": 1717814814998666,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6193491968,
+      "time_ns": 1717814815107083,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=0 WHERE id=1"
+    },
+    {
+      "connection": 4375792720,
+      "thread": 6193491968,
+      "time_ns": 1717814815135833,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717814833632958,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717814833665958,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717814835237875,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='6837dddb-9ce5-40d6-8d8a-fa2f048330f9'"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717814835324291,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717814835449041,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6193491968,
+      "time_ns": 1717815162631916,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6193491968,
+      "time_ns": 1717815162649916,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6193491968,
+      "time_ns": 1717815163912291,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-175'"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6193491968,
+      "time_ns": 1717815163998333,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6193491968,
+      "time_ns": 1717815164040333,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815227932041,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815228315625,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815228985458,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717815235144833,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717815236553375,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717815236900416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717815236948250,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6227144704,
+      "time_ns": 1717815239844708,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6227144704,
+      "time_ns": 1717815239980875,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717815240304416,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717815240510583,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717815242249166,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6227144704,
+      "time_ns": 1717815242275916,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6227144704,
+      "time_ns": 1717815242860458,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717815244886458,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717815245828083,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717815245870125,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717815245889708,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800912,
+      "thread": 6193491968,
+      "time_ns": 1717815245947875,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815310432958,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6210318336,
+      "time_ns": 1717815310872458,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6210318336,
+      "time_ns": 1717815311185375,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815311443666,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6210318336,
+      "time_ns": 1717815313264458,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375800144,
+      "thread": 6210318336,
+      "time_ns": 1717815313317125,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815313424958,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6227144704,
+      "time_ns": 1717815314376666,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6227144704,
+      "time_ns": 1717815314388458,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815314942125,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815314989666,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815315017041,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815315032541,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6193491968,
+      "time_ns": 1717815315049916,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6227144704,
+      "time_ns": 1717815316396291,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375800400,
+      "thread": 6227144704,
+      "time_ns": 1717815316444333,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717815328659083,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6210318336,
+      "time_ns": 1717815328748541,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6210318336,
+      "time_ns": 1717815329297750,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717815329631708,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6227144704,
+      "time_ns": 1717815330830375,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6227144704,
+      "time_ns": 1717815330858791,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6210318336,
+      "time_ns": 1717815331508416,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717815331568625,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375792464,
+      "thread": 6210318336,
+      "time_ns": 1717815331598875,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6227144704,
+      "time_ns": 1717815332141083,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375801680,
+      "thread": 6227144704,
+      "time_ns": 1717815332176166,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717815332345791,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717815332383125,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717815332415916,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717815332436500,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375800656,
+      "thread": 6193491968,
+      "time_ns": 1717815332468083,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6193491968,
+      "time_ns": 1717815568823666,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6193491968,
+      "time_ns": 1717815568842583,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6193491968,
+      "time_ns": 1717815569575625,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6193491968,
+      "time_ns": 1717815569700708,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=4, equipment='[\"白板\"]', active=1 WHERE id=1"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6193491968,
+      "time_ns": 1717815569740833,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6193491968,
+      "time_ns": 1717815643240833,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6193491968,
+      "time_ns": 1717815643288333,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6193491968,
+      "time_ns": 1717815644345291,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='5115e7f8-3b00-4971-b546-407d81bd770a'"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6193491968,
+      "time_ns": 1717815644564041,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6193491968,
+      "time_ns": 1717815644644250,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717816140690666,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717816140715250,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717816145328708,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='a0b3688c-d465-417c-8dd8-3113a9e149a8'"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717816145813250,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717816145915583,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717816146057250,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 2, '旧弹窗', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 4, '2030-04-10T01:00:00+00:00', 'a0b3688c-d465-417c-8dd8-3113a9e149a8', '6642ad5eba73d8c04138f46b10b1acde4038b394781cb0d3f8084d40fea3382d')"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717816146364541,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (2, 1, '「旧弹窗」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375797584,
+      "thread": 6193491968,
+      "time_ns": 1717816146566333,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6210318336,
+      "time_ns": 1717816167454166,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6210318336,
+      "time_ns": 1717816167472916,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816169708666,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816169726333,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6227144704,
+      "time_ns": 1717816173290833,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6227144704,
+      "time_ns": 1717816173409291,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6210318336,
+      "time_ns": 1717816175594458,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6227144704,
+      "time_ns": 1717816175741541,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6210318336,
+      "time_ns": 1717816181705708,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6227144704,
+      "time_ns": 1717816181813375,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816184489291,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816185619083,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816185666666,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816185682083,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816185695750,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816185728458,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816194720541,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816194733333,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816195817958,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-176'"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816195899000,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816196168958,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816196313333,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 2, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 8, '2030-04-10T01:00:00+00:00', 'matrix-176', 'ea4d386f698706d5e13daa618a6face9bbddb483be26b29532ff9fae045ab4be')"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816196380708,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (2, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816196406458,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816199369041,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816199382166,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816200466666,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816200691333,
+      "sql": "UPDATE rooms SET name='云杉', location='测试层', capacity=8, equipment='[\"白板\"]', active=0 WHERE id=1"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816200736166,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816205288000,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816205305791,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816206765208,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816207281791,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816207331625,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816207348500,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816207361958,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816207381500,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816210413333,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816210425375,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816211653958,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816211717166,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816214411250,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816214436666,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816215038416,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816215086583,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816243076041,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816243115916,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816244215708,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6227144704,
+      "time_ns": 1717816253764583,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6227144704,
+      "time_ns": 1717816253829208,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6210318336,
+      "time_ns": 1717816254147583,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6210318336,
+      "time_ns": 1717816254200166,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6210318336,
+      "time_ns": 1717816257781708,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6227144704,
+      "time_ns": 1717816258234208,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6210318336,
+      "time_ns": 1717816258330083,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6227144704,
+      "time_ns": 1717816258418125,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816258764750,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816259362708,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816261301125,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816262664625,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816262833166,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816262932708,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816262954208,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375799888,
+      "thread": 6193491968,
+      "time_ns": 1717816262978583,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717816319084583,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717816319109708,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816320450416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816321097500,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6227144704,
+      "time_ns": 1717816321405583,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6227144704,
+      "time_ns": 1717816321462000,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717816324251875,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717816324667458,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816325155000,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6227144704,
+      "time_ns": 1717816325833750,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6227144704,
+      "time_ns": 1717816328240333,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816328290916,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816328365791,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816328401791,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816328436291,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6193491968,
+      "time_ns": 1717816328453875,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816362216708,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816362241000,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6210318336,
+      "time_ns": 1717816363601458,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6210318336,
+      "time_ns": 1717816363637333,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6227144704,
+      "time_ns": 1717816364833166,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6227144704,
+      "time_ns": 1717816364867625,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816365055500,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6210318336,
+      "time_ns": 1717816365114750,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=2 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6210318336,
+      "time_ns": 1717816366327625,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816366526000,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6227144704,
+      "time_ns": 1717816366594500,
+      "sql": "SELECT * FROM notifications WHERE user_id=2 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816367195875,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375791696,
+      "thread": 6227144704,
+      "time_ns": 1717816367283708,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816367638000,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816367762625,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-11T16:00:00+00:00' AND b.end>'2030-04-10T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816367794958,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816692308541,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816692333125,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816693567166,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6193491968,
+      "time_ns": 1717816703888416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6193491968,
+      "time_ns": 1717816703920458,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6193491968,
+      "time_ns": 1717816714972583,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6193491968,
+      "time_ns": 1717816715478750,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717816716365291,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717816716407291,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6227144704,
+      "time_ns": 1717816716908333,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6227144704,
+      "time_ns": 1717816716945375,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6193491968,
+      "time_ns": 1717816717555583,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717816722129708,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=1 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6210318336,
+      "time_ns": 1717816723342791,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6193491968,
+      "time_ns": 1717816725223916,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6227144704,
+      "time_ns": 1717816727672291,
+      "sql": "SELECT * FROM notifications WHERE user_id=1 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6193491968,
+      "time_ns": 1717816727754916,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6193491968,
+      "time_ns": 1717816727800833,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6227144704,
+      "time_ns": 1717816730449125,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6227144704,
+      "time_ns": 1717816801314833,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816801397291,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6210318336,
+      "time_ns": 1717816801521208,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6227144704,
+      "time_ns": 1717816801575333,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816802088333,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6210318336,
+      "time_ns": 1717816803256166,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6243971072,
+      "time_ns": 1717816803775708,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816804357333,
+      "sql": "SELECT * FROM rooms WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6243971072,
+      "time_ns": 1717816804399875,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6210318336,
+      "time_ns": 1717816806571083,
+      "sql": "SELECT b.*, r.name AS room_name, r.location, u.name AS owner\n                     FROM bookings b JOIN rooms r ON r.id=b.room_id JOIN users u ON u.id=b.user_id\n                     WHERE b.team_id=1 AND b.user_id=1 ORDER BY b.start DESC, b.id DESC"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6227144704,
+      "time_ns": 1717816806670125,
+      "sql": "SELECT * FROM notifications WHERE user_id=1 ORDER BY id DESC LIMIT 100"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6243971072,
+      "time_ns": 1717816809881416,
+      "sql": "SELECT id, email, name, role FROM users WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4375796816,
+      "thread": 6227144704,
+      "time_ns": 1717816809912666,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802192,
+      "thread": 6210318336,
+      "time_ns": 1717816810009791,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816812150583,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=1\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375802448,
+      "thread": 6243971072,
+      "time_ns": 1717816812281208,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816813472208,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=2\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816813516041,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=3\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816817060583,
+      "sql": "SELECT b.id, b.user_id, b.title, b.start, b.end, u.name AS owner\n                    FROM bookings b JOIN users u ON u.id=b.user_id WHERE b.room_id=4\n                    AND b.status='confirmed' AND b.start<'2030-04-10T16:00:00+00:00' AND b.end>'2030-04-09T16:00:00+00:00' ORDER BY b.start"
+    },
+    {
+      "connection": 4375795536,
+      "thread": 6193491968,
+      "time_ns": 1717816817175083,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6193491968,
+      "time_ns": 1717817003740875,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6193491968,
+      "time_ns": 1717817003760000,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6193491968,
+      "time_ns": 1717817004630625,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-177'"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6193491968,
+      "time_ns": 1717817004715708,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6193491968,
+      "time_ns": 1717817004764375,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6193491968,
+      "time_ns": 1717817004835833,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 2, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 1, '2030-04-10T01:00:00+00:00', 'matrix-177', 'ecca5ddf3ddd5b47c22f0e5cec7cc4210538c738464d004d0218f5af890c23c4')"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6193491968,
+      "time_ns": 1717817004895750,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (2, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375802960,
+      "thread": 6193491968,
+      "time_ns": 1717817004917291,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817013627291,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817013644666,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817014823416,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-178'"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817014897000,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817014939541,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817015198208,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 2, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 7, '2030-04-10T01:00:00+00:00', 'matrix-178', 'be850b317a63ffa132a56d36c375711423dd9bffc36f970ea3734eb49e18715a')"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817015737458,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (2, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817015778583,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817019459333,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817019473541,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817019930375,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-179'"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817019998708,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817020148791,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817020481125,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 2, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 8, '2030-04-10T01:00:00+00:00', 'matrix-179', 'ea4d386f698706d5e13daa618a6face9bbddb483be26b29532ff9fae045ab4be')"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817020531791,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (2, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817020552500,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817025513875,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817025524583,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817025902166,
+      "sql": "SELECT * FROM bookings WHERE user_id=2 AND idempotency_key='matrix-180'"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817025999291,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375798608,
+      "thread": 6193491968,
+      "time_ns": 1717817026032416,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817031631375,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817031642666,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817032160333,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-181'"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817032240291,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817032376333,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817033118916,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 1, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 1, '2030-04-10T01:00:00+00:00', 'matrix-181', 'ecca5ddf3ddd5b47c22f0e5cec7cc4210538c738464d004d0218f5af890c23c4')"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817033259916,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (1, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817033287833,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817036041125,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817036051541,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817036392000,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-182'"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817036442875,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817036476583,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817036530791,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 1, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 7, '2030-04-10T01:00:00+00:00', 'matrix-182', 'be850b317a63ffa132a56d36c375711423dd9bffc36f970ea3734eb49e18715a')"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817036583166,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (1, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817036601250,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817039560041,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817039571750,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817040167416,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-183'"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817040359250,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817041782000,
+      "sql": "SELECT id FROM bookings WHERE room_id=1 AND status='confirmed' AND start<'2030-04-11T03:00:00+00:00' AND end>'2030-04-11T02:00:00+00:00'"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817042149500,
+      "sql": "INSERT INTO bookings\n            (team_id, room_id, user_id, title, start, end, attendees, created_at, idempotency_key, request_hash)\n            VALUES (1, 1, 1, '合成矩阵会议', '2030-04-11T02:00:00+00:00', '2030-04-11T03:00:00+00:00', 8, '2030-04-10T01:00:00+00:00', 'matrix-183', 'ea4d386f698706d5e13daa618a6face9bbddb483be26b29532ff9fae045ab4be')"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817042291708,
+      "sql": "INSERT INTO notifications (user_id, booking_id, message, created_at) VALUES (1, 1, '「合成矩阵会议」预约成功：云杉 · 04月11日 10:00–11:00。', '2030-04-10T01:00:00+00:00')"
+    },
+    {
+      "connection": 4375802704,
+      "thread": 6193491968,
+      "time_ns": 1717817042331791,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817047903000,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817047916708,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817048686541,
+      "sql": "SELECT * FROM bookings WHERE user_id=1 AND idempotency_key='matrix-184'"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817048755458,
+      "sql": "SELECT * FROM rooms WHERE id=1 AND team_id=1"
+    },
+    {
+      "connection": 4375801424,
+      "thread": 6193491968,
+      "time_ns": 1717817048792541,
+      "sql": "ROLLBACK"
+    }
+  ],
+  "final_snapshot": {
+    "bookings": [],
+    "notifications": [],
+    "rooms": [
+      {
+        "id": 1,
+        "team_id": 1,
+        "name": "云杉",
+        "location": "3F · 东侧",
+        "capacity": 8,
+        "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+        "active": 1
+      },
+      {
+        "id": 2,
+        "team_id": 1,
+        "name": "白桦",
+        "location": "3F · 西侧",
+        "capacity": 4,
+        "equipment": "[\"显示屏\", \"白板\"]",
+        "active": 1
+      },
+      {
+        "id": 3,
+        "team_id": 1,
+        "name": "银杏",
+        "location": "2F · 开放区",
+        "capacity": 12,
+        "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+        "active": 1
+      },
+      {
+        "id": 4,
+        "team_id": 1,
+        "name": "青松",
+        "location": "2F · 北侧",
+        "capacity": 6,
+        "equipment": "[\"白板\", \"电话会议\"]",
+        "active": 1
+      },
+      {
+        "id": 5,
+        "team_id": 2,
+        "name": "海风",
+        "location": "1F · 靠窗",
+        "capacity": 6,
+        "equipment": "[\"白板\"]",
+        "active": 1
+      }
+    ],
+    "roles": [
+      {
+        "id": 1,
+        "team_id": 1,
+        "role": "admin"
+      },
+      {
+        "id": 2,
+        "team_id": 1,
+        "role": "member"
+      },
+      {
+        "id": 3,
+        "team_id": 1,
+        "role": "member"
+      },
+      {
+        "id": 4,
+        "team_id": 2,
+        "role": "admin"
+      }
+    ]
+  }
+}

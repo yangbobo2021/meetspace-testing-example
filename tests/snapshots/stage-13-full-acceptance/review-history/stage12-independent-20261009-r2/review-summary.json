@@ -1,0 +1,79 @@
+{
+  "revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "reviewed_at": "2026-10-09T01:28:20.301624+00:00",
+  "status": "passed",
+  "requirements_sufficient": 96,
+  "requirements_gap": 0,
+  "fault_probes": 209,
+  "white_box_targets": 71,
+  "native_matrix_checks": 40,
+  "delta": {
+    "scenarios.json": [
+      "BB-interface-experience-8",
+      "BB-team-administration-7",
+      "WB-ui-role-demotion-reload",
+      "WB-ui-self-demotion-session-failure"
+    ],
+    "methods.json": [
+      "AI-interface-experience-8",
+      "AI-team-administration-7",
+      "AI-WB-ui-role-demotion-reload",
+      "AI-WB-ui-self-demotion-session-failure"
+    ]
+  },
+  "resolved_findings": [
+    {
+      "id": "GAP-STAGE12-ROLE-SESSION-PENDING",
+      "requirement_ids": [
+        "team-administration-7",
+        "interface-experience-8"
+      ],
+      "scenario_ids": [
+        "WB-ui-role-demotion-reload",
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "branch_refs": [
+        "web/app.js:274 changeRole/session成功后的identityGeneration与roleRefreshToken守卫",
+        "web/app.js:275-278 旧session写user、清pending并加载",
+        "web/app.js:282 changeRole/catch旧刷新非401错误守卫",
+        "web/app.js:285 pending错误展示"
+      ],
+      "mode": "同一身份较早changeRole的session响应晚于较新自降提交及其session失败",
+      "state": "服务角色已经member；新session503或网络失败，当前identityPending=true且已有最新错误；旧changeRole仍扣留admin session响应",
+      "counterexample": "错误实现保留身份代次守卫，但把成功续段的刷新序拒绝改为 roleRefreshToken !== state.roleRefreshToken && !state.identityPending；开发者误以为pending时应接受任一身份响应帮助恢复。较新操作成功结束时仍正确丢旧响应，跨身份仍丢弃，旧loadPage及旧PATCH错误守卫仍正确，故已有分支可全通过。较新自降的session失败后释放旧admin200，则会写回旧admin、清pending、恢复管理菜单，即使原有toast守卫继续抑制旧成功提示，旧admin身份及管理导航仍会恢复，身份与菜单断言应失败。另一个同类反例是catch仅在!identityPending时拒绝旧role-session503/网络错误，覆盖新错误/反馈。",
+      "why_existing_definitions_do_not_catch": "original-same-identity-session200与same-identity-old-session503/network均先等较新member工作空间完成（pending=false）才释放旧changeRole.session。pending-cross三项只释放sessions[1]的loadPage身份读，明确first_changeRole_response_still_held=true，随后重试；没有释放sessions[0]的旧changeRole.session。same-identity-old-PATCH-*覆盖PATCH拒绝而非已提交PATCH后的session续段，same-identity-late-PATCH200为有效晚提交，应重新读当前身份，语义不同。一般性expected虽禁止旧响应影响新状态，动作没有构造本组合，不能用泛化文字充当必执行分支。",
+      "definition_evidence": [
+        "methods.json#AI-WB-ui-role-demotion-reload.matrix_checks",
+        "methods.json#AI-WB-ui-self-demotion-session-failure.matrix_checks",
+        "methods.json#AI-WB-ui-load-token-races.matrix_checks",
+        "release-preparation/20261009/identity-continuation-regressions-r2/matrix.py:38-44",
+        "release-preparation/20261009/identity-continuation-regressions-r2/matrix.py:86-98"
+      ],
+      "required_observable_failure": "独立基线真实提升另一成员并扣留该changeRole的session200；原生自降实际提交后让新的session503/abort形成pending错误。此时分别释放旧changeRole.session的200、503、网络错误，必须保持member、spaces/mine、无管理入口、pending及最新错误/反馈不变；禁止旧成功toast和旧续段发起业务加载。最后原生重试实际读当前session恢复正常。记录UI/只读状态及真实后台member和members403。若上述错误实现运行，至少旧200分支应在旧admin/menu/pending或toast断言失败。",
+      "disposition": "拒绝设计充分性，交回Analyst在原ID内明确补齐；Reviewer不修改场景或方法。本次未运行产品，不判当前实现有此缺陷。",
+      "status": "resolved_in_design",
+      "resolved_at": "2026-10-09T01:28:20.301624+00:00",
+      "resolution": "六项独立矩阵明确先真实提升V、扣留第一次changeRole取得的旧admin200，再真实自降且令新session503或网络失败，证明同身份/新刷新序/pending=true后才释放旧200、503或网络错误。请求归属和消费完成必须取证，禁止用loadPage身份读、旧PATCH拒绝或恢复后释放代替。旧身份菜单、pending、最新错误/toast以及零额外加载断言将检出只在!identityPending时丢旧响应的错误；恢复须实际重读member。原34矩阵与其他正常/失败/401对照均保留。",
+      "new_matrix_keys": [
+        "old-changeRole-session-200-after-new-self-session-503-pending",
+        "old-changeRole-session-503-after-new-self-session-503-pending",
+        "old-changeRole-session-network-after-new-self-session-503-pending",
+        "old-changeRole-session-200-after-new-self-session-network-pending",
+        "old-changeRole-session-503-after-new-self-session-network-pending",
+        "old-changeRole-session-network-after-new-self-session-network-pending"
+      ],
+      "execution_proven": false
+    }
+  ],
+  "analyst_assets_unchanged_by_reviewer": true,
+  "analyst_assets_sha256": {
+    "requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "scenarios.json": "0e1269ff9ab19ec91ed9db7a1c13e2466eb9721033a89d9167ce77f22c931267",
+    "methods.json": "1da0836a60fa78f247484b15f38f320c0178edbcf2ffe41d29f7119bc154ad39",
+    "white-box-map.json": "92c3866531ff37da1851178fa6b1f93567d7cbec56d5ba85c1bf7eff3399afbc"
+  },
+  "product_sources_unchanged": true,
+  "white_box_complete": false,
+  "execution_status": "not_executed; design sufficient, execution results must be newly observed",
+  "release_approved": false
+}

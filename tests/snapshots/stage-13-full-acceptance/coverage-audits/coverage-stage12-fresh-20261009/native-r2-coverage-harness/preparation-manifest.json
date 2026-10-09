@@ -1,0 +1,69 @@
+{
+  "status": "prepared_only_not_executed",
+  "case_count": 27,
+  "source_revision_at_preparation": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "proposal_sha256_reviewed_not_loaded": "dcc1488e74676faacc68344513f2941615226df8bb689c93681b1e89e7feccd5",
+  "static_review_sha256": "9051d1ff672f5a8c77eb5514655f6050dc6e29cfdcdbe3df7f91fa4dbe68a037",
+  "case_ids": [
+    "original-cross-self-session200",
+    "original-cross-other-session200",
+    "original-same-identity-session200",
+    "original-pending-load-new-role200",
+    "late-PATCH-200-cross-identity",
+    "late-PATCH-503-cross-identity",
+    "late-PATCH-network-cross-identity",
+    "late-PATCH-401-cross-identity",
+    "late-session-503-cross-identity",
+    "late-session-network-cross-identity",
+    "late-session-401-cross-identity",
+    "same-identity-late-PATCH-response200",
+    "same-identity-late-PATCH-actual-commit",
+    "same-identity-old-session503",
+    "same-identity-old-session-network",
+    "current-role-PATCH401",
+    "current-role-session401",
+    "current401-from-earlier-same-identity-role-query",
+    "old-success-toast-after-loadPage-identity-switch",
+    "old-pending503-after-new-role-commit503",
+    "old-pending-network-after-new-role-commit503",
+    "normal-nonself-success",
+    "normal-self-demotion-success",
+    "current-self-session-503-data-retry",
+    "current-self-session-503-reload",
+    "current-self-session-network-data-retry",
+    "current-self-session-network-reload"
+  ],
+  "required_regressions": [
+    "迟到PATCH与迟到首轮/session200分别覆盖logout/newlogin，保持真实currentidentity/backend/sql一致",
+    "同身份两次角色动作响应重排（本finding）",
+    "当前真实401反馈可见；旧503/network/401失败不污染新身份或新操作",
+    "当前成功普通nonself admin与self-demotion及session失败原生重试仍能结束并显示正确DOM",
+    "loadPage途中身份更换后旧success toast不可出现",
+    "第4个pending旧load/session跨新role提交503交叉例，以及旧200/503/network返回均不能动新pending/loading/error；真正retry可完成。"
+  ],
+  "bindings": [
+    "Project cwd only; read actual web/app.js, never load proposed file.",
+    "Explicit --expected-js-sha256 required; reject original failing source SHA.",
+    "Fresh output directory without instrumented-app.js; exact-copy hashes checked for native frontend.",
+    "Real actual PATCH/session response capture; real401 uses actual HTTP session revocation and route.fetch.",
+    "Known four original failures copied unmodified with sha256 manifest; original source harnesses unchanged.",
+    "Stale401 across new identity must be ignored; same-generation authentic401 is authoritative and must show login plus error.",
+    "No product edits; no formal ledger writes; dev evidence cannot replace full acceptance.",
+    "Output must remain under project tests/delivery-acceptance."
+  ],
+  "prepared_harness_sha256": {
+    "matrix.py": "dc2920b8b0518439a883c8b07b0aef38d53eef2828383d7b38d17bde6c2b327d",
+    "identity_env.py": "4b57045c33821d3df097309ff270ec9e07e7d90ac7bff30a865db693ac548539",
+    "native_original_sequences.py": "8e5de8f4e92c0f0c53ded4e8b155fa82c3ed650d0e42c1588095a0f924fb8e7d"
+  },
+  "checks_performed": [
+    "Python AST syntax parse only",
+    "Static CASES expression expansion only",
+    "Original evidence copy sha verification",
+    "Generated wait predicate JS syntax checked with node --check (no execution)."
+  ],
+  "product_or_proposed_source_executed": false,
+  "preparation_repairs": [
+    "Node syntax check caught malformed quote in nonself wait CSS selector; simplified selector and kept separate exact target-value assertion. No product/proposal execution."
+  ]
+}

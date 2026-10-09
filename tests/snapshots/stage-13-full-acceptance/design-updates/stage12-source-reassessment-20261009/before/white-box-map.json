@@ -1,0 +1,3145 @@
+{
+  "basis": [
+    "DR-002全部96需求及DR-004端点，需求和黑盒定义未修改。",
+    "逐文件阅读当前后端、前端、HTML/CSS和七项现有HTTP测试，逐目标核对旧设计与stage10源码差异。",
+    "71个稳定白盒目标复用；旧行号按源码差异重定位，目标条件和状态矩阵按新实现修订。",
+    "场景预期来自确认需求；方法中的源码变量与格式仅作为当前实现到达依据，不新增业务合同。",
+    "本轮为Analyst完整性判断，白盒complete保持false直到独立复审；不以旧覆盖率或旧passed证明新修订。"
+  ],
+  "targets": [
+    {
+      "id": "WBT-runtime-entry",
+      "description": "main 默认值/单项覆盖/组合覆盖进入实际 Store 和监听地址，数据库父目录不存在与存在两路",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Store.__init__",
+          "line_start": 100,
+          "line_end": 105
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "ApplicationServer.__init__",
+          "line_start": 162,
+          "line_end": 166
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "main",
+          "line_start": 494,
+          "line_end": 507
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-1",
+        "application-runtime-2"
+      ],
+      "scenario_ids": [
+        "WB-runtime-entry"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-seed-empty-existing",
+      "description": "count(teams)==0 执行全种子；非零直接返回，不改变初始会议日期",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Store.seed",
+          "line_start": 122,
+          "line_end": 156
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-3",
+        "application-runtime-4"
+      ],
+      "scenario_ids": [
+        "WB-seed-empty-existing"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-password-derivation",
+      "description": "salt=None 生成随机盐；提供既有盐重算并 compare_digest；不存在账号短路与错误/正确密码三路",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "password_hash",
+          "line_start": 66,
+          "line_end": 69
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "password_matches",
+          "line_start": 72,
+          "line_end": 73
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.seed (password derivation)",
+          "line_start": 122,
+          "line_end": 156
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.login (credential check)",
+          "line_start": 293,
+          "line_end": 318
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-1",
+        "identity-session-2",
+        "identity-session-3",
+        "identity-session-13"
+      ],
+      "scenario_ids": [
+        "WB-password-derivation"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-persistence-restart",
+      "description": "成功 commit 与 finally close，重新打开同一数据文件读取已修改状态",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect",
+          "line_start": 108,
+          "line_end": 120
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "SCHEMA",
+          "line_start": 28,
+          "line_end": 53
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.__init__",
+          "line_start": 100,
+          "line_end": 105
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-5"
+      ],
+      "scenario_ids": [
+        "WB-persistence-restart"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-health-static-dispatch",
+      "description": "GET /api/health 在身份读取前探测数据库；非 /api/ 静态 allowlist；HEAD 不写正文",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.do_GET",
+          "line_start": 172,
+          "line_end": 173
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.do_HEAD",
+          "line_start": 181,
+          "line_end": 182
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch (health/static entry)",
+          "line_start": 245,
+          "line_end": 272
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.static_file",
+          "line_start": 274,
+          "line_end": 291
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.send_json",
+          "line_start": 193,
+          "line_end": 204
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-1",
+        "application-runtime-6",
+        "application-runtime-7",
+        "identity-session-5"
+      ],
+      "scenario_ids": [
+        "WB-health-static-dispatch"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-request-origin",
+      "description": "标记不等于1短路；Origin 缺省/严格同当前 http://Host/不一致两路",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.read_json (marker/origin)",
+          "line_start": 206,
+          "line_end": 223
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch (POST/PATCH read_json)",
+          "line_start": 245,
+          "line_end": 272
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-10",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-request-origin"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-json-envelope",
+      "description": "Content-Type 拆分分号、长度int解析、rfile字节读取、JSON对象判断、UnicodeDecodeError/ValueError",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.read_json (type/length/object)",
+          "line_start": 206,
+          "line_end": 223
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-11",
+        "application-runtime-7",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-json-envelope"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-errors-and-response",
+      "description": "AppError/IntegrityError/OperationalError/未知Exception映射，json UTF8、Cookie可选与 HEAD无正文",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "AppError.__init__",
+          "line_start": 57,
+          "line_end": 59
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.send_json",
+          "line_start": 193,
+          "line_end": 204
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch (exception classification)",
+          "line_start": 245,
+          "line_end": 272
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-7",
+        "application-runtime-8"
+      ],
+      "scenario_ids": [
+        "WB-errors-and-response"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-transaction-failure-matrix",
+      "description": "BEGIN IMMEDIATE→多个实际DML→commit；异常→rollback→close，写后/两写之间/最后写后/最终commit失败",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect",
+          "line_start": 108,
+          "line_end": 120
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch (transaction then response)",
+          "line_start": 245,
+          "line_end": 272
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.login (session write)",
+          "line_start": 293,
+          "line_end": 318
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (logout)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (cancel)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (mark-read)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (member role)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (room writes)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (booking/notification write)",
+          "line_start": 446,
+          "line_end": 487
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.notify",
+          "line_start": 490,
+          "line_end": 491
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-9",
+        "application-runtime-8",
+        "reservation-creation-10",
+        "reservation-management-7",
+        "notification-center-1",
+        "notification-center-2"
+      ],
+      "scenario_ids": [
+        "WB-transaction-failure-matrix"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-session-join",
+      "description": "Cookie缺失/解析失败→401；SHA256(token)联接sessions/users/teams且expires>time.time；角色每次动态读取",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.current_user",
+          "line_start": 225,
+          "line_end": 238
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (session response)",
+          "line_start": 320,
+          "line_end": 411
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-4",
+        "identity-session-5",
+        "team-administration-5"
+      ],
+      "scenario_ids": [
+        "WB-session-join"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-session-expiry",
+      "description": "expires>now 有效；expires==now无效；login DELETE expires<=now；业务读写无续期",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.current_user (expires comparison)",
+          "line_start": 225,
+          "line_end": 238
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.login (expiry cleanup and deadline)",
+          "line_start": 293,
+          "line_end": 318
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "SESSION_SECONDS",
+          "line_start": 26,
+          "line_end": 26
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-6",
+        "identity-session-2"
+      ],
+      "scenario_ids": [
+        "WB-session-expiry"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-login-window-lock",
+      "description": "text_field校验在计数前，login_lock覆盖过滤/阈值/append，stamp>now−60，成功也append",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.login (format/IP/window/lock)",
+          "line_start": 293,
+          "line_end": 318
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "ApplicationServer.__init__ (attempts/lock)",
+          "line_start": 162,
+          "line_end": 166
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-1",
+        "identity-session-3",
+        "identity-session-9"
+      ],
+      "scenario_ids": [
+        "WB-login-window-lock"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-login-switch-and-cookies",
+      "description": "valid credentials→random token→清到期→删除Cookie旧摘要→插入新摘要，Cookie统一属性；错密在删除前拒绝",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.login (token/replace/cookie)",
+          "line_start": 293,
+          "line_end": 318
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "SCHEMA sessions",
+          "line_start": 35,
+          "line_end": 36
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-2",
+        "identity-session-3",
+        "identity-session-7",
+        "identity-session-12",
+        "identity-session-14"
+      ],
+      "scenario_ids": [
+        "WB-login-switch-and-cookies"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-logout-revocation",
+      "description": "通过current_user后DELETE当前token_hash并提交，再发Max-Age=0 Cookie",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (POST /api/logout)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch (commit before response)",
+          "line_start": 245,
+          "line_end": 272
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-8",
+        "identity-session-12",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-logout-revocation"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-route-authorizations",
+      "description": "admin守卫在团队查询/room写/member读写前；method+path完全匹配，未知路径最后404",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.admin",
+          "line_start": 241,
+          "line_end": 243
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (scope admin)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (members and rooms authorization)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch (HTTP method/body/identity entry)",
+          "line_start": 245,
+          "line_end": 272
+        }
+      ],
+      "requirement_ids": [
+        "space-administration-1",
+        "team-administration-1",
+        "team-administration-2",
+        "reservation-management-1",
+        "identity-session-5"
+      ],
+      "scenario_ids": [
+        "WB-route-authorizations"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-rooms-team-deserialization",
+      "description": "WHERE team_id；json.loads设备，bool(active)，包括停用室",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (GET /api/rooms)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.room_data",
+          "line_start": 414,
+          "line_end": 418
+        }
+      ],
+      "requirement_ids": [
+        "room-discovery-1",
+        "space-administration-7"
+      ],
+      "scenario_ids": [
+        "WB-rooms-team-deserialization"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-day-range-intersection",
+      "description": "dispatch保留空查询值；日期参数不存在才取上海当前日，显式空串进入day_range拒绝；严格相交及升序分支保持。",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (date and intersection)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.day_range",
+          "line_start": 425,
+          "line_end": 431
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch",
+          "line_start": 245,
+          "line_end": 272
+        }
+      ],
+      "requirement_ids": [
+        "room-discovery-2",
+        "room-discovery-3"
+      ],
+      "scenario_ids": [
+        "WB-day-range-intersection"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-agenda-title-redaction",
+      "description": "user_id!=current AND role!=admin 才把title改已预约",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (agenda title redaction)",
+          "line_start": 320,
+          "line_end": 411
+        }
+      ],
+      "requirement_ids": [
+        "room-discovery-4",
+        "room-discovery-6"
+      ],
+      "scenario_ids": [
+        "WB-agenda-title-redaction"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-booking-fields-guards",
+      "description": "room/title/attendees/key按序校验，bool先于int，trim后长度判断",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (field validation)",
+          "line_start": 446,
+          "line_end": 487
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "integer",
+          "line_start": 76,
+          "line_end": 79
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "text_field",
+          "line_start": 82,
+          "line_end": 86
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-2",
+        "reservation-creation-14"
+      ],
+      "scenario_ids": [
+        "WB-booking-fields-guards"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-datetime-parse-normalize",
+      "description": "fromisoformat→tzinfo/utcoffset非空→astimezoneUTC；捕ValueError/TypeError/OverflowError；fingerprint含UTC规范化时刻",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "date_time",
+          "line_start": 89,
+          "line_end": 96
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (time/fingerprint)",
+          "line_start": 446,
+          "line_end": 487
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-3",
+        "reservation-creation-12"
+      ],
+      "scenario_ids": [
+        "WB-datetime-parse-normalize"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-booking-horizon",
+      "description": "start<=current OR start>current+30days；replay先于日期守卫",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (date horizon)",
+          "line_start": 446,
+          "line_end": 487
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-4",
+        "reservation-creation-14"
+      ],
+      "scenario_ids": [
+        "WB-booking-horizon"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-booking-duration",
+      "description": "not 15min<=end−start<=8h；绝对时刻差",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (duration)",
+          "line_start": 446,
+          "line_end": 487
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-5",
+        "reservation-creation-14"
+      ],
+      "scenario_ids": [
+        "WB-booking-duration"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-booking-open-hours",
+      "description": "上海date不同/start.hour<8/end.hour>20/end20:xx任分量；任endpoint minute%15 or second or microsecond",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (hours/interval)",
+          "line_start": 446,
+          "line_end": 487
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-6",
+        "reservation-creation-7",
+        "reservation-creation-14"
+      ],
+      "scenario_ids": [
+        "WB-booking-open-hours"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-room-eligibility-capacity",
+      "description": "team过滤→not found、active false→conflict、人数>当前capacity→400",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (team/active/capacity)",
+          "line_start": 446,
+          "line_end": 487
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-1",
+        "reservation-creation-8",
+        "space-administration-7",
+        "space-administration-10"
+      ],
+      "scenario_ids": [
+        "WB-room-eligibility-capacity"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-booking-conflict-serialization",
+      "description": "confirmed AND start<newEnd AND end>newStart；写事务串行化冲突读取和INSERT",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (conflict and insert)",
+          "line_start": 446,
+          "line_end": 487
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect (BEGIN IMMEDIATE)",
+          "line_start": 108,
+          "line_end": 120
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-9",
+        "reservation-creation-14",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-booking-conflict-serialization"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-booking-insert-notify",
+      "description": "booking INSERT→数字字段格式化北京月日与起止小时分钟→notify同事务；read默认0；commit后才201。",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (INSERT and notify)",
+          "line_start": 446,
+          "line_end": 487
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.notify",
+          "line_start": 490,
+          "line_end": 491
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "SCHEMA bookings",
+          "line_start": 42,
+          "line_end": 47
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "SCHEMA notifications",
+          "line_start": 49,
+          "line_end": 52
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-10",
+        "notification-center-1"
+      ],
+      "scenario_ids": [
+        "WB-booking-insert-notify"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-idempotency-priority",
+      "description": "规范化字段与完整精度UTC时刻生成指纹；user+key优先返回当前状态或内容冲突，随后才检查新预约日期/粒度/房间资格。",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (validation/fingerprint/replay before horizon)",
+          "line_start": 446,
+          "line_end": 487
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-11",
+        "reservation-creation-13",
+        "reservation-creation-12"
+      ],
+      "scenario_ids": [
+        "WB-idempotency-priority"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-idempotency-user-concurrency",
+      "description": "UNIQUE(user_id,key)与事务在previous读取/插入之间一致；不同user同key独立",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (previous/replay)",
+          "line_start": 446,
+          "line_end": 487
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "SCHEMA bookings (UNIQUE user/key)",
+          "line_start": 42,
+          "line_end": 47
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect (write serialization)",
+          "line_start": 108,
+          "line_end": 120
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-11",
+        "reservation-creation-12",
+        "reservation-creation-10"
+      ],
+      "scenario_ids": [
+        "WB-idempotency-user-concurrency"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-booking-query-scope-join",
+      "description": "scope缺省mine/team/非法；b.team_id过滤、mine b.user_id、rooms/users JOIN、ORDER start DESC,id DESC",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (GET /api/bookings)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.booking_data",
+          "line_start": 421,
+          "line_end": 422
+        }
+      ],
+      "requirement_ids": [
+        "reservation-management-1",
+        "reservation-management-2",
+        "space-administration-3",
+        "identity-session-4"
+      ],
+      "scenario_ids": [
+        "WB-booking-query-scope-join"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-cancel-authorization-and-clock",
+      "description": "先id AND team_id，再owner OR admin，再status!=cancelled且start<=serverNow",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (cancel team/owner/start guards)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "date_time",
+          "line_start": 89,
+          "line_end": 96
+        }
+      ],
+      "requirement_ids": [
+        "reservation-management-5",
+        "reservation-management-6",
+        "reservation-management-9"
+      ],
+      "scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-cancel-atomic-idempotent",
+      "description": "status confirmed→UPDATE cancel_time→notify owner；cancelled绕过时钟/更新/通知",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (cancel state/update/notify)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.notify",
+          "line_start": 490,
+          "line_end": 491
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect",
+          "line_start": 108,
+          "line_end": 120
+        }
+      ],
+      "requirement_ids": [
+        "reservation-management-7",
+        "reservation-management-8",
+        "notification-center-2"
+      ],
+      "scenario_ids": [
+        "WB-cancel-atomic-idempotent"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-notifications-select-limit",
+      "description": "WHERE current user ORDER BY id DESC LIMIT100，不以created_at排序或团队角色放宽",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (GET /api/notifications)",
+          "line_start": 320,
+          "line_end": 411
+        }
+      ],
+      "requirement_ids": [
+        "notification-center-3",
+        "notification-center-4"
+      ],
+      "scenario_ids": [
+        "WB-notifications-select-limit"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-notifications-mark-all",
+      "description": "UPDATE WHERE user_id 无LIMIT，包括不在最新100的旧通知；repeat幂等",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (POST /api/notifications/read)",
+          "line_start": 320,
+          "line_end": 411
+        }
+      ],
+      "requirement_ids": [
+        "notification-center-5",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-notifications-mark-all"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-room-write-and-return",
+      "description": "POST INSERT lastrowid读回；PATCH先 team过滤再 UPDATE五字段；缺失/外队404",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (POST/PATCH /api/rooms)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.room_data",
+          "line_start": 414,
+          "line_end": 418
+        }
+      ],
+      "requirement_ids": [
+        "space-administration-2",
+        "space-administration-3",
+        "space-administration-9"
+      ],
+      "scenario_ids": [
+        "WB-room-write-and-return"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-room-text-capacity-active",
+      "description": "name/location trim长度；capacity拒bool/浮点；data.get(active,True) 与bool检查",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.room_values",
+          "line_start": 434,
+          "line_end": 444
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "integer",
+          "line_start": 76,
+          "line_end": 79
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "text_field",
+          "line_start": 82,
+          "line_end": 86
+        }
+      ],
+      "requirement_ids": [
+        "space-administration-5",
+        "space-administration-2",
+        "space-administration-3"
+      ],
+      "scenario_ids": [
+        "WB-room-text-capacity-active"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-room-equipment-set",
+      "description": "not list OR any(not str OR not EQUIPMENT)，sorted(set(equipment))",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.room_values (equipment validation/deduplication)",
+          "line_start": 434,
+          "line_end": 444
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "EQUIPMENT",
+          "line_start": 27,
+          "line_end": 27
+        }
+      ],
+      "requirement_ids": [
+        "space-administration-6"
+      ],
+      "scenario_ids": [
+        "WB-room-equipment-set"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-room-name-unique-concurrency",
+      "description": "trim后的name进入UNIQUE(team_id,name)，create×create/edit×edit/create×edit同时写",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "SCHEMA rooms (UNIQUE team/name)",
+          "line_start": 37,
+          "line_end": 41
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.room_values (trim name)",
+          "line_start": 434,
+          "line_end": 444
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (room writes)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect (write serialization)",
+          "line_start": 108,
+          "line_end": 120
+        }
+      ],
+      "requirement_ids": [
+        "space-administration-4",
+        "application-runtime-8",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-room-name-unique-concurrency"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-room-state-existing-bookings",
+      "description": "UPDATE仅rooms，保留bookings；new booking读取active/capacity当前值",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (PATCH room)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (new active/capacity)",
+          "line_start": 446,
+          "line_end": 487
+        }
+      ],
+      "requirement_ids": [
+        "space-administration-7",
+        "space-administration-8",
+        "space-administration-10"
+      ],
+      "scenario_ids": [
+        "WB-room-state-existing-bookings"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-member-select-role-guards",
+      "description": "admin→role集合→team id选择→notfound→UPDATE，GET只本队显式字段",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (GET/PATCH members)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.admin",
+          "line_start": 241,
+          "line_end": 243
+        }
+      ],
+      "requirement_ids": [
+        "team-administration-1",
+        "team-administration-2",
+        "team-administration-3",
+        "team-administration-6"
+      ],
+      "scenario_ids": [
+        "WB-member-select-role-guards"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-last-admin-lock",
+      "description": "原role admin且目标member才count；count<=1拒绝，BEGIN IMMEDIATE同步授权/计数/UPDATE",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.api (role transition/count/update)",
+          "line_start": 320,
+          "line_end": 411
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.current_user (current role)",
+          "line_start": 225,
+          "line_end": 238
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect (write serialization)",
+          "line_start": 108,
+          "line_end": 120
+        }
+      ],
+      "requirement_ids": [
+        "team-administration-4",
+        "team-administration-5"
+      ],
+      "scenario_ids": [
+        "WB-last-admin-lock"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-start-session-errors",
+      "description": "start成功session→loadPage，401→renderLogin，非401连接错误→error-page",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "start",
+          "line_start": 282,
+          "line_end": 288
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "api",
+          "line_start": 20,
+          "line_end": 38
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "renderLogin",
+          "line_start": 40,
+          "line_end": 48
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-4",
+        "interface-experience-4",
+        "interface-experience-10"
+      ],
+      "scenario_ids": [
+        "WB-ui-start-session-errors"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-api-error-session-transition",
+      "description": "api记录请求identityGeneration；JSON解析失败、非ok及login401例外；仅当前世代业务401递增世代、清user及identityPending并关闭弹窗，旧世代401只拒绝原请求。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "api",
+          "line_start": 20,
+          "line_end": 38
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-9",
+        "interface-experience-10",
+        "identity-session-3"
+      ],
+      "scenario_ids": [
+        "WB-ui-api-error-session-transition"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-login-navigation",
+      "description": "示例按钮只填资料；提交登录递增identityGeneration；session成功后清identityPending、重置page/scope/四列表；角色决定导航。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "renderLogin",
+          "line_start": 40,
+          "line_end": 48
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "login",
+          "line_start": 50,
+          "line_end": 63
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "renderShell",
+          "line_start": 91,
+          "line_end": 100
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "wirePage (navigation controls)",
+          "line_start": 153,
+          "line_end": 168
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-1",
+        "interface-experience-2",
+        "identity-session-2",
+        "identity-session-7"
+      ],
+      "scenario_ids": [
+        "WB-ui-login-navigation"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-load-parallel-error",
+      "description": "loadPage无user返回；pending=false直接并行读取；pending=true先session，当前token且有user才应用身份、清pending，非admin退spaces/mine；之后Promise.all与catch/finally按token守卫。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "loadPage",
+          "line_start": 65,
+          "line_end": 89
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "renderShell (loading/error)",
+          "line_start": 91,
+          "line_end": 100
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "changeRole",
+          "line_start": 258,
+          "line_end": 277
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "api",
+          "line_start": 20,
+          "line_end": 38
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-3",
+        "interface-experience-4"
+      ],
+      "scenario_ids": [
+        "WB-ui-load-parallel-error"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-load-token-races",
+      "description": "loadToken保护异步数据和身份重读结果；identityGeneration保护api的401副作用；pending session的token不符/无user早返回，finally仅当前token且有user执行。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "loadPage",
+          "line_start": 65,
+          "line_end": 89
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "api (401 side effect)",
+          "line_start": 20,
+          "line_end": 38
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "logout",
+          "line_start": 170,
+          "line_end": 175
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "login (new identity)",
+          "line_start": 50,
+          "line_end": 63
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "changeRole",
+          "line_start": 258,
+          "line_end": 277
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "api",
+          "line_start": 20,
+          "line_end": 38
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-3",
+        "interface-experience-4",
+        "interface-experience-10"
+      ],
+      "scenario_ids": [
+        "WB-ui-load-token-races"
+      ],
+      "risk": "api在loadPage token检查之前处理401，旧加载的401可能破坏最新有效工作空间；静态疑点，尚未执行。"
+    },
+    {
+      "id": "WBT-ui-filters-statistics",
+      "description": "active && capacity条件 && equipment条件，myToday按start日，total按原rooms，empty分支",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "spacesContent",
+          "line_start": 114,
+          "line_end": 119
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "wirePage (filter changes)",
+          "line_start": 153,
+          "line_end": 168
+        }
+      ],
+      "requirement_ids": [
+        "room-discovery-5",
+        "room-discovery-8",
+        "room-discovery-9"
+      ],
+      "scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-room-timeline-agenda",
+      "description": "Array48各slot用start<slotEnd/end>slotStart；空预约/有预约，manage编辑vs预约，空设备",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "roomCard",
+          "line_start": 121,
+          "line_end": 129
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "manageContent",
+          "line_start": 149,
+          "line_end": 151
+        }
+      ],
+      "requirement_ids": [
+        "room-discovery-6",
+        "room-discovery-7",
+        "space-administration-7"
+      ],
+      "scenario_ids": [
+        "WB-ui-room-timeline-agenda"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-timezone-format",
+      "description": "Intl显式Asia/Shanghai，prettyDate本地中午输入；DOM北京时间提示",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "dateString",
+          "line_start": 13,
+          "line_end": 13
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "timeString",
+          "line_start": 14,
+          "line_end": 14
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "prettyDate",
+          "line_start": 15,
+          "line_end": 15
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "fullDate",
+          "line_start": 16,
+          "line_end": 16
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-15",
+        "room-discovery-2"
+      ],
+      "scenario_ids": [
+        "WB-ui-timezone-format"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-booking-status-sort",
+      "description": "cancelled优先；end<=now；start<=now；canCancel confirmed&&start>now；upcoming升序history继承API降序",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "bookingsContent",
+          "line_start": 131,
+          "line_end": 135
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "bookingRow",
+          "line_start": 137,
+          "line_end": 142
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "openCancel",
+          "line_start": 243,
+          "line_end": 249
+        }
+      ],
+      "requirement_ids": [
+        "reservation-management-3",
+        "reservation-management-4",
+        "reservation-management-10"
+      ],
+      "scenario_ids": [
+        "WB-ui-booking-status-sort"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-notification-render",
+      "description": "loaded notifications read过滤；unread0按钮disabled/no badge；列表空/非空；mark-read请求中disable/失败恢复",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "renderShell (unread badge)",
+          "line_start": 91,
+          "line_end": 100
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "inboxContent",
+          "line_start": 144,
+          "line_end": 147
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "wirePage (mark-read)",
+          "line_start": 153,
+          "line_end": 168
+        }
+      ],
+      "requirement_ids": [
+        "notification-center-6",
+        "notification-center-7",
+        "notification-center-5",
+        "interface-experience-7"
+      ],
+      "scenario_ids": [
+        "WB-ui-notification-render"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-default-times",
+      "description": "day==today ceil((minute+1)/15)，过去或minutes>=20:00→明天09；max8；end min(start+60,20)",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "defaultTimes",
+          "line_start": 177,
+          "line_end": 187
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "openBooking",
+          "line_start": 189,
+          "line_end": 202
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-6",
+        "interface-experience-5"
+      ],
+      "scenario_ids": [
+        "WB-ui-default-times"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-booking-draft-key",
+      "description": "新dialog清fingerprint/key；JSON payload含trim title/number人数/+08时间；变化randomUUID不变复用",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "openBooking (draft reset)",
+          "line_start": 189,
+          "line_end": 202
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "booking-form submit listener",
+          "line_start": 204,
+          "line_end": 217
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-16",
+        "reservation-creation-11",
+        "reservation-creation-12",
+        "interface-experience-9"
+      ],
+      "scenario_ids": [
+        "WB-ui-booking-draft-key"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-submit-button-matrix",
+      "description": "请求前disable，成功重载，catch错误，finally恢复；合法HTML验证优先，crypto指纹准备在booking try外",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "login",
+          "line_start": 50,
+          "line_end": 63
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "booking-form submit listener",
+          "line_start": 204,
+          "line_end": 217
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "room-form submit listener",
+          "line_start": 231,
+          "line_end": 241
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "confirm-cancel click listener",
+          "line_start": 251,
+          "line_end": 256
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-7",
+        "interface-experience-9",
+        "interface-experience-8"
+      ],
+      "scenario_ids": [
+        "WB-ui-submit-button-matrix"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-room-edit-draft",
+      "description": "roomId存在预填，null新增form.reset；editingRoom决定PATCH/POST；checkbox列表和active布尔",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "openRoom",
+          "line_start": 219,
+          "line_end": 229
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "room-form submit listener",
+          "line_start": 231,
+          "line_end": 241
+        }
+      ],
+      "requirement_ids": [
+        "space-administration-2",
+        "space-administration-3",
+        "interface-experience-9"
+      ],
+      "scenario_ids": [
+        "WB-ui-room-edit-draft"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-role-demotion-reload",
+      "description": "changeRole PATCH成功置pending；自降先采用已提交member并退spaces/mine；session成功清pending；catch按user存在及pending真假分路，未提交失败走旧身份reload。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "changeRole",
+          "line_start": 258,
+          "line_end": 277
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "loadPage",
+          "line_start": 65,
+          "line_end": 89
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "api",
+          "line_start": 20,
+          "line_end": 38
+        }
+      ],
+      "requirement_ids": [
+        "team-administration-7",
+        "team-administration-4",
+        "interface-experience-8"
+      ],
+      "scenario_ids": [
+        "WB-ui-role-demotion-reload"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-logout-races",
+      "description": "logout成功递增identityGeneration及loadToken，清identityPending/user并关闭dialog；失败仅反馈并恢复按钮，旧身份响应不能重建workspace。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "logout",
+          "line_start": 170,
+          "line_end": 175
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "api (401)",
+          "line_start": 20,
+          "line_end": 38
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "loadPage",
+          "line_start": 65,
+          "line_end": 89
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-8",
+        "interface-experience-10",
+        "interface-experience-3"
+      ],
+      "scenario_ids": [
+        "WB-ui-logout-races"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-dialog-close-no-write",
+      "description": "data-close.closest.close；event.target===dialog且坐标在rect外才关闭；native Escape；逐弹窗分别评估left/right/top/bottom短路坐标及矩形内padding。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "data-close click listener",
+          "line_start": 279,
+          "line_end": 279
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "dialog backdrop click listener",
+          "line_start": 280,
+          "line_end": 280
+        },
+        {
+          "path": "web/index.html",
+          "symbol": "dialog markup and close controls",
+          "line_start": 16,
+          "line_end": 46
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-11",
+        "reservation-management-10"
+      ],
+      "scenario_ids": [
+        "WB-ui-dialog-close-no-write"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-text-escaping",
+      "description": "五字符escapeHtml与属性文本；innerHTML渲染所有业务字段，title/error/confirm/toast textContent",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "escapeHtml",
+          "line_start": 12,
+          "line_end": 12
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "toast",
+          "line_start": 18,
+          "line_end": 18
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "renderLogin",
+          "line_start": 40,
+          "line_end": 48
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "renderShell",
+          "line_start": 91,
+          "line_end": 100
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "roomCard",
+          "line_start": 121,
+          "line_end": 129
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "bookingRow",
+          "line_start": 137,
+          "line_end": 142
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "inboxContent",
+          "line_start": 144,
+          "line_end": 147
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "manageContent",
+          "line_start": 149,
+          "line_end": 151
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "openBooking (textContent)",
+          "line_start": 189,
+          "line_end": 202
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "openRoom (textContent)",
+          "line_start": 219,
+          "line_end": 229
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "openCancel (textContent)",
+          "line_start": 243,
+          "line_end": 249
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-14",
+        "interface-experience-13"
+      ],
+      "scenario_ids": [
+        "WB-ui-text-escaping"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-accessibility-focus",
+      "description": "label嵌套输入、dialog aria-labelledby，表单error role=alert、toast aria-live；CSS focus-visible/input-focus",
+      "source_refs": [
+        {
+          "path": "web/index.html",
+          "symbol": "toast role=status",
+          "line_start": 15,
+          "line_end": 15
+        },
+        {
+          "path": "web/index.html",
+          "symbol": "booking dialog labels/aria/errors",
+          "line_start": 16,
+          "line_end": 27
+        },
+        {
+          "path": "web/index.html",
+          "symbol": "room dialog labels/aria/errors",
+          "line_start": 28,
+          "line_end": 40
+        },
+        {
+          "path": "web/index.html",
+          "symbol": "cancel dialog title/feedback",
+          "line_start": 41,
+          "line_end": 46
+        },
+        {
+          "path": "web/style.css",
+          "symbol": "focus selectors",
+          "line_start": 2,
+          "line_end": 2
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "toast",
+          "line_start": 18,
+          "line_end": 18
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "renderLogin",
+          "line_start": 40,
+          "line_end": 48
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "renderShell",
+          "line_start": 91,
+          "line_end": 100
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-13"
+      ],
+      "scenario_ids": [
+        "WB-ui-accessibility-focus"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-ui-responsive-breakpoints",
+      "description": "断点切sidebar/nav/grid/login-story/topbar、dialog max-width，列宽与内容换行",
+      "source_refs": [
+        {
+          "path": "web/style.css",
+          "symbol": "base layout and dialog max-width",
+          "line_start": 2,
+          "line_end": 2
+        },
+        {
+          "path": "web/style.css",
+          "symbol": "@media min-width:1500px",
+          "line_start": 3,
+          "line_end": 3
+        },
+        {
+          "path": "web/style.css",
+          "symbol": "@media max-width:1150px",
+          "line_start": 4,
+          "line_end": 4
+        },
+        {
+          "path": "web/style.css",
+          "symbol": "@media max-width:850px",
+          "line_start": 5,
+          "line_end": 5
+        },
+        {
+          "path": "web/style.css",
+          "symbol": "@media max-width:600px",
+          "line_start": 6,
+          "line_end": 6
+        }
+      ],
+      "requirement_ids": [
+        "interface-experience-12"
+      ],
+      "scenario_ids": [
+        "WB-ui-responsive-breakpoints"
+      ],
+      "risk": "该分支或状态迁移错误可能使相关需求的正常、拒绝、边界或持久化结果失真。"
+    },
+    {
+      "id": "WBT-seed-failure-retry",
+      "description": "初始化SCHEMA后，seed同一事务teams→users→rooms→三bookings；任批实际写后/commit失败回滚，下一启动count仍空",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Store.__init__",
+          "line_start": 100,
+          "line_end": 105
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect",
+          "line_start": 108,
+          "line_end": 120
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store.seed",
+          "line_start": 122,
+          "line_end": 156
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "SCHEMA",
+          "line_start": 28,
+          "line_end": 53
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-3",
+        "application-runtime-4",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-seed-failure-retry"
+      ],
+      "risk": "目标的初始化/输入/规范化错误可能绕过要求或留下部分状态。"
+    },
+    {
+      "id": "WBT-login-format-boundaries",
+      "description": "strip后长度1–160邮箱/1–256密码，非str/空/超限在attempts更新前拒绝",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "text_field",
+          "line_start": 82,
+          "line_end": 86
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.login (format before attempts)",
+          "line_start": 293,
+          "line_end": 318
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-1",
+        "identity-session-9"
+      ],
+      "scenario_ids": [
+        "WB-login-format-boundaries"
+      ],
+      "risk": "目标的初始化/输入/规范化错误可能绕过要求或留下部分状态。"
+    },
+    {
+      "id": "WBT-idempotency-absolute-precision",
+      "description": "fingerprint使用start.isoformat()/end.isoformat()保留微秒；持久化秒精度与内容比较分离；existing-key判断仍早于invalid_interval。",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking (time/fingerprint/replay)",
+          "line_start": 446,
+          "line_end": 487
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "date_time",
+          "line_start": 89,
+          "line_end": 96
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-3",
+        "reservation-creation-12",
+        "reservation-creation-11"
+      ],
+      "scenario_ids": [
+        "WB-idempotency-absolute-precision"
+      ],
+      "risk": "目标的初始化/输入/规范化错误可能绕过要求或留下部分状态。"
+    },
+    {
+      "id": "WBT-response-transport-disconnect",
+      "description": "正常响应写入的BrokenPipeError/ConnectionResetError进入dispatch连接断开异常分支；AppError拒绝响应在except body写入，捕获位置不同。",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.send_json",
+          "line_start": 193,
+          "line_end": 204
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch exception bodies",
+          "line_start": 258,
+          "line_end": 272
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-7",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-response-transport-disconnect"
+      ],
+      "risk": "正常成功响应和业务拒绝响应的连接断开后，进程仍可处理新健康及合法业务请求；已提交业务不能因响应丢失被假装回滚，拒绝业务不留部分写入。断开客户端没有收到响应，不要求其收到JSON；正常连接的后续错误响应仍遵循稳定JSON契约。",
+      "coverage_audit_gap": "COV-GAP-001"
+    },
+    {
+      "id": "WBT-booking-response-loss-replay",
+      "description": "事务提交退出先于send_json；existing-key按完整精度指纹重放；预约和通知同事务；响应写入断开与提交前失败分开判断。",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Store.connect commit/rollback",
+          "line_start": 107,
+          "line_end": 120
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.dispatch commit before response",
+          "line_start": 258,
+          "line_end": 261
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.create_booking replay",
+          "line_start": 452,
+          "line_end": 458
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "create_booking and notify",
+          "line_start": 479,
+          "line_end": 491
+        }
+      ],
+      "requirement_ids": [
+        "reservation-creation-11",
+        "reservation-creation-12",
+        "notification-center-1",
+        "application-runtime-9"
+      ],
+      "scenario_ids": [
+        "WB-booking-response-loss-replay"
+      ],
+      "risk": "提交已经完成时，同用户同标识同内容重试返回原编号和重放状态，预约及通知只各一条；同标识不同内容仍拒绝且不改原记录。提交前事务失败时没有残留预约/通知，恢复后同请求首次成功，而非伪造重放。",
+      "coverage_audit_gap": "COV-GAP-001"
+    },
+    {
+      "id": "WBT-runtime-sigint-persistence",
+      "description": "main的serve_forever→KeyboardInterrupt→finally server_close；同库新进程读取已提交资料。",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "main SIGINT/finally",
+          "line_start": 494,
+          "line_end": 507
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Store seed/reopen",
+          "line_start": 99,
+          "line_end": 156
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-2",
+        "application-runtime-4",
+        "application-runtime-5"
+      ],
+      "scenario_ids": [
+        "WB-runtime-sigint-persistence"
+      ],
+      "risk": "真实CLI中断后监听释放，使用同一端口和数据库可再次启动，已提交的会议室/预约/通知/已读资料保持一致，不重复播种。退出码和耗时作为生命周期观察，不新增特定退出码或硬超时业务要求。",
+      "coverage_audit_gap": "COV-GAP-002"
+    },
+    {
+      "id": "WBT-ui-mark-read-session-expiry",
+      "description": "wirePage的mark-read请求发生当前世代真实401；api清user/pending并关dialog，catch的if(state.user)为false，不重画旧空间。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "api 401",
+          "line_start": 20,
+          "line_end": 37
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "wirePage mark-read",
+          "line_start": 163,
+          "line_end": 167
+        }
+      ],
+      "requirement_ids": [
+        "identity-session-5",
+        "interface-experience-10",
+        "notification-center-5"
+      ],
+      "scenario_ids": [
+        "WB-ui-mark-read-session-expiry"
+      ],
+      "risk": "本次失效会话的已读写入被拒绝且未读数据不变；界面清身份回登录，catch不得重画旧空间或显示已读成功。重新合法登录后仍可正常标已读。",
+      "coverage_audit_gap": "COV-GAP-005"
+    },
+    {
+      "id": "WBT-ui-role-update-session-expiry",
+      "description": "PATCH401或提交后session401经api清user/pending并递增世代；changeRole catch无user时不得reload；已提交与未提交角色状态分别核对。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "api real 401",
+          "line_start": 20,
+          "line_end": 37
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "changeRole",
+          "line_start": 258,
+          "line_end": 277
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "members role write",
+          "line_start": 382,
+          "line_end": 396
+        }
+      ],
+      "requirement_ids": [
+        "team-administration-2",
+        "team-administration-7",
+        "identity-session-5",
+        "interface-experience-10"
+      ],
+      "scenario_ids": [
+        "WB-ui-role-update-session-expiry"
+      ],
+      "risk": "PATCH401时角色没有写入；PATCH已提交后session401时实际角色保持提交结果，不能误判回滚。两种情况均清身份回登录，catch不请求旧身份空间；重新登录恢复正确角色及菜单，服务实际拒绝降权身份的管理员操作。",
+      "coverage_audit_gap": "COV-GAP-006"
+    },
+    {
+      "id": "WBT-ui-self-demotion-session-failure",
+      "description": "自身PATCH提交后本地角色已member且pending=true；session失败时catch保存loadError而非按旧管理员直接loadPage；原生重试先重读session，成功清pending后加载成员空间。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "changeRole self demotion and failure",
+          "line_start": 258,
+          "line_end": 277
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "loadPage error/retry state",
+          "line_start": 65,
+          "line_end": 100
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "members/admin safeguards",
+          "line_start": 382,
+          "line_end": 396
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "loadPage",
+          "line_start": 65,
+          "line_end": 89
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "changeRole",
+          "line_start": 258,
+          "line_end": 277
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "api",
+          "line_start": 20,
+          "line_end": 38
+        }
+      ],
+      "requirement_ids": [
+        "team-administration-7",
+        "team-administration-4",
+        "interface-experience-8"
+      ],
+      "scenario_ids": [
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "risk": "合法自降实际已经提交且服务权限立即按成员生效；身份查询失败明确反馈，不显示修改成功或假装服务角色回滚。故障解除后通过界面提供的重试或整页刷新重新读身份、回会议室并撤去管理员入口；旧管理员状态不应被错误重载当作已恢复身份。",
+      "coverage_audit_gap": "COV-GAP-006"
+    },
+    {
+      "id": "WBT-ui-date-filter-empty-recovery",
+      "description": "filter-date change中event.target.value为空时不更新日期或加载；随后有效日期更新state.date并发起真实查询。",
+      "source_refs": [
+        {
+          "path": "web/app.js",
+          "symbol": "wirePage date filter",
+          "line_start": 153,
+          "line_end": 156
+        },
+        {
+          "path": "web/app.js",
+          "symbol": "loadPage date query",
+          "line_start": 65,
+          "line_end": 89
+        }
+      ],
+      "requirement_ids": [
+        "room-discovery-2",
+        "interface-experience-3"
+      ],
+      "scenario_ids": [
+        "WB-ui-date-filter-empty-recovery"
+      ],
+      "risk": "空值不作为合法查询日发送或展示成功日程，不向API发送date=空字符串；随后选择合法日期，界面当前日期与实际查询/日程一致。未规定空值提示、自动回填或固定回退日期，不新增产品交互政策；API显式空日期拒绝仍由既有场景单独断言。",
+      "coverage_audit_gap": "COV-GAP-007"
+    },
+    {
+      "id": "WBT-http-unsupported-methods",
+      "description": "标准库方法缺失进入Handler.send_error；API路径501与非501分支均send_json，非API委托基类；已实现方法仍dispatch，HEAD响应不写实体。",
+      "source_refs": [
+        {
+          "path": "app/server.py",
+          "symbol": "Handler HTTP entry methods/inherited handler",
+          "line_start": 168,
+          "line_end": 204
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "dispatch/API entry",
+          "line_start": 245,
+          "line_end": 261
+        },
+        {
+          "path": "app/server.py",
+          "symbol": "Handler.send_error",
+          "line_start": 184,
+          "line_end": 191
+        }
+      ],
+      "requirement_ids": [
+        "application-runtime-7",
+        "identity-session-5"
+      ],
+      "scenario_ids": [
+        "WB-http-unsupported-methods"
+      ],
+      "risk": "未支持方法被拒绝，API错误仍为可解析JSON error/code且同类错误代码稳定，不泄露内部异常或密码，不改变业务数据。不擅自规定401/404/405/501的优先级或特定状态码；无效会话不能借未知方法完成业务读写。",
+      "coverage_audit_gap": "COV-GAP-008",
+      "dependency_refs": [
+        {
+          "path": "/opt/miniconda3/lib/python3.12/http/server.py",
+          "symbol": "BaseHTTPRequestHandler.handle_one_request",
+          "line_start": 395,
+          "line_end": 426,
+          "sha256": "6ef28116c245a8e5e7f2d57f17607b7df706fd86110cf1c5a2b8416151b41248"
+        }
+      ]
+    }
+  ],
+  "requirement_assessment": [
+    {
+      "requirement_id": "application-runtime-1",
+      "white_box_scenario_ids": [
+        "WB-runtime-entry",
+        "WB-health-static-dispatch"
+      ],
+      "reason": "干净标准库环境默认启动、监听地址和同库重启排除隐含依赖与临时存储。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "application-runtime-2",
+      "white_box_scenario_ids": [
+        "WB-runtime-entry",
+        "WB-runtime-sigint-persistence"
+      ],
+      "reason": "host/port/db单独和组合覆盖，未选项默认值及两库记录隔离。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "application-runtime-3",
+      "white_box_scenario_ids": [
+        "WB-seed-empty-existing",
+        "WB-seed-failure-retry"
+      ],
+      "reason": "空文件/空库、UTC与北京日期不同的初始化，四身份五室三会议完整资料。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "application-runtime-4",
+      "white_box_scenario_ids": [
+        "WB-seed-empty-existing",
+        "WB-seed-failure-retry",
+        "WB-runtime-sigint-persistence"
+      ],
+      "reason": "已有团队、业务已修改/取消/新增、同日与跨日重启不补种不移动日期。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "application-runtime-5",
+      "white_box_scenario_ids": [
+        "WB-persistence-restart",
+        "WB-runtime-sigint-persistence"
+      ],
+      "reason": "角色、室、预约、取消、通知及已读位两次重启逐字段对账。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "application-runtime-6",
+      "white_box_scenario_ids": [
+        "WB-health-static-dispatch"
+      ],
+      "reason": "匿名和已登录的正常可读数据库健康查询；存储异常由错误分类场景补充。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "application-runtime-7",
+      "white_box_scenario_ids": [
+        "WB-health-static-dispatch",
+        "WB-json-envelope",
+        "WB-errors-and-response",
+        "WB-response-transport-disconnect",
+        "WB-http-unsupported-methods"
+      ],
+      "reason": "凭据/输入/冲突及三类依赖异常JSON与敏感信息检查；白盒补继承HTTP错误入口。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "application-runtime-8",
+      "white_box_scenario_ids": [
+        "WB-errors-and-response",
+        "WB-transaction-failure-matrix",
+        "WB-room-name-unique-concurrency"
+      ],
+      "reason": "完整性、存储操作和未预期异常分别触发、恢复及JSON类别核对，不用前置业务拒绝代替。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "application-runtime-9",
+      "white_box_scenario_ids": [
+        "WB-request-origin",
+        "WB-json-envelope",
+        "WB-transaction-failure-matrix",
+        "WB-logout-revocation",
+        "WB-booking-conflict-serialization",
+        "WB-notifications-mark-all",
+        "WB-room-name-unique-concurrency",
+        "WB-seed-failure-retry",
+        "WB-response-transport-disconnect",
+        "WB-booking-response-loss-replay"
+      ],
+      "reason": "新增/编辑室、角色、全部已读、预约和取消部分写后/写间隙/提交失败回滚；白盒补登录退出及种子事务。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-1",
+      "white_box_scenario_ids": [
+        "WB-password-derivation",
+        "WB-login-window-lock",
+        "WB-login-format-boundaries"
+      ],
+      "reason": "类型、去空格后长度两端及越界、邮箱大小写，格式有效但凭据错与格式错误分开。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-2",
+      "white_box_scenario_ids": [
+        "WB-password-derivation",
+        "WB-session-expiry",
+        "WB-login-switch-and-cookies",
+        "WB-ui-login-navigation"
+      ],
+      "reason": "四个正确身份登录、受保护读取及刷新；错误凭据和会话失效由相邻需求场景补充。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-3",
+      "white_box_scenario_ids": [
+        "WB-password-derivation",
+        "WB-login-window-lock",
+        "WB-login-switch-and-cookies",
+        "WB-ui-api-error-session-transition"
+      ],
+      "reason": "未知账号与错密统一反馈，匿名及已有成员/管理员会话下不错误切换身份。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-4",
+      "white_box_scenario_ids": [
+        "WB-session-join",
+        "WB-booking-query-scope-join",
+        "WB-ui-start-session-errors"
+      ],
+      "reason": "四身份完整字段和不重登角色双向变化；不能只检查用户姓名。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-5",
+      "white_box_scenario_ids": [
+        "WB-health-static-dispatch",
+        "WB-session-join",
+        "WB-route-authorizations",
+        "WB-ui-mark-read-session-expiry",
+        "WB-ui-role-update-session-expiry",
+        "WB-http-unsupported-methods"
+      ],
+      "reason": "每个业务入口无Cookie/无效/撤销/到期会话拒绝读写且不留副作用。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-6",
+      "white_box_scenario_ids": [
+        "WB-session-expiry"
+      ],
+      "reason": "8小时前、等号、之后与活跃/闲置会话对照，读写不续期。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-7",
+      "white_box_scenario_ids": [
+        "WB-login-switch-and-cookies",
+        "WB-ui-login-navigation"
+      ],
+      "reason": "同队/跨队/管理员成员切换首业务请求、旧会话撤销及另一浏览器保留。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-8",
+      "white_box_scenario_ids": [
+        "WB-logout-revocation",
+        "WB-ui-logout-races"
+      ],
+      "reason": "真实退出撤销当前会话及Cookie，刷新/重放拒绝，独立会话仍可用。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-9",
+      "white_box_scenario_ids": [
+        "WB-login-window-lock",
+        "WB-login-format-boundaries"
+      ],
+      "reason": "成功失败都计数、格式错不计、不同IP隔离、错开时间滚动及59.999/60/60.001端点。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-10",
+      "white_box_scenario_ids": [
+        "WB-request-origin"
+      ],
+      "reason": "八个POST/PATCH入口标记及Origin scheme/host/port矩阵，无Origin不额外拒绝。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-11",
+      "white_box_scenario_ids": [
+        "WB-json-envelope"
+      ],
+      "reason": "八入口媒体类型/对象类型/损坏字节/0与1字节/65536与65537边界；空对象成功或业务拒绝分开。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-12",
+      "white_box_scenario_ids": [
+        "WB-login-switch-and-cookies",
+        "WB-logout-revocation"
+      ],
+      "reason": "首次登录、同队跨队角色切换及退出均核对Cookie属性和脚本不可读。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-13",
+      "white_box_scenario_ids": [
+        "WB-password-derivation"
+      ],
+      "reason": "独立派生复算、有效熵输入因果与全部持久化出口，未知格式或漏出口不算通过。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "identity-session-14",
+      "white_box_scenario_ids": [
+        "WB-login-switch-and-cookies"
+      ],
+      "reason": "首次及后续登录/切换、撤销/到期与独立会话；摘要/用户/期限及全部持久化出口核对。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-1",
+      "white_box_scenario_ids": [
+        "WB-ui-login-navigation"
+      ],
+      "reason": "成员/管理员/异队登录及切换后的导航与管理入口权限一致。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-2",
+      "white_box_scenario_ids": [
+        "WB-ui-login-navigation"
+      ],
+      "reason": "四个示例选择仅填字段，无请求；点击登录才使用最后所选账号。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-3",
+      "white_box_scenario_ids": [
+        "WB-ui-load-parallel-error",
+        "WB-ui-load-token-races",
+        "WB-ui-logout-races",
+        "WB-ui-date-filter-empty-recovery"
+      ],
+      "reason": "旧成功/错误先后返回×新成功/失败×日期/页面切换，并观察等待中不闪回。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-4",
+      "white_box_scenario_ids": [
+        "WB-ui-start-session-errors",
+        "WB-ui-load-parallel-error",
+        "WB-ui-load-token-races"
+      ],
+      "reason": "每条数据读取失败可重试，恢复显示真实资料；正常空集与错误不混淆。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-5",
+      "white_box_scenario_ids": [
+        "WB-ui-default-times"
+      ],
+      "reason": "不同房间依次开弹窗，资料、五输入与确认时间规则齐全且不沿用旧室。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-6",
+      "white_box_scenario_ids": [
+        "WB-ui-default-times"
+      ],
+      "reason": "北京时间07:50至23:59关键点×过去/今天/未来及浏览器时区，默认对齐与20点上界。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-7",
+      "white_box_scenario_ids": [
+        "WB-ui-notification-render",
+        "WB-ui-submit-button-matrix"
+      ],
+      "reason": "登录、预约、取消及新增/编辑室等待、成功、业务/网络失败和重试按钮恢复。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-8",
+      "white_box_scenario_ids": [
+        "WB-ui-submit-button-matrix",
+        "WB-ui-role-demotion-reload",
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "reason": "预约编号、取消、新增/编辑室、角色保存的反馈和真实重载；成功写后加载错不能假成功空表。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-9",
+      "white_box_scenario_ids": [
+        "WB-ui-api-error-session-transition",
+        "WB-ui-booking-draft-key",
+        "WB-ui-submit-button-matrix",
+        "WB-ui-room-edit-draft"
+      ],
+      "reason": "预约及新增/编辑室业务拒绝/断网后逐字段保留，修正和不改内容重试。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-10",
+      "white_box_scenario_ids": [
+        "WB-ui-start-session-errors",
+        "WB-ui-api-error-session-transition",
+        "WB-ui-load-token-races",
+        "WB-ui-logout-races",
+        "WB-ui-mark-read-session-expiry",
+        "WB-ui-role-update-session-expiry"
+      ],
+      "reason": "各业务弹窗遇当前会话真实失效关闭并回登录，重登恢复；白盒区分旧世代401。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-11",
+      "white_box_scenario_ids": [
+        "WB-ui-dialog-close-no-write"
+      ],
+      "reason": "三弹窗关闭键/Escape/四侧外部/内部点击，所有关闭无业务写。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-12",
+      "white_box_scenario_ids": [
+        "WB-ui-responsive-breakpoints"
+      ],
+      "reason": "1440×900、390×844、320×740完整任务及长文本，CSS各断点由白盒细化。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-13",
+      "white_box_scenario_ids": [
+        "WB-ui-text-escaping",
+        "WB-ui-accessibility-focus"
+      ],
+      "reason": "键盘完整流程、名称/焦点/弹窗标题及成功错误反馈的可访问性。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-14",
+      "white_box_scenario_ids": [
+        "WB-ui-text-escaping"
+      ],
+      "reason": "名称位置主题通知等真实业务载荷以文本展示，DOM未生成可执行标记且脱敏不被绕过。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-15",
+      "white_box_scenario_ids": [
+        "WB-ui-timezone-format"
+      ],
+      "reason": "所有日期时段日程通知在多浏览器时区及北京午夜仍同义并标明UTC+8。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "interface-experience-16",
+      "white_box_scenario_ids": [
+        "WB-ui-booking-draft-key"
+      ],
+      "reason": "同弹窗相同规范化内容复用标识、各输入改变换标识，实际响应丢失后仅一单一通知。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "notification-center-1",
+      "white_box_scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-booking-insert-notify",
+        "WB-booking-response-loss-replay"
+      ],
+      "reason": "真实创建成功一条owner未读通知、完整时段字段，失败与部分写回滚无通知。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "notification-center-2",
+      "white_box_scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-cancel-atomic-idempotent"
+      ],
+      "reason": "本人/管理员代取消一条owner通知，重复及并发不多发，部分写失败回滚。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "notification-center-3",
+      "white_box_scenario_ids": [
+        "WB-notifications-select-limit"
+      ],
+      "reason": "四身份及伪造用户选择均只读自己，管理员无额外私信权限。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "notification-center-4",
+      "white_box_scenario_ids": [
+        "WB-notifications-select-limit"
+      ],
+      "reason": "0/1/99/100/101/105条、混合已读与同秒生成，完整字段及生成倒序最近100。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "notification-center-5",
+      "white_box_scenario_ids": [
+        "WB-notifications-mark-all",
+        "WB-ui-notification-render",
+        "WB-ui-mark-read-session-expiry"
+      ],
+      "reason": "空集/105条含列表外5条/重复标记/新增未读与其他用户隔离，故障回滚。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "notification-center-6",
+      "white_box_scenario_ids": [
+        "WB-ui-notification-render"
+      ],
+      "reason": "0、105条只显示100、新增3条和全已读转零；与真实返回列表计数对应。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "notification-center-7",
+      "white_box_scenario_ids": [
+        "WB-ui-notification-render"
+      ],
+      "reason": "空/创建/取消/已读状态的正文时间和编号及浏览器时区不变。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-1",
+      "white_box_scenario_ids": [
+        "WB-room-eligibility-capacity"
+      ],
+      "reason": "成员/管理员×同队异队×启停状态，旧弹窗提交前停用重新判资格。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-2",
+      "white_box_scenario_ids": [
+        "WB-booking-fields-guards"
+      ],
+      "reason": "必填类型、整数排除布尔小数、字符串trim和长度、编号及人数两端与越界。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-3",
+      "white_box_scenario_ids": [
+        "WB-datetime-parse-normalize",
+        "WB-idempotency-absolute-precision"
+      ],
+      "reason": "起止各自类型/解析/时区失败及等价绝对时刻、混合偏移，不按字符串排序。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-4",
+      "white_box_scenario_ids": [
+        "WB-booking-horizon"
+      ],
+      "reason": "固定合法开始只移动服务时间验证未来严格下界及30天含上界，不与粒度错误混淆。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-5",
+      "white_box_scenario_ids": [
+        "WB-booking-duration"
+      ],
+      "reason": "零/负/不足/15分钟/8小时/超长，正控制与同时违规项分开记录。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-6",
+      "white_box_scenario_ids": [
+        "WB-booking-open-hours"
+      ],
+      "reason": "北京同日08/20端点、开门前/关门后/跨日及不同偏移的等价表示。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-7",
+      "white_box_scenario_ids": [
+        "WB-booking-open-hours"
+      ],
+      "reason": "两端分钟0/15/30/45与非对齐、秒及微秒各自非零、显式零微秒。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-8",
+      "white_box_scenario_ids": [
+        "WB-room-eligibility-capacity"
+      ],
+      "reason": "人数=当前容量及+1，降容后的旧表单和成员/管理员不能绕过。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-9",
+      "white_box_scenario_ids": [
+        "WB-booking-conflict-serialization"
+      ],
+      "reason": "全部重叠形状、左右相邻、异室/取消及同时重叠和同时相邻真实竞争。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-10",
+      "white_box_scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-booking-insert-notify",
+        "WB-idempotency-user-concurrency"
+      ],
+      "reason": "UI/API成功完整业务字段、列表日程和单通知一致；写间隙/提交失败均原子。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-11",
+      "white_box_scenario_ids": [
+        "WB-idempotency-priority",
+        "WB-idempotency-user-concurrency",
+        "WB-ui-booking-draft-key",
+        "WB-idempotency-absolute-precision",
+        "WB-booking-response-loss-replay"
+      ],
+      "reason": "顺序/并发同key、已过时段/停用/减容/已取消及不同用户key作用域。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-12",
+      "white_box_scenario_ids": [
+        "WB-datetime-parse-normalize",
+        "WB-idempotency-priority",
+        "WB-idempotency-user-concurrency",
+        "WB-ui-booking-draft-key",
+        "WB-idempotency-absolute-precision",
+        "WB-booking-response-loss-replay"
+      ],
+      "reason": "五维单改冲突、trim和等价时区不冲突、首次异内容竞争；白盒补微秒精度。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-13",
+      "white_box_scenario_ids": [
+        "WB-idempotency-priority"
+      ],
+      "reason": "取消后重放、原时段被别人重订及开始后仍返回原取消状态无复活。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-creation-14",
+      "white_box_scenario_ids": [
+        "WB-booking-fields-guards",
+        "WB-booking-horizon",
+        "WB-booking-duration",
+        "WB-booking-open-hours",
+        "WB-booking-conflict-serialization"
+      ],
+      "reason": "资料/资格/容量/冲突各失败无预约占用通知，修正后能成功。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-1",
+      "white_box_scenario_ids": [
+        "WB-route-authorizations",
+        "WB-booking-query-scope-join"
+      ],
+      "reason": "省略/mine/team/非法范围×各角色/团队及同会话升降权，完整所有状态集合。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-2",
+      "white_box_scenario_ids": [
+        "WB-booking-query-scope-join"
+      ],
+      "reason": "未取消及取消字段、当前室名位置与历史业务字段分别核对。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-3",
+      "white_box_scenario_ids": [
+        "WB-ui-booking-status-sort"
+      ],
+      "reason": "浏览器start/end前、等号、后×confirmed/cancelled，取消优先且独立于服务时钟。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-4",
+      "white_box_scenario_ids": [
+        "WB-ui-booking-status-sort"
+      ],
+      "reason": "混乱创建顺序、进行中/已结束/取消分组排序，跨结束和取消后移组。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-5",
+      "white_box_scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "reason": "本人/管理员/其他成员/异队及同会话提升降权，拒绝无状态与通知副作用。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-6",
+      "white_box_scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "reason": "本人及管理员在开始前/等号/进行中/结束后取消，以服务时钟为准。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-7",
+      "white_box_scenario_ids": [
+        "WB-transaction-failure-matrix",
+        "WB-cancel-atomic-idempotent"
+      ],
+      "reason": "本人/代取消原字段保留、取消时间与owner通知原子，释放后他人可订。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-8",
+      "white_box_scenario_ids": [
+        "WB-cancel-atomic-idempotent"
+      ],
+      "reason": "开始前后重复及并发取消不改首时间不多通知，不释放后来别人预约。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-9",
+      "white_box_scenario_ids": [
+        "WB-cancel-authorization-and-clock"
+      ],
+      "reason": "不存在与异队目标均不存在反馈无泄露、原记录未变。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "reservation-management-10",
+      "white_box_scenario_ids": [
+        "WB-ui-booking-status-sort",
+        "WB-ui-dialog-close-no-write"
+      ],
+      "reason": "未来/进行中/结束/取消各卡片入口和确认资料，放弃无写入、确认才取消。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-1",
+      "white_box_scenario_ids": [
+        "WB-rooms-team-deserialization"
+      ],
+      "reason": "成员/管理员/异队资料完整且团队隔离，读取包含停用室不等于可预约列表。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-2",
+      "white_box_scenario_ids": [
+        "WB-day-range-intersection",
+        "WB-ui-timezone-format",
+        "WB-ui-date-filter-empty-recovery"
+      ],
+      "reason": "显式日期、省略、空串、无效日期与北京午夜，空串不能回落今天。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-3",
+      "white_box_scenario_ids": [
+        "WB-day-range-intersection"
+      ],
+      "reason": "开始/结束贴日边界与跨午夜历史fixture、取消过滤及开始升序；不放宽创建规则。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-4",
+      "white_box_scenario_ids": [
+        "WB-agenda-title-redaction"
+      ],
+      "reason": "本人/管理员/同队他人及角色变化的API与UI主题处理，跨队不可见。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-5",
+      "white_box_scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "reason": "所有真实容量选项及设备AND组合、相等边界/停用/清除/零匹配恢复。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-6",
+      "white_box_scenario_ids": [
+        "WB-agenda-title-redaction",
+        "WB-ui-room-timeline-agenda"
+      ],
+      "reason": "各身份展开日程时段owner主题、切日后再展开不复用旧内容。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-7",
+      "white_box_scenario_ids": [
+        "WB-ui-room-timeline-agenda"
+      ],
+      "reason": "48格逐格比对08与20端点/相邻/取消/空日，不只数总格数。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-8",
+      "white_box_scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "reason": "三统计基于原列表，筛选至零也不变；停用原预约、跨日相交与本人开始日分开。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "room-discovery-9",
+      "white_box_scenario_ids": [
+        "WB-ui-filters-statistics"
+      ],
+      "reason": "筛选无匹配仍保留控件并能调整恢复，不把空态当加载失败。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-1",
+      "white_box_scenario_ids": [
+        "WB-route-authorizations"
+      ],
+      "reason": "UI及直接新增/编辑权限，成员/异队/刚降权拒绝且资料不变。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-2",
+      "white_box_scenario_ids": [
+        "WB-room-write-and-return",
+        "WB-room-text-capacity-active",
+        "WB-ui-room-edit-draft"
+      ],
+      "reason": "两团队同名新增、各自独立ID及完整规范化资料，不覆盖旧空间。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-3",
+      "white_box_scenario_ids": [
+        "WB-booking-query-scope-join",
+        "WB-room-write-and-return",
+        "WB-room-text-capacity-active",
+        "WB-ui-room-edit-draft"
+      ],
+      "reason": "五字段逐项及合并更新，重登和既有预约查询读取当前名称位置。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-4",
+      "white_box_scenario_ids": [
+        "WB-room-name-unique-concurrency"
+      ],
+      "reason": "trim同名/停用同名/自己原名/异队同名及新增新增、编辑编辑、新增编辑竞争。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-5",
+      "white_box_scenario_ids": [
+        "WB-room-text-capacity-active"
+      ],
+      "reason": "新增编辑分别验证类型/trim长度/整数与布尔，新增缺省active及失败无部分保存。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-6",
+      "white_box_scenario_ids": [
+        "WB-room-equipment-set"
+      ],
+      "reason": "新增编辑空集、四设备、重复、未知及混合类型；整体拒绝而非部分保存。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-7",
+      "white_box_scenario_ids": [
+        "WB-rooms-team-deserialization",
+        "WB-room-eligibility-capacity",
+        "WB-room-state-existing-bookings",
+        "WB-ui-room-timeline-agenda"
+      ],
+      "reason": "停用保留房间预约占用，旧弹窗及直接请求不能创建。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-8",
+      "white_box_scenario_ids": [
+        "WB-room-state-existing-bookings"
+      ],
+      "reason": "改名位置/设备/减容/停用不改旧人数时段状态，启用后新单按新容量。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-9",
+      "white_box_scenario_ids": [
+        "WB-room-write-and-return"
+      ],
+      "reason": "不存在/异队修改同义拒绝，无目标资料泄露或变更。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "space-administration-10",
+      "white_box_scenario_ids": [
+        "WB-room-eligibility-capacity",
+        "WB-room-state-existing-bookings"
+      ],
+      "reason": "停用→启用恢复资格，但仍遵守原预约冲突和当前容量，不要求重建。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "team-administration-1",
+      "white_box_scenario_ids": [
+        "WB-route-authorizations",
+        "WB-member-select-role-guards"
+      ],
+      "reason": "管理员两队列表完整字段、成员及刚降权拒绝，不接受异队选择泄漏。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "team-administration-2",
+      "white_box_scenario_ids": [
+        "WB-route-authorizations",
+        "WB-member-select-role-guards",
+        "WB-ui-role-update-session-expiry"
+      ],
+      "reason": "普通成员改自己/别人/管理员及异队修改全拒；合法本队升降允许。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "team-administration-3",
+      "white_box_scenario_ids": [
+        "WB-member-select-role-guards"
+      ],
+      "reason": "精确合法角色、同值与大小写/空格/缺失/null/数值/布尔/数组异常不改变角色。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "team-administration-4",
+      "white_box_scenario_ids": [
+        "WB-last-admin-lock",
+        "WB-ui-role-demotion-reload",
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "reason": "唯一管理员自降、两管理员顺序及并发自降/互降始终保留至少一名本队管理员。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "team-administration-5",
+      "white_box_scenario_ids": [
+        "WB-session-join",
+        "WB-last-admin-lock"
+      ],
+      "reason": "全部管理入口分别作为升/降后第一条业务请求，不依赖session刷新缓存。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "team-administration-6",
+      "white_box_scenario_ids": [
+        "WB-member-select-role-guards"
+      ],
+      "reason": "不存在/异队成员角色修改拒绝且无泄露无变更。；当前修订设计待独立复审，未执行。"
+    },
+    {
+      "requirement_id": "team-administration-7",
+      "white_box_scenario_ids": [
+        "WB-ui-role-demotion-reload",
+        "WB-ui-role-update-session-expiry",
+        "WB-ui-self-demotion-session-failure"
+      ],
+      "reason": "成功自降重新读身份撤管理、唯一管理员失败保留；白盒补已提交但身份重读失败/到期和恢复。；当前修订设计待独立复审，未执行。"
+    }
+  ],
+  "exclusions": [
+    {
+      "source_ref": "app/__init__.py:1",
+      "reason": "仅包说明字符串，无执行分支，实际入口由runtime-entry覆盖。",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "app/server.py:286–288 static CSP/Referrer-Policy",
+      "reason": "当前96需求没有独立逐项安全头合同；真实静态可加载及文本转义验收已有目标，不新增安全头值要求。",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "web/app.js:9–10 art/brand and web/style.css decoration selectors",
+      "reason": "装饰图形和品牌固定文案不涉及用户业务数据与状态；布局可操作性、焦点与文本呈现均已有白盒目标，不对颜色形状逐像素验收。",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "tests/test_smoke.py:1–92",
+      "reason": "已有三个冒烟方法只覆盖登录/预约取消/room管理部分顺路；本轮只静态参考不运行，不把它们当分支完整验收或已有通过证据。",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "web/app.js:61",
+      "reason": "不新增业务场景；在既有身份/加载竞态后续执行时观察DOM重建与未处理异常。如果实际合法UI时序出现缺节点，则新建对应时序补测，不把本分析当覆盖命中。",
+      "coverage_defensive_id": "COV-DEF-001",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "web/app.js:92",
+      "reason": "保留防御分析，不新增已确认业务行为；后续真实401/退出矩阵观察无旧shell复现。",
+      "coverage_defensive_id": "COV-DEF-002",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "web/app.js:106–107",
+      "reason": "未发现约定UI能生成非法枚举，暂不为篡改内部state新增业务场景，仍保留未命中指标。",
+      "coverage_defensive_id": "COV-DEF-003",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "web/app.js:110",
+      "reason": "不新增正式验收场景；未使用的默认值辅助出口仍在代码覆盖分母。",
+      "coverage_defensive_id": "COV-DEF-004",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "web/app.js:118",
+      "reason": "当前支持环境没有已证明格式差异，不扩展浏览器兼容要求；未来实际支持环境出现差异时补环境矩阵。",
+      "coverage_defensive_id": "COV-DEF-005",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    },
+    {
+      "source_ref": "tests/test_regressions.py",
+      "reason": "四项开发回归可作为执行方法的辅助证据，但缺少全部状态/边界矩阵，不能替代关联AI方法或新run独立审阅。",
+      "reassessed_revision": "708c9c057b5c9014f4ff975fdc5774093a687abe"
+    }
+  ]
+}

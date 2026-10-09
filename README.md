@@ -101,6 +101,7 @@ python3 -m unittest discover -s tests -v
 - `stage-10-fixes` 保存[六类缺陷修复与开发回归档案](tests/snapshots/stage-10-fixes/README.md)：业务修复、七项HTTP回归、22项前端竞态、13项身份矩阵及独立兼容复核；尚未完成修复后的全部167条正式验收。
 - `stage-11-failed-acceptance` 保存[修复后完整验收档案](tests/snapshots/stage-11-failed-acceptance/README.md)：167条记录、160通过/6失败/1未证明的独立结论、新源码计数与角色刷新竞态；发布验收未通过。
 - `stage-12-identity-fixes` 保存[角色异步续段修复档案](tests/snapshots/stage-12-identity-fixes/README.md)：r1追加反例、r2修复及75矩阵/8HTTP、独立19原生/8HTTP，下一步完整重新验收。
+- `stage-13-full-acceptance` 保存[完整验收通过档案](tests/snapshots/stage-13-full-acceptance/README.md)：固定5247b360全量167执行/独立审阅通过、五门禁通过；后端行/分支100%，前端行99.52%/分支97.64%；独立发布审阅另行提交。
 - 完整复验及独立发布判断分别提交真实产出，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：

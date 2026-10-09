@@ -1,0 +1,65 @@
+{
+  "revision": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+  "formal_verdict": null,
+  "release_approved": false,
+  "resource_observation_complete": true,
+  "actual_resource_summary": "resource-execution-summary.json",
+  "initial_diagnostic_facts": "initial-diagnostic-facts.json",
+  "formal_initial_resources_read_only_check": {
+    "reference": "tests/delivery-acceptance/evidence/resources/stage12-20261009T005321Z/entropy",
+    "business_reports": 31,
+    "recorded_trace_gaps": [],
+    "interpretation": "正式首轮没有记录相同缺口；本次新补查确实记录缺口，所以不能据正式首轮无uncovered而删除新事实。正式方法的证据及结论由其Tester/Reviewer判断。"
+  },
+  "ongoing_diagnosis": "mapping-lifecycle-diagnostic adds metadata only, preserves uncovered; no product change or verdict override.",
+  "metadata_only_diagnostics": {
+    "reference": "mapping-lifecycle-diagnostic/diagnostic-results.json",
+    "fresh_seed_E2_branches": 8,
+    "lifecycles": 16,
+    "recorded_mapping_read_failures": 0,
+    "interpretation": "未复现不能解除既有一次缺口；未替换业务/随机/存储函数。"
+  },
+  "concurrent_shared_mapping_negative_control": {
+    "reference": "mapping-lifecycle-diagnostic/concurrent-mapping-probe-r2/probe-results.json",
+    "threads_mapping_cycles": 300,
+    "actual_leak_observations": 300,
+    "recorded_mapping_read_failures": 0,
+    "purpose": "真实共享映射写公开合成密码后munmap与另一线程退出；证明此负控被检出，不能据此证明原缺口原因。"
+  },
+  "diagnostic_observer_algorithm": "metadata-only additions; original gaps retained",
+  "accepted_resource_attempt": "generation-guard-complete-attempt",
+  "status": "all_actual_resources_complete_mapping_scope_evidence_sent_for_independent_review",
+  "original_remaining_gap": {
+    "branch": "seed-1",
+    "phase": "os_trace_restart",
+    "uncovered": [
+      "mapping_unreadable_before_flush_or_exit"
+    ],
+    "mapping_path": "not_recorded_by_original_adapter_failure_event",
+    "cause": "unproven; no observer judgment suppression or product failure classification",
+    "state": "unproven preserved; not used to decide new attempt"
+  },
+  "new_actual_result": {
+    "business": 31,
+    "lifecycle_traces": 62,
+    "cli": 22,
+    "runtime_versions": [
+      "Python3.11.17",
+      "Python3.12.15"
+    ],
+    "source_pin": "5247b360276f2900d20fdeab96bd75bb3ece73fa",
+    "uncovered": [],
+    "issues": [],
+    "product_observed_path_count": 125,
+    "scope": "固定产品已登记shared writable file mmap及其实际路径/字段；MAP_FIXED未登记替换、只读→mprotect写、mremap并发替换和任意普通store竞态不声明通用全支持。当前已观察产品出口需独立源码/格式对账。"
+  },
+  "observer_race_scope": "合成并发负控证实重复exit扫描时全区munmap已真实完成但return停点尚未核账的设施竞态；新观察器只在同代已完整扫描+全区pendingmunmap且ret0时解析。原seed-1原因没有完整路径实证仍未知，不泛化已证明。",
+  "resource_control_references": [
+    "generation-guard-complete-attempt/munmap-guard-results.json",
+    "generation-guard-complete-attempt/address-reuse-probe/probe-results.json",
+    "generation-guard-complete-attempt/seccomp-guard-results.json"
+  ],
+  "accepted_tool_binding": "accepted-resource-binding.json",
+  "historical_initial_tool_binding": "source-tool-binding.json (historical only; not current accepted tools)",
+  "mapping_metadata_reference": "generation-guard-complete-attempt/mapping-metadata/mapping-metadata-analysis.json"
+}

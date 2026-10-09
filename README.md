@@ -4,6 +4,8 @@
 
 最初交接版本为 **1.0.0-rc.1**：主要功能已实现，当时有少量原有冒烟测试，尚未完成系统发布验收。不能凭这三个测试通过认定版本可发布。没有故意植入故障，也不预设测试 Skill 一定发现严重缺陷。
 
+当前修复版本 **`5247b36` 已通过完整验收与独立发布审阅**：96条需求、167条场景（96黑盒/71白盒）、176个方法、五项门禁全部通过，发布审阅58项核验通过。后端行/分支覆盖100%，前端行99.52%/分支97.64%，覆盖率复查无新增必要补测建议。结论限定已验证的本地示例范围；Windows实际系统和公网生产未验收。详见 [最终发布审阅档案](tests/snapshots/stage-14-release-readiness/README.md)。后文各轮失败和准备状态保留为阶段历史。
+
 ## 启动
 
 需要 Python 3.11+，使用标准库，无需安装依赖、申请云服务或配置真实邮件账号。macOS、Linux 和安装了 Python 的 Windows 可运行。
@@ -102,6 +104,7 @@ python3 -m unittest discover -s tests -v
 - `stage-11-failed-acceptance` 保存[修复后完整验收档案](tests/snapshots/stage-11-failed-acceptance/README.md)：167条记录、160通过/6失败/1未证明的独立结论、新源码计数与角色刷新竞态；发布验收未通过。
 - `stage-12-identity-fixes` 保存[角色异步续段修复档案](tests/snapshots/stage-12-identity-fixes/README.md)：r1追加反例、r2修复及75矩阵/8HTTP、独立19原生/8HTTP，下一步完整重新验收。
 - `stage-13-full-acceptance` 保存[完整验收通过档案](tests/snapshots/stage-13-full-acceptance/README.md)：固定5247b360全量167执行/独立审阅通过、五门禁通过；后端行/分支100%，前端行99.52%/分支97.64%；独立发布审阅另行提交。
+- `stage-14-release-readiness` 保存[独立发布审阅档案](tests/snapshots/stage-14-release-readiness/README.md)：58项核验通过，当前本地示例范围ready；原始证据、工具来源及范围分别绑定，未执行部署或创建GitHub Release。
 - 完整复验及独立发布判断分别提交真实产出，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：

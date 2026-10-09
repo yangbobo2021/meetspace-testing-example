@@ -2,7 +2,8 @@
 
 ## 状态
 
-已接受，承接 [DR-013](013-identity-continuation-fix.md)，完整验收通过，独立发布判断另行记录。
+已接受，承接 [DR-013](013-identity-continuation-fix.md)，完整验收通过。
+后续独立发布判断见 [DR-015](015-release-readiness-review.md)，本阶段验收记录保持。
 
 ## 背景
 

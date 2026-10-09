@@ -1,0 +1,1142 @@
+{
+  "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "agent /root/api_execution reviewing /root/runtime_execution; no self-executed API/SIGINT methods included",
+  "method_reviews": [
+    {
+      "method_id": "AI-WB-errors-and-response",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 faults,storage-errors,real-integrity,required-external-locks,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到143项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-health-static-dispatch",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 health,real-process-restarts,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到83项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-json-envelope",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 envelopes,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到404项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-login-format-boundaries",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 formats,missing-formats,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到99项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-login-switch-and-cookies",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 identity,first-request-switch,ui-switch-and-errors,cross-team-first-write；核对到105项行为断言均成立。 独立核对31分支及六个E1重放/E2/E3因果比较；初次和后续/切换序列同源哈希一致。检查每个trace无uncovered/泄漏且写出口仅SQLite主库/WAL/journal/shm、应用日志、faketime共享对象；源码SCHEMA所有字段用途可解释，sessions仅token_hash/user_id/expires、users密码仅salt:scrypt；独立复算与真实认证对应。sendto属于HTTP Cookie协议，source无外部存储调用，另网络元数据仅两次失败nscd连接。有限样本不证明密码学强度。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-login-window-lock",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 rate,complete-rates,source-ip-and-rate,missing-formats,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到159项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/edges/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-logout-revocation",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 identity,real-process-restarts,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到89项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-password-derivation",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 password,ui,all-seed-logins；核对到38项行为断言均成立。 独立核对31分支及六个E1重放/E2/E3因果比较；初次和后续/切换序列同源哈希一致。检查每个trace无uncovered/泄漏且写出口仅SQLite主库/WAL/journal/shm、应用日志、faketime共享对象；源码SCHEMA所有字段用途可解释，sessions仅token_hash/user_id/expires、users密码仅salt:scrypt；独立复算与真实认证对应。sendto属于HTTP Cookie协议，source无外部存储调用，另网络元数据仅两次失败nscd连接。有限样本不证明密码学强度。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-persistence-restart",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 persistence,real-process-restarts,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到71项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-request-origin",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 envelopes,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到404项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-route-authorizations",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 authorizations,expiry,identity,invalid-session-matrix,ui-switch-and-errors,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到173项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-runtime-entry",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 ；核对到0项行为断言均成立。 另核对Python3.11/3.12各11项实际CLI参数、PID监听、不同库写后重启隔离；network none隔离8766，实际浏览器代理登入并读取健康。",
+      "evidence": [
+        "evidence/cli311/cli-matrix-results.json",
+        "evidence/cli312/cli-matrix-results.json",
+        "evidence/cli-browser/result.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-seed-empty-existing",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 seed-matrix,ui,all-seed-logins,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到104项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-seed-failure-retry",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 seed-faults,seed-final；核对到31项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-session-expiry",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 expiry,two-expiry,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到93项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-session-join",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 identity,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到83项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-WB-transaction-failure-matrix",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 faults,write-matrix,required-external-locks,all105-success-peer-isolation,extra-envelope-dispatch,session-dynamic-join-cleanup,wrong-route-methods,missing-length；核对到227项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-1",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 ；核对到0项行为断言均成立。 另核对Python3.11/3.12各11项实际CLI参数、PID监听、不同库写后重启隔离；network none隔离8766，实际浏览器代理登入并读取健康。",
+      "evidence": [
+        "evidence/cli311/cli-matrix-results.json",
+        "evidence/cli312/cli-matrix-results.json",
+        "evidence/cli-browser/result.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-2",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 ；核对到0项行为断言均成立。 另核对Python3.11/3.12各11项实际CLI参数、PID监听、不同库写后重启隔离；network none隔离8766，实际浏览器代理登入并读取健康。",
+      "evidence": [
+        "evidence/cli311/cli-matrix-results.json",
+        "evidence/cli312/cli-matrix-results.json",
+        "evidence/cli-browser/result.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-3",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 seed-matrix,ui,all-seed-logins；核对到41项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-4",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 persistence,real-process-restarts,two-days-process-restart；核对到10项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-5",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 persistence,real-process-restarts；核对到8项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-6",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 health,real-process-restarts；核对到20项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-7",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 health,formats,faults,storage-errors,real-integrity,required-external-locks,extra-envelope-dispatch；核对到150项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-8",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 faults,storage-errors,real-integrity,required-external-locks；核对到80项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-application-runtime-9",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 faults,write-matrix,required-external-locks,all105-success-peer-isolation；核对到164项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-1",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 formats,missing-formats；核对到36项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-10",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 envelopes；核对到341项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-11",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 envelopes；核对到341项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-12",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 ui,identity,ui-switch-and-errors,real-process-restarts；核对到32项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-13",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 password,ui；核对到6项行为断言均成立。 独立核对31分支及六个E1重放/E2/E3因果比较；初次和后续/切换序列同源哈希一致。检查每个trace无uncovered/泄漏且写出口仅SQLite主库/WAL/journal/shm、应用日志、faketime共享对象；源码SCHEMA所有字段用途可解释，sessions仅token_hash/user_id/expires、users密码仅salt:scrypt；独立复算与真实认证对应。sendto属于HTTP Cookie协议，source无外部存储调用，另网络元数据仅两次失败nscd连接。有限样本不证明密码学强度。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-14",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 identity,expiry；核对到31项行为断言均成立。 独立核对31分支及六个E1重放/E2/E3因果比较；初次和后续/切换序列同源哈希一致。检查每个trace无uncovered/泄漏且写出口仅SQLite主库/WAL/journal/shm、应用日志、faketime共享对象；源码SCHEMA所有字段用途可解释，sessions仅token_hash/user_id/expires、users密码仅salt:scrypt；独立复算与真实认证对应。sendto属于HTTP Cookie协议，source无外部存储调用，另网络元数据仅两次失败nscd连接。有限样本不证明密码学强度。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-2",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 ui,identity；核对到21项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-3",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 identity,ui-switch-and-errors；核对到25项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-4",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 identity；核对到20项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-5",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 authorizations,expiry,identity,invalid-session-matrix,ui-switch-and-errors；核对到110项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-6",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 expiry,two-expiry；核对到30项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-7",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 identity,first-request-switch,cross-team-first-write,ui-switch-and-errors；核对到105项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-8",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 identity,real-process-restarts；核对到26项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-identity-session-9",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 rate,complete-rates,source-ip-and-rate,missing-formats；核对到96项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-new-room-write-failure-boundary",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 faults,storage-errors,write-matrix,required-external-locks,all105-success-peer-isolation；核对到191项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-other-writes-failure-boundary",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 faults,storage-errors,write-matrix,required-external-locks,all105-success-peer-isolation；核对到191项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-password-persistence-scope",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 password,identity；核对到25项行为断言均成立。 独立核对31分支及六个E1重放/E2/E3因果比较；初次和后续/切换序列同源哈希一致。检查每个trace无uncovered/泄漏且写出口仅SQLite主库/WAL/journal/shm、应用日志、faketime共享对象；源码SCHEMA所有字段用途可解释，sessions仅token_hash/user_id/expires、users密码仅salt:scrypt；独立复算与真实认证对应。sendto属于HTTP Cookie协议，source无外部存储调用，另网络元数据仅两次失败nscd连接。有限样本不证明密码学强度。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "method_id": "AI-salt-entropy-dependence",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 password,identity；核对到25项行为断言均成立。 独立核对31分支及六个E1重放/E2/E3因果比较；初次和后续/切换序列同源哈希一致。检查每个trace无uncovered/泄漏且写出口仅SQLite主库/WAL/journal/shm、应用日志、faketime共享对象；源码SCHEMA所有字段用途可解释，sessions仅token_hash/user_id/expires、users密码仅salt:scrypt；独立复算与真实认证对应。sendto属于HTTP Cookie协议，source无外部存储调用，另网络元数据仅两次失败nscd连接。有限样本不证明密码学强度。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "method_id": "AI-storage-exception-boundary",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 faults,storage-errors,write-matrix,required-external-locks,all105-success-peer-isolation；核对到191项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "method_id": "AI-subsequent-session-entropy",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 password,identity；核对到25项行为断言均成立。 独立核对31分支及六个E1重放/E2/E3因果比较；初次和后续/切换序列同源哈希一致。检查每个trace无uncovered/泄漏且写出口仅SQLite主库/WAL/journal/shm、应用日志、faketime共享对象；源码SCHEMA所有字段用途可解释，sessions仅token_hash/user_id/expires、users密码仅salt:scrypt；独立复算与真实认证对应。sendto属于HTTP Cookie协议，source无外部存储调用，另网络元数据仅两次失败nscd连接。有限样本不证明密码学强度。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "method_id": "AI-token-entropy-and-storage-scope",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 password,identity；核对到25项行为断言均成立。 独立核对31分支及六个E1重放/E2/E3因果比较；初次和后续/切换序列同源哈希一致。检查每个trace无uncovered/泄漏且写出口仅SQLite主库/WAL/journal/shm、应用日志、faketime共享对象；源码SCHEMA所有字段用途可解释，sessions仅token_hash/user_id/expires、users密码仅salt:scrypt；独立复算与真实认证对应。sendto属于HTTP Cookie协议，source无外部存储调用，另网络元数据仅两次失败nscd连接。有限样本不证明密码学强度。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "method_id": "AI-transaction-midwrite-boundary",
+      "status": "passed",
+      "reason": "逐项核对真实HTTP状态/返回正文与独立SQLite快照；检查测试适配器仅在I/O边界注入、不代替业务判定，相关操作组 faults,storage-errors,write-matrix,required-external-locks,all105-success-peer-isolation；核对到191项行为断言均成立。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_id": "BB-application-runtime-1",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-1"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/cli311/cli-matrix-results.json",
+        "evidence/cli312/cli-matrix-results.json",
+        "evidence/cli-browser/result.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-2",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-2"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/cli311/cli-matrix-results.json",
+        "evidence/cli312/cli-matrix-results.json",
+        "evidence/cli-browser/result.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-3",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-3"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-4",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-4"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-5",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-5"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-6",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-6"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-7",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-7",
+        "AI-storage-exception-boundary"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-8",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-8",
+        "AI-storage-exception-boundary"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-application-runtime-9",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-application-runtime-9",
+        "AI-transaction-midwrite-boundary",
+        "AI-other-writes-failure-boundary",
+        "AI-new-room-write-failure-boundary"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-1",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-1"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-2",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-2"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-3",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-3"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-4",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-4"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-5",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-5"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-6",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-6"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-7",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-7"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/finish/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-8",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-8"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-9",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-9"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-10",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-10"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-11",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-11"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-12",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-12"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-13",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-13",
+        "AI-salt-entropy-dependence",
+        "AI-password-persistence-scope"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-identity-session-14",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-identity-session-14",
+        "AI-token-entropy-and-storage-scope",
+        "AI-subsequent-session-entropy"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-1",
+      "status": "unproven",
+      "reviewed_method_ids": [
+        "AI-application-runtime-9",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-notification-center-2",
+      "status": "unproven",
+      "reviewed_method_ids": [
+        "AI-application-runtime-9",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-creation-10",
+      "status": "unproven",
+      "reviewed_method_ids": [
+        "AI-application-runtime-9",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-reservation-management-7",
+      "status": "unproven",
+      "reviewed_method_ids": [
+        "AI-application-runtime-9",
+        "AI-transaction-midwrite-boundary"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "BB-team-administration-5",
+      "status": "unproven",
+      "reviewed_method_ids": [
+        "AI-identity-session-4"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-runtime-entry",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-runtime-entry"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/cli311/cli-matrix-results.json",
+        "evidence/cli312/cli-matrix-results.json",
+        "evidence/cli-browser/result.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-seed-empty-existing",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-seed-empty-existing"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-password-derivation",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-password-derivation",
+        "AI-identity-session-13",
+        "AI-salt-entropy-dependence",
+        "AI-password-persistence-scope"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-persistence-restart",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-persistence-restart"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-health-static-dispatch",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-health-static-dispatch"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-request-origin",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-request-origin"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-json-envelope",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-json-envelope"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-errors-and-response",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-errors-and-response"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-transaction-failure-matrix",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-transaction-failure-matrix"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-session-join",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-session-join"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-session-expiry",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-session-expiry"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-login-window-lock",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-login-window-lock"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/edges/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-login-switch-and-cookies",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-login-switch-and-cookies",
+        "AI-identity-session-14",
+        "AI-token-entropy-and-storage-scope",
+        "AI-subsequent-session-entropy"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/entropy/entropy-matrix-report.json",
+        "evidence/entropy-current-validation.json",
+        "evidence/network-metadata/network-probe.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-logout-revocation",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-logout-revocation"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-route-authorizations",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-route-authorizations"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/supplement/branches.json",
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-seed-failure-retry",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-seed-failure-retry"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json"
+      ]
+    },
+    {
+      "scenario_id": "WB-login-format-boundaries",
+      "status": "passed",
+      "reviewed_method_ids": [
+        "AI-WB-login-format-boundaries"
+      ],
+      "reason": "运行环境/身份/存储方法独立复查见method_reviews；跨所有者方法由总审阅合并。",
+      "evidence": [
+        "evidence/runtime/branches.json",
+        "evidence/runtime/completion/branches.json",
+        "evidence/runtime/finish/branches.json",
+        "evidence/runtime/storage-final/branches.json",
+        "evidence/runtime/edges/branches.json"
+      ]
+    }
+  ],
+  "source_basis": [
+    "app/server.py SCHEMA,password_hash,login,Store.connect,Handler.dispatch",
+    "harnesses/runtime/runtime_execute.py Conn",
+    "harnesses/runtime/runtime_complete.py TraceConn",
+    "harnesses/entropy/ptrace_os_adapter.py write/writev/pwrite64,mmap,child,connect handling",
+    "harnesses/entropy/entropy_business_branch.py independent scrypt/schema/identity checks"
+  ],
+  "limits": [
+    "受控依赖故障与真实OS熵/SQLite锁证据分开，未将Mock故障当第三方集成；本应用无外部第三方服务。",
+    "仅复查运行时48方法，非整个应用发布通过。"
+  ]
+}

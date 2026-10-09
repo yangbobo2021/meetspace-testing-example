@@ -1,0 +1,256 @@
+{
+  "status": "ready_for_formal_resource_binding",
+  "scope": "对708c9c0冻结源与r4资源观测的独立准备复核；不是167场景正式通过或发布认可",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "/root/fix_code_reviewer",
+  "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "source_sha256": {
+    "app/server.py": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322"
+  },
+  "inputs_sha256": {
+    "frozen-stage10-r3/ptrace_os_adapter.py": "fa6dbd6a4fb0f0f176d56afc14b2fcf54276c615979a2ad042d44cb9e4c45791",
+    "frozen-stage10-r3/ptrace_preflight.py": "ef338330b2538f14f2c10bfe9962499fb32d79c747eb0ad4ae2e89c57e0e650c",
+    "frozen-stage10-r3/ptrace_extended_preflight.py": "08a5e2bb7fb853ba10043c99fff399164ea89b1a0de247777d6befa2e8459581",
+    "frozen-stage10-r3/run_entropy_matrix.py": "f47ba38163ce24861adbaf1d7b99c5ce1d27ec809a3cff95860d5d87b2e4aad1",
+    "frozen-stage10-r3/entropy_business_branch.py": "aef69ce8ad10d49ad630a6471f7d2ee8163d5889045d83da3eb81ea03e7220f9",
+    "entropy-stage10-r3/entropy-matrix-report.json": "aec338d0dc7a12e63bab7cce2189e7181791e6b066e2bd385f1a26a356fa3af7",
+    "ptrace-extended-preflight-r3/extended-preflight.json": "80387706122b61127b771a7089d17f99ba19d291184e553aee6b55ebfddabb89",
+    "resource-review/inherited-mmap-probe/reviewer-probe-result.json": "9b223a8309241b7dc2ef5d0c439e0cc48d81b2e7ace511c78179e9bd214a1498",
+    "resource-review/inherited-mmap-probe-r2/reviewer-probe-result.json": "91ecdadc4837e9f3e43d74517b194459faa5e0f7825473f489023b86f5e31dc7",
+    "resource-review/partial-msync-probe/reviewer-probe-result.json": "b2de8cd07f2aa037e215720fcdf0e5d02b64ffaa9404ad032fc285082bc75aa6",
+    "resource-review/partial-msync-probe-r2/reviewer-probe-result.json": "02a69d0bb53520438a5ff969b71e556337ecf4f32463831bf9096888306b4c94"
+  },
+  "formal_verdict": null,
+  "release_approved": false,
+  "reviewed_methods": [
+    "AI-salt-entropy-dependence",
+    "AI-token-entropy-and-storage-scope",
+    "AI-subsequent-session-entropy",
+    "AI-password-persistence-scope",
+    "AI-WB-password-derivation",
+    "AI-WB-login-switch-and-cookies"
+  ],
+  "requirement_interpretation": [
+    "六类起点为初始化salt、首次登录、同用户第二浏览器、三次登录退出后的同浏览器重登、A→U、U→B；每个分别E1/E2/E3、同E1重放、正常OS源。不能用一次salt/token调用或看起来不同替代因果。",
+    "正常初始化后的共享基线须尚未登录，不用SQL清会话造起点；每分支真实建立前缀并用本分支令牌继续。",
+    "全部实际生成token应独立比较SHA256/用户/八小时截止，并验证真实身份与受保护业务；物理删除仅按真实退出/登录清理行为检查，精确到期401不新增即刻删除行义务。",
+    "I/O范围必须从进程创建前含子进程、普通写/writev/pwrite、共享mmap、WAL/journal、日志/临时/重命名删除、未知外连及重启，字段用途与可恢复内容需独立解释；找不到字符串和无BLOB都不足。"
+  ],
+  "findings": [
+    {
+      "id": "RESOURCE-001",
+      "severity": "blocking",
+      "status": "corrected_in_r3",
+      "issue": "早期baseline-real-os在四账号login后backup，初次登录矩阵起点已有会话。",
+      "correction": "r3冻结branch在任何login前SQLite正常backup，并assert sessions=0；仍随后执行全部四账号认证，不改SQL造基线。"
+    },
+    {
+      "id": "RESOURCE-002",
+      "severity": "blocking",
+      "status": "corrected_and_independently_probed",
+      "issue": "fork child继承MAP_SHARED不进入子TGID映射表，child已flush的密码可被清覆后漏报且uncovered空。",
+      "old_evidence": "resource-review/inherited-mmap-probe/reviewer-probe-result.json",
+      "corrected_evidence": "resource-review/inherited-mmap-probe-r2/reviewer-probe-result.json",
+      "reason": "独立合成反例前版leaks0，修后同一反例leaks1/父子exit0，mapping继承被观察。"
+    },
+    {
+      "id": "RESOURCE-003",
+      "severity": "blocking",
+      "status": "corrected_and_independently_probed",
+      "issue": "partial msync请求不含映射首地址时被漏过，二页共享map秘密已flush又清覆可静默通过。",
+      "old_evidence": "resource-review/partial-msync-probe/reviewer-probe-result.json",
+      "corrected_evidence": "resource-review/partial-msync-probe-r2/reviewer-probe-result.json",
+      "reason": "冻结r3 fa6dbd6...改范围交集，独立同反例扫描3次/leaks1，partial munmap成功分割及mremap失败保留亦与静态问题对应。"
+    },
+    {
+      "id": "RESOURCE-004",
+      "severity": "blocking",
+      "status": "corrected_in_r3",
+      "issue": "摘要仅核target，其他前缀/退出/restart身份字段未逐token匹配；after-three target是新容器而非退出后的second句柄。",
+      "correction": "r3每login独立memory backup核实际token SHA256/user_id/expiry并真实rooms200，after-three复用second句柄。"
+    },
+    {
+      "id": "RESOURCE-005",
+      "severity": "blocking",
+      "status": "corrected_and_raw_r4_verified",
+      "issue": "r3重启同库却重置同entropy tape sequence，20后续controlled分支在restart实际login409，被外层记blocked；最终comparison只有salt seed一组。",
+      "reason": "此前相同随机源序列人工生成已有token_hash，不能作为正常重启失败新产品义务。因果目标完成后正常同库重启应恢复真实OS源，保留旧库并追踪restart实际源；需新冻结r4全矩阵，不合并r3片段通过。",
+      "resolution": "r4冻结branch只在因果目标比较后移除--tape，保留原数据库正常停机并恢复真实OS源重启；独立核31个实际business文件及62个初始/重启trace，六类完整比较均true，所有业务assert真、退出码0、uncovered空，无泄漏。r3历史blocked保留，未合并片段认证。"
+    },
+    {
+      "id": "RESOURCE-006",
+      "severity": "blocking_if_missing",
+      "status": "reconciled_for_fixed_source_and_actual_runs",
+      "issue": "socket输出仅按fd字符串跳过、TEXT/可逆内容仅样本扫描；最终不能据此直接声明全部持久出口无副本。",
+      "required": "结合固定源码、实际trace syscall/写入path与DB全字段格式解释SQLite DB/WAL/SHM/journal、应用stdout/stderr日志、libfaketime依赖共享状态、Cookie HTTP协议socket；工具私有备份单列。若有不明字段/写出口/外连/未跟进程即blocked。未知密文不得按未命中字符串认证。",
+      "resolution": "逐核当前源所有Store SQL字段与日志/HTTP发送实现，实际写路径完整分为SQLite DB/WAL/SHM/journal、应用server日志、libfaketime共享状态；均保留payload/mapping扫描。没有未知表/字段或未知实际写路径。socket sendto结合固定标准库HTTP监听/accept路径归于Cookie/JSON协议返回；124次connect并非0，62个生命周期各2次失败，由同固定源strace元数据独立解释为AF_UNIX /var/run/nscd/socket ENOENT，未发生成功外连。任何后续陌生出口/字段或未知内容仍须unproven。"
+    }
+  ],
+  "preflight_review": {
+    "extended_r3_all_assertions_true": true,
+    "known_reversible_scope": "hex/base64/固定XOR样本能检出只证明这些样本及写入出口被观察，不证明任意密码学加密不可恢复。",
+    "entropy_source_scope": "真实Linux getrandom及/dev/urandom读取依赖返还控制，readv等未知入口会uncovered；无需规定应用每次某API调用次数。",
+    "clock_scope": "r2 truncate写钟文件瞬态解析故障是设施失败；r3原子replace修复后需各分支验证真实T/八小时。",
+    "nonrandom_scope": "真实PID有7/8变化且日志路径不同，须保留；当前源码salt/token有效生成路径不使用这些值。仅与输出有关的账号、业务初态/同数据库、时钟、请求前缀和有效熵入口需控制，不能宣称每bit机器状态相同；同E1与不同E控制及实际路径作为因果依据。"
+  },
+  "next_check": "正式Tester/Reviewer按完整方法逐场景绑定冻结资源及实际证据；产品已确认迟到角色响应P1另见product-failure-review.json，资源ready不能解除其阻断。新产品修复后需新sourceSHA全量证据。",
+  "previous_status": "unproven_pending_r4",
+  "raw_r4_independent_validation": {
+    "reference": "resource-review/r4-independent-validation.json",
+    "matrix_rows": 31,
+    "lifecycle_traces": 62,
+    "same_source_and_harness_hashes": true,
+    "outer_rows_equal_actual_business_files": true,
+    "actual_trace_files_equal_embedded_reports": true,
+    "all_assertions_true": true,
+    "all_process_and_thread_exits_zero": true,
+    "leaks": 0,
+    "uncovered": [],
+    "comparison_scope": "initial_target_before_real_os_restart",
+    "restart_entropy_source": "real_os",
+    "aggregate_syscall_counts": {
+      "syscall_221": 186,
+      "syscall_214": 4446,
+      "syscall_222": 12250,
+      "syscall_48": 186,
+      "syscall_56": 131073,
+      "syscall_80": 27196,
+      "syscall_57": 123935,
+      "syscall_63": 231717,
+      "syscall_215": 6896,
+      "syscall_226": 11038,
+      "syscall_96": 186,
+      "syscall_99": 866,
+      "syscall_293": 866,
+      "syscall_261": 186,
+      "syscall_278": 488,
+      "syscall_98": 21257,
+      "syscall_160": 186,
+      "syscall_92": 62,
+      "syscall_78": 372,
+      "syscall_172": 1738,
+      "syscall_79": 41798,
+      "syscall_64": 804,
+      "scanned_write_calls": 8511,
+      "syscall_37": 62,
+      "syscall_35": 1676,
+      "syscall_46": 1003,
+      "scanned_shared_mappings": 2474,
+      "syscall_62": 11780,
+      "syscall_178": 2164,
+      "syscall_61": 1860,
+      "syscall_25": 20560,
+      "syscall_29": 6324,
+      "syscall_134": 4154,
+      "syscall_135": 2906,
+      "syscall_17": 62,
+      "syscall_216": 248,
+      "syscall_20": 62,
+      "syscall_34": 62,
+      "syscall_67": 5719,
+      "syscall_175": 1490,
+      "syscall_55": 1490,
+      "syscall_68": 7707,
+      "syscall_83": 1055,
+      "syscall_198": 186,
+      "syscall_208": 62,
+      "syscall_200": 62,
+      "syscall_204": 742,
+      "syscall_203": 124,
+      "syscall_201": 62,
+      "syscall_73": 769,
+      "syscall_242": 680,
+      "syscall_435": 680,
+      "syscall_207": 680,
+      "syscall_206": 1360,
+      "network_send_calls": 1360,
+      "syscall_210": 680,
+      "syscall_233": 680,
+      "syscall_93": 680,
+      "syscall_139": 62,
+      "syscall_94": 62
+    },
+    "event_kinds": {
+      "exec": 186,
+      "getrandom": 488,
+      "write": 804,
+      "file_shared_mapping": 1114,
+      "unlink_or_rename": 1676,
+      "file_shared_mapping_scan": 2474,
+      "random_device_read": 62,
+      "pwrite64": 7707,
+      "child_process_or_thread": 680
+    }
+  },
+  "database_field_review": {
+    "teams": "id/name为初始化固定团队身份；无凭据输入路径",
+    "users": "id/team_id/email/name/role为公开身份与权限；唯一password_hash格式salt_hex:scrypt_digest_hex，经四账号独立scrypt及错密码核验；角色PATCH只更新role",
+    "sessions": "唯一三字段token_hash SHA256摘要/user_id/REAL expires；逐次真实login后read-only一致内存backup绑定实际Cookie令牌摘要、真实/session身份及T+8h。token原文只在内存与HTTP Cookie返回，登录和退出SQL均仅摘要比较/写入",
+    "rooms": "id/team_id/name/location/capacity/equipment JSON允许设备集合/active为会议室业务资料；本矩阵来源为真实初始化",
+    "bookings": "id/team_id/room_id/user_id/title/start/end/attendees/status/created_at/cancelled_at/idempotency_key/request_hash为预约业务资料及幂等摘要，本矩阵真实初始化；SQL持久参数不引用登录原密码或Cookie原令牌",
+    "notifications": "id/user_id/booking_id/message/created_at/read为消息业务资料，SQL写入消息来自固定预约动作，无凭据路径",
+    "database_objects": "六表、UNIQUE自动索引及booking_room_time与当前SCHEMA吻合；无自定义附加表/触发器/BLOB容器",
+    "SQLite_files": "db、rollback journal和WAL是同一SQL记录的数据库及事务页；shm为WAL索引共享状态。本结论依赖已固定SQLite执行路径/完整写trace与SQL结构解释，不能由no_unknown_blob_fields或字符串未命中单独推出",
+    "exclusions": "正常只读测试backup包含必要派生凭据/会话摘要，是测试私有工件，private-baseline.sqlite不公开；HTTP Cookie协议返回原令牌为登录契约，不作为服务器持久副本。公开示例密码在固定演示静态资源与合成反例属于显式测试资料，不冒充提交凭据泄漏证据"
+  },
+  "outlet_review": {
+    "actual_path_inventory": "resource-review/r4-independent-validation.json#observed_paths",
+    "database_files": [
+      "meetspace.sqlite",
+      "meetspace.sqlite-journal",
+      "meetspace.sqlite-wal",
+      "meetspace.sqlite-shm"
+    ],
+    "application_logs": "各分支server.log/server-restart.log（仍扫描，未因其为日志而排除）",
+    "dependency_shared_state": "/dev/shm/faketime_shm_*, sem.faketime_sem_*与sem.*（实际共享map/write均扫描）",
+    "protocol_sockets": "当前源只有127.0.0.1:8766监听及已accept的HTTP响应，network=none隔离；当前实际无成功connect，也无未知传输syscall",
+    "network_metadata": "network-metadata-stage10/network-probe.json及network-metadata.log；sourceSHA与r4一致，2次失败connect；这是固定实现/设施解释，不伪称每个r4trace已经记录目标地址",
+    "unexplained_actual_paths": []
+  },
+  "nonrandom_state_review": {
+    "accepted_scope": "与当前salt/token结果有关的源、初始库、账户、时钟/mono、请求顺序、文件位置/ASLR/PYTHONHASHSEED固定；有效OS熵返还为唯一受控差异。真实PID7/8/9和线程序列保持公开。",
+    "reason": "当前实际生成路径secrets.token_hex(16)/secrets.token_urlsafe(32)不取PID/日志路径，实际getrandom和随机设备依赖已受控；首次、三登录和自切换同E1在不同PID仍严格复现。故符合该方法对因果相关非随机状态的固定意图，而非机器每bit相同。",
+    "limits": "不以30次样本宣称密码学随机强度、任意程序出口覆盖或任意加密文件不可恢复；fork/partial-msync反例修复由独立运行与哈希支持。未知syscall、字段、进程或不可解释密文应缺证。"
+  },
+  "cli_resource_review": [
+    {
+      "reference": "cli-stage10-python311-r2/cli-matrix-results.json",
+      "python": "3.11.17 (main, Oct  6 2026, 02:08:45) [GCC 14.2.0]",
+      "rows": 11,
+      "all_raw_assertions_true": true,
+      "scope": "资源可用性矩阵复核；不独立升级为正式场景passed"
+    },
+    {
+      "reference": "cli-stage10-python312-r2/cli-matrix-results.json",
+      "python": "3.12.15 (main, Oct  6 2026, 02:08:11) [GCC 14.2.0]",
+      "rows": 11,
+      "all_raw_assertions_true": true,
+      "scope": "资源可用性矩阵复核；不独立升级为正式场景passed"
+    }
+  ],
+  "bounded_preflight_limits": [
+    "当前adapter不是一般意义任意程序完整信息流监视器；mprotect由只读转写、异步dirty-page瞬时写后清覆等泛化路径没有被这些合成反例穷尽。固定产品实际SQLite/标准库路径已逐项解释；新源若使用此类路径须补观测或缺证。",
+    "mmap/fork/partial-msync、split write、自删除、hex/base64/已知XOR预检只证明实际被检样本；不允许把未知编码/密文自动解释为安全。",
+    "正常重启恢复真实OS随机源和因果固定E比较分开，不能把正常重启结果解释成重放固定E源无碰撞。"
+  ],
+  "final_inputs_sha256": {
+    "stage10-resource-execution-summary.json": "17b8637f510da5fdb797983211c91895a8efd28eeaa49cae9036fbd1d500ebdd",
+    "entropy-stage10-r4/entropy-matrix-report.json": "c604b650b88cd70d3a17d341538de3de3d8aa4d1a0462e2ca13e49d671c7baa9",
+    "resource-review/r4-independent-validation.json": "ab7119a1f7ae1f2107e9a3d27973417fa7a566b4da37e5b5b23ff981a719966b",
+    "network-metadata-stage10/network-probe.json": "1d225c410f7e8644f7e3c228fead635d8e8a6a84d12b8d167fc1237c96c87fae",
+    "network-metadata-stage10/network-metadata.log": "cc1bd16a3ac946914e5a132528060b0b519f96614b7552d671093acc5d93111c",
+    "ptrace-extended-preflight-r3/extended-preflight.json": "80387706122b61127b771a7089d17f99ba19d291184e553aee6b55ebfddabb89",
+    "ptrace-preflight-r4/ptrace-resource-report.json": "13a81af0c3aace9843e5039ab6c25e74b4184b738769351b1e1be7d7c2f89bc5",
+    "cli-stage10-python311-r2/cli-matrix-results.json": "e2da81f07a8421c62e6c4ddff0ca20ae85921c86d4501214feed9e4c5f6d13ba",
+    "cli-stage10-python312-r2/cli-matrix-results.json": "bbe20286154b1c51d4f3991ebe12304f7b5228f24d834f235d264d15ef5b721f",
+    "entropy-stage10-r4/frozen-harness/run_entropy_matrix.py": "f47ba38163ce24861adbaf1d7b99c5ce1d27ec809a3cff95860d5d87b2e4aad1",
+    "entropy-stage10-r4/frozen-harness/entropy_business_branch.py": "49ade6e6416aeb86e31e2eef892c7711a555b25658fb16a1d2fb54f78e0ba585",
+    "entropy-stage10-r4/frozen-harness/ptrace_os_adapter.py": "fa6dbd6a4fb0f0f176d56afc14b2fcf54276c615979a2ad042d44cb9e4c45791"
+  },
+  "frozen_r4_harness_sha256": {
+    "run_entropy_matrix.py": "f47ba38163ce24861adbaf1d7b99c5ce1d27ec809a3cff95860d5d87b2e4aad1",
+    "entropy_business_branch.py": "49ade6e6416aeb86e31e2eef892c7711a555b25658fb16a1d2fb54f78e0ba585",
+    "ptrace_os_adapter.py": "fa6dbd6a4fb0f0f176d56afc14b2fcf54276c615979a2ad042d44cb9e4c45791"
+  }
+}

@@ -79,6 +79,8 @@ python3 -m unittest discover -s tests -v
 
 六类已知缺陷随后在开发阶段修复，保留原冒烟和历史失败。修复阶段七项HTTP回归、22项前端加载竞态和13项身份矩阵通过；独立检查还验证旧版本真实建库到新实现同库重放兼容。修复代码与独立审查见 [阶段10档案](tests/snapshots/stage-10-fixes/README.md) 及 [DR-011](specs/decisions/011-release-defect-fixes.md)。这些结果支持修复效果；完整167场景复验、新源码覆盖率及发布判断仍须另行完成和提交。
 
+708c9c0的完整167场景复验已完成：正式独立审阅 **160通过、6失败、1未证明**，流程incomplete，仍不批准发布。四个原生迟到响应反例暴露角色/身份刷新竞态，后台新身份正确而UI恢复旧账号或admin菜单。新计数后端行389/389、分支126/126均100%；前端行197/198为99.49%、分支187/192为97.39%。高覆盖没有抵消状态组合缺陷，详见 [阶段11档案](tests/snapshots/stage-11-failed-acceptance/README.md) 与 [DR-012](specs/decisions/012-fixed-release-acceptance.md)。下一过程单独修复再完整复验。
+
 ## GitHub 阶段对比
 
 公共仓库：<https://github.com/yangbobo2021/meetspace-testing-example>。
@@ -94,6 +96,7 @@ python3 -m unittest discover -s tests -v
 - `stage-08-coverage-scenarios` 保存[覆盖率驱动的设计更新档案](tests/snapshots/stage-08-coverage-scenarios/README.md)：新增8白盒、细化2旧场景，正式台账167场景/176方法，五处防御逻辑按可达性处置；本轮不执行补测。
 - `stage-09-supplemental-coverage-cycle` 保存[补测执行与覆盖率循环档案](tests/snapshots/stage-09-supplemental-coverage-cycle/README.md)：固定新run、178矩阵项、8场景通过/2失败、累计及仅本轮计数、独立剩余路径审查；无新增场景建议，发布验收未通过。
 - `stage-10-fixes` 保存[六类缺陷修复与开发回归档案](tests/snapshots/stage-10-fixes/README.md)：业务修复、七项HTTP回归、22项前端竞态、13项身份矩阵及独立兼容复核；尚未完成修复后的全部167条正式验收。
+- `stage-11-failed-acceptance` 保存[修复后完整验收档案](tests/snapshots/stage-11-failed-acceptance/README.md)：167条记录、160通过/6失败/1未证明的独立结论、新源码计数与角色刷新竞态；发布验收未通过。
 - 完整复验及独立发布判断分别提交真实产出，保留已有标签用于对比。
 
 例如，查看当前实现到后续版本的变化：

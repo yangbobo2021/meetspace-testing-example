@@ -1,0 +1,113 @@
+{
+  "status": "confirmed_product_failure",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "/root/fix_code_reviewer",
+  "scope": "当前revision新的可达操作状态诊断；不是正式完整run终态审阅",
+  "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "source_sha256": {
+    "app/server.py": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322"
+  },
+  "requirement_ids": [
+    "interface-experience-1",
+    "interface-experience-3",
+    "interface-experience-8",
+    "team-administration-7"
+  ],
+  "existing_scenario_ids": [
+    "WB-ui-role-demotion-reload",
+    "WB-ui-load-token-races"
+  ],
+  "severity": "P1",
+  "classification": "newly_discovered_failure; not evidence that stage10 introduced this preexisting unguarded successful continuation",
+  "reason": "changeRole成功/session200回调直接写state.user，并调用loadPage及旧操作toast；它未使用api中的identityGeneration401保护，也未受loadPage token在赋身份之前阻止。真实旧A回调在logout/new-login后覆盖当前Other/Bob UI，成功后台身份仍是新用户。",
+  "source_locations": [
+    "web/app.js:258–269 changeRole await PATCH/session/loadPage continuations",
+    "web/app.js:20–34 api保护仅错误401世代副作用",
+    "web/app.js:68–88 loadPage token guard不保护调用前已被赋的身份"
+  ],
+  "confirmed_cases": [
+    {
+      "name": "self-demote-then-login-other",
+      "status": "confirmed_failed",
+      "old_response_user": "admin@meetspace.test",
+      "before_ui_user": "other@meetspace.test",
+      "after_ui_user": "admin@meetspace.test",
+      "server_current_user_before_after": "other@meetspace.test",
+      "old_toast_after_release": "成员角色已更新",
+      "generation_before": 4,
+      "generation_after": 4,
+      "business_unchanged": true,
+      "raw_evidence": "reviewer-change-role-identity-race/change-role-identity-race/self-demote-then-login-other.json"
+    },
+    {
+      "name": "other-promote-then-login-bob",
+      "status": "confirmed_failed",
+      "old_response_user": "admin@meetspace.test",
+      "before_ui_user": "bob@meetspace.test",
+      "after_ui_user": "admin@meetspace.test",
+      "server_current_user_before_after": "bob@meetspace.test",
+      "old_toast_after_release": "成员角色已更新",
+      "generation_before": 4,
+      "generation_after": 4,
+      "business_unchanged": true,
+      "raw_evidence": "reviewer-change-role-identity-race/change-role-identity-race/other-promote-then-login-bob.json"
+    },
+    {
+      "name": "same-identity-other-promote-then-self-demote",
+      "status": "confirmed_failed",
+      "identity": "admin@meetspace.test",
+      "before_ui_role": "member",
+      "after_ui_role": "admin",
+      "server_current_role_before_after": "member",
+      "server_admin_business_status": 403,
+      "generation_before": 2,
+      "generation_after": 2,
+      "loadToken_before": 3,
+      "loadToken_after": 4,
+      "business_unchanged": true,
+      "raw_evidence": "reviewer-same-identity-role-race/same-identity-role-race.json",
+      "independent_execution": true
+    },
+    {
+      "name": "pending-load-admin200-after-new-self-role-commit503",
+      "status": "confirmed_failed",
+      "independent_execution": true,
+      "identity": "admin@meetspace.test",
+      "before_ui_role": "member",
+      "after_ui_role": "admin",
+      "server_current_role": "member",
+      "server_admin_business_status": 403,
+      "generation_before_after": 2,
+      "loadToken_before_after": 3,
+      "identityPending_before": true,
+      "identityPending_after": false,
+      "original_direct_changeRole_response_held_during_observation": true,
+      "business_unchanged": true,
+      "raw_evidence": "reviewer-pending-role-commit-race/pending-load-role-commit-race.json"
+    }
+  ],
+  "independent_execution": "复制原诊断harness，仅复用isolated Env/clock/network依赖设施，使用未仪表化当前原JS；全部角色、退出、新登录来自native控件，route.fetch捕获真实旧session200再原样释放，未写state/调用api或业务helper制造路径。与Istanbul原诊断两例同失败。；另复制same-identity native诊断到独立reviewer目录，以同未仪表化原JS真实提升Bob→自降，两次PATCH200/真实session200重排，再独立确认member→admin误恢复、generation2不变、真实成员授权仍403。；第四交叉例独立再执行未仪表化原源：首轮direct changeRole200始终hold，隔离其身份覆盖因素，单独释放旧loadPage pending200，即可把后提交member/session503故障状态改为admin并清新pending。",
+  "counterfactual": "只过滤过时401并保护loadPage结果的错误实现可通过正常角色更新、503重试、当前401和普通load-token全部检查，却仍在直接changeRole的成功迟到身份响应污染新会话。新方法须覆盖成功200、self/other、logout与新登录的交错；只修pending重试守卫不足。 仅新增identityGeneration成功守卫仍可逃逸：同一会话两次角色动作之间generation不变，旧角色查询成功可覆盖新角色；应覆盖同身份角色刷新顺序。 仅为直接changeRole加roleRefreshToken仍不能保护旧pending loadPage身份读；新角色提交后即使它尚待恢复，也必须使之前的load结果/catch/finally失效。",
+  "limits": [
+    "证据确认UI身份/团队/菜单混淆及旧成功反馈，未发现SQL新业务写入或后台授权绕过，不宣称服务器越权或已泄漏跨团队数据。",
+    "300ms观察已见明确错误稳定UI及Backend200正确身份；独立原JS重现排除coverage/CSP和旧harness早观察导致的假失败。",
+    "正式账本由compiled角色细化、独立审阅并新run固定hash，当前diagnostic不是自动的167结果。"
+  ],
+  "remediation_direction": "在changeRole进入时绑定原身份世代/用户，PATCH返回、session返回赋state之前、loadPage结束toast之前以及catch副作用之前重新检查当前身份；过时成功/失败回调不得写新身份/页面或给新会话旧反馈。返回session结果先留局部变量再校验，不要先赋state再判断。此为建议，本Reviewer未改产品。 同身份角色动作需在真实PATCH成功后分配身份刷新序号，应用session/catch反馈/完成toast前检查该序号。还须考虑loadPage中pending身份查询跨后续角色提交的旧结果，不能只在changeRole里守卫。 当前拟议每次有效PATCH成功同时++loadToken并loading=false，静态保护旧loadPage身份赋值、catch和finally，保留新identityPending/错误重试；开发验证必须实际执行四case及正常恢复对照。",
+  "workflow_rule": "当前compiled workflow活动中不改产品；保持固定708c9c0，终结incomplete后在开发修复阶段另提交，再重新执行完整验收。",
+  "evidence_sha256": {
+    "reviewer-change-role-identity-race/change-role-identity-race/self-demote-then-login-other.json": "c1adfc96cad3316df5309effc2e8d1dcdde76f19ac260265ed5c16d526486ab5",
+    "reviewer-change-role-identity-race/ui-identity/changeRole-self-demote-then-login-other-old200-released.png": "561163c64ec484ed8dff0c0ff9122d0adf7361ca07fd4c5803687b0145a8278d",
+    "coverage-audits/coverage-stage10-fresh-20261009/change-role-identity-race/self-demote-then-login-other.json": "8c3fe248130e56f80d4291a4f44486a19d163d9e676dd7c75131c4457dd60ce8",
+    "coverage-audits/coverage-stage10-fresh-20261009/harnesses/change_role_identity_race.py": "3c6becaf2605fe9d08f0445d7e9fef51d45cdee9eb69930c70ae1763f1cec6ce",
+    "reviewer-change-role-identity-race/change-role-identity-race/other-promote-then-login-bob.json": "cc3de077e69878e0bfaaa9d4210742d1fa620c3834e8d88f5f08915e2b5c631a",
+    "reviewer-change-role-identity-race/ui-identity/changeRole-other-promote-then-login-bob-old200-released.png": "d7c4b3eeef4ebb2da878e7af9014f4cf0e66d957030daeb6677c9d7a8882be81",
+    "coverage-audits/coverage-stage10-fresh-20261009/change-role-identity-race/other-promote-then-login-bob.json": "ae4a8d8c932cfbea4e7d9b075c1473a295af7260ae6ce366e8d8b3cf929621b5",
+    "reviewer-same-identity-role-race/same-identity-role-race.json": "78dce84af8c3e959e351aeecb773fd287d8321ba6b0b4d89392563e7baa651a7",
+    "reviewer_same_identity_role_operation_race.py": "76dc6ccd748a2041628db5303bce0feae27597720d766e25f39b532404ce60eb",
+    "reviewer-pending-role-commit-race/pending-load-role-commit-race.json": "9a7d07037c54dd8b82263dbede8b30ccebc3b660f274962eac63fb44dfe0aaa3",
+    "reviewer_pending_load_role_commit_race.py": "c01560f9b25d88eeeece64986ba5a5ef92a3b5635cb5c1f9438bd83155a5f31b"
+  },
+  "release_approved": false
+}

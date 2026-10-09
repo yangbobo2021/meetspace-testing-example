@@ -1,0 +1,33 @@
+{
+  "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "environment": {
+    "host": "macOS-15.3.1-arm64-arm-64bit-Mach-O",
+    "python": "3.14.2 (main, Dec  5 2025, 16:49:16) [Clang 17.0.0 (clang-1700.6.3.2)]",
+    "sqlite": "3.51.2",
+    "app_sha256": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "isolation": "CLI Linux Docker --network none --read-only cap-drop ALL; runtime HTTP ephemeral loopback separate DB; OS entropy ptrace SYS_PTRACE seccomp=unconfined network none"
+  },
+  "dependency_checks": [
+    {
+      "resource_id": "isolated-cli-runtime",
+      "status": "passed",
+      "actual": "Python3.11和3.12真实默认/host/port/db/组合、PID监听归属、独立写和同库重启11行各完成，无错误；测试host8766不可触达。",
+      "evidence": [
+        "evidence/cli311/runtime-resources.json",
+        "evidence/cli311/cli-matrix-results.json",
+        "evidence/cli312/runtime-resources.json",
+        "evidence/cli312/cli-matrix-results.json"
+      ]
+    },
+    {
+      "resource_id": "os-entropy-and-persistence-observer",
+      "status": "passed",
+      "actual": "当前运行基本与扩展预检全部断言true，含实际getrandom有效控制、分段write/删除、fork共享mmap、编码、随机设备。范围限定固定实现，不认证任意编码。",
+      "evidence": [
+        "evidence/ptrace-preflight/ptrace-resource-report.json",
+        "evidence/ptrace-extended/extended-preflight.json"
+      ]
+    }
+  ],
+  "initial_attempt": "evidence/runtime-sandbox-attempt/branches.json"
+}

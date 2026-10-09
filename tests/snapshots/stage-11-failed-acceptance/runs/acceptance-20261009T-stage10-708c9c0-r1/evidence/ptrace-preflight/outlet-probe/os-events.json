@@ -1,0 +1,111 @@
+{
+  "adapter": "ptrace_syscall_linux_aarch64",
+  "tape_alias": "real_os",
+  "root_pid": 18,
+  "events": [
+    {
+      "kind": "exec",
+      "pid": 18
+    },
+    {
+      "kind": "getrandom",
+      "pid": 18,
+      "bytes": 8,
+      "source": "real_linux_getrandom_syscall",
+      "controlled_return": false
+    },
+    {
+      "kind": "getrandom",
+      "pid": 18,
+      "bytes": 24,
+      "source": "real_linux_getrandom_syscall",
+      "controlled_return": false
+    },
+    {
+      "kind": "write",
+      "path": "/tmp/ptrace-probe",
+      "bytes": 10,
+      "leak": false
+    },
+    {
+      "kind": "write",
+      "path": "/tmp/ptrace-probe",
+      "bytes": 4,
+      "leak": true
+    },
+    {
+      "kind": "file_shared_mapping",
+      "pid": 18,
+      "address_alias": 1,
+      "path": "/tmp/ptrace-probe",
+      "bytes": 4096
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/ptrace-probe",
+      "bytes": 4096,
+      "leak": true
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/ptrace-probe",
+      "bytes": 4096,
+      "leak": true
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 18,
+      "syscall": 35,
+      "result": 0
+    }
+  ],
+  "counters": {
+    "syscall_221": 1,
+    "syscall_214": 14,
+    "syscall_222": 25,
+    "syscall_78": 4,
+    "syscall_48": 1,
+    "syscall_56": 31,
+    "syscall_63": 12,
+    "syscall_80": 24,
+    "syscall_215": 11,
+    "syscall_226": 10,
+    "syscall_57": 17,
+    "syscall_96": 1,
+    "syscall_99": 1,
+    "syscall_293": 1,
+    "syscall_261": 1,
+    "syscall_278": 2,
+    "syscall_98": 1,
+    "syscall_178": 1,
+    "syscall_79": 42,
+    "syscall_62": 10,
+    "syscall_61": 8,
+    "syscall_25": 5,
+    "syscall_29": 9,
+    "syscall_134": 66,
+    "syscall_135": 2,
+    "syscall_17": 1,
+    "syscall_64": 2,
+    "scanned_write_calls": 2,
+    "leaks": 3,
+    "syscall_46": 1,
+    "syscall_227": 1,
+    "scanned_shared_mappings": 2,
+    "syscall_35": 1,
+    "syscall_94": 1
+  },
+  "uncovered": [],
+  "exits": {
+    "18": {
+      "exit_code": 0,
+      "signal": null
+    }
+  },
+  "formal_verdict": null,
+  "limitations": [
+    "syscall trace and payload scanning require independent outlet/schema review",
+    "session expiration time adaptation and restart need outer matrix harness",
+    "does not claim encrypted/unknown storage harmless without field inspection"
+  ]
+}

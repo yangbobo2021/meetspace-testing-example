@@ -1,0 +1,4520 @@
+{
+  "method_ids": [
+    "AI-team-administration-1",
+    "AI-team-administration-2",
+    "AI-team-administration-3",
+    "AI-team-administration-6",
+    "AI-WB-member-select-role-guards"
+  ],
+  "checks": [
+    {
+      "label": "GET /api/members status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members",
+        "method": "GET",
+        "input": null,
+        "status": 200,
+        "body": {
+          "members": [
+            {
+              "id": 1,
+              "email": "admin@meetspace.test",
+              "name": "林可",
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "email": "alice@meetspace.test",
+              "name": "陈悦",
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "email": "bob@meetspace.test",
+              "name": "周言",
+              "role": "member"
+            }
+          ]
+        },
+        "start_ns": 1712184790448541,
+        "end_ns": 1712184793259333,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "成员字段与团队隔离",
+      "passed": true,
+      "actual": {
+        "members": [
+          {
+            "id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          }
+        ]
+      }
+    },
+    {
+      "label": "GET /api/members?team_id=2 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members?team_id=2",
+        "method": "GET",
+        "input": null,
+        "status": 200,
+        "body": {
+          "members": [
+            {
+              "id": 1,
+              "email": "admin@meetspace.test",
+              "name": "林可",
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "email": "alice@meetspace.test",
+              "name": "陈悦",
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "email": "bob@meetspace.test",
+              "name": "周言",
+              "role": "member"
+            }
+          ]
+        },
+        "start_ns": 1712184793331625,
+        "end_ns": 1712184794937750,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "GET /api/members status",
+      "passed": true,
+      "actual": {
+        "actor": "B",
+        "path": "/api/members",
+        "method": "GET",
+        "input": null,
+        "status": 200,
+        "body": {
+          "members": [
+            {
+              "id": 4,
+              "email": "other@meetspace.test",
+              "name": "许宁",
+              "role": "admin"
+            }
+          ]
+        },
+        "start_ns": 1712184794977791,
+        "end_ns": 1712184796659875,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "成员字段与团队隔离",
+      "passed": true,
+      "actual": {
+        "members": [
+          {
+            "id": 4,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ]
+      }
+    },
+    {
+      "label": "GET /api/members?team_id=2 status",
+      "passed": true,
+      "actual": {
+        "actor": "B",
+        "path": "/api/members?team_id=2",
+        "method": "GET",
+        "input": null,
+        "status": 200,
+        "body": {
+          "members": [
+            {
+              "id": 4,
+              "email": "other@meetspace.test",
+              "name": "许宁",
+              "role": "admin"
+            }
+          ]
+        },
+        "start_ns": 1712184796702791,
+        "end_ns": 1712184798447500,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "GET /api/members status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/members",
+        "method": "GET",
+        "input": null,
+        "status": 403,
+        "body": {
+          "error": "仅管理员可以执行此操作",
+          "code": "forbidden"
+        },
+        "start_ns": 1712184798490750,
+        "end_ns": 1712184800293166,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "GET /api/members?team_id=2 status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/members?team_id=2",
+        "method": "GET",
+        "input": null,
+        "status": 403,
+        "body": {
+          "error": "仅管理员可以执行此操作",
+          "code": "forbidden"
+        },
+        "start_ns": 1712184800338416,
+        "end_ns": 1712184802176875,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/members/2 status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/members/2",
+        "method": "PATCH",
+        "input": {
+          "role": "admin"
+        },
+        "status": 403,
+        "body": {
+          "error": "仅管理员可以执行此操作",
+          "code": "forbidden"
+        },
+        "start_ns": 1712184802674458,
+        "end_ns": 1712184805622041,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": "admin"
+        },
+        "status": 403,
+        "body": {
+          "error": "仅管理员可以执行此操作",
+          "code": "forbidden"
+        },
+        "start_ns": 1712184807787000,
+        "end_ns": 1712184811278791,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/1 status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/members/1",
+        "method": "PATCH",
+        "input": {
+          "role": "member"
+        },
+        "status": 403,
+        "body": {
+          "error": "仅管理员可以执行此操作",
+          "code": "forbidden"
+        },
+        "start_ns": 1712184813313166,
+        "end_ns": 1712184817004125,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/2 status",
+      "passed": true,
+      "actual": {
+        "actor": "B",
+        "path": "/api/members/2",
+        "method": "PATCH",
+        "input": {
+          "role": "admin"
+        },
+        "status": 404,
+        "body": {
+          "error": "成员不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1712184818523083,
+        "end_ns": 1712184823215208,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": "admin"
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1712184824198416,
+        "end_ns": 1712184826567166,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": "member"
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1712184826628083,
+        "end_ns": 1712184828476250,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": "Admin"
+        },
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184828923750,
+        "end_ns": 1712184831979000,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": "MEMBER"
+        },
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184833263625,
+        "end_ns": 1712184835169750,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": ""
+        },
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184836114333,
+        "end_ns": 1712184838701916,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": " admin"
+        },
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184840299083,
+        "end_ns": 1712184843230916,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": "owner"
+        },
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184844164500,
+        "end_ns": 1712184846290250,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": null
+        },
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184847914166,
+        "end_ns": 1712184850327833,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": 1
+        },
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184851849458,
+        "end_ns": 1712184854351625,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": true
+        },
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184856150041,
+        "end_ns": 1712184859175666,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": false,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": []
+        },
+        "status": 500,
+        "body": {
+          "error": "服务发生错误，请稍后重试",
+          "code": "internal_error"
+        },
+        "start_ns": 1712184860965458,
+        "end_ns": 1712184864018916,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": false,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {
+          "role": {}
+        },
+        "status": 500,
+        "body": {
+          "error": "服务发生错误，请稍后重试",
+          "code": "internal_error"
+        },
+        "start_ns": 1712184864860250,
+        "end_ns": 1712184866562208,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/3 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/3",
+        "method": "PATCH",
+        "input": {},
+        "status": 400,
+        "body": {
+          "error": "角色无效",
+          "code": "invalid_request"
+        },
+        "start_ns": 1712184867356625,
+        "end_ns": 1712184868763500,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/4 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/4",
+        "method": "PATCH",
+        "input": {
+          "role": "member"
+        },
+        "status": 404,
+        "body": {
+          "error": "成员不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1712184869577375,
+        "end_ns": 1712184871982583,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/999999 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/999999",
+        "method": "PATCH",
+        "input": {
+          "role": "member"
+        },
+        "status": 404,
+        "body": {
+          "error": "成员不存在",
+          "code": "not_found"
+        },
+        "start_ns": 1712184872805166,
+        "end_ns": 1712184874369958,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "拒绝后独立数据库不变量",
+      "passed": true,
+      "actual": {
+        "before": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        },
+        "after": {
+          "bookings": [],
+          "notifications": [],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "roles": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "role": "admin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "PATCH /api/members/2 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/2",
+        "method": "PATCH",
+        "input": {
+          "role": "admin"
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1712184877424958,
+        "end_ns": 1712184879985166,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "PATCH /api/members/2 status",
+      "passed": true,
+      "actual": {
+        "actor": "A",
+        "path": "/api/members/2",
+        "method": "PATCH",
+        "input": {
+          "role": "member"
+        },
+        "status": 200,
+        "body": {
+          "ok": true
+        },
+        "start_ns": 1712184880016041,
+        "end_ns": 1712184881361625,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    },
+    {
+      "label": "GET /api/members status",
+      "passed": true,
+      "actual": {
+        "actor": "U",
+        "path": "/api/members",
+        "method": "GET",
+        "input": null,
+        "status": 403,
+        "body": {
+          "error": "仅管理员可以执行此操作",
+          "code": "forbidden"
+        },
+        "start_ns": 1712184881383875,
+        "end_ns": 1712184882539833,
+        "server_clock": "2030-04-10T09:00:00+08:00"
+      }
+    }
+  ],
+  "http": [
+    {
+      "actor": "A",
+      "path": "/api/members",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "members": [
+          {
+            "id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          }
+        ]
+      },
+      "start_ns": 1712184790448541,
+      "end_ns": 1712184793259333,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members?team_id=2",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "members": [
+          {
+            "id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          }
+        ]
+      },
+      "start_ns": 1712184793331625,
+      "end_ns": 1712184794937750,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/members",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "members": [
+          {
+            "id": 4,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ]
+      },
+      "start_ns": 1712184794977791,
+      "end_ns": 1712184796659875,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/members?team_id=2",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "members": [
+          {
+            "id": 4,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ]
+      },
+      "start_ns": 1712184796702791,
+      "end_ns": 1712184798447500,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/members",
+      "method": "GET",
+      "input": null,
+      "status": 403,
+      "body": {
+        "error": "仅管理员可以执行此操作",
+        "code": "forbidden"
+      },
+      "start_ns": 1712184798490750,
+      "end_ns": 1712184800293166,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/members?team_id=2",
+      "method": "GET",
+      "input": null,
+      "status": 403,
+      "body": {
+        "error": "仅管理员可以执行此操作",
+        "code": "forbidden"
+      },
+      "start_ns": 1712184800338416,
+      "end_ns": 1712184802176875,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/members/2",
+      "method": "PATCH",
+      "input": {
+        "role": "admin"
+      },
+      "status": 403,
+      "body": {
+        "error": "仅管理员可以执行此操作",
+        "code": "forbidden"
+      },
+      "start_ns": 1712184802674458,
+      "end_ns": 1712184805622041,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": "admin"
+      },
+      "status": 403,
+      "body": {
+        "error": "仅管理员可以执行此操作",
+        "code": "forbidden"
+      },
+      "start_ns": 1712184807787000,
+      "end_ns": 1712184811278791,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/members/1",
+      "method": "PATCH",
+      "input": {
+        "role": "member"
+      },
+      "status": 403,
+      "body": {
+        "error": "仅管理员可以执行此操作",
+        "code": "forbidden"
+      },
+      "start_ns": 1712184813313166,
+      "end_ns": 1712184817004125,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/members/2",
+      "method": "PATCH",
+      "input": {
+        "role": "admin"
+      },
+      "status": 404,
+      "body": {
+        "error": "成员不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1712184818523083,
+      "end_ns": 1712184823215208,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": "admin"
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1712184824198416,
+      "end_ns": 1712184826567166,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": "member"
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1712184826628083,
+      "end_ns": 1712184828476250,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": "Admin"
+      },
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184828923750,
+      "end_ns": 1712184831979000,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": "MEMBER"
+      },
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184833263625,
+      "end_ns": 1712184835169750,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": ""
+      },
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184836114333,
+      "end_ns": 1712184838701916,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": " admin"
+      },
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184840299083,
+      "end_ns": 1712184843230916,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": "owner"
+      },
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184844164500,
+      "end_ns": 1712184846290250,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": null
+      },
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184847914166,
+      "end_ns": 1712184850327833,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": 1
+      },
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184851849458,
+      "end_ns": 1712184854351625,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": true
+      },
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184856150041,
+      "end_ns": 1712184859175666,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": []
+      },
+      "status": 500,
+      "body": {
+        "error": "服务发生错误，请稍后重试",
+        "code": "internal_error"
+      },
+      "start_ns": 1712184860965458,
+      "end_ns": 1712184864018916,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {
+        "role": {}
+      },
+      "status": 500,
+      "body": {
+        "error": "服务发生错误，请稍后重试",
+        "code": "internal_error"
+      },
+      "start_ns": 1712184864860250,
+      "end_ns": 1712184866562208,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/3",
+      "method": "PATCH",
+      "input": {},
+      "status": 400,
+      "body": {
+        "error": "角色无效",
+        "code": "invalid_request"
+      },
+      "start_ns": 1712184867356625,
+      "end_ns": 1712184868763500,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/4",
+      "method": "PATCH",
+      "input": {
+        "role": "member"
+      },
+      "status": 404,
+      "body": {
+        "error": "成员不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1712184869577375,
+      "end_ns": 1712184871982583,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/999999",
+      "method": "PATCH",
+      "input": {
+        "role": "member"
+      },
+      "status": 404,
+      "body": {
+        "error": "成员不存在",
+        "code": "not_found"
+      },
+      "start_ns": 1712184872805166,
+      "end_ns": 1712184874369958,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/session",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "user": {
+          "id": 4,
+          "team_id": 2,
+          "email": "other@meetspace.test",
+          "name": "许宁",
+          "role": "admin",
+          "team_name": "远岸工作室"
+        },
+        "timezone": "Asia/Shanghai",
+        "version": "1.0.0-rc.1"
+      },
+      "start_ns": 1712184874889125,
+      "end_ns": 1712184876185333,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "B",
+      "path": "/api/members",
+      "method": "GET",
+      "input": null,
+      "status": 200,
+      "body": {
+        "members": [
+          {
+            "id": 4,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ]
+      },
+      "start_ns": 1712184876213208,
+      "end_ns": 1712184877396500,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/2",
+      "method": "PATCH",
+      "input": {
+        "role": "admin"
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1712184877424958,
+      "end_ns": 1712184879985166,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "A",
+      "path": "/api/members/2",
+      "method": "PATCH",
+      "input": {
+        "role": "member"
+      },
+      "status": 200,
+      "body": {
+        "ok": true
+      },
+      "start_ns": 1712184880016041,
+      "end_ns": 1712184881361625,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    },
+    {
+      "actor": "U",
+      "path": "/api/members",
+      "method": "GET",
+      "input": null,
+      "status": 403,
+      "body": {
+        "error": "仅管理员可以执行此操作",
+        "code": "forbidden"
+      },
+      "start_ns": 1712184881383875,
+      "end_ns": 1712184882539833,
+      "server_clock": "2030-04-10T09:00:00+08:00"
+    }
+  ],
+  "gap": "",
+  "executed_source_lines": [
+    58,
+    59,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    120,
+    173,
+    179,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    202,
+    203,
+    204,
+    207,
+    209,
+    210,
+    212,
+    214,
+    215,
+    216,
+    218,
+    219,
+    221,
+    226,
+    227,
+    228,
+    229,
+    232,
+    235,
+    236,
+    238,
+    242,
+    243,
+    246,
+    247,
+    248,
+    249,
+    251,
+    255,
+    256,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    266,
+    268,
+    270,
+    271,
+    272,
+    321,
+    322,
+    323,
+    324,
+    329,
+    342,
+    357,
+    359,
+    360,
+    372,
+    375,
+    378,
+    379,
+    380,
+    381,
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389,
+    390,
+    391,
+    392,
+    393,
+    395,
+    396
+  ],
+  "sql_trace": [
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184792323125,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184792335916,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184792791958,
+      "sql": "SELECT id, email, name, role FROM users WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184792815000,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184794221416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184794230833,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184794500666,
+      "sql": "SELECT id, email, name, role FROM users WHERE team_id=1 ORDER BY id"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184794519583,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184795879750,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184795891125,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184796214208,
+      "sql": "SELECT id, email, name, role FROM users WHERE team_id=2 ORDER BY id"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184796232125,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184797599000,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184797609583,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184797956916,
+      "sql": "SELECT id, email, name, role FROM users WHERE team_id=2 ORDER BY id"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184797974250,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387411024,
+      "thread": 6341865472,
+      "time_ns": 1712184799325458,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387411024,
+      "thread": 6341865472,
+      "time_ns": 1712184799335333,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387411024,
+      "thread": 6341865472,
+      "time_ns": 1712184799795458,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184801382000,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184801392250,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387411792,
+      "thread": 6341865472,
+      "time_ns": 1712184801719500,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387412560,
+      "thread": 6341865472,
+      "time_ns": 1712184804120583,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387412560,
+      "thread": 6341865472,
+      "time_ns": 1712184804199250,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387412560,
+      "thread": 6341865472,
+      "time_ns": 1712184804926625,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184809696875,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184809708541,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184810081875,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184815402000,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184815416916,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184816156916,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387416144,
+      "thread": 6341865472,
+      "time_ns": 1712184820573416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387416144,
+      "thread": 6341865472,
+      "time_ns": 1712184820608125,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387416144,
+      "thread": 6341865472,
+      "time_ns": 1712184821769916,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184825529791,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184825541416,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184825910750,
+      "sql": "UPDATE users SET role='admin' WHERE id=3"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184825930833,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184827612625,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184827623625,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184827933750,
+      "sql": "SELECT count(*) FROM users WHERE team_id=1 AND role='admin'"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184827957000,
+      "sql": "UPDATE users SET role='member' WHERE id=3"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184827971833,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387414352,
+      "thread": 6341865472,
+      "time_ns": 1712184831008041,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387414352,
+      "thread": 6341865472,
+      "time_ns": 1712184831026583,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387414352,
+      "thread": 6341865472,
+      "time_ns": 1712184831388958,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387416144,
+      "thread": 6341865472,
+      "time_ns": 1712184834451791,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387416144,
+      "thread": 6341865472,
+      "time_ns": 1712184834462500,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387416144,
+      "thread": 6341865472,
+      "time_ns": 1712184834759416,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184837343458,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184837357208,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184837903708,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184842001250,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184842015916,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184842492291,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387411536,
+      "thread": 6341865472,
+      "time_ns": 1712184845350666,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387411536,
+      "thread": 6341865472,
+      "time_ns": 1712184845361375,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387411536,
+      "thread": 6341865472,
+      "time_ns": 1712184845689958,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184849154625,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184849168416,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184849643958,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387408720,
+      "thread": 6341865472,
+      "time_ns": 1712184853146541,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387408720,
+      "thread": 6341865472,
+      "time_ns": 1712184853157125,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387408720,
+      "thread": 6341865472,
+      "time_ns": 1712184853705083,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387410000,
+      "thread": 6341865472,
+      "time_ns": 1712184857616500,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387410000,
+      "thread": 6341865472,
+      "time_ns": 1712184857628541,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387410000,
+      "thread": 6341865472,
+      "time_ns": 1712184858076958,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387409232,
+      "thread": 6341865472,
+      "time_ns": 1712184862999750,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387409232,
+      "thread": 6341865472,
+      "time_ns": 1712184863011875,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387409232,
+      "thread": 6341865472,
+      "time_ns": 1712184863413625,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387412560,
+      "thread": 6341865472,
+      "time_ns": 1712184865854208,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387412560,
+      "thread": 6341865472,
+      "time_ns": 1712184865863000,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387412560,
+      "thread": 6341865472,
+      "time_ns": 1712184866117000,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184868196208,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184868204125,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387414096,
+      "thread": 6341865472,
+      "time_ns": 1712184868414291,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387411536,
+      "thread": 6341865472,
+      "time_ns": 1712184870772250,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387411536,
+      "thread": 6341865472,
+      "time_ns": 1712184870781791,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387411536,
+      "thread": 6341865472,
+      "time_ns": 1712184871218916,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184873722208,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184873730125,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387416656,
+      "thread": 6341865472,
+      "time_ns": 1712184873984583,
+      "sql": "ROLLBACK"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184875623416,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184875632291,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184875850458,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184876882000,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184876890000,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184877107958,
+      "sql": "SELECT id, email, name, role FROM users WHERE team_id=2 ORDER BY id"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184877122250,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184878172458,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184879316916,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184879566166,
+      "sql": "UPDATE users SET role='admin' WHERE id=2"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184879581000,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184880755958,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184880763958,
+      "sql": "BEGIN IMMEDIATE"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184880995625,
+      "sql": "SELECT count(*) FROM users WHERE team_id=1 AND role='admin'"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184881014625,
+      "sql": "UPDATE users SET role='member' WHERE id=2"
+    },
+    {
+      "connection": 4387415120,
+      "thread": 6341865472,
+      "time_ns": 1712184881026750,
+      "sql": "COMMIT"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184882019250,
+      "sql": "PRAGMA foreign_keys=ON"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184882027458,
+      "sql": "BEGIN"
+    },
+    {
+      "connection": 4387414864,
+      "thread": 6341865472,
+      "time_ns": 1712184882235541,
+      "sql": "ROLLBACK"
+    }
+  ],
+  "final_snapshot": {
+    "bookings": [],
+    "notifications": [],
+    "rooms": [
+      {
+        "id": 1,
+        "team_id": 1,
+        "name": "云杉",
+        "location": "3F · 东侧",
+        "capacity": 8,
+        "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+        "active": 1
+      },
+      {
+        "id": 2,
+        "team_id": 1,
+        "name": "白桦",
+        "location": "3F · 西侧",
+        "capacity": 4,
+        "equipment": "[\"显示屏\", \"白板\"]",
+        "active": 1
+      },
+      {
+        "id": 3,
+        "team_id": 1,
+        "name": "银杏",
+        "location": "2F · 开放区",
+        "capacity": 12,
+        "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+        "active": 1
+      },
+      {
+        "id": 4,
+        "team_id": 1,
+        "name": "青松",
+        "location": "2F · 北侧",
+        "capacity": 6,
+        "equipment": "[\"白板\", \"电话会议\"]",
+        "active": 1
+      },
+      {
+        "id": 5,
+        "team_id": 2,
+        "name": "海风",
+        "location": "1F · 靠窗",
+        "capacity": 6,
+        "equipment": "[\"白板\"]",
+        "active": 1
+      }
+    ],
+    "roles": [
+      {
+        "id": 1,
+        "team_id": 1,
+        "role": "admin"
+      },
+      {
+        "id": 2,
+        "team_id": 1,
+        "role": "member"
+      },
+      {
+        "id": 3,
+        "team_id": 1,
+        "role": "member"
+      },
+      {
+        "id": 4,
+        "team_id": 2,
+        "role": "admin"
+      }
+    ]
+  }
+}

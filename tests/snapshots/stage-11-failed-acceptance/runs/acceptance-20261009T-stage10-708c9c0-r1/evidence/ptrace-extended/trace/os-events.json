@@ -1,0 +1,181 @@
+{
+  "adapter": "ptrace_syscall_linux_aarch64",
+  "tape_alias": "E1",
+  "root_pid": 8,
+  "events": [
+    {
+      "kind": "exec",
+      "pid": 8
+    },
+    {
+      "kind": "getrandom",
+      "pid": 8,
+      "bytes": 8,
+      "source": "real_linux_getrandom_syscall",
+      "controlled_return": true
+    },
+    {
+      "kind": "getrandom",
+      "pid": 8,
+      "bytes": 24,
+      "source": "real_linux_getrandom_syscall",
+      "controlled_return": true
+    },
+    {
+      "kind": "file_shared_mapping",
+      "pid": 8,
+      "address_alias": 1,
+      "path": "/tmp/probe-before",
+      "bytes": 4096
+    },
+    {
+      "kind": "child_process_or_thread",
+      "pid": 9,
+      "parent_group": 8,
+      "child_group": 9,
+      "inherited_shared_mappings": 1
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/probe-before",
+      "bytes": 4096,
+      "leak": true
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/probe-before",
+      "bytes": 4096,
+      "leak": false
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/probe-before",
+      "bytes": 4096,
+      "leak": false
+    },
+    {
+      "kind": "file_shared_mapping_scan",
+      "path": "/tmp/probe-before",
+      "bytes": 4096,
+      "leak": false
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 8,
+      "syscall": 38,
+      "result": 0
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 8,
+      "syscall": 35,
+      "result": 0
+    },
+    {
+      "kind": "write",
+      "path": "/tmp/hex",
+      "bytes": 28,
+      "leak": true
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 8,
+      "syscall": 35,
+      "result": 0
+    },
+    {
+      "kind": "write",
+      "path": "/tmp/base64",
+      "bytes": 20,
+      "leak": true
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 8,
+      "syscall": 35,
+      "result": 0
+    },
+    {
+      "kind": "write",
+      "path": "/tmp/reversible",
+      "bytes": 14,
+      "leak": true
+    },
+    {
+      "kind": "unlink_or_rename",
+      "pid": 8,
+      "syscall": 35,
+      "result": 0
+    },
+    {
+      "kind": "random_device_read",
+      "pid": 8,
+      "bytes": 32,
+      "source": "/dev/urandom",
+      "controlled_return": true
+    },
+    {
+      "kind": "write",
+      "path": "pipe:[21787]",
+      "bytes": 3,
+      "leak": false
+    }
+  ],
+  "counters": {
+    "syscall_221": 1,
+    "syscall_214": 43,
+    "syscall_222": 38,
+    "syscall_78": 4,
+    "syscall_48": 1,
+    "syscall_56": 85,
+    "syscall_63": 46,
+    "syscall_80": 59,
+    "syscall_215": 19,
+    "syscall_226": 16,
+    "syscall_57": 41,
+    "syscall_96": 1,
+    "syscall_99": 2,
+    "syscall_293": 1,
+    "syscall_261": 1,
+    "syscall_278": 2,
+    "syscall_98": 1,
+    "syscall_178": 2,
+    "syscall_79": 144,
+    "syscall_62": 40,
+    "syscall_61": 10,
+    "syscall_25": 5,
+    "syscall_29": 24,
+    "syscall_134": 66,
+    "syscall_135": 5,
+    "syscall_17": 14,
+    "syscall_216": 3,
+    "syscall_46": 1,
+    "syscall_220": 1,
+    "syscall_260": 1,
+    "syscall_227": 2,
+    "scanned_shared_mappings": 4,
+    "leaks": 4,
+    "syscall_94": 2,
+    "syscall_38": 1,
+    "syscall_35": 4,
+    "syscall_64": 4,
+    "scanned_write_calls": 4
+  },
+  "uncovered": [],
+  "exits": {
+    "9": {
+      "exit_code": 0,
+      "signal": null
+    },
+    "8": {
+      "exit_code": 0,
+      "signal": null
+    }
+  },
+  "formal_verdict": null,
+  "limitations": [
+    "syscall trace and payload scanning require independent outlet/schema review",
+    "session expiration time adaptation and restart need outer matrix harness",
+    "does not claim encrypted/unknown storage harmless without field inspection"
+  ]
+}

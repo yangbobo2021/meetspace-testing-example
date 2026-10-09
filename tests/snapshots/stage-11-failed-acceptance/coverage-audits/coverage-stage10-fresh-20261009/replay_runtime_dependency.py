@@ -1,0 +1,6 @@
+import os,json,subprocess,time
+from pathlib import Path
+B=Path(__file__).resolve().parent;D=B/'replay-projects/runtime_complete';P=B/'python-data/runtime-edges-dependency';P.mkdir(exist_ok=True);env={**os.environ,'COVERAGE_PROCESS_START':str(B/'coverage.ini'),'COVERAGE_FILE':str(P/'.coverage'),'PYTHONPATH':str(B/'bootstrap')+os.pathsep+str(B.parent/'coverage-20261008-stage06/tools/python'),'MEETSPACE_COVERAGE_AUDIT':str(B),'COVERAGE_AUDIT_JOB':'runtime-edges-dependency','PYTHONDONTWRITEBYTECODE':'1'}
+start=time.monotonic()
+with (B/'logs/runtime-edges-dependency.log').open('w') as log:r=subprocess.run(['/Users/boboyang/.cloakbrowser-codex/venv/bin/python','tests/delivery-acceptance/harnesses/runtime_edges.py'],cwd=D,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=300)
+(B/'runtime-dependency-correction.json').write_text(json.dumps({'job':'runtime-edges-dependency','exit_code':r.returncode,'seconds':round(time.monotonic()-start,2),'reason':'runtime_edges的future_process明确读取runtime_complete创建的completion/process-persist.sqlite，原独立项目缺该前置数据；在刚完成的新runtime_complete项目中顺序运行，同次新源码实测生成数据库，无旧成功或旧数据库seed。','initial_log':'logs/runtime_edges.log','corrected_log':'logs/runtime-edges-dependency.log'},ensure_ascii=False,indent=2))

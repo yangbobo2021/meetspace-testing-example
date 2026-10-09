@@ -1,0 +1,795 @@
+{
+  "name": "role-variants",
+  "method_id": "AI-WB-ui-role-demotion-reload",
+  "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "source_hashes": {
+    "app/server.py": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "app/__init__.py": "9a5623638e2d1dbe87e6a0b36dec5086355b89727bc8c5a80a146f63bbd83ee9",
+    "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322",
+    "web/index.html": "cc671156d428909077fdf34ee8ceb369a6b4b9bd3b97a536b7b87d164ccb55e1",
+    "web/style.css": "88171688868446cda01ba6a9060042b49017c3766f247ab318e347806c74b721",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead"
+  },
+  "final": {
+    "user": {
+      "id": 1,
+      "team_id": 1,
+      "email": "admin@meetspace.test",
+      "name": "林可",
+      "role": "admin",
+      "team_name": "见山设计"
+    },
+    "page": "manage",
+    "scope": "mine",
+    "date": "2030-04-10",
+    "loading": false,
+    "loadError": "",
+    "login": false,
+    "manage": true,
+    "openDialogs": 0,
+    "toast": "成员角色已更新",
+    "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+    "retry": false,
+    "pending": false,
+    "token": 6,
+    "generation": 2
+  },
+  "status": "passed",
+  "checks": [
+    {
+      "assertion": "role变更/同值后台一致且session重读",
+      "passed": true,
+      "actual": {
+        "target": 2,
+        "value": "admin",
+        "responses": [
+          {
+            "method": "PATCH",
+            "path": "/api/members/2",
+            "status": 200,
+            "monotonic_seconds": 1712399.545772041
+          },
+          {
+            "method": "GET",
+            "path": "/api/session",
+            "status": 200,
+            "monotonic_seconds": 1712399.550413083
+          },
+          {
+            "method": "GET",
+            "path": "/api/members",
+            "status": 200,
+            "monotonic_seconds": 1712399.563124541
+          },
+          {
+            "method": "GET",
+            "path": "/api/notifications",
+            "status": 200,
+            "monotonic_seconds": 1712399.564496708
+          },
+          {
+            "method": "GET",
+            "path": "/api/bookings?scope=mine",
+            "status": 200,
+            "monotonic_seconds": 1712399.572880333
+          },
+          {
+            "method": "GET",
+            "path": "/api/rooms?date=2030-04-10",
+            "status": 200,
+            "monotonic_seconds": 1712399.574216666
+          }
+        ],
+        "UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin",
+            "team_name": "见山设计"
+          },
+          "page": "manage",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "",
+          "login": false,
+          "manage": true,
+          "openDialogs": 0,
+          "toast": "成员角色已更新",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": false,
+          "pending": false,
+          "token": 3,
+          "generation": 2
+        }
+      }
+    },
+    {
+      "assertion": "role变更/同值后台一致且session重读",
+      "passed": true,
+      "actual": {
+        "target": 2,
+        "value": "member",
+        "responses": [
+          {
+            "method": "PATCH",
+            "path": "/api/members/2",
+            "status": 200,
+            "monotonic_seconds": 1712399.714271625
+          },
+          {
+            "method": "GET",
+            "path": "/api/session",
+            "status": 200,
+            "monotonic_seconds": 1712399.717690375
+          },
+          {
+            "method": "GET",
+            "path": "/api/bookings?scope=mine",
+            "status": 200,
+            "monotonic_seconds": 1712399.726574708
+          },
+          {
+            "method": "GET",
+            "path": "/api/members",
+            "status": 200,
+            "monotonic_seconds": 1712399.727344541
+          },
+          {
+            "method": "GET",
+            "path": "/api/notifications",
+            "status": 200,
+            "monotonic_seconds": 1712399.727873833
+          },
+          {
+            "method": "GET",
+            "path": "/api/rooms?date=2030-04-10",
+            "status": 200,
+            "monotonic_seconds": 1712399.728152916
+          }
+        ],
+        "UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin",
+            "team_name": "见山设计"
+          },
+          "page": "manage",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "",
+          "login": false,
+          "manage": true,
+          "openDialogs": 0,
+          "toast": "成员角色已更新",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": false,
+          "pending": false,
+          "token": 4,
+          "generation": 2
+        }
+      }
+    },
+    {
+      "assertion": "role变更/同值后台一致且session重读",
+      "passed": true,
+      "actual": {
+        "target": 2,
+        "value": "member",
+        "responses": [
+          {
+            "method": "PATCH",
+            "path": "/api/members/2",
+            "status": 200,
+            "monotonic_seconds": 1712399.83582725
+          },
+          {
+            "method": "GET",
+            "path": "/api/session",
+            "status": 200,
+            "monotonic_seconds": 1712399.839985333
+          },
+          {
+            "method": "GET",
+            "path": "/api/notifications",
+            "status": 200,
+            "monotonic_seconds": 1712399.847302
+          },
+          {
+            "method": "GET",
+            "path": "/api/rooms?date=2030-04-10",
+            "status": 200,
+            "monotonic_seconds": 1712399.847717166
+          },
+          {
+            "method": "GET",
+            "path": "/api/bookings?scope=mine",
+            "status": 200,
+            "monotonic_seconds": 1712399.848021458
+          },
+          {
+            "method": "GET",
+            "path": "/api/members",
+            "status": 200,
+            "monotonic_seconds": 1712399.848583291
+          }
+        ],
+        "UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin",
+            "team_name": "见山设计"
+          },
+          "page": "manage",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "",
+          "login": false,
+          "manage": true,
+          "openDialogs": 0,
+          "toast": "成员角色已更新",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": false,
+          "pending": false,
+          "token": 5,
+          "generation": 2
+        }
+      }
+    },
+    {
+      "assertion": "role变更/同值后台一致且session重读",
+      "passed": true,
+      "actual": {
+        "target": 1,
+        "value": "admin",
+        "responses": [
+          {
+            "method": "PATCH",
+            "path": "/api/members/1",
+            "status": 200,
+            "monotonic_seconds": 1712399.984565041
+          },
+          {
+            "method": "GET",
+            "path": "/api/session",
+            "status": 200,
+            "monotonic_seconds": 1712399.997322583
+          },
+          {
+            "method": "GET",
+            "path": "/api/rooms?date=2030-04-10",
+            "status": 200,
+            "monotonic_seconds": 1712400.001617083
+          },
+          {
+            "method": "GET",
+            "path": "/api/bookings?scope=mine",
+            "status": 200,
+            "monotonic_seconds": 1712400.001875041
+          },
+          {
+            "method": "GET",
+            "path": "/api/notifications",
+            "status": 200,
+            "monotonic_seconds": 1712400.012014833
+          },
+          {
+            "method": "GET",
+            "path": "/api/members",
+            "status": 200,
+            "monotonic_seconds": 1712400.015252375
+          }
+        ],
+        "UI": {
+          "user": {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin",
+            "team_name": "见山设计"
+          },
+          "page": "manage",
+          "scope": "mine",
+          "date": "2030-04-10",
+          "loading": false,
+          "loadError": "",
+          "login": false,
+          "manage": true,
+          "openDialogs": 0,
+          "toast": "成员角色已更新",
+          "text": "m\nMeetSpace\nROOM FOR IDEAS\n◈\n见山设计\nTEAM WORKSPACE\n工作空间\n▦\n会议室\n▤\n我的预约\n◷\n通知中心\n⚙\n空间管理\nMAKE ROOM FOR BETTER\n\n准时开始，留好空间。\n不用的预约记得及时取消。\n\n可\n林可\n团队管理员\n退出\n工作空间 / 空间管理\n北京时间 UTC+8\n见山设计\n退出\nWORKSPACE SETTINGS\n让空间，为团队更好地运转\n\n维护会议室信息，为成员分配合适的管理权限。\n\n＋ 添加会议室\n团队空间 · 4\n\n停用空间将阻止新预约，已有预约继续保留。\n\n▱\n云杉\n\n3F · 东侧 · 8 人\n\n开放预约\n显示屏\n白板\n视频会议\n08:00\n12:00\n16:00\n20:00\n\n容量 8 人 · 允许新预约\n\n编辑空间\n◫\n白桦\n\n3F · 西侧 · 4 人\n\n开放预约\n显示屏\n白板\n08:00\n12:00\n16:00\n20:00\n\n容量 4 人 · 允许新预约\n\n编辑空间\n▥\n银杏\n\n2F · 开放区 · 12 人\n\n开放预约\n显示屏\n白板\n视频会议\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 12 人 · 允许新预约\n\n编辑空间\n▧\n青松\n\n2F · 北侧 · 6 人\n\n开放预约\n白板\n电话会议\n08:00\n12:00\n16:00\n20:00\n\n容量 6 人 · 允许新预约\n\n编辑空间\n成员与权限\n\n角色变更将在成员下一次请求时生效；团队至少保留一位管理员。\n\n可\n\n林可 · 你\n\nadmin@meetspace.test\n团队成员\n管理员\n悦\n\n陈悦\n\nalice@meetspace.test\n团队成员\n管理员\n言\n\n周言\n\nbob@meetspace.test\n团队成员\n管理员\n为团队的下一次好想法，留一个空间。\nMeetSpace · 见山设计",
+          "retry": false,
+          "pending": false,
+          "token": 6,
+          "generation": 2
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "event": "second_admin_real_patch",
+      "status": 200,
+      "roles": [
+        [
+          1,
+          "admin"
+        ],
+        [
+          2,
+          "member"
+        ],
+        [
+          3,
+          "admin"
+        ],
+        [
+          4,
+          "admin"
+        ]
+      ],
+      "monotonic_seconds": 1712398.688128083
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/",
+      "monotonic_seconds": 1712398.807047291
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/style.css",
+      "monotonic_seconds": 1712398.827670416
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/app.js",
+      "monotonic_seconds": 1712398.828000208
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1712398.848641625
+    },
+    {
+      "event": "request",
+      "method": "POST",
+      "path": "/api/login",
+      "monotonic_seconds": 1712399.265129875
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1712399.341193666
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1712399.346863708
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1712399.348553333
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1712399.349292875
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1712399.517634541
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1712399.518081916
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1712399.518421833
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/members",
+      "monotonic_seconds": 1712399.518694083
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "monotonic_seconds": 1712399.54052125
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1712399.547630708
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1712399.552367708
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1712399.55871875
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1712399.559604708
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/members",
+      "monotonic_seconds": 1712399.559947166
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "monotonic_seconds": 1712399.701539583
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1712399.714753208
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1712399.718799833
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1712399.72163525
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1712399.722060125
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/members",
+      "monotonic_seconds": 1712399.723526875
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "monotonic_seconds": 1712399.83170175
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1712399.836864375
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1712399.840816833
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1712399.842300458
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1712399.843089208
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/members",
+      "monotonic_seconds": 1712399.843826583
+    },
+    {
+      "event": "request",
+      "method": "PATCH",
+      "path": "/api/members/1",
+      "monotonic_seconds": 1712399.976028166
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/session",
+      "monotonic_seconds": 1712399.985690791
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "monotonic_seconds": 1712399.998396666
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "monotonic_seconds": 1712400.000879
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/notifications",
+      "monotonic_seconds": 1712400.001134541
+    },
+    {
+      "event": "request",
+      "method": "GET",
+      "path": "/api/members",
+      "monotonic_seconds": 1712400.001314875
+    }
+  ],
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "monotonic_seconds": 1712398.810642291
+    },
+    {
+      "method": "GET",
+      "path": "/app.js",
+      "status": 200,
+      "monotonic_seconds": 1712398.82840625
+    },
+    {
+      "method": "GET",
+      "path": "/style.css",
+      "status": 200,
+      "monotonic_seconds": 1712398.83221675
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 401,
+      "monotonic_seconds": 1712398.861455916
+    },
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "monotonic_seconds": 1712399.339872291
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1712399.344990833
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1712399.439734125
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1712399.440143
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1712399.440562625
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1712399.52494825
+    },
+    {
+      "method": "GET",
+      "path": "/api/members",
+      "status": 200,
+      "monotonic_seconds": 1712399.525751041
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1712399.526620791
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1712399.527526958
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "status": 200,
+      "monotonic_seconds": 1712399.545772041
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1712399.550413083
+    },
+    {
+      "method": "GET",
+      "path": "/api/members",
+      "status": 200,
+      "monotonic_seconds": 1712399.563124541
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1712399.564496708
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1712399.572880333
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1712399.574216666
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "status": 200,
+      "monotonic_seconds": 1712399.714271625
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1712399.717690375
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1712399.726574708
+    },
+    {
+      "method": "GET",
+      "path": "/api/members",
+      "status": 200,
+      "monotonic_seconds": 1712399.727344541
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1712399.727873833
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1712399.728152916
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/2",
+      "status": 200,
+      "monotonic_seconds": 1712399.83582725
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1712399.839985333
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1712399.847302
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1712399.847717166
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1712399.848021458
+    },
+    {
+      "method": "GET",
+      "path": "/api/members",
+      "status": 200,
+      "monotonic_seconds": 1712399.848583291
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/members/1",
+      "status": 200,
+      "monotonic_seconds": 1712399.984565041
+    },
+    {
+      "method": "GET",
+      "path": "/api/session",
+      "status": 200,
+      "monotonic_seconds": 1712399.997322583
+    },
+    {
+      "method": "GET",
+      "path": "/api/rooms?date=2030-04-10",
+      "status": 200,
+      "monotonic_seconds": 1712400.001617083
+    },
+    {
+      "method": "GET",
+      "path": "/api/bookings?scope=mine",
+      "status": 200,
+      "monotonic_seconds": 1712400.001875041
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "monotonic_seconds": 1712400.012014833
+    },
+    {
+      "method": "GET",
+      "path": "/api/members",
+      "status": 200,
+      "monotonic_seconds": 1712400.015252375
+    }
+  ],
+  "screenshots": [
+    "ui-identity/extended-role-variants-role-variants.png",
+    "ui-identity/extended-role-variants-outcome.png"
+  ]
+}

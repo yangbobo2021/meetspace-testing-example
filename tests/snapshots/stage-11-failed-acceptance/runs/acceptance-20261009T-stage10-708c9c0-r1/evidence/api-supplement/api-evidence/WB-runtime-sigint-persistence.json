@@ -1,0 +1,522 @@
+{
+  "scenario_id": "WB-runtime-sigint-persistence",
+  "status": "passed",
+  "method_ids": [
+    "AI-WB-runtime-sigint-persistence"
+  ],
+  "items": [
+    {
+      "item": "CLI_SIGINT_restart",
+      "status": "passed",
+      "checks": {
+        "real_setup_all_writes_finished": true,
+        "pid_owned_listener_before_SIGINT": true,
+        "real_exit_and_listener_released": true,
+        "same_port_new_pid_owns_listener": true,
+        "all_business_rows_identical_no_reseed": true,
+        "API_readback_room": true,
+        "API_readback_booking": true,
+        "API_readback_read_notification": true
+      },
+      "actual": {
+        "command": [
+          "/opt/miniconda3/bin/python",
+          "-m",
+          "app.server",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "62554",
+          "--db",
+          "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/cli-sigint-1791504128693480000/fixture.sqlite"
+        ],
+        "first_pid": 28914,
+        "second_pid": 28953,
+        "port": 62554,
+        "owners_before": [
+          28914
+        ],
+        "owners_after": [],
+        "exit_code_observed": 0,
+        "exit_elapsed_seconds": 0.03881141706369817,
+        "clock_mode": "actual_system_clock_for_real_CLI; booking_next_day",
+        "real_clock": "2026-10-09T00:02:10.749239+00:00",
+        "before": {
+          "teams": [
+            {
+              "id": 1,
+              "name": "见山设计"
+            },
+            {
+              "id": 2,
+              "name": "远岸工作室"
+            }
+          ],
+          "users": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "email": "admin@meetspace.test",
+              "name": "林可",
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "email": "alice@meetspace.test",
+              "name": "陈悦",
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "email": "bob@meetspace.test",
+              "name": "周言",
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "email": "other@meetspace.test",
+              "name": "许宁",
+              "role": "admin"
+            }
+          ],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 6,
+              "team_id": 1,
+              "name": "SIGINT资料",
+              "location": "隔离测试",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "bookings": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "room_id": 1,
+              "user_id": 2,
+              "title": "品牌方向讨论",
+              "start": "2026-10-10T02:00:00+00:00",
+              "end": "2026-10-10T03:00:00+00:00",
+              "attendees": 6,
+              "status": "confirmed",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "cancelled_at": null,
+              "idempotency_key": "seed-1",
+              "request_hash": "seed"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "room_id": 3,
+              "user_id": 3,
+              "title": "产品周会",
+              "start": "2026-10-10T06:00:00+00:00",
+              "end": "2026-10-10T07:00:00+00:00",
+              "attendees": 10,
+              "status": "confirmed",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "cancelled_at": null,
+              "idempotency_key": "seed-2",
+              "request_hash": "seed"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "room_id": 2,
+              "user_id": 1,
+              "title": "设计评审",
+              "start": "2026-10-10T03:00:00+00:00",
+              "end": "2026-10-10T04:00:00+00:00",
+              "attendees": 3,
+              "status": "confirmed",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "cancelled_at": null,
+              "idempotency_key": "seed-3",
+              "request_hash": "seed"
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "room_id": 6,
+              "user_id": 2,
+              "title": "SIGINT持久化预约",
+              "start": "2026-10-10T02:00:00+00:00",
+              "end": "2026-10-10T03:00:00+00:00",
+              "attendees": 3,
+              "status": "confirmed",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "cancelled_at": null,
+              "idempotency_key": "sigint-saved",
+              "request_hash": "8419f8a0a053b563a25931da83d4a5f6fd9b98c6cc869f628e04bf1a190b12f3"
+            }
+          ],
+          "notifications": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "booking_id": 4,
+              "message": "「SIGINT持久化预约」预约成功：SIGINT资料 · 10月10日 10:00–11:00。",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "read": 1
+            }
+          ]
+        },
+        "after": {
+          "teams": [
+            {
+              "id": 1,
+              "name": "见山设计"
+            },
+            {
+              "id": 2,
+              "name": "远岸工作室"
+            }
+          ],
+          "users": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "email": "admin@meetspace.test",
+              "name": "林可",
+              "role": "admin"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "email": "alice@meetspace.test",
+              "name": "陈悦",
+              "role": "member"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "email": "bob@meetspace.test",
+              "name": "周言",
+              "role": "member"
+            },
+            {
+              "id": 4,
+              "team_id": 2,
+              "email": "other@meetspace.test",
+              "name": "许宁",
+              "role": "admin"
+            }
+          ],
+          "rooms": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "name": "云杉",
+              "location": "3F · 东侧",
+              "capacity": 8,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+              "active": 1
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "name": "白桦",
+              "location": "3F · 西侧",
+              "capacity": 4,
+              "equipment": "[\"显示屏\", \"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "name": "银杏",
+              "location": "2F · 开放区",
+              "capacity": 12,
+              "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "name": "青松",
+              "location": "2F · 北侧",
+              "capacity": 6,
+              "equipment": "[\"白板\", \"电话会议\"]",
+              "active": 1
+            },
+            {
+              "id": 5,
+              "team_id": 2,
+              "name": "海风",
+              "location": "1F · 靠窗",
+              "capacity": 6,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            },
+            {
+              "id": 6,
+              "team_id": 1,
+              "name": "SIGINT资料",
+              "location": "隔离测试",
+              "capacity": 8,
+              "equipment": "[\"白板\"]",
+              "active": 1
+            }
+          ],
+          "bookings": [
+            {
+              "id": 1,
+              "team_id": 1,
+              "room_id": 1,
+              "user_id": 2,
+              "title": "品牌方向讨论",
+              "start": "2026-10-10T02:00:00+00:00",
+              "end": "2026-10-10T03:00:00+00:00",
+              "attendees": 6,
+              "status": "confirmed",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "cancelled_at": null,
+              "idempotency_key": "seed-1",
+              "request_hash": "seed"
+            },
+            {
+              "id": 2,
+              "team_id": 1,
+              "room_id": 3,
+              "user_id": 3,
+              "title": "产品周会",
+              "start": "2026-10-10T06:00:00+00:00",
+              "end": "2026-10-10T07:00:00+00:00",
+              "attendees": 10,
+              "status": "confirmed",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "cancelled_at": null,
+              "idempotency_key": "seed-2",
+              "request_hash": "seed"
+            },
+            {
+              "id": 3,
+              "team_id": 1,
+              "room_id": 2,
+              "user_id": 1,
+              "title": "设计评审",
+              "start": "2026-10-10T03:00:00+00:00",
+              "end": "2026-10-10T04:00:00+00:00",
+              "attendees": 3,
+              "status": "confirmed",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "cancelled_at": null,
+              "idempotency_key": "seed-3",
+              "request_hash": "seed"
+            },
+            {
+              "id": 4,
+              "team_id": 1,
+              "room_id": 6,
+              "user_id": 2,
+              "title": "SIGINT持久化预约",
+              "start": "2026-10-10T02:00:00+00:00",
+              "end": "2026-10-10T03:00:00+00:00",
+              "attendees": 3,
+              "status": "confirmed",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "cancelled_at": null,
+              "idempotency_key": "sigint-saved",
+              "request_hash": "8419f8a0a053b563a25931da83d4a5f6fd9b98c6cc869f628e04bf1a190b12f3"
+            }
+          ],
+          "notifications": [
+            {
+              "id": 1,
+              "user_id": 2,
+              "booking_id": 4,
+              "message": "「SIGINT持久化预约」预约成功：SIGINT资料 · 10月10日 10:00–11:00。",
+              "created_at": "2026-10-09T00:02:09+00:00",
+              "read": 1
+            }
+          ]
+        },
+        "readback": {
+          "rooms": {
+            "status": 200,
+            "content_type": "application/json; charset=utf-8",
+            "json": {
+              "rooms": [
+                {
+                  "id": 1,
+                  "team_id": 1,
+                  "name": "云杉",
+                  "location": "3F · 东侧",
+                  "capacity": 8,
+                  "equipment": [
+                    "显示屏",
+                    "白板",
+                    "视频会议"
+                  ],
+                  "active": true,
+                  "bookings": []
+                },
+                {
+                  "id": 2,
+                  "team_id": 1,
+                  "name": "白桦",
+                  "location": "3F · 西侧",
+                  "capacity": 4,
+                  "equipment": [
+                    "显示屏",
+                    "白板"
+                  ],
+                  "active": true,
+                  "bookings": []
+                },
+                {
+                  "id": 3,
+                  "team_id": 1,
+                  "name": "银杏",
+                  "location": "2F · 开放区",
+                  "capacity": 12,
+                  "equipment": [
+                    "显示屏",
+                    "白板",
+                    "视频会议",
+                    "电话会议"
+                  ],
+                  "active": true,
+                  "bookings": []
+                },
+                {
+                  "id": 4,
+                  "team_id": 1,
+                  "name": "青松",
+                  "location": "2F · 北侧",
+                  "capacity": 6,
+                  "equipment": [
+                    "白板",
+                    "电话会议"
+                  ],
+                  "active": true,
+                  "bookings": []
+                },
+                {
+                  "id": 6,
+                  "team_id": 1,
+                  "name": "SIGINT资料",
+                  "location": "隔离测试",
+                  "capacity": 8,
+                  "equipment": [
+                    "白板"
+                  ],
+                  "active": true,
+                  "bookings": []
+                }
+              ],
+              "date": "2026-10-09"
+            },
+            "body_excerpt": null
+          },
+          "bookings": {
+            "status": 200,
+            "content_type": "application/json; charset=utf-8",
+            "json": {
+              "bookings": [
+                {
+                  "id": 4,
+                  "room_id": 6,
+                  "user_id": 2,
+                  "title": "SIGINT持久化预约",
+                  "start": "2026-10-10T02:00:00+00:00",
+                  "end": "2026-10-10T03:00:00+00:00",
+                  "attendees": 3,
+                  "status": "confirmed",
+                  "created_at": "2026-10-09T00:02:09+00:00",
+                  "cancelled_at": null,
+                  "room_name": "SIGINT资料",
+                  "location": "隔离测试",
+                  "owner": "陈悦"
+                },
+                {
+                  "id": 1,
+                  "room_id": 1,
+                  "user_id": 2,
+                  "title": "品牌方向讨论",
+                  "start": "2026-10-10T02:00:00+00:00",
+                  "end": "2026-10-10T03:00:00+00:00",
+                  "attendees": 6,
+                  "status": "confirmed",
+                  "created_at": "2026-10-09T00:02:09+00:00",
+                  "cancelled_at": null,
+                  "room_name": "云杉",
+                  "location": "3F · 东侧",
+                  "owner": "陈悦"
+                }
+              ]
+            },
+            "body_excerpt": null
+          },
+          "notifications": {
+            "status": 200,
+            "content_type": "application/json; charset=utf-8",
+            "json": {
+              "notifications": [
+                {
+                  "id": 1,
+                  "user_id": 2,
+                  "booking_id": 4,
+                  "message": "「SIGINT持久化预约」预约成功：SIGINT资料 · 10月10日 10:00–11:00。",
+                  "created_at": "2026-10-09T00:02:09+00:00",
+                  "read": 1
+                }
+              ]
+            },
+            "body_excerpt": null
+          }
+        }
+      }
+    }
+  ]
+}

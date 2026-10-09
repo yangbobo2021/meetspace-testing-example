@@ -1,0 +1,23 @@
+{
+  "status": "independently_confirmed_product_failure",
+  "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "source_sha256": {
+    "app/server.py": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead",
+    "tests/test_regressions.py": "763b220fe5ac9e62ec381d4763fd1e8c1d39a79b17b305c31ba94143d7d7cc92"
+  },
+  "scenario_ids": [
+    "WB-ui-role-demotion-reload",
+    "WB-ui-load-token-races"
+  ],
+  "actual": "真实self角色PATCH后/session真实200 held；原生logout与other新登录成功且后台当前session200是other；释放旧changeRole session200后UI变回旧林可/见山/member，当前后台会话仍other；旧成员toast出现。",
+  "evidence": "coverage-audits/coverage-stage10-fresh-20261009/change-role-identity-race/self-demote-then-login-other.json",
+  "evidence_sha256": "8c3fe248130e56f80d4291a4f44486a19d163d9e676dd7c75131c4457dd60ce8",
+  "workflow_instruction": "不要在active验收改产品。正式方法必须覆盖直接changeRole身份查询旧200到达新identity，保留已有ID；Tester新run真实记录failed、Reviewer按productFailed终结incomplete；Captain不得宣称发布通过。终结后外层开发修复另提交，再针对新source完整167复验。",
+  "independent_review": "release-preparation/20261009/product-failure-review.json",
+  "same_identity_variant": "另原始JS同身份先提升Bob并hold旧admin session200→本人自降member完成→释放旧admin200，UI回admin，后台member/管理403，generation相同，不能仅靠identityGeneration修复。",
+  "same_identity_evidence": "coverage-audits/coverage-stage10-fresh-20261009/same-identity-control/same-identity-role-race.json",
+  "pending_role_commit_variant": "第四个原始JS真实反例：旧loadPage pending /session admin200 held，后续真实self PATCH提交member/身份503，释放较早pending200后UI回admin并clear新pending，loadToken3不变/gen2不变。首轮changeRole200保持hold，因果只来自pending loadPage。",
+  "pending_role_commit_evidence": "coverage-audits/coverage-stage10-fresh-20261009/pending-role-commit-control/pending-load-role-commit-race.json"
+}

@@ -1,0 +1,75 @@
+{
+  "authorized_scope": "用户明确授权六类修复→完整验收→独立发布审阅，过程分别提交。stage10已固定，当前应执行新源码全部167条场景；用户指定tests且96需求已确认，无需重复确认。",
+  "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "scenario_count": 167,
+  "method_count": 176,
+  "requirements_count": 96,
+  "source_sha256": {
+    "app/server.py": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+    "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322",
+    "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead",
+    "tests/test_regressions.py": "763b220fe5ac9e62ec381d4763fd1e8c1d39a79b17b305c31ba94143d7d7cc92"
+  },
+  "rules": [
+    "不要以阶段10开发回归或旧run通过替代新run逐场景验收；所有场景使用当前固定pin及单一新run六账本hash。",
+    "白盒source refs/hash/位置按修复源码重新设计审阅，尤其identityGeneration与identityPending当前/旧401，session error、stale-load守卫，允许在既有相关场景细化必须有独立审阅。",
+    "不得改产品源码或旧run/snapshots。旧harness若写死旧bug状态或JSON role异常400等不属于正式要求，复制新run再纠正，保留尝试/独立理由，不降低正式预期。",
+    "完整运行必须重新执行全部167条，保留passed/failed/unproven事实。对旧blocked路径有新的真实资源，先验证再用；不能只把旧环境结论抄为blocked。",
+    "正式运行同时或其后对新源码 fresh coverage（Python coverage.py branches + Istanbul当前app.js）计数。不能 union 旧源码counter。保留全部源码分母。"
+  ],
+  "resources": {
+    "python311": "uv Python3.11.11 + Docker Python3.11.17",
+    "docker_image": "meetspace-testing-resources:stage10",
+    "isolation": "Docker --network none: 隔离默认8766及127.0.0.2；用户localhost8766 demo不得操作",
+    "entropy_adapter": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/ptrace_os_adapter.py",
+    "preflight": "ptrace-preflight-r3：实际getrandom全syscall捕获/控制、固定wall与monotonic及ASLR、split-write/unlink-before/mmap预检。仅资源预检不等于业务场景通过。",
+    "entropy_execution": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/run_entropy_matrix.py",
+    "cli_execution": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/cli_isolation_matrix.py",
+    "focused_harness": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/release-preparation/20261009/dev-ui-identity-final/execute_ui_identity.py",
+    "reviewed_fix_evidence": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/snapshots/stage-10-fixes",
+    "entropy_preflight_status": "独立资源Reviewer尚在审查，旧r1/r2/r3/r4不得直接视为完整。发现首次登录snapshot保存太晚、fork继承MAP_SHARED写漏报；environmentTester正在修正并会冻结最终adapter后新矩阵重跑。正式Tester必须读resource-review与最终新报告，不能只用旧preflight true认定全持久出口。",
+    "independent_review": "release-preparation/20261009/resource-review/"
+  },
+  "coverage_tools": "tests/delivery-acceptance/coverage-audits/coverage-20261008-stage06/tools/{python,node} only reuse tools not old counts. bootstrap/instrument.js/replay.py old工具可复制改新pin/BASE/current app; newcoverage unique directory and all jobs need sourceSHA fixed.",
+  "historical_full_harnesses": "tests/delivery-acceptance/runs/acceptance-20261008T-full-0b386b4-r1 (copy into newrun before changes; UI continuations share freshly initialized first UI harness output, cannot seed old passed ledger)",
+  "supplemental_harnesses": "tests/delivery-acceptance/coverage-audits/coverage-20261009-stage08-r1/harnesses (coverage_cycle_api.py has hardcoded old BASE: must copy/adapt so no historical overwrite)",
+  "fresh_coverage_design_hints": {
+    "status": "intermediate counting diagnosis; review business relevance independently, do not mark unreachable solely from missing counts",
+    "paths": [
+      "原源码app.js:73 pending session后的stale token与token相同!user须分别证明",
+      "原源码app.js:75 pending返回admin分支",
+      "原源码app.js:263 非自身角色PATCH短路；之前280是错误定位，按未instrument源码与map核对"
+    ],
+    "real_operation_sequence": "真实PATCH提交→/session503/网络中断→retry挂起/session→真实导航或logout，验证旧session恢复不能覆盖新载入或退出；另pending的真实session401应清UI，nonself role-change pending恢复admin应可继续manage。",
+    "coverage_source": "coverage-audits/coverage-stage10-fresh-20261009，源为stage10固定SHA，旧counter不能补新guard",
+    "design_action": "正式Analyst/Reviewer在已有相关167场景方法内明确这些可达状态组合；若不能被当前预期捕获必须提出补测，独立审查后再启动新run。",
+    "independent_counterexample": "!user原子不能以logout代替。可让早期真实UI rooms request未发出held，最新导航成功后rolePATCH→初次session503→retry真实session200 held→真实重新登录隔离Cookie撤销当前browser cookie→释放早期rooms得到真实401，api清user但loadToken不增加→释放retry旧200，必须不复活旧工作区且不继续业务读取。stale-token单独以retry挂起后新nav加载完成或logout证明。"
+  },
+  "harness_wait_corrections": [
+    "旧run_ui_acceptance.role仅等state.user.role=member且!loading，新code先根据已提交角色设member，此时session或DOM尚未完成；应额外等pending false + loaded + 最终DOM/no admin菜单再断言，保留初始错观测。",
+    "旧run_ui_final.logout第二个故障仅等toast非空，可能上一条toast还存在；应等当前故障响应对应toast + 当前按钮恢复enabled，再严格验证user/对话框/DB不变。不是产品fail，也不能直接把旧false failure算passed。"
+  ],
+  "identity_additional_counterexample_to_check": {
+    "status": "independently_confirmed_product_failure",
+    "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+    "source_sha256": {
+      "app/server.py": "5f1b056d791a452e842c35bff6bccbb50389a9e882bd1127d436aecdb103c5b5",
+      "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322",
+      "tests/test_smoke.py": "97110ac262460dcbe9be5028f4bf44248cd1daee6096c648a696bdea9a84cead",
+      "tests/test_regressions.py": "763b220fe5ac9e62ec381d4763fd1e8c1d39a79b17b305c31ba94143d7d7cc92"
+    },
+    "scenario_ids": [
+      "WB-ui-role-demotion-reload",
+      "WB-ui-load-token-races"
+    ],
+    "actual": "真实self角色PATCH后/session真实200 held；原生logout与other新登录成功且后台当前session200是other；释放旧changeRole session200后UI变回旧林可/见山/member，当前后台会话仍other；旧成员toast出现。",
+    "evidence": "coverage-audits/coverage-stage10-fresh-20261009/change-role-identity-race/self-demote-then-login-other.json",
+    "evidence_sha256": "8c3fe248130e56f80d4291a4f44486a19d163d9e676dd7c75131c4457dd60ce8",
+    "workflow_instruction": "不要在active验收改产品。正式方法必须覆盖直接changeRole身份查询旧200到达新identity，保留已有ID；Tester新run真实记录failed、Reviewer按productFailed终结incomplete；Captain不得宣称发布通过。终结后外层开发修复另提交，再针对新source完整167复验。",
+    "independent_review": "release-preparation/20261009/product-failure-review.json",
+    "same_identity_variant": "另原始JS同身份先提升Bob并hold旧admin session200→本人自降member完成→释放旧admin200，UI回admin，后台member/管理403，generation相同，不能仅靠identityGeneration修复。",
+    "same_identity_evidence": "coverage-audits/coverage-stage10-fresh-20261009/same-identity-control/same-identity-role-race.json",
+    "pending_role_commit_variant": "第四个原始JS真实反例：旧loadPage pending /session admin200 held，后续真实self PATCH提交member/身份503，释放较早pending200后UI回admin并clear新pending，loadToken3不变/gen2不变。首轮changeRole200保持hold，因果只来自pending loadPage。",
+    "pending_role_commit_evidence": "coverage-audits/coverage-stage10-fresh-20261009/pending-role-commit-control/pending-load-role-commit-race.json"
+  }
+}

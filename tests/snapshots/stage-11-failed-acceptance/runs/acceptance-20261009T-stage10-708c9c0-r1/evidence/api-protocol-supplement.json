@@ -1,0 +1,1981 @@
+{
+  "python": "3.11.11 (main, Mar 17 2025, 21:33:08) [Clang 20.1.0 ]",
+  "stdlib_parse_request_source": "    def parse_request(self):\n        \"\"\"Parse a request (internal).\n\n        The request should be stored in self.raw_requestline; the results\n        are in self.command, self.path, self.request_version and\n        self.headers.\n\n        Return True for success, False for failure; on failure, any relevant\n        error response has already been sent back.\n\n        \"\"\"\n        self.command = None  # set in case of error on the first line\n        self.request_version = version = self.default_request_version\n        self.close_connection = True\n        requestline = str(self.raw_requestline, 'iso-8859-1')\n        requestline = requestline.rstrip('\\r\\n')\n        self.requestline = requestline\n        words = requestline.split()\n        if len(words) == 0:\n            return False\n\n        if len(words) >= 3:  # Enough to determine protocol version\n            version = words[-1]\n            try:\n                if not version.startswith('HTTP/'):\n                    raise ValueError\n                base_version_number = version.split('/', 1)[1]\n                version_number = base_version_number.split(\".\")\n                # RFC 2145 section 3.1 says there can be only one \".\" and\n                #   - major and minor numbers MUST be treated as\n                #      separate integers;\n                #   - HTTP/2.4 is a lower version than HTTP/2.13, which in\n                #      turn is lower than HTTP/12.3;\n                #   - Leading zeros MUST be ignored by recipients.\n                if len(version_number) != 2:\n                    raise ValueError\n                if any(not component.isdigit() for component in version_number):\n                    raise ValueError(\"non digit in http version\")\n                if any(len(component) > 10 for component in version_number):\n                    raise ValueError(\"unreasonable length http version\")\n                version_number = int(version_number[0]), int(version_number[1])\n            except (ValueError, IndexError):\n                self.send_error(\n                    HTTPStatus.BAD_REQUEST,\n                    \"Bad request version (%r)\" % version)\n                return False\n            if version_number >= (1, 1) and self.protocol_version >= \"HTTP/1.1\":\n                self.close_connection = False\n            if version_number >= (2, 0):\n                self.send_error(\n                    HTTPStatus.HTTP_VERSION_NOT_SUPPORTED,\n                    \"Invalid HTTP version (%s)\" % base_version_number)\n                return False\n            self.request_version = version\n\n        if not 2 <= len(words) <= 3:\n            self.send_error(\n                HTTPStatus.BAD_REQUEST,\n                \"Bad request syntax (%r)\" % requestline)\n            return False\n        command, path = words[:2]\n        if len(words) == 2:\n            self.close_connection = True\n            if command != 'GET':\n                self.send_error(\n                    HTTPStatus.BAD_REQUEST,\n                    \"Bad HTTP/0.9 request type (%r)\" % command)\n                return False\n        self.command, self.path = command, path\n\n        # gh-87389: The purpose of replacing '//' with '/' is to protect\n        # against open redirect attacks possibly triggered if the path starts\n        # with '//' because http clients treat //path as an absolute URI\n        # without scheme (similar to http://path) rather than a path.\n        if self.path.startswith('//'):\n            self.path = '/' + self.path.lstrip('/')  # Reduce to a single /\n\n        # Examine the headers and look for a Connection directive.\n        try:\n            self.headers = http.client.parse_headers(self.rfile,\n                                                     _class=self.MessageClass)\n        except http.client.LineTooLong as err:\n            self.send_error(\n                HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE,\n                \"Line too long\",\n                str(err))\n            return False\n        except http.client.HTTPException as err:\n            self.send_error(\n                HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE,\n                \"Too many headers\",\n                str(err)\n            )\n            return False\n\n        conntype = self.headers.get('Connection', \"\")\n        if conntype.lower() == 'close':\n            self.close_connection = True\n        elif (conntype.lower() == 'keep-alive' and\n              self.protocol_version >= \"HTTP/1.1\"):\n            self.close_connection = False\n        # Examine the headers and look for an Expect directive\n        expect = self.headers.get('Expect', \"\")\n        if (expect.lower() == \"100-continue\" and\n                self.protocol_version >= \"HTTP/1.1\" and\n                self.request_version >= \"HTTP/1.1\"):\n            if not self.handle_expect_100():\n                return False\n        return True\n",
+  "items": [
+    {
+      "name": "too_many_headers",
+      "status": "passed",
+      "checks": {
+        "no_business_writes": true,
+        "healthy_after": true,
+        "two_real_431": true,
+        "stable_json_error_code": true,
+        "api_431_send_error_trace": true,
+        "no_dispatch": true
+      },
+      "responses": [
+        {
+          "status": 431,
+          "content_type": "application/json; charset=utf-8",
+          "json": {
+            "error": "HTTP 请求无效",
+            "code": "invalid_request"
+          },
+          "request_shape": "too_many_headers",
+          "raw_request_line": "GET /api/rooms HTTP/1.1",
+          "extra_header_bytes": 1405
+        },
+        {
+          "status": 431,
+          "content_type": "application/json; charset=utf-8",
+          "json": {
+            "error": "HTTP 请求无效",
+            "code": "invalid_request"
+          },
+          "request_shape": "too_many_headers",
+          "raw_request_line": "GET /api/rooms HTTP/1.1",
+          "extra_header_bytes": 1405
+        }
+      ],
+      "traces": [
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "send_error",
+            "line": 184,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-too_many_headers-1791504154248818000/app/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": 431,
+            "error_message": "Too many headers"
+          },
+          {
+            "event": "return",
+            "function": "send_error",
+            "line": 186,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-too_many_headers-1791504154248818000/app/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": 431,
+            "error_message": "Too many headers"
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 416,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": null,
+            "error_message": null
+          }
+        ],
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "send_error",
+            "line": 184,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-too_many_headers-1791504154248818000/app/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": 431,
+            "error_message": "Too many headers"
+          },
+          {
+            "event": "return",
+            "function": "send_error",
+            "line": 186,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-too_many_headers-1791504154248818000/app/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": 431,
+            "error_message": "Too many headers"
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 416,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": null,
+            "error_message": null
+          }
+        ]
+      ],
+      "before": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      },
+      "after": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      }
+    },
+    {
+      "name": "long_header",
+      "status": "passed",
+      "checks": {
+        "no_business_writes": true,
+        "healthy_after": true,
+        "two_real_431": true,
+        "stable_json_error_code": true,
+        "api_431_send_error_trace": true,
+        "no_dispatch": true
+      },
+      "responses": [
+        {
+          "status": 431,
+          "content_type": "application/json; charset=utf-8",
+          "json": {
+            "error": "HTTP 请求无效",
+            "code": "invalid_request"
+          },
+          "request_shape": "long_header",
+          "raw_request_line": "GET /api/rooms HTTP/1.1",
+          "extra_header_bytes": 65547
+        },
+        {
+          "status": 431,
+          "content_type": "application/json; charset=utf-8",
+          "json": {
+            "error": "HTTP 请求无效",
+            "code": "invalid_request"
+          },
+          "request_shape": "long_header",
+          "raw_request_line": "GET /api/rooms HTTP/1.1",
+          "extra_header_bytes": 65547
+        }
+      ],
+      "traces": [
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "send_error",
+            "line": 184,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-long_header-1791504154855062000/app/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": 431,
+            "error_message": "Line too long"
+          },
+          {
+            "event": "return",
+            "function": "send_error",
+            "line": 186,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-long_header-1791504154855062000/app/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": 431,
+            "error_message": "Line too long"
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 416,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": null,
+            "error_message": null
+          }
+        ],
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "send_error",
+            "line": 184,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-long_header-1791504154855062000/app/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": 431,
+            "error_message": "Line too long"
+          },
+          {
+            "event": "return",
+            "function": "send_error",
+            "line": 186,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-long_header-1791504154855062000/app/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": 431,
+            "error_message": "Line too long"
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 416,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "GET",
+            "path": "/api/rooms",
+            "error_code": null,
+            "error_message": null
+          }
+        ]
+      ],
+      "before": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      },
+      "after": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      }
+    },
+    {
+      "name": "static_delete",
+      "status": "passed",
+      "checks": {
+        "no_business_writes": true,
+        "healthy_after": true,
+        "static_rejected": true
+      },
+      "responses": [
+        {
+          "status": 501,
+          "body_length": 359,
+          "content_length": "359"
+        },
+        {
+          "status": 501,
+          "body_length": 359,
+          "content_length": "359"
+        }
+      ],
+      "traces": [
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "send_error",
+            "line": 184,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-static_delete-1791504155258983000/app/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": 501,
+            "error_message": "Unsupported method ('DELETE')"
+          },
+          {
+            "event": "call",
+            "function": "send_error",
+            "line": 440,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": 501,
+            "error_message": "Unsupported method ('DELETE')"
+          },
+          {
+            "event": "return",
+            "function": "send_error",
+            "line": 491,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": 501,
+            "error_message": "Unsupported method ('DELETE')"
+          },
+          {
+            "event": "return",
+            "function": "send_error",
+            "line": 191,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-static_delete-1791504155258983000/app/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": 501,
+            "error_message": "Unsupported method ('DELETE')"
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 422,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": null,
+            "error_message": null
+          }
+        ],
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "send_error",
+            "line": 184,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-static_delete-1791504155258983000/app/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": 501,
+            "error_message": "Unsupported method ('DELETE')"
+          },
+          {
+            "event": "call",
+            "function": "send_error",
+            "line": 440,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": 501,
+            "error_message": "Unsupported method ('DELETE')"
+          },
+          {
+            "event": "return",
+            "function": "send_error",
+            "line": 491,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": 501,
+            "error_message": "Unsupported method ('DELETE')"
+          },
+          {
+            "event": "return",
+            "function": "send_error",
+            "line": 191,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-static_delete-1791504155258983000/app/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": 501,
+            "error_message": "Unsupported method ('DELETE')"
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 422,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "DELETE",
+            "path": "/",
+            "error_code": null,
+            "error_message": null
+          }
+        ]
+      ],
+      "before": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      },
+      "after": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      }
+    },
+    {
+      "name": "head_static",
+      "status": "passed",
+      "checks": {
+        "no_business_writes": true,
+        "healthy_after": true,
+        "no_head_entity": true
+      },
+      "responses": [
+        {
+          "status": 200,
+          "body_length": 0,
+          "content_length": "4126"
+        },
+        {
+          "status": 200,
+          "body_length": 0,
+          "content_length": "4126"
+        }
+      ],
+      "traces": [
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "dispatch",
+            "line": 245,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-head_static-1791504155709785000/app/server.py",
+            "method": "HEAD",
+            "path": "/",
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "return",
+            "function": "dispatch",
+            "line": 250,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-head_static-1791504155709785000/app/server.py",
+            "method": "HEAD",
+            "path": "/",
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 425,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "HEAD",
+            "path": "/",
+            "error_code": null,
+            "error_message": null
+          }
+        ],
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "dispatch",
+            "line": 245,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-head_static-1791504155709785000/app/server.py",
+            "method": "HEAD",
+            "path": "/",
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "return",
+            "function": "dispatch",
+            "line": 250,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-head_static-1791504155709785000/app/server.py",
+            "method": "HEAD",
+            "path": "/",
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 425,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "HEAD",
+            "path": "/",
+            "error_code": null,
+            "error_message": null
+          }
+        ]
+      ],
+      "before": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      },
+      "after": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      }
+    },
+    {
+      "name": "head_api",
+      "status": "passed",
+      "checks": {
+        "no_business_writes": true,
+        "healthy_after": true,
+        "no_head_entity": true
+      },
+      "responses": [
+        {
+          "status": 401,
+          "body_length": 0,
+          "content_length": "52"
+        },
+        {
+          "status": 401,
+          "body_length": 0,
+          "content_length": "52"
+        }
+      ],
+      "traces": [
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "dispatch",
+            "line": 245,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-head_api-1791504156149226000/app/server.py",
+            "method": "HEAD",
+            "path": "/api/health",
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "return",
+            "function": "dispatch",
+            "line": 263,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-head_api-1791504156149226000/app/server.py",
+            "method": "HEAD",
+            "path": "/api/health",
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 425,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "HEAD",
+            "path": "/api/health",
+            "error_code": null,
+            "error_message": null
+          }
+        ],
+        [
+          {
+            "event": "call",
+            "function": "handle_one_request",
+            "line": 395,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": null,
+            "path": null,
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "call",
+            "function": "dispatch",
+            "line": 245,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-head_api-1791504156149226000/app/server.py",
+            "method": "HEAD",
+            "path": "/api/health",
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "return",
+            "function": "dispatch",
+            "line": 263,
+            "file": "/Users/boboyang/work/sublang.ai/meeting-room-booking/tests/delivery-acceptance/runs/acceptance-20261009T-stage10-708c9c0-r1/evidence/api-supplement/api-projects/protocol-head_api-1791504156149226000/app/server.py",
+            "method": "HEAD",
+            "path": "/api/health",
+            "error_code": null,
+            "error_message": null
+          },
+          {
+            "event": "return",
+            "function": "handle_one_request",
+            "line": 425,
+            "file": "/Users/boboyang/.local/share/uv/python/cpython-3.11.11-macos-aarch64-none/lib/python3.11/http/server.py",
+            "method": "HEAD",
+            "path": "/api/health",
+            "error_code": null,
+            "error_message": null
+          }
+        ]
+      ],
+      "before": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      },
+      "after": {
+        "teams": [
+          {
+            "id": 1,
+            "name": "见山设计"
+          },
+          {
+            "id": 2,
+            "name": "远岸工作室"
+          }
+        ],
+        "users": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "email": "admin@meetspace.test",
+            "name": "林可",
+            "role": "admin"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "email": "alice@meetspace.test",
+            "name": "陈悦",
+            "role": "member"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "email": "bob@meetspace.test",
+            "name": "周言",
+            "role": "member"
+          },
+          {
+            "id": 4,
+            "team_id": 2,
+            "email": "other@meetspace.test",
+            "name": "许宁",
+            "role": "admin"
+          }
+        ],
+        "rooms": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "name": "云杉",
+            "location": "3F · 东侧",
+            "capacity": 8,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\"]",
+            "active": 1
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "name": "白桦",
+            "location": "3F · 西侧",
+            "capacity": 4,
+            "equipment": "[\"显示屏\", \"白板\"]",
+            "active": 1
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "name": "银杏",
+            "location": "2F · 开放区",
+            "capacity": 12,
+            "equipment": "[\"显示屏\", \"白板\", \"视频会议\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 4,
+            "team_id": 1,
+            "name": "青松",
+            "location": "2F · 北侧",
+            "capacity": 6,
+            "equipment": "[\"白板\", \"电话会议\"]",
+            "active": 1
+          },
+          {
+            "id": 5,
+            "team_id": 2,
+            "name": "海风",
+            "location": "1F · 靠窗",
+            "capacity": 6,
+            "equipment": "[\"白板\"]",
+            "active": 1
+          }
+        ],
+        "bookings": [
+          {
+            "id": 1,
+            "team_id": 1,
+            "room_id": 1,
+            "user_id": 2,
+            "title": "品牌方向讨论",
+            "start": "2030-04-11T02:00:00+00:00",
+            "end": "2030-04-11T03:00:00+00:00",
+            "attendees": 6,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-1",
+            "request_hash": "seed"
+          },
+          {
+            "id": 2,
+            "team_id": 1,
+            "room_id": 3,
+            "user_id": 3,
+            "title": "产品周会",
+            "start": "2030-04-11T06:00:00+00:00",
+            "end": "2030-04-11T07:00:00+00:00",
+            "attendees": 10,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-2",
+            "request_hash": "seed"
+          },
+          {
+            "id": 3,
+            "team_id": 1,
+            "room_id": 2,
+            "user_id": 1,
+            "title": "设计评审",
+            "start": "2030-04-11T03:00:00+00:00",
+            "end": "2030-04-11T04:00:00+00:00",
+            "attendees": 3,
+            "status": "confirmed",
+            "created_at": "2030-04-10T01:00:00+00:00",
+            "cancelled_at": null,
+            "idempotency_key": "seed-3",
+            "request_hash": "seed"
+          }
+        ],
+        "notifications": []
+      }
+    }
+  ]
+}

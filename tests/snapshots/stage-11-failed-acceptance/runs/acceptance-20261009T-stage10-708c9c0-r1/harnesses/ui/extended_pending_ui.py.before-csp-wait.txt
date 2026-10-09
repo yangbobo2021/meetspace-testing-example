@@ -1,0 +1,79 @@
+"""Fresh explicit pending-session UI matrices. Only network boundaries are controlled."""
+import asyncio,json,traceback
+import coverage_cycle_ui_identity as h
+from playwright.async_api import async_playwright
+E=h.AUDIT/'extended-pending';E.mkdir(exist_ok=True)
+async def wait(items,n=1):
+ for _ in range(1000):
+  if len(items)>=n:return
+  await asyncio.sleep(.01)
+ raise TimeoutError('native UI route barrier absent')
+async def setup(e):
+ await e.nav('manage');calls=0;held=[]
+ async def route(r):
+  nonlocal calls
+  calls+=1
+  if calls==1:return await r.fulfill(status=503,content_type='application/json',body='{"error":"initial session503"}')
+  if calls in [2,3]:
+   resp=await r.fetch();held.append((r,resp));e.events.append({'event':'session_held','index':calls-1,'real_status':resp.status});return
+  await r.continue_()
+ await e.p.route('**/api/session',route);await e.p.locator('[data-member="2"]').select_option('admin');await e.p.locator('.retry-panel').wait_for();await e.p.wait_for_function('state.identityPending && !state.loading');return held
+async def release(pair,kind):
+ r,response=pair
+ if kind=='success':await r.fulfill(response=response)
+ else:await r.fulfill(status=503,content_type='application/json',body='{"error":"delayed session503"}')
+async def obs(e):
+ x=await e.observe();x.update(await e.p.evaluate('({pending:state.identityPending,token:state.loadToken,generation:state.identityGeneration})'));return x
+async def p12(e,old,timing,new):
+ held=await setup(e);before=e.snapshot();await e.p.locator('[data-refresh]').click();await wait(held);await e.p.locator('nav [data-page=inbox]').click();await wait(held,2)
+ if timing=='done':
+  await release(held[1],new);await e.p.wait_for_function('!state.loading');await e.p.wait_for_timeout(100)
+ prior=await obs(e);idx=len(e.events);await release(held[0],old);await e.p.wait_for_timeout(150);after=await obs(e)
+ e.check('旧pending结果不改最新身份/页面/错误或loading',prior==after and before==e.snapshot(),{'before':prior,'after':after,'events':e.events[idx:]});await e.shot('old-released')
+ if timing=='waiting':await release(held[1],new);await e.p.wait_for_function('!state.loading')
+ final=await obs(e);e.check('P2实际结果保持',final['page']=='inbox' and final['user']['role']=='admin' and ((new=='success' and not final['loadError'] and not final['pending']) or (new=='error' and final['loadError']=='delayed session503' and final['pending'])),final)
+async def logout(e,old,outcome,relogin=False):
+ held=await setup(e);await e.p.locator('[data-refresh]').click();await wait(held);snapshot=e.snapshot();cookie=await e.cookie()
+ if outcome!='success':
+  async def fault(r):
+   if outcome=='network':await r.abort('failed')
+   else:await r.fulfill(status=503,content_type='application/json',body='{"error":"logout controlled503"}')
+  await e.p.route('**/api/logout',fault)
+ await e.p.locator('[data-logout]:visible').first.click()
+ if outcome=='success':
+  await e.p.locator('#login-form').wait_for();st,_,_=h.req(e.url,'/api/rooms?date=2030-04-10',cookie=cookie);e.check('成功退出真实旧会话401且pending清除',st==401 and not await e.p.evaluate('state.identityPending'),{'real_status':st,'UI':await obs(e)})
+  if relogin:await e.login('other')
+ else:
+  await e.p.wait_for_function('() => [...document.querySelectorAll("[data-logout]")].filter(x=>x.offsetParent!==null).every(x=>!x.disabled)');o=await obs(e);e.check('失败退出保留身份、错误、可操作按钮',o['user'] is not None and bool(o['toast']) and o['pending'],o)
+ before=await obs(e);await release(held[0],old);await e.p.wait_for_timeout(200);after=await obs(e)
+ if outcome=='success':e.check('退出/新登录后旧session不得恢复旧身份',before==after and snapshot==e.snapshot(),{'before':before,'after':after})
+ else:
+  await e.p.unroute('**/api/logout');await e.p.locator('[data-logout]:visible').first.click();await e.p.locator('#login-form').wait_for();e.check('失败后可重新退出成功',not await e.p.evaluate('state.identityPending'),await obs(e))
+ await e.shot('final')
+async def roles(e):
+ await e.nav('manage');rows=[]
+ for target,value in [(2,'admin'),(2,'member'),(2,'member'),(1,'admin')]:
+  idx=len(e.responses);await e.p.locator(f'[data-member="{target}"]').select_option(value);await e.p.wait_for_function('() => !state.loading && !state.identityPending && document.querySelector("#toast").textContent==="成员角色已更新"');await e.p.wait_for_timeout(100);o=await obs(e);rs=e.responses[idx:]
+  e.check('role变更/同值后台一致且session重读',e.roles()[target-1][1]==value and any(r['path']=='/api/session' and r['status']==200 for r in rs) and o['user']['role']=='admin' and o['manage'] and not o['pending'],{'target':target,'value':value,'responses':rs,'UI':o});rows.append(o)
+ await e.shot('role-variants')
+async def main():
+ results=[]
+ async with async_playwright() as pw:
+  browser=await pw.chromium.launch(headless=True)
+  cases=[('p12-'+a+'-'+b+'-'+c,p12,(a,b,c),'AI-WB-ui-load-token-races') for a in ['success','error'] for b in ['waiting','done'] for c in ['success','error']]
+  cases += [('pending-logout-'+a+'-'+b,logout,(a,b,False),'AI-WB-ui-logout-races') for a in ['success','error'] for b in ['success','503','network']]
+  cases += [('pending-new-login-'+a,logout,(a,'success',True),'AI-WB-ui-load-token-races') for a in ['success','error']]
+  cases += [('role-variants',roles,(),'AI-WB-ui-role-demotion-reload')]
+  for name,fn,args,mid in cases:
+   e=h.Env();o={'name':name,'method_id':mid,'revision':h.REV,'source_hashes':h.HASHES};status='unproven'
+   try:
+    await e.start(browser,'extended-'+name,'admin',True);await fn(e,*args);status='passed' if e.checks and all(c['passed'] for c in e.checks) else 'failed'
+   except Exception as ex:o['error']=str(ex);o['traceback']=traceback.format_exc()
+   finally:
+    try:o['final']=await obs(e);await e.shot('outcome')
+    except Exception:pass
+    o.update({'status':status,'checks':getattr(e,'checks',[]),'events':getattr(e,'events',[]),'responses':getattr(e,'responses',[]),'screenshots':getattr(e,'shots',[])});f=E/(name+'.json');f.write_text(json.dumps(o,ensure_ascii=False,indent=2));results.append({'name':name,'method_id':mid,'status':status,'evidence':str(f.relative_to(h.AUDIT))});(h.AUDIT/'extended-pending-results.json').write_text(json.dumps({'revision':h.REV,'browser':browser.version,'results':results},ensure_ascii=False,indent=2));print(name,status,o.get('error',''),flush=True)
+    try:await e.close()
+    except Exception:pass
+  await browser.close()
+if __name__=='__main__':asyncio.run(main())

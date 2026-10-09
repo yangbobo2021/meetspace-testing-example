@@ -1,0 +1,141 @@
+{
+  "status": "needs_formal_method_refinement",
+  "scope": "独立设计建议，供compiled Analyst/Reviewer处理；未修改正式场景/方法，未证明应用验收通过",
+  "reviewer_kind": "independent_ai",
+  "review_reference": "/root/fix_code_reviewer",
+  "revision": "708c9c057b5c9014f4ff975fdc5774093a687abe",
+  "source_sha256": {
+    "web/app.js": "f06c17c249d27e16ccdba83511f0d3c18534358a238a0f08c79eaec7ff0e8322"
+  },
+  "formal_inputs_sha256": {
+    "requirements.json": "fd62b1a6119975ca9a0e2e16782d0de23462e6cccd076e6eaf03c38ee94aa6b0",
+    "scenarios.json": "a6516a2ecc08b11275cf4632251e6d9d102587d9c9f23ab4deb38dde9a9554d0",
+    "methods.json": "737b2c99ec6eac3cda65097d0228a08cf6ad58ea9156ddfb954b86f670ef85ce"
+  },
+  "important_reachable_paths": [
+    {
+      "source": "web/app.js:73",
+      "path": "identityPending实际/session 200返回后token !== state.loadToken",
+      "reason": "已提交角色变更的身份查询故障可进入pending；界面实际重新加载再发session期间，原生导航/退出增加token。不能归为仅helper可达的防御出口。",
+      "escaping_fault": "缺少stale token守卫可能让较旧pending身份回调修改当前页面/身份、引发过时业务加载；只测正常重试不能捕获。"
+    },
+    {
+      "source": "web/app.js:73",
+      "path": "token仍相同且!state.user",
+      "reason": "api当前世代真实401会清user而不增加loadToken。pending session200已实际返回但被网络hold时，另一在途当前世代实际请求401可造成此状态。",
+      "escaping_fault": "只保留token比较的错误实现可把已失效身份从迟到session200重新写回；logout因为会增加token，不能证明这一原子。"
+    },
+    {
+      "source": "web/app.js:75",
+      "path": "pending重新读取/session返回admin，不走降权重置page/scope",
+      "reason": "管理员实际修改他人角色，PATCH成功但后续身份查询503/网络错时本人仍admin，重试身份读应保持正确管理员导航。",
+      "escaping_fault": "恢复代码若无条件当成员处理，会错误撤去管理员权限入口；仅自降member恢复不能发现。"
+    },
+    {
+      "source": "web/app.js:263",
+      "path": "Number(select.dataset.member) !== state.user.id使&&第二项短路",
+      "reason": "修改他人角色是正式团队管理操作；需核对本人身份仍真实admin、目标已持久改变，以及失败/重试不混淆自降。原源码280是dialog，不使用仪表化行号冒充此位置。",
+      "escaping_fault": "错误地把目标角色赋予当前用户，可在其他成员降权时错误降权管理员界面。"
+    },
+    {
+      "source": "web/app.js:266–269",
+      "path": "direct changeRole首次成功session200迟到跨过logout及new login，不是loadPage pending恢复路径",
+      "reason": "两例已在instrumented与Reviewer未仪表化原JS各真实重现；旧A赋身份将Other/Bob新合法UI改回A，服务当前会话仍正确。",
+      "escaping_fault": "api只隔离旧401，loadPage守卫也只能保护它自己的结果；任何直接成功身份赋值/旧toast没有原动作世代绑定即可污染新身份。"
+    },
+    {
+      "id": "same-identity-role-continuation",
+      "source": "web/app.js:266–269",
+      "path": "同一identityGeneration两次真实role成功，首轮admin/session200迟到覆盖已完成member UI",
+      "reason": "原始JS实测且独立Reviewer再执行同失败；first-disabled但second-enabled原生控件可操作，真实两次提交；身份epoch不变不能阻止角色时序污染。",
+      "escaping_fault": "只增加身份generation检查的修复可在跨登录场景通过，同时仍恢复过时admin菜单/角色。"
+    },
+    {
+      "id": "pending-load-cross-role-commit",
+      "source": "web/app.js:73–88 与261–271",
+      "path": "先前pending loadPage session200跨较新角色提交/session503，token未变导致旧admin赋值并清新pending",
+      "reason": "当前原JS已由fresh及独立Reviewer真实复现；首个direct changeRole成功仍hold，确认污染仅来自另一个旧loadPage身份读。",
+      "escaping_fault": "只为direct changeRole加roleRefreshToken但不使旧loadPage token过时，会通过前三例却保留此错误。"
+    }
+  ],
+  "required_repair_cases": [
+    {
+      "id": "pending-new-navigation",
+      "actions": "准备第二管理员，实际self PATCH降为member后仅前端初次session503；点击真实重试，捕获真实/session200；原生导航触发更新加载并完成后释放旧session。",
+      "expected": "最新导航/加载和真实成员身份保持，旧pending回调不恢复旧页面或把loading/error覆盖成旧状态。",
+      "evidence": "真PATCH/SQL角色、初次503限定前端、两次真实session请求/响应、native导航、token先后只读记录、DOM/请求序列及晚响应释放前后截图。"
+    },
+    {
+      "id": "pending-logout",
+      "actions": "同一合法pending起点；retry真实session200被hold；原生退出真实POST200完成，随后释放旧session。",
+      "expected": "保持登录页面/user为空/弹窗关闭，旧会话实际拒绝，迟到session不复活工作空间。",
+      "evidence": "真实logout与原Cookie失效、token增长、旧session响应释放时刻、DOM变更记录。此项只证明stale token，不能冒充!user原子。"
+    },
+    {
+      "id": "pending-current401-same-token",
+      "actions": "先以原生UI导航创建早期rooms请求并仅在传输层hold发出；另一次实际导航最新加载完成恢复可操作页面。实际role PATCH成功→初次session503→原生重试捕获真实session200。经隔离Cookie容器携当前旧Cookie执行真实撤销，保持目标浏览器仍持旧Cookie；释放早期rooms得到当前世代真实401，使user为空且retry token未变；再释放retry已捕获200。",
+      "expected": "迟到200不得恢复已失效身份/工作空间；整个过程保留真实401与登录DOM。不得用fake401、console调用api/loadPage或直接写state制造可达性。",
+      "evidence": "所有UI导航/角色变更/重试来自真实控件；原Cookie撤销和session401实际服务证据；readonly token及generation证明相等token/当前世代；迟到200前后identity/UI与请求时序，观察暂态恢复不能只看最后画面。"
+    },
+    {
+      "id": "pending-other-member-admin-recovery",
+      "actions": "本人A admin实际修改其他成员角色成功，然后初次/session分别503和network；通过原生数据重试读取真实admin session。",
+      "expected": "目标角色持久变更，本人仍admin；故障不是假成功/假回滚；恢复后正确管理员菜单/所选页面及当前权限，会员列表真实数据一致。",
+      "evidence": "本人/目标独立API与SQL前后、故障限定前端、每种恢复真实session200、管理员直接业务权限及完整DOM。复用已有修改他人成功/失败控制。"
+    },
+    {
+      "id": "direct-changeRole-success-late-new-identity",
+      "actions": "自身实际降权与修改他人实际成功各一项；首次follow-up session用route.fetch获得真实200后hold，原生logout完成并原生登录新用户（含另一团队admin与本团队member），新session/业务200及稳定UI完成后释放旧200。另安排旧PATCH迟到与旧失败catch不污染新身份对照。",
+      "expected": "始终保持新真实身份/团队/菜单及当前页面；迟到旧响应/成功toast/失败catch不得覆盖当前UI。后台真实当前identity与SQL已提交角色仍分别正确，不把旧角色提交假回滚。",
+      "evidence": "原动作generation、真实PATCH及SQL角色、被hold真实session200完整user元数据、logout/new login实际响应、释放前后UI/Backend身份一致性、菜单/业务内容/反馈及请求序列；不用fake200或console修改state。",
+      "existing_scenario_ids": [
+        "WB-ui-role-demotion-reload",
+        "WB-ui-load-token-races"
+      ]
+    },
+    {
+      "id": "direct-changeRole-success-late-same-identity",
+      "actions": "原生将Bob提升admin（保障允许自降）成功后捕获第一角色/session admin200并hold，确认self另select可用；self自降真实PATCH200与member/session200及member DOM完成后释放首轮admin200。另对照PATCH发出次序与真实提交次序反转、跨loadPage pending/session身份读与较新角色提交交叉。",
+      "expected": "始终以最新实际角色查询结果为准，不恢复旧admin入口/角色或过时反馈；后端仍member、/members403、业务SQL不发生额外写入。",
+      "evidence": "两个真实PATCH/commit、真实/session捕获原值、native控件第一disabled第二enabled、identityGeneration保持2、响应次序、释放前后DOM/角色/菜单与后台API和SQL；独立未仪表化复现raw参考product-failure-review.json。",
+      "existing_scenario_ids": [
+        "WB-ui-role-demotion-reload",
+        "WB-ui-load-token-races"
+      ]
+    },
+    {
+      "id": "pending-load-success-late-new-role-commit",
+      "actions": "other-role成功，首轮direct/session真实admin200 hold；原生self-select发起PATCH但hold发送，再native nav发出pending loadPage/session真实admin200并hold；放行selfPATCH真实member提交，将其follow-up/session限定503；保留member/新pending/错误retry状态后只释放第二个旧pending200。",
+      "expected": "保持最新member及新identityPending与故障恢复入口，不恢复admin菜单、清新pending或覆写loading/error；旧direct响应仍hold。随后原生retry须真实/session member200并正确结束。",
+      "evidence": "两次真实提交、三个身份读次序及网络故障限定、第一direct一直hold、oldloadToken/新commit token记录、DOM与user/pending/错误、真实后台member/members403、SQL前后；独立raw product-failure-review第四case。",
+      "existing_scenario_ids": [
+        "WB-ui-role-demotion-reload",
+        "WB-ui-load-token-races",
+        "WB-ui-self-demotion-session-failure"
+      ]
+    }
+  ],
+  "ledger_strategy": "优先细化已有WB-ui-load-token-races与WB-ui-self-demotion-session-failure相关方法，明确各新增操作状态；如现有场景链接不足，由正式Analyst新增稳定ID。不得改96需求、以新通过覆盖旧失败或从历史run拼通过。更新之后必须独立审阅及新run固定hash。",
+  "wait_correction_review": [
+    {
+      "harness": "run_ui_acceptance.py role()",
+      "status": "approved_expectation_alignment",
+      "reason": "旧wait state.user.role=member && !loading可在补丁预置member字段而DOM尚未更新时满足。加identityPending false、无loadError及真实filter-date最终DOM只纠正完成观测；管理员菜单撤去、直接/members403、刷新后身份与成功反馈等业务断言保留。"
+    },
+    {
+      "harness": "run_ui_final.py logout()",
+      "status": "approved_for_controlled_sequence",
+      "reason": "两次故障循环第二次旧toast非空可让等待提前满足，禁用按钮尚未恢复。该harness登录已完成且没有并行导航/加载，等待当前可见退出按钮再次启用再查toast能够等待catch完成；不能以此替代并发重绘情况下的请求绑定。正式结果仍要核当次实际错误反馈、原session200、重试真实退出及旧Cookie401。更稳健是当次request/response或fetch失败事件加按钮恢复，且toast应匹配当前故障。"
+    }
+  ],
+  "business_requirement_changes": false,
+  "executed_new_cases": false,
+  "release_approved": false,
+  "confirmed_new_product_failure_reference": "product-failure-review.json",
+  "diagnostic_execution_references": [
+    "product-failure-review.json",
+    "reviewer-same-identity-role-race/same-identity-role-race.json",
+    "reviewer-pending-role-commit-race/pending-load-role-commit-race.json"
+  ],
+  "executed_new_cases_note": "独立诊断四case已执行；完整正式method尚未执行，此字段不冒充正式验收。"
+}
